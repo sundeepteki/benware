@@ -1,56 +1,96 @@
 %% initial setup
 
+addpath(genpath('D:\auditory-objects\NeilLib'))
+
 global zBus stimDevice dataDevice;
 global fs_in fs_out
 global channelOrder
 
 fs_in = 24414.0625;
-fs_out = fs_in*2;
 
-% don't forget this! channels need to be assigned correctly for rolling
-% display and saving of data
-%channelOrder = [9 8 10 7 13 4 12 5 15 2 16 1 14 3 11 6];
-%channelOrder = [channelOrder channelOrder+16];
+global truncate checkdata;
+truncate = 20; % for testing only. should normally be 0
+checkdata = false; % for testing only. should normally be FALSE
 
+% filename tokens:
+% %E = expt number, e.g. '29'
+% %1, %2... %9 = stimulus parameter value
+% %N = grid name
+% %L = left or right (for stimulus file)
+% %P = penetration number
+% %S = sweep number
+% %C = channel number
+
+expt.exptNum = 29;
+expt.penetrationNum = 1;
+expt.probe.lhs = 9999;
+expt.probe.rhs = 9999;
+expt.headstage.lhs = 9999;
+expt.headstage.rhs = 9999;
+channelMapping = [9 8 10 7 13 4 12 5 15 2 16 1 14 3 11 6];
+expt.channelMapping = [channelMapping channelMapping+16];
+
+grid.name = 'ctuning.drc';
+grid.altName = '';
+grid.sampleRate = 24414.0625*4;
+grid.stimGenerationFunctionName = 'loadStereo';
+grid.stimDir = 'D:\auditory-objects\sounds.calib.expt%E\%N\';
+grid.stimFilename = 'fw.%1.token.%2.naive.%L.f32';
+grid.stimulusGridTitles = {'Full width','Token','Level'};
+%grid.stimulusGrid = [30 1 80; 30 2 70; 30 5 60];
+grid.stimulusGrid = [30 99 80];
+grid.stimLevelOffsetDB = -50;
+grid.postStimSilence = 0.25;
+
+grid.nStimConditions = size(grid.stimulusGrid,1);
+grid.repeatsPerCondition = 5;
+grid.dataDir = 'F:\expt-%E\%P-%N\';
+grid.dataFilename = 'raw.f32\%P.%N.sweep.%S.channel.%C.f32';
+
+%%%
+fs_out = grid.sampleRate;
 zBusInit;
-stimulusDeviceInit('RX6',50);
+stimulusDeviceInit('RX6',fs_out);
 dataDeviceInit;
 pause(2);
 
-dataGain = 1;
-extraTimePerSweep = 0.25;
+stimGenerationFunction = str2func(grid.stimGenerationFunctionName);
 
-grid.filename = 'D:\auditory-objects\sounds.calib.expt29\ctuning.drc\fw.30.token.%N.naive.%L.f32';
-grid.nStimuli = 5;
-grid.stimMultiplier = 30;
-grid.repeats = 10;
-grid.savename = 'f:\junkdata\%P\ctuning.drc.s%S.c%C.f32';
+repeatedGrid = repmat(grid.stimulusGrid,[grid.repeatsPerCondition,1]);
+grid.nSweepsDesired = size(repeatedGrid,1);
+grid.randomisedGrid = repeatedGrid(randperm(grid.nSweepsDesired),:);
 
-penNum = 1;
+% check for existence of data directory. If it does exist, use grid.altName
+% to store alternative name
+grid.altName = verifySaveDir(grid,expt);
+fprintf(['Saving to ' regexprep(constructDataPath(grid.dataDir(1:end-1),grid,expt),'\','\\\'),'\n']);
 
-stimNum = repmat(1:grid.nStimuli,[1 grid.repeats]);
-stimNum = stimNum(randperm(length(stimNum)));
+% save grid metadata
+saveGridMetadata(grid,expt);
 
-sweepNum = 0;
-for ii = 1:length(stimNum)
-    sweepNum = sweepNum + 1;
+clear sweeps;
 
-    fprintf(['== Starting sweep ' num2str(sweepNum) ' of ' num2str(length(stimNum)) '\n']);
+% upload first stimulus
+tic;
+[stim sweeps(1).stimInfo] = stimGenerationFunction(1,grid,expt);
+uploadWholeStimulus(stim);
 
+% run sweeps
+for sweepNum = 1:grid.nSweepsDesired
     tic;
-    f = findstr('%N',grid.filename);
-    filename = [grid.filename(1:f-1) num2str(stimNum(ii)) grid.filename(f+2:end)];
-    f = findstr('%L',filename);
-    stimfileL = [filename(1:f-1) 'L' filename(f+2:end)];
-    stimfileR = [filename(1:f-1) 'R' filename(f+2:end)];
+    fprintf('\n');
+    fprintf(['== Starting sweep ' num2str(sweepNum) ' of ' num2str(grid.nSweepsDesired) '\n']);
+    fprintf(['== Stimulus parameters: ' num2str(sweeps(sweepNum).stimInfo.stimParameters) '\n']);
+    if sweepNum<grid.nSweepsDesired
+        [nextStim,sweeps(sweepNum+1).stimInfo] = stimGenerationFunction(sweepNum+1,grid,expt);
+    else
+        nextStim = [];
+    end
     
-    stimMultiplier = 30;
-    stim = loadStimulus(stimfileL,stimfileR,stimMultiplier);
-    stim = stim(:,1:round(5*fs_out)); % hack to present 1 second stimulus instead of 30
-    sweepLen = size(stim,2)/fs_out+extraTimePerSweep;
+    sweepLen = size(stim,2)/fs_out+grid.postStimSilence; % length of CURRENT stimulus + a bit
+    [data,sweeps(sweepNum).timeStamp] = runSweep(sweepLen,nextStim,expt.channelMapping);    
+    saveData(data,grid,expt,sweepNum);
+    saveSweepInfo(sweeps,grid,expt);
 
-    data = runSweep(sweepLen,stim,dataGain);
-    
-    saveData(data,grid.savename,penNum,sweepNum);
     fprintf(['== Finished sweep after ' num2str(toc) ' sec.\n\n']);
 end

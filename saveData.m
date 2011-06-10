@@ -1,18 +1,13 @@
-function saveData(data,fullPath,grid,expt,sweepNum)
+function saveData(data,grid,expt,sweepNum)
 
 fprintf(['Saving data']);
 
-fullPath = regexprep(fullPath,'%E',num2str(expt.exptNum));
-fullPath = regexprep(fullPath,'%P',['P' num2str(expt.penetrationNum,'%02d')]);
-fullPath = regexprep(fullPath,'%N',num2str(grid.name));
-fullPath = regexprep(fullPath,'%S',num2str(sweepNum));
+fullPath = constructDataPath([grid.dataDir grid.dataFilename],grid,expt,sweepNum);
 
-% create directory hierarchy if necessary
-f = find(fullPath=='\');
-dirname = fullPath(1:f(end));
-
-if ~exist(dirname,'dir')
-    mkdir(dirname);
+f = find(fullPath,'\');
+dirName = fullPath(1:f(end));
+if ~exist(dirName,'dir');
+    mkdir(dirName);
 end
 
 f = findstr('%C',fullPath);
