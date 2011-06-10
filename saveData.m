@@ -1,25 +1,25 @@
-function saveData(data,basename,penNum,sweepNum)
+function saveData(data,fullPath,grid,expt,sweepNum)
 
 fprintf(['Saving data']);
 
-f = findstr('%P',basename);
-basename = [basename(1:f-1) 'P' num2str(penNum,'%02d') basename(f+2:end)];
-f = findstr('%S',basename);
-basename = [basename(1:f-1) num2str(sweepNum) basename(f+2:end)];
+fullPath = regexprep(fullPath,'%E',num2str(expt.exptNum));
+fullPath = regexprep(fullPath,'%P',['P' num2str(expt.penetrationNum,'%02d')]);
+fullPath = regexprep(fullPath,'%N',num2str(grid.name));
+fullPath = regexprep(fullPath,'%S',num2str(sweepNum));
 
 % create directory hierarchy if necessary
-f = find(basename=='\');
-dirname = basename(1:f(end));
+f = find(fullPath=='\');
+dirname = fullPath(1:f(end));
 
 if ~exist(dirname,'dir')
     mkdir(dirname);
 end
 
-f = findstr('%C',basename);
+f = findstr('%C',fullPath);
 
 for chan = 1:length(data)
     fprintf('.');
-    filename = [basename(1:f-1) num2str(chan,'%02d') basename(f+2:end)];
+    filename = [fullPath(1:f-1) num2str(chan,'%02d') fullPath(f+2:end)];
     h = fopen(filename,'w');
     fwrite(h,data{chan},'float32');
     fclose(h);

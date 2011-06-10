@@ -1,21 +1,23 @@
-function [stim, stimInfo] = loadStereo(sweepNum,grid)
+function [stim, stimInfo] = loadStereo(sweepNum,grid,expt)
 
-fprintf(['Loading stimulus ' num2str(number) '...']);
+fprintf(['Loading stimulus ' num2str(sweepNum) '...']);
 
 stimInfo.sweepNum = sweepNum;
 stimInfo.stimParameters = grid.randomisedGrid(sweepNum,:);
 
 fullPath = [grid.stimDir grid.stimFilename];
 for ii = 1:length(stimInfo.stimParameters)
-    [s,e] = regexp(fullpath,['%' num2str(ii)];
-    
-f = findstr('%N',fullName);
-filename = [fullName(1:f-1) num2str(number) fullName(f+2:end)];
-f = findstr('%L',filename);
-stimfileL = [filename(1:f-1) 'L' filename(f+2:end)];
-stimfileR = [filename(1:f-1) 'R' filename(f+2:end)];
+    fullPath = regexprep(fullPath,['%' num2str(ii)],num2str(stimInfo.stimParameters(ii)));
+end
 
-stim = loadStimulus(stimfileL, stimfileR, grid.stimGainMultiplier);
+fullPath = regexprep(fullPath,'%E',num2str(expt.exptNum));
+fullPath = regexprep(fullPath,'%P',['P' num2str(expt.penetrationNum,'%02d')]);
+fullPath = regexprep(fullPath,'%N',num2str(grid.name));
+
+stimInfo.stimfileL = regexprep(fullPath,'%L','L')
+stimInfo.stimfileR = regexprep(fullPath,'%L','R')
+
+stim = loadStimulus(stimInfo.stimfileL, stimInfo.stimfileR, grid.stimGainMultiplier);
 
 global fs_out truncate
 
