@@ -23,7 +23,6 @@ for chan = 1:length(data)
     h = fopen(filename,'w');
     fwrite(h,data{chan},'float32');
     fclose(h);
-    pause(0.01);
 end
 
 fprintf(['done after ' num2str(toc) ' sec.\n']);
