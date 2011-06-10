@@ -1,4 +1,4 @@
-function data = runSweepFast(sweepLen,nextStim)
+function [data,timeStamp] = runSweepFast(sweepLen,nextStim)
 %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
 %% Upload the next stimulus at the same time, then reset the stimDevice
 %% and inform the stimDevice of the stimulus length
@@ -25,10 +25,10 @@ index = zeros(1,32);
 stimIndex = 0;
 
 % trigger stimulus presentation and data collection
+timeStamp = datestr(now);
 triggerZBus;
 
 fprintf('Sweep triggered.\n');
-now = toc;
 
 % while trial is running:
 % * upload next stimulus as far as possible
@@ -72,7 +72,7 @@ fprintf(['Got ' num2str(dataLen) ' samples from 32 channels (' num2str(dataLen/f
 
 resetStimDevice;
 
-checkdata = false;
+global checkdata
 if checkdata
     fprintf('Checking stim...');
     teststim = downloadStim(size(nextStim,2));
