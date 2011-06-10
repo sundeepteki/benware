@@ -25,7 +25,7 @@ index = zeros(1,32);
 stimIndex = 0;
 
 % trigger stimulus presentation and data collection
-timeStamp = datestr(now);
+timeStamp = clock;
 triggerZBus;
 
 fprintf('Sweep triggered.\n');
@@ -37,11 +37,13 @@ fprintf('Sweep triggered.\n');
 figure(2);
 while any(index+1~=ceil(sweepLen*fs_in))
     maxStimIndex = getStimIndex;
-    if stimIndex==(size(nextStim,2)-1)
-        fprintf(['Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
-    elseif maxStimIndex>stimIndex
-        uploadStimulus(nextStim(:,stimIndex+1:maxStimIndex),stimIndex);
-        stimIndex = maxStimIndex;
+    if ~isempty(nextStim)
+        if stimIndex==(size(nextStim,2)-1)
+            fprintf(['Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
+        elseif maxStimIndex>stimIndex
+            uploadStimulus(nextStim(:,stimIndex+1:maxStimIndex),stimIndex);
+            stimIndex = maxStimIndex;
+        end
     end
     for chan = 1:32
         newdata = downloadData(chan,index(chan));
@@ -55,9 +57,11 @@ end
 
 fprintf(['Sweep done after ' num2str(toc) ' sec.\n']);
 
-if stimIndex~=(size(nextStim,2)-1)
-    uploadStimulus(nextStim(:,stimIndex+1:end),stimIndex);
-    fprintf(['Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
+if ~isempty(nextStim)
+    if stimIndex~=(size(nextStim,2)-1)
+        uploadStimulus(nextStim(:,stimIndex+1:end),stimIndex);
+        fprintf(['Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
+    end
 end
 
 % check all channels have the same amount of data
