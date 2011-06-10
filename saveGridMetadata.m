@@ -2,18 +2,12 @@ function saveGridMetadata(grid,expt)
 
 fprintf(['Saving grid metadata...']);
 
-fullPath = [grid.dataDir 'gridInfo.mat'];
+dataDir = constructDataPath(grid.dataDir,grid,expt);
 
-fullPath = regexprep(fullPath,'%E',num2str(expt.exptNum));
-fullPath = regexprep(fullPath,'%P',['P' num2str(expt.penetrationNum,'%02d')]);
-fullPath = regexprep(fullPath,'%N',num2str(grid.name));
+fullPath = [dataDir 'gridInfo.mat'];
 
-% create directory hierarchy if necessary
-f = find(fullPath=='\');
-dirname = fullPath(1:f(end))
-
-if ~exist(dirname,'dir')
-    mkdir(dirname);
+if ~exist(dataDir,'dir')
+    mkdir(dataDir);
 elseif exist(fullPath,'file')
     error(['Grid metadata file -- ' fullPath ' -- already exists']);
 end
