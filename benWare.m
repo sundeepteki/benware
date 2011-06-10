@@ -7,16 +7,10 @@ global fs_in fs_out
 global channelOrder
 
 fs_in = 24414.0625;
-fs_out = fs_in*2;
 
 global truncate checkdata;
 truncate = 1; % for testing only. should normally be 0
 checkdata = false; % for testing only. should normally be FALSE
-
-zBusInit;
-stimulusDeviceInit('RX6',50);
-dataDeviceInit;
-pause(2);
 
 % filename tokens:
 % %E = expt number, e.g. '29'
@@ -38,6 +32,7 @@ expt.channelMapping = [channelMapping channelMapping+16];
 
 grid.name = 'ctuning.drc';
 grid.altName = '';
+grid.sampleRate = 24414.0625*4;
 grid.stimGenerationFunctionName = 'loadStereo';
 grid.stimDir = 'D:\auditory-objects\sounds.calib.expt%E\%N\';
 grid.stimFilename = 'fw.%1.token.%2.naive.%L.f32';
@@ -50,6 +45,13 @@ grid.nStimConditions = size(grid.stimulusGrid,1);
 grid.repeatsPerCondition = 5;
 grid.dataDir = 'F:\expt-%E\%P-%N\';
 grid.dataFilename = 'raw.f32\%P.%N.sweep.%S.channel.%C.f32';
+
+%%%
+fs_out = grid.sampleRate;
+zBusInit;
+stimulusDeviceInit('RX6',fs_out);
+dataDeviceInit;
+pause(2);
 
 stimGenerationFunction = str2func(grid.stimGenerationFunctionName);
 
