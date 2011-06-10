@@ -9,7 +9,7 @@ global channelOrder
 fs_in = 24414.0625;
 
 global truncate checkdata;
-truncate = 1; % for testing only. should normally be 0
+truncate = 20; % for testing only. should normally be 0
 checkdata = false; % for testing only. should normally be FALSE
 
 % filename tokens:
@@ -37,7 +37,8 @@ grid.stimGenerationFunctionName = 'loadStereo';
 grid.stimDir = 'D:\auditory-objects\sounds.calib.expt%E\%N\';
 grid.stimFilename = 'fw.%1.token.%2.naive.%L.f32';
 grid.stimulusGridTitles = {'Full width','Token','Level'};
-grid.stimulusGrid = [30 1 80; 30 2 70; 30 5 60];
+%grid.stimulusGrid = [30 1 80; 30 2 70; 30 5 60];
+grid.stimulusGrid = [30 99 80];
 grid.stimLevelOffsetDB = -50;
 grid.postStimSilence = 0.25;
 
