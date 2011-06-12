@@ -1,4 +1,5 @@
 function uploadWholeStimulus(stim)
+  % uploadWholeStimulus(stim)
 
 global stimDevice
 

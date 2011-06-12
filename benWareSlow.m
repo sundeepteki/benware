@@ -13,7 +13,7 @@ fs_out = fs_in*2;
 %channelOrder = [channelOrder channelOrder+16];
 
 zBusInit;
-stimulusDeviceInit('RX6',50);
+stimDeviceInit('RX6',50);
 dataDeviceInit;
 pause(2);
 

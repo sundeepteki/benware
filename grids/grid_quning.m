@@ -1,8 +1,9 @@
-function grid = quning()
+function grid = grid_quning()
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStereo';
   grid.stimDir = 'D:\auditory-objects\sounds.calib.expt%E\%N\';
+  grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   % essentials
   grid.name = 'CRF03';

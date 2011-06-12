@@ -5,7 +5,7 @@ fs_in = 24414.0625;
 fs_out = fs_in*2;
 
 zBusInit;
-stimulusDeviceInit('RX6',50);
+stimDeviceInit('RX6',50);
 dataDeviceInit;
 pause(2);
 

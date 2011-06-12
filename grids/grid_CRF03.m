@@ -1,8 +1,9 @@
-function grid = CRF03()
+function grid = grid_CRF03()
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStereo';
   grid.stimDir = 'D:\auditory-objects\sounds.calib.expt%E\%N\';
+  grid.sampleRate = 24414.0625*4;  % ~100kHz
 
   % essentials
   grid.name = 'CRF03';

@@ -1,12 +1,14 @@
-function grid = ctuning_ss()
+function grid = grid_ctuning_ss()
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStereo';
   grid.stimDir = 'D:\auditory-objects\sounds.calib.expt%E\%N\';
+  grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   % essentials
   grid.name = 'ctuning.ss';
-  grid.stimFilename = 'special_sound.is_smoothed.%1.token.%2.embedded.%3.%L.f32';
+  grid.stimFilename = ...
+      'special_sound.is_smoothed.%1.token.%2.embedded.%3.%L.f32';
   
   % stimulus grid structure
   grid.stimGridTitles = {'Smoothed', 'Token', 'Embedded', 'Level'};

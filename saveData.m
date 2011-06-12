@@ -1,22 +1,20 @@
-function saveData(data,grid,expt,sweepNum)
+function saveData(data, grid, expt, sweepNum)
+  % saveData(data, grid, expt, sweepNum)
 
 fprintf(['Saving data']);
 
-fullPath = constructDataPath([grid.dataDir grid.dataFilename],grid,expt,sweepNum);
+% ensure target directory exists
+dirTemplate = [grid.dataDir grid.dataFilename];
+fullPath = constructDataPath(dirTemplate, grid, expt, sweepNum);
+dirName = split_path(fullPath);
+mkdir_nowarning(dirName);
 
-f = find(fullPath,'\');
-dirName = fullPath(1:f(end));
-if ~exist(dirName,'dir');
-    mkdir(dirName);
-end
-
-f = findstr('%C',fullPath);
-
-for chan = 1:length(data)
+% save each channel in a separate f32 file
+for chanNum = 1:L(data)
     fprintf('.');
-    filename = [fullPath(1:f-1) num2str(chan,'%02d') fullPath(f+2:end)];
-    h = fopen(filename,'w');
-    fwrite(h,data{chan},'float32');
+    filename = constructDataPath(dirTemplate, grid, expt, sweepNum, chanNum);
+    h = fopen(filename, 'w');
+    fwrite(h, data{chanNum}, 'float32');
     fclose(h);
 end
 

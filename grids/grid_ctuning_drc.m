@@ -1,8 +1,9 @@
-function grid = ctuning_drc()
+function grid = grid_ctuning_drc()
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStereo';
   grid.stimDir = 'D:\auditory-objects\sounds.calib.expt%E\%N\';
+  grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   % essentials
   grid.name = 'ctuning.drc';
@@ -17,5 +18,4 @@ function grid = ctuning_drc()
   grid.repeatsPerCondition = 10;
   
   % set this using absolute calibration
-  grid.stimLevelOffset = 30;
-  
+  grid.stimLevelOffsetDB = -50;

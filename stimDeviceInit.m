@@ -1,4 +1,4 @@
-function stimulusDeviceInit(deviceName,sampleRatekHz)
+function stimDeviceInit(deviceName, sampleRatekHz)
 
 global stimDevice;
 
