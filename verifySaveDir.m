@@ -44,7 +44,7 @@ while repeatLoop
 
   fprintf_subtitle(promptTitle);
   fprintf(promptStr);
-  r = demandinput({'o', 'a', 'k'});
+  r = demandinput('Choose [o/a/k]: ',{'o', 'a', 'k'},'a',true);
   
   switch r
     % overwrite
@@ -52,7 +52,7 @@ while repeatLoop
       deleteStr = sprintf('About to delete %s. Sure? [y/n]\n', ...
 			  regexprep([dataDir lastFoundStr], '\', '\\\'));
       fprintf(deleteStr);
-      r2 = demandinput({'y', 'n'});
+      r2 = demandinput('',{'y', 'n'},'y',true);
       if r2=='y'
         rmdir([dataDir lastFoundStr], 's');
         altName = [grid.name lastFoundStr];

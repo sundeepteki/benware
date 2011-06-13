@@ -14,9 +14,9 @@ fprintf('  - RHS probe: %d \n', expt.probe.lhs);
 fprintf('  - LHS headstage: %d \n', expt.headstage.lhs);
 fprintf('  - RHS headstage: %d \n', expt.headstage.lhs);
 
-r = demandinput('\nis this ok? [y/n]: ', {'y', 'n'});
+r = demandinput('\nis this ok? [y/n]: ', {'y', 'n'},'y',true);
 if r=='n'
-  error('parameter:error');
+  error('parameter:error','Error in verifyExpt');
 end
 
 % stimulus
@@ -30,9 +30,10 @@ fprintf('  - # sweeps: %d\n', ...
 fprintf('  - stimulus dir: %s\n', ...
 	split_path(constructStimPath(grid, expt, 1)));
 
-r = demandinput('\nis this ok? [y/n]: ', {'y', 'n'});
+
+r = demandinput('\nis this ok? [y/n]: ', {'y', 'n'},'y',true);
 if r=='n'
-  error('parameter:error');
+  error('parameter:error','Error in verifyExpt');
 end
 
 % recording
@@ -40,7 +41,7 @@ fprintf_subtitle('recording');
 fprintf('  - data dir: %s\n', ...
 	constructDataPath(grid.dataDir, grid, expt))
 
-r = demandinput('\nis this ok? [y/n]: ', {'y', 'n'});
+r = demandinput('\nis this ok? [y/n]: ', {'y', 'n'},'y',true);
 if r=='n'
-  error('parameter:error');
+  error('parameter:error','Error in verifyExpt');
 end

@@ -7,4 +7,6 @@ if isempty(zBus)
     if zBus.ConnectZBUS('GB') == 0
         error(['Cannot connect to zBUS on GB']);
     end
+else
+    fprintf('ZBus already connected, doing nothing\n');
 end

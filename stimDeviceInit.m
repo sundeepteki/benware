@@ -12,7 +12,10 @@ end
 
 if ~isempty(stimDevice)
     % check sample rate, clear device if wrong
-    if stimDevice.GetSFreq~=sampleRatekHz
+    if stimDevice.GetSFreq==sampleRatekHz
+        fprintf([deviceName ' already initialised at correct sample rate, doing nothing\n']);
+    else
+        fprintf('Wrong sample rate, clearing stimDevice\n');
         clear stimDevice;
         stimDevice = [];
     end
@@ -26,13 +29,13 @@ if isempty(stimDevice)
     end
 
     rcxFilename = 'stereoPlay.rcx';
-    if ~stimDevice.LoadCOFsf(rcxFilename,sampleRate)
-        error(['Cannot load ' rcxFilename ]);
+    if invoke(stimDevice,'LoadCOFsf',rcxFilename,sampleRate)==0
+        error(['Cannot upload ' rcxFilename ]);
     end
 
-    if ~stimDevice.Run
+    if invoke(stimDevice,'Run')==0
         error('Stimulus RCX Circuit failed to run.');
     end
 end
 
-fprintf([deviceName ' initialized, fs=' num2str(stimDevice.GetSFreq) '\n']);
+fprintf([deviceName ' ready, fs=' num2str(stimDevice.GetSFreq) '\n']);

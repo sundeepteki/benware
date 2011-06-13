@@ -29,7 +29,8 @@ end
 missingFilesStr = 'missing files:';
 for ii=1:L(filenames(:))
   if ~filesExist(ii)
-    missingFilesStr = [missingFilesStr '\n  - ' filenames{ii}];
+    missingFilesStr = [missingFilesStr '\n  - ' regexprep(filenames{ii},'\','\\\')];
   end
 end
+
 error('stimulus:files', missingFilesStr);

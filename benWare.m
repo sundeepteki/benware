@@ -36,6 +36,7 @@ end
 
 % experiment details
 expt.exptNum = 29;
+%expt.stimDeviceName = 'RX6';
 expt.penetrationNum = 98;
 expt.probe.lhs = 9999;
 expt.probe.rhs = 9999;
@@ -45,8 +46,8 @@ channelMapping = [9 8 10 7 13 4 12 5 15 2 16 1 14 3 11 6];
 expt.channelMapping = [channelMapping channelMapping+16];
 
 % load grid
-grid = grid_test();
-
+%grid = grid_test();
+grid = grid_ctuning_drc;
 
 %% stim/data setup: AUTO
 % =======================
@@ -56,12 +57,12 @@ verifyGridFields(grid);
 verifyStimFilesExist(grid, expt);
 
 % add extra fields
-grid.altName = '';
+grid.saveName = '';
 grid.nStimConditions = size(grid.stimGrid, 1);
-%grid.dataDir = 'F:\expt-%E\%P-%N\';
-%grid.dataFilename = 'raw.f32\%P.%N.sweep.%S.channel.%C.f32';
-grid.dataDir = '/data/expt-%E/%P-%N/';
-grid.dataFilename = 'raw.f32/%P.%N.sweep.%S.channel.%C.f32';
+grid.dataDir = 'F:\expt-%E\%P-%N\';
+grid.dataFilename = 'raw.f32\%P.%N.sweep.%S.channel.%C.f32';
+%grid.dataDir = '/data/expt-%E/%P-%N/';
+%grid.dataFilename = 'raw.f32/%P.%N.sweep.%S.channel.%C.f32';
 
 % randomise grid
 repeatedGrid = repmat(grid.stimGrid, [grid.repeatsPerCondition, 1]);
@@ -74,8 +75,8 @@ grid.randomisedGrid = repeatedGrid(randperm(grid.nSweepsDesired), :);
 verifyExpt(grid, expt);
 
 % check for existence of data directory. 
-% If it does exist, use grid.altName to store alternative name.
-grid.altName = verifySaveDir(grid, expt);
+% If it does exist, use grid.saveName to store alternative name.
+grid.saveName = verifySaveDir(grid, expt);
 
 % stimulus generation function handle
 stimGenerationFunction = str2func(grid.stimGenerationFunctionName);
@@ -99,7 +100,9 @@ fprintf(['Saving to ' saveDirStr '\n']);
 tic;
 fs_out = grid.sampleRate;
 zBusInit;
+pause(2);
 stimDeviceInit('RX6', fs_out);
+pause(2);
 dataDeviceInit;
 pause(2);
 
@@ -119,7 +122,7 @@ for sweepNum = 1:grid.nSweepsDesired
   isLastSweep = (sweepNum == grid.nSweepsDesired);
   if ~isLastSweep
     [nextStim, sweeps(sweepNum+1).stimInfo] = ...
-	stimGenerationFunction(sweepNum+1, grid, expt);
+    	stimGenerationFunction(sweepNum+1, grid, expt);
   else
     nextStim = [];
   end
