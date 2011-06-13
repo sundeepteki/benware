@@ -4,7 +4,7 @@ function saveGridMetadata(grid, expt)
 fprintf(['Saving grid metadata...']);
 
 % target directory
-dataDir = constructDataPath(grid.dataDir, grid, expt);
+dataDir = constructDataPath(expt.dataDir, grid, expt);
 mkdir_nowarning(dataDir);
 
 % target file

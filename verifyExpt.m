@@ -39,7 +39,7 @@ end
 % recording
 fprintf_subtitle('recording');
 fprintf('  - data dir: %s\n', ...
-	constructDataPath(grid.dataDir, grid, expt))
+	constructDataPath(expt.dataDir, grid, expt))
 
 r = demandinput('\nis this ok? [y/n]: ', {'y', 'n'},'y',true);
 if r=='n'

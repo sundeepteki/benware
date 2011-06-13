@@ -3,7 +3,7 @@ function saveSweepInfo(sweeps, grid, expt)
 
 fprintf(['Saving sweep metadata...']);
 
-dataDir = constructDataPath(grid.dataDir, grid, expt);
+dataDir = constructDataPath(expt.dataDir, grid, expt);
 fullPath = [dataDir 'sweepInfo.mat'];
 
 if exist(fullPath, 'file')

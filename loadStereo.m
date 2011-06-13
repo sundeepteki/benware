@@ -17,7 +17,7 @@ stim = loadStim(stimInfo.stimFileL, stimInfo.stimFileR, ...
 
 % hack to present 1 second stimulus instead of 30
 if truncate > 0
-    fprintf('Truncating stimulus\n');
+    fprintf(' ==Truncating stimulus== ');
     stim = stim(:, 1:round(truncate*fs_out)); 
 end
 

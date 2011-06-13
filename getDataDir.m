@@ -1,7 +1,7 @@
 function fullPath = getDataDir(grid,expt)
 % deprecated, I think. Use constructDataPath instead
 
-fullPath = grid.dataDir;
+fullPath = expt.dataDir;
 
 fullPath = regexprep(fullPath,'%E',num2str(expt.exptNum));
 fullPath = regexprep(fullPath,'%P',['P' num2str(expt.penetrationNum,'%02d')]);

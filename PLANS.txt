@@ -1,0 +1,6 @@
+== PLANS
+
+* Save expt structure somewhere
+* UI for modifying expt structure
+* Grids for sparseness/highlights
+* UI for seeing incoming data

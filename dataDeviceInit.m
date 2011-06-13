@@ -24,5 +24,5 @@ if isempty(dataDevice)
         error('Data RCX Circuit failed to run.');
     end;
 else
-    fprintf('RX6 alrady initialised, doing nothing\n');
+    fprintf('RZ5 alrady initialised, doing nothing\n');
 end

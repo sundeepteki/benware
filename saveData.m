@@ -4,7 +4,7 @@ function saveData(data, grid, expt, sweepNum)
 fprintf(['Saving data']);
 
 % ensure target directory exists
-dirTemplate = [grid.dataDir grid.dataFilename];
+dirTemplate = [expt.dataDir expt.dataFilename];
 fullPath = constructDataPath(dirTemplate, grid, expt, sweepNum);
 dirName = split_path(fullPath);
 mkdir_nowarning(dirName);

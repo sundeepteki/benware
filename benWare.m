@@ -9,8 +9,15 @@ global channelOrder
 fs_in = 24414.0625;
 
 global truncate checkdata;
-truncate = 20; % for testing only. should normally be 0
-checkdata = false; % for testing only. should normally be FALSE
+truncate = 1; % for testing only. should normally be 0
+checkdata = true; % for testing only. should normally be FALSE
+
+if truncate~=0
+    fprintf('Truncating stimuli! This is for testing only!\n');
+end
+if checkdata
+    fprintf('Downloading all data twice! this is for testing only!\n');
+end
 
 % path
 if ispc
@@ -21,20 +28,13 @@ else
   addpath([pwd '/grids']);
 end
 
-% filename tokens:
-% %E = expt number, e.g. '29'
-% %1, %2... %9 = stimulus parameter value
-% %N = grid name
-% %L = left or right (for stimulus file)
-% %P = penetration number
-% %S = sweep number
-% %C = channel number
-
 
 %% stim/data setup: USER
 % =======================
 
 % experiment details
+clear expt grid;
+
 expt.exptNum = 29;
 %expt.stimDeviceName = 'RX6';
 expt.penetrationNum = 98;
@@ -44,6 +44,13 @@ expt.headstage.lhs = 9999;
 expt.headstage.rhs = 9999;
 channelMapping = [9 8 10 7 13 4 12 5 15 2 16 1 14 3 11 6];
 expt.channelMapping = [channelMapping channelMapping+16];
+if ispc
+    expt.dataDir = 'F:\expt-%E\%P-%N\';
+    expt.dataFilename = 'raw.f32\%P.%N.sweep.%S.channel.%C.f32';
+else
+    expt.dataDir = './expt-%E/%P-%N/';
+    expt.dataFilename = 'raw.f32/%P.%N.sweep.%S.channel.%C.f32';
+end
 
 % load grid
 %grid = grid_test();
@@ -59,10 +66,6 @@ verifyStimFilesExist(grid, expt);
 % add extra fields
 grid.saveName = '';
 grid.nStimConditions = size(grid.stimGrid, 1);
-grid.dataDir = 'F:\expt-%E\%P-%N\';
-grid.dataFilename = 'raw.f32\%P.%N.sweep.%S.channel.%C.f32';
-%grid.dataDir = '/data/expt-%E/%P-%N/';
-%grid.dataFilename = 'raw.f32/%P.%N.sweep.%S.channel.%C.f32';
 
 % randomise grid
 repeatedGrid = repmat(grid.stimGrid, [grid.repeatsPerCondition, 1]);
@@ -88,7 +91,7 @@ saveGridMetadata(grid, expt);
 %% display
 % =========
 
-saveDirStr = constructDataPath(grid.dataDir(1:end-1), grid, expt);
+saveDirStr = constructDataPath(expt.dataDir(1:end-1), grid, expt);
 saveDirStr = regexprep(saveDirStr, '\', '\\\');
 fprintf(['Saving to ' saveDirStr '\n']);
 
@@ -100,29 +103,34 @@ fprintf(['Saving to ' saveDirStr '\n']);
 tic;
 fs_out = grid.sampleRate;
 zBusInit;
-pause(2);
+%pause(2);
 stimDeviceInit('RX6', fs_out);
-pause(2);
+%pause(2);
 dataDeviceInit;
+fprintf('Post-initialisation pause...');
 pause(2);
+fprintf('done.\n');
 
 clear sweeps;
 
 % upload first stimulus
 tic;
 [stim sweeps(1).stimInfo] = stimGenerationFunction(1, grid, expt);
+fprintf('Uploading first stimulus...');
 uploadWholeStim(stim);
+fprintf(['done after ' num2str(toc) ' sec.\n']);
 
 % run sweeps
 for sweepNum = 1:grid.nSweepsDesired
   tic;
+  
+  stim = nextStim;
   displayStimInfo(sweeps, grid, sweepNum);
 
-  % retrieve the next stimulus
+  % retrieve the stimulus for the NEXT sweep
   isLastSweep = (sweepNum == grid.nSweepsDesired);
-  if ~isLastSweep
-    [nextStim, sweeps(sweepNum+1).stimInfo] = ...
-    	stimGenerationFunction(sweepNum+1, grid, expt);
+  if ~isLastSweep    
+    [nextStim, sweeps(sweepNum+1).stimInfo] = stimGenerationFunction(sweepNum+1, grid, expt);
   else
     nextStim = [];
   end
@@ -130,8 +138,7 @@ for sweepNum = 1:grid.nSweepsDesired
   % sweep duration in seconds
   sweepLen = size(stim, 2)/fs_out + grid.postStimSilence;
   % run the sweep
-  [data, sweeps(sweepNum).timeStamp] = ...
-      runSweep(sweepLen, nextStim, expt.channelMapping);    
+  [data, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim, expt.channelMapping);    
   % save this sweep
   saveData(data, grid, expt, sweepNum);
   saveSweepInfo(sweeps, grid, expt);

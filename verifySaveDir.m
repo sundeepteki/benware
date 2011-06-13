@@ -3,7 +3,7 @@ function altName = verifySaveDir(grid, expt)
 % exists. If it does, allow user to decide whether to delete it or
 % to use an alternative directory (named .2 etc).
 
-dataDir = constructDataPath(grid.dataDir(1:end-1), grid, expt);
+dataDir = constructDataPath(expt.dataDir(1:end-1), grid, expt);
 
 % use the default dir if it doesn't yet exist
 if ~exist(dataDir, 'dir')

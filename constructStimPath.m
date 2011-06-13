@@ -1,6 +1,15 @@
 function path = constructStimPath(grid, expt, sweepNum, side)
 % path = constructStimPath(grid, expt, sweepNum)
 % path = constructStimPath(grid, expt, sweepNum, side)
+%
+% filename tokens:
+% %E = expt number, e.g. '29'
+% %1, %2... %9 = stimulus parameter value
+% %N = grid name
+% %L = left or right (for stimulus file)
+% %P = penetration number
+% %S = sweep number
+% %C = channel number
 
 stimParameters = grid.randomisedGrid(sweepNum, :);
 
