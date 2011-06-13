@@ -18,8 +18,10 @@ end
 sz = size(stim,2);
 rnd = floor(100+rand*(sz-300));
 checkData = [downloadStim(0,100) downloadStim(rnd,100) downloadStim(sz-100,100)];
-d = max(abs(checkData - [stim(:,1:100) stim(:,rnd+1:rnd+100) stim(:,end-99:end)]));
+d = max(max(abs(checkData - [stim(:,1:100) stim(:,rnd+1:rnd+100) stim(:,end-99:end)])));
+
 if d>10e-7
+  keyboard;
   error('Stimulus mismatch!');
 end
 

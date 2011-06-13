@@ -11,11 +11,11 @@ function grid = grid_ctuning_drc()
   
   % stimulus grid structure
   grid.stimGridTitles = {'Fullwidth', 'Token', 'Level'};
-  grid.stimGrid = [30, 1, 70];
+  grid.stimGrid = [30, 1, 70; 30, 2 80; 30, 3, 60];
   
   % sweep parameters
   grid.postStimSilence = 0;
-  grid.repeatsPerCondition = 10;
+  grid.repeatsPerCondition = 5;
   
   % set this using absolute calibration
   grid.stimLevelOffsetDB = -50;

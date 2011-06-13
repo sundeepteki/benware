@@ -9,7 +9,7 @@ global channelOrder
 fs_in = 24414.0625;
 
 global truncate checkdata;
-truncate = 1; % for testing only. should normally be 0
+truncate = 0; % for testing only. should normally be 0
 checkdata = true; % for testing only. should normally be FALSE
 
 if truncate~=0
@@ -54,7 +54,8 @@ end
 
 % load grid
 %grid = grid_test();
-grid = grid_ctuning_drc;
+%grid = grid_ctuning_drc;
+grid = grid_sparseness_highlights;
 
 %% stim/data setup: AUTO
 % =======================
@@ -115,9 +116,9 @@ clear sweeps;
 
 % upload first stimulus
 tic;
-[stim sweeps(1).stimInfo] = stimGenerationFunction(1, grid, expt);
+[nextStim sweeps(1).stimInfo] = stimGenerationFunction(1, grid, expt);
 fprintf('Uploading first stimulus...');
-uploadWholeStim(stim);
+uploadWholeStim(nextStim);
 fprintf(['done after ' num2str(toc) ' sec.\n']);
 
 % run sweeps
