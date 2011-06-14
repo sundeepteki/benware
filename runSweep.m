@@ -29,10 +29,6 @@ end
 %keyboard;
 % make matlab buffer for data
 nSamplesExpected = ceil(sweepLen*fs_in)+1; % actually, we may get one fewer than this
-%data = cell(1,32);
-%for chan = 1:32
-%  data{chan} = zeros(1,nSamplesExpected);
-%end
 data = zeros(32,nSamplesExpected);
 index = zeros(1,32);
 
@@ -79,19 +75,16 @@ while any(index~=index(1)) || (nSamplesExpected-index(1)>2)
   end
   for chan = 1:32
     newdata = downloadData(chan,index(chan));
-    if isempty(fakedata)
-      %data{chan}(index(chan)+1:index(chan)+length(newdata)) = newdata;
+    if isempty(fakedata) % I.E. NOT using fakedata
       data(chan,index(chan)+1:index(chan)+length(newdata)) = newdata;
     end
     index(chan) = index(chan)+length(newdata)-1;
-    %plot(channelAxes(chan),(1:100:length(data{chan}))/fs_in,data{chan}(1:100:end));
   end  
 
   if detectSpikes
     [spikeTimes,spikeIndex] = appendSpikes(spikeTimes,data,index,spikeIndex,spikeFilter,spikeThreshold);
   end
-  %index
-  %ceil(sweepLen*fs_in)
+  
   plotData = feval(plotFunctions.plot,plotData,data,spikeTimes);
   drawnow;
 end
@@ -125,12 +118,6 @@ if (nSamples>nSamplesExpected) || (nSamples-nSamplesExpected)>1
   fprintf(['Got ' num2str(nSamples) ' samples, expecting ' num2str(nSamplesExpected)]);
   error('Wrong amount of data');
 end
-%elseif (nSamplesExpected-nSamples)==1
-  %for chan = 1:length(data)     
-  %  data{chan} = data{chan}(1:end-1);
-  %end
-%  data = data(:,1:end-1);
-%end
 
 resetStimDevice;
 
