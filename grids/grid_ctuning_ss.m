@@ -2,7 +2,7 @@ function grid = grid_ctuning_ss()
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStereo';
-  grid.stimDir = 'D:\auditory-objects\sounds.calib.expt%E\%N\P99-ctuning-ss\';
+  grid.stimDir = 'D:\auditory-objects\sounds.calib.expt%E\%N\%P-%N\';
   grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   % essentials
