@@ -5,9 +5,11 @@
 * Save expt structure somewhere
 * UI for modifying expt structure
 * UI for seeing incoming data
-* UI for choosing grid
+* Why is having data as a {} faster than a []? This suggests that something
+  can be fixed, and then it will be faster than both.
 
 
 == DONE
 
 * Grids for sparseness/highlights
+* UI for choosing grid

@@ -124,7 +124,7 @@ zBusInit;
 %pause(2);
 stimDeviceInit('RX6', fs_out);
 %pause(2);
-dataDeviceInit;
+dataDeviceInit(expt.channelMapping);
 fprintf('Post-initialisation pause...');
 pause(2);
 fprintf('done.\n');
@@ -157,7 +157,7 @@ for sweepNum = 1:grid.nSweepsDesired
   sweepLen = size(stim, 2)/fs_out + grid.postStimSilence;
   
   % run the sweep
-  [data, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim, expt.channelMapping,expt.plotFunctions,expt.detectSpikes,spikeFilter);    
+  [data, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim,expt.plotFunctions,expt.detectSpikes,spikeFilter);    
 
   % save this sweep
   saveData(data, grid, expt, sweepNum);

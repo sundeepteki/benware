@@ -1,4 +1,4 @@
-function [data,spikeTimes,timeStamp] = runSweep(sweepLen,stim,nextStim,channelMapping,plotFunctions,detectSpikes,spikeFilter)
+function [data,spikeTimes,timeStamp] = runSweep(sweepLen,stim,nextStim,plotFunctions,detectSpikes,spikeFilter)
 %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
 %% Upload the next stimulus at the same time, then reset the stimDevice
 %% and inform the stimDevice of the stimulus length
@@ -28,11 +28,10 @@ end
 
 %keyboard;
 % make matlab buffer for data
-%data = {};
-%for chan = 1:32
-%  data{chan} = zeros(1,ceil(sweepLen*fs_in));
-%end
-data = zeros(32,ceil(sweepLen*fs_in)); % use Nan?? might be slower
+data = {};
+for chan = 1:32
+  data{chan} = zeros(1,ceil(sweepLen*fs_in));
+end
 index = zeros(1,32);
 
 % cell array for storing spike times
@@ -59,8 +58,10 @@ fprintf('Sweep triggered.\n');
 % * plot incoming data
 
 if ~isempty(fakedata)
-  data = rand(32,ceil(sweepLen*fs_in))/5000;
-  data(1,1:size(fakedata.signal,1)) = fakedata.signal(:,floor(rand*size(fakedata.signal,2)+1));
+  for chan = 1:32
+    data{chan} = rand(1,ceil(sweepLen*fs_in))/5000;
+  end
+  data{1}(1:size(fakedata.signal,1)) = fakedata.signal(:,floor(rand*size(fakedata.signal,2)+1));
 end
 
 while any(index~=index(1)) || any(abs(index-round(sweepLen*fs_in))>1)
@@ -72,19 +73,22 @@ while any(index~=index(1)) || any(abs(index-round(sweepLen*fs_in))>1)
       uploadStimulus(nextStim(:,stimIndex+1:maxStimIndex),stimIndex);
       stimIndex = maxStimIndex;
     end
+    %stimIndex
   end
   for chan = 1:32
-    newdata = downloadData(channelMapping(chan),index(chan));
+    newdata = downloadData(chan,index(chan));
     if isempty(fakedata)
-      data(1,index(chan)+1:index(chan)+length(newdata)) = newdata;
+      data{chan}(index(chan)+1:index(chan)+length(newdata)) = newdata;
     end
     index(chan) = index(chan)+length(newdata)-1;
+    %plot(channelAxes(chan),(1:100:length(data{chan}))/fs_in,data{chan}(1:100:end));
   end  
 
   if detectSpikes
     [spikeTimes,spikeIndex] = appendSpikes(spikeTimes,data,index,spikeIndex,spikeFilter,spikeThreshold);
   end
-  
+  %index
+  %ceil(sweepLen*fs_in)
   plotData = feval(plotFunctions.plot,plotData,data,spikeTimes);
   drawnow;
 end
@@ -105,11 +109,14 @@ if detectSpikes
 end
 
 % check all channels have the same amount of data
-if any(index-index(1)~=0)
-  error('Different amounts of data from different channels');
+dataLen = length(data{1});
+for ii = 2:32
+  if length(data{ii})~=dataLen
+    error('Different amounts of data from different channels');
+  end
 end
 
-fprintf(['Got ' index(1) ' samples from 32 channels (' num2str(index(1)/fs_in) ' sec).\n']);
+fprintf(['Got ' num2str(dataLen) ' samples from 32 channels (' num2str(dataLen/fs_in) ' sec).\n']);
 
 resetStimDevice;
 
@@ -122,7 +129,6 @@ if checkdata
     error('Stimulus mismatch!');
   end
   fprintf([num2str(size(d,2)) ' samples verified.\n']);
-
   fprintf('Checking data...');
   testdata = downloadAllData;
   for chan = 1:32

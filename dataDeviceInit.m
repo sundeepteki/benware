@@ -1,4 +1,4 @@
-function dataDeviceInit
+function dataDeviceInit(channelMapping)
 % This function should allow other device choices than RZ5,
 % (though this would require different RCX files too
 % It should also check whether the dataDevice is actually
@@ -23,6 +23,10 @@ if isempty(dataDevice)
     if invoke(dataDevice,'Run') == 0
         error('Data RCX Circuit failed to run.');
     end;
+    
+    for chan = 1:length(channelMapping)
+      dataDevice.SetTagVal(['ec' num2str(chan) '_Chan'],channelMapping(chan));
+    end
 else
     fprintf('RZ5 alrady initialised, doing nothing\n');
 end
