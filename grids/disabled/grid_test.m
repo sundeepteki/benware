@@ -1,8 +1,8 @@
-function grid = grid_ctuning_drc()
+function grid = grid_test()
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStereo';
-  grid.stimDir = 'D:\auditory-objects\sounds.calib.expt%E\%N\';
+  grid.stimDir = '/data/contrast/tokens/frozen.naive.calib.expt%E/';
   grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   % essentials
@@ -11,11 +11,11 @@ function grid = grid_ctuning_drc()
   
   % stimulus grid structure
   grid.stimGridTitles = {'Fullwidth', 'Token', 'Level'};
-  grid.stimGrid = [30, 1, 110];
+  grid.stimGrid = [30, 1, 70];
   
   % sweep parameters
   grid.postStimSilence = 0;
-  grid.repeatsPerCondition = 200;
+  grid.repeatsPerCondition = 100;
   
   % set this using absolute calibration
   grid.stimLevelOffsetDB = -74;

@@ -1,12 +1,12 @@
-function grid = grid_CRF03()
+function grid = grid_CRF04()
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStereo';
   grid.stimDir = 'D:\auditory-objects\sounds.calib.expt%E\%N\';
-  grid.sampleRate = 24414.0625*4;  % ~100kHz
+  grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   % essentials
-  grid.name = 'CRF03';
+  grid.name = 'CRF04';
   grid.stimFilename = 'mode.%1.BF.%2.token.%3.%L.f32';
   
   % stimulus grid structure
@@ -19,21 +19,13 @@ function grid = grid_CRF03()
     2, 0, 2, 80; ...
     2, 0, 3, 80; ...
     2, 0, 4, 80; ...
-    2, 0, 5, 80; ...
-    2, 0, 6, 80; ...
-    2, 0, 7, 80; ...
-    2, 0, 8, 80; ...
-    2, 0, 9, 80; ...
-    2, 0, 10, 80; ...
     3, 13, 0, 80; ...
-    3, 13, 1, 80; ...
-    3, 13, 2, 80; ...
-    3, 13, 3, 80];
+    3, 13, 1, 80];
 
   % sweep parameters
   grid.postStimSilence = 0;
   grid.repeatsPerCondition = 10;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -80;
+  grid.stimLevelOffsetDB = -92;
   
