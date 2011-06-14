@@ -1,7 +1,5 @@
-function path = constructDataPath(pathTemplate, grid, expt, sweepNum, ...
-				  channelNum)
-% path = constructDataPath(pathTemplate, grid, expt, sweepNum,
-%                          channelNum)
+function path = constructDataPath(pathTemplate, grid, expt, sweepNum, channelNum)
+% path = constructDataPath(pathTemplate, grid, expt, sweepNum, channelNum)
 %
 % filename tokens:
 % %E = expt number, e.g. '29'

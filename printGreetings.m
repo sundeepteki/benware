@@ -1,0 +1,1 @@
+fprintf_title('Welcome to the magical world of BenWare');

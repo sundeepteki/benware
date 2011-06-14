@@ -1,8 +1,10 @@
 %% initial setup
 % =================
 
+printGreetings()
+
 % core variables
-global zBus stimDevice dataDevice;
+global zBus stimDevice dataDevice; %#ok<*NUSED>
 global fs_in fs_out
 global channelOrder
 
@@ -10,9 +12,10 @@ fs_in = 24414.0625;
 
 global truncate fakedata checkdata;
 truncate = 0; % for testing only. should normally be 0
-fakedata = [];%load('fakedata.mat'); % for testing only. should normally be []
+fakedata = []; %load('fakedata.mat'); % for testing only. should normally be []
 checkdata = false; % for testing only. should normally be FALSE
 
+% testing notices
 if truncate~=0
     fprintf('Truncating stimuli! This is for testing only!\n');
 end
@@ -71,15 +74,16 @@ expt.spikeThreshold = -5;
 %expt.plotFunctions.plot = 'rasterPlot';
 
 % load grid from grids/ directory
-grid = chooseGrid;
+grid = chooseGrid();
 
 %% stim/data setup: AUTO
 % =======================
 
-% check that the grid is valid, and that stim files are there
+% check that the grid is valid
 verifyGridFields(grid);
 
-if isequal(grid.stimGenerationFunctionName,'loadStereo')
+% check that stim files are there, if needed
+if isequal(grid.stimGenerationFunctionName, 'loadStereo')
   verifyStimFilesExist(grid, expt);
 end
 
@@ -108,42 +112,41 @@ stimGenerationFunction = str2func(grid.stimGenerationFunctionName);
 saveGridMetadata(grid, expt);
 
 
-%% display
-% =========
-
-saveDirStr = constructDataPath(expt.dataDir(1:end-1), grid, expt);
-saveDirStr = regexprep(saveDirStr, '\', '\\\');
-fprintf(['Saving to ' saveDirStr '\n']);
-
-%% make filter for spike detection
-spikeFilter = makeSpikeFilter(fs_in);
-
 %% Begin recording
 % =================
 
-% prepare TDT
 tic;
+
+% make filter for spike detection
+spikeFilter = makeSpikeFilter(fs_in);
+
+% prepare TDT
 figure(99);
+set_fig_size(100, 100, 99);
+put_fig_in_bottom_right;
 fs_out = grid.sampleRate;
-zBusInit;
+zBusInit();
 %pause(2);
 stimDeviceInit('RX6', fs_out);
 %pause(2);
 dataDeviceInit(expt.channelMapping);
-fprintf('Post-initialisation pause...');
+fprintf('  * Post-initialisation pause...');
 pause(2);
 fprintf('done.\n');
 
 clear sweeps stim nextStim sweepNum data sweepLen;
+tic;
 
 % upload first stimulus
-tic;
 [nextStim sweeps(1).stimInfo] = stimGenerationFunction(1, grid, expt);
-fprintf('Uploading first stimulus...');
+fprintf('  * Uploading first stimulus...');
 uploadWholeStim(nextStim);
 fprintf(['done after ' num2str(toc) ' sec.\n']);
 
-% run sweeps
+
+%% run sweeps
+% =============
+
 for sweepNum = 1:grid.nSweepsDesired
   tic;
   
@@ -159,13 +162,13 @@ for sweepNum = 1:grid.nSweepsDesired
   end
 
   % store stimulus duration
-  sweeps(sweepNum).stimLen.samples = size(stim,2);
+  sweeps(sweepNum).stimLen.samples = size(stim, 2);
   sweeps(sweepNum).stimLen.ms = sweeps(sweepNum).stimLen.samples/fs_out*1000;
   
   sweepLen = size(stim, 2)/fs_out + grid.postStimSilence;
   
   % run the sweep
-  [data, nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim,expt.plotFunctions,expt.detectSpikes,spikeFilter,expt.spikeThreshold);    
+  [data, nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim, expt.plotFunctions, expt.detectSpikes, spikeFilter, expt.spikeThreshold);     %#ok<*SAGROW>
   
   % store sweep duration
   sweeps(sweepNum).sweepLen.samples = nSamples;

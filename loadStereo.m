@@ -3,7 +3,7 @@ function [stim, stimInfo] = loadStereo(sweepNum, grid, expt)
 
 global fs_out truncate
 
-fprintf(['Loading stimulus ' num2str(sweepNum) '...']);
+fprintf(['  * Loading stimulus ' num2str(sweepNum) '...']);
 
 % generate stimInfo structure
 stimInfo.sweepNum = sweepNum;
