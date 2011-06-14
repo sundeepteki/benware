@@ -4,20 +4,14 @@ global fs_in;
 
 maxlen = min(dataIndex);
 
-if maxlen-index<(fs_in)
-  fprintf('Skipping spike finding\n');
+if maxlen-index<(fs_in*2)
+  fprintf('Skipping spike detection\n');
   return;
 end
 
-nChan = length(data);
-%[maxlen index maxlen-index]
-datacube = zeros(maxlen-index,nChan);
-for chan = 1:nChan
-  datacube(:,chan) = data{chan}(index+1:maxlen);
-end
+nChan = size(data,1);
 
-newSpikeTimes = findSpikesFast(datacube,spikeFilter,fs_in,threshold);
-%newSpikeTimes
+newSpikeTimes = findSpikesFast(data(:,index+1:maxlen)',spikeFilter,fs_in,threshold);
 
 for chan = 1:nChan
   spikeTimes{chan} = [spikeTimes{chan}; newSpikeTimes{chan}];

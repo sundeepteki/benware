@@ -47,6 +47,15 @@ stimIndex = 0;
 % prepare data display
 plotData = feval(plotFunctions.init,[]);
 
+% fake data if needed
+if ~isempty(fakedata)
+  clear data;
+  r = rand(1,ceil(sweepLen*fs_in))/5000;
+  data = repmat(r,32,1);
+  data(1,1:size(fakedata.signal,1)) = fakedata.signal(:,floor(rand*size(fakedata.signal,2)+1));
+end
+
+
 % trigger stimulus presentation and data collection
 timeStamp = clock;
 triggerZBus;
@@ -58,12 +67,10 @@ fprintf('Sweep triggered.\n');
 % * download data as fast as possible while trial is running
 % * plot incoming data
 
-if ~isempty(fakedata)
-  data = rand(32,ceil(sweepLen*fs_in))/5000;
-  data(1,1:size(fakedata.signal,1)) = fakedata.signal(:,floor(rand*size(fakedata.signal,2)+1));
-end
+size(data)
 
 while any(index~=index(1)) || any(abs(index-round(sweepLen*fs_in))>1)
+  
   maxStimIndex = getStimIndex;
   if ~isempty(nextStim)
     if stimIndex==(size(nextStim,2)-1)
@@ -73,10 +80,11 @@ while any(index~=index(1)) || any(abs(index-round(sweepLen*fs_in))>1)
       stimIndex = maxStimIndex;
     end
   end
+  
   for chan = 1:32
     newdata = downloadData(channelMapping(chan),index(chan));
-    if isempty(fakedata)
-      data(1,index(chan)+1:index(chan)+length(newdata)) = newdata;
+    if isempty(fakedata) % i.e. NOT using fakedata
+      data(chan,index(chan)+1:index(chan)+length(newdata)) = newdata;
     end
     index(chan) = index(chan)+length(newdata)-1;
   end  
@@ -89,6 +97,7 @@ while any(index~=index(1)) || any(abs(index-round(sweepLen*fs_in))>1)
   drawnow;
 end
 
+size(data)
 fprintf(['Sweep done after ' num2str(toc) ' sec.\n']);
 plotData = feval(plotFunctions.plot,plotData,data,spikeTimes);
 
@@ -109,7 +118,7 @@ if any(index-index(1)~=0)
   error('Different amounts of data from different channels');
 end
 
-fprintf(['Got ' index(1) ' samples from 32 channels (' num2str(index(1)/fs_in) ' sec).\n']);
+fprintf(['Got ' num2str(index(1)) ' samples from 32 channels (' num2str(index(1)/fs_in) ' sec).\n']);
 
 resetStimDevice;
 
@@ -123,14 +132,18 @@ if checkdata
   end
   fprintf([num2str(size(d,2)) ' samples verified.\n']);
 
+  if fakedata
+    fprintf('Can''t check data because fakedata is being used.\n');
+  else
   fprintf('Checking data...');
-  testdata = downloadAllData;
+  testDataCell = downloadAllData;
   for chan = 1:32
-    d = max(abs(data{chan}-testdata{chan}));
+    d = max(max(abs(data(chan,:)-testDataCell{chan})));
     if d>0
       error('Data mismatch!');
     end
   end
-  fprintf([num2str(length(data{chan})) ' samples verified.\n']);
+  fprintf([num2str(size(data,2)) ' samples verified.\n']);
+  end
   fprintf(['done after ' num2str(toc) ' sec.\n']);
 end
