@@ -8,24 +8,34 @@ global channelOrder
 
 fs_in = 24414.0625;
 
-global truncate checkdata;
+global truncate fakedata checkdata;
 truncate = 0; % for testing only. should normally be 0
-checkdata = true; % for testing only. should normally be FALSE
+fakedata = [];%load('fakedata.mat'); % for testing only. should normally be []
+checkdata = false; % for testing only. should normally be FALSE
 
 if truncate~=0
     fprintf('Truncating stimuli! This is for testing only!\n');
 end
+if ~isempty(fakedata)
+    fprintf('RECORDING FAKE DATA! this is for testing only!\n');
+end
 if checkdata
     fprintf('Downloading all data twice! this is for testing only!\n');
+end
+if truncate~=0 || ~isempty(fakedata) || checkdata
+  fprintf('Press a key to continue.\n');
+  pause;
 end
 
 % path
 if ispc
   addpath(genpath('D:\auditory-objects\NeilLib'));
+  addpath([pwd '\plotFunctions\']);
   addpath([pwd '\grids']);
 else
   addpath([pwd '/../NeilLib/']);
-  addpath([pwd '/grids']);
+  addpath([pwd '/plotFunctions/']);
+  addpath([pwd '/grids/']);
 end
 
 
@@ -51,11 +61,15 @@ else
     expt.dataDir = './expt-%E/%P-%N/';
     expt.dataFilename = 'raw.f32/%P.%N.sweep.%S.channel.%C.f32';
 end
+expt.plotFunctions.init = 'scopeTraceInit';
+expt.plotFunctions.plot = 'scopeTracePlot';
+expt.detectSpikes = false;
+%expt.plotFunctions.preGrid = 'rasterPreGrid';
+%expt.plotFunctions.preSweep = 'rasterPreSweep';
+%expt.plotFunctions.plot = 'rasterPlot';
 
-% load grid
-%grid = grid_test();
-%grid = grid_ctuning_drc;
-grid = grid_sparseness_highlights;
+% load grid from grids/ directory
+grid = chooseGrid;
 
 %% stim/data setup: AUTO
 % =======================
@@ -96,12 +110,15 @@ saveDirStr = constructDataPath(expt.dataDir(1:end-1), grid, expt);
 saveDirStr = regexprep(saveDirStr, '\', '\\\');
 fprintf(['Saving to ' saveDirStr '\n']);
 
+%% make filter for spike detection
+spikeFilter = makeSpikeFilter(fs_in);
 
 %% Begin recording
 % =================
 
 % prepare TDT
 tic;
+figure(99);
 fs_out = grid.sampleRate;
 zBusInit;
 %pause(2);
@@ -112,7 +129,7 @@ fprintf('Post-initialisation pause...');
 pause(2);
 fprintf('done.\n');
 
-clear sweeps;
+clear sweeps stim nextStim sweepNum data sweepLen;
 
 % upload first stimulus
 tic;
@@ -138,8 +155,10 @@ for sweepNum = 1:grid.nSweepsDesired
 
   % sweep duration in seconds
   sweepLen = size(stim, 2)/fs_out + grid.postStimSilence;
+  
   % run the sweep
-  [data, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim, expt.channelMapping);    
+  [data, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim, expt.channelMapping,expt.plotFunctions,expt.detectSpikes,spikeFilter);    
+
   % save this sweep
   saveData(data, grid, expt, sweepNum);
   saveSweepInfo(sweeps, grid, expt);

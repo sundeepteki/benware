@@ -1,13 +1,13 @@
 function grid = grid_sparseness_calib
 
+% essentials
+grid.name = 'sparseness.highlights';
+grid.stimFilename = 'sparseness.set.3.stimnum.%1.%L.f32';
+
 % controlling the sound presentation
 grid.stimGenerationFunctionName = 'loadStereo';
 grid.stimDir = 'D:\auditory-objects\sounds.calib.expt%E\sparseness\';
 grid.sampleRate = 24414.0625*2;  % ~50kHz
-
-% essentials
-grid.name = 'sparseness.highlights';
-grid.stimFilename = 'sparseness.set.3.stimnum.%1.%L.f32';
 
 % stimulus grid structure
 grid.stimGridTitles = {'StimID', 'Level'};

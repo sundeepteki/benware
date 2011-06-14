@@ -1,6 +1,13 @@
 == PLANS
 
+* stereoPlay16bit
+* More careful checks of device status in stim/dataDeviceIinit and ZBusInit
 * Save expt structure somewhere
 * UI for modifying expt structure
-* Grids for sparseness/highlights
 * UI for seeing incoming data
+* UI for choosing grid
+
+
+== DONE
+
+* Grids for sparseness/highlights

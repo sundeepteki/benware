@@ -1,13 +1,14 @@
 function grid = grid_quning()
 
+  % essentials
+  grid.name = 'quning';
+  grid.stimFilename = 'quning.cf.%1.%L.f32';
+
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStereo';
   grid.stimDir = 'D:\auditory-objects\sounds.calib.expt%E\%N\';
   grid.sampleRate = 24414.0625*2;  % ~50kHz
 
-  % essentials
-  grid.name = 'CRF03';
-  grid.stimFilename = 'quning.cf.%1.%L.f32';
   
   % stimulus grid structure
   grid.stimGridTitles = {'Frequency', 'Level'};
@@ -26,6 +27,6 @@ function grid = grid_quning()
   grid.repeatsPerCondition = 10;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = 30;
+  grid.stimLevelOffsetDB = -96;
   
   

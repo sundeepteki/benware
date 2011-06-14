@@ -35,5 +35,5 @@ function grid = grid_CRF03()
   grid.repeatsPerCondition = 10;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = 30;
+  grid.stimLevelOffsetDB = -80;
   
