@@ -9,14 +9,15 @@ if maxlen-index<(fs_in)
   return;
 end
 
-nChan = length(data);
-%[maxlen index maxlen-index]
-datacube = zeros(maxlen-index,nChan);
-for chan = 1:nChan
-  datacube(:,chan) = data{chan}(index+1:maxlen);
-end
+% nChan = length(data);
+% %[maxlen index maxlen-index]
+% datacube = zeros(maxlen-index,nChan);
+% for chan = 1:nChan
+%   datacube(:,chan) = data{chan}(index+1:maxlen);
+% end
 
 %keyboard;
+datacube = data(:,index+1:maxlen)';
 validChans = find(sum(datacube)>0);
 newSpikeTimes = findSpikesFast(datacube(:,validChans),spikeFilter,fs_in,threshold);
 %newSpikeTimes

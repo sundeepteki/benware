@@ -1,6 +1,5 @@
 function plotData = scopeTraceInit(plotData)
 
-
 % positions
 n.rows = 8;
 n.cols = 4;
@@ -43,6 +42,7 @@ pos = pos';
   
 % create figure
 figure(1);
+clf;
 for ii = 1:32
   %plotData.subplotHandles(ii) = subplot(8,4,ii);
     plotData.subplotHandles(ii) = axes('position', pos{ii});

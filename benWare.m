@@ -157,10 +157,10 @@ for sweepNum = 1:grid.nSweepsDesired
   sweepLen = size(stim, 2)/fs_out + grid.postStimSilence;
   
   % run the sweep
-  [data, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim,expt.plotFunctions,expt.detectSpikes,spikeFilter);    
+  [data, nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim,expt.plotFunctions,expt.detectSpikes,spikeFilter);    
 
   % save this sweep
-  saveData(data, grid, expt, sweepNum);
+  saveData(data, grid, expt, sweepNum, nSamples);
   saveSweepInfo(sweeps, grid, expt);
 
   fprintf(['Finished sweep after ' num2str(toc) ' sec.\n\n']);

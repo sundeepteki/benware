@@ -1,5 +1,5 @@
-function saveData(data, grid, expt, sweepNum)
-  % saveData(data, grid, expt, sweepNum)
+function saveData(data, grid, expt, sweepNum, nSamples)
+% saveData(data, grid, expt, sweepNum)
 
 fprintf(['Saving data']);
 
@@ -10,11 +10,13 @@ dirName = split_path(fullPath);
 mkdir_nowarning(dirName);
 
 % save each channel in a separate f32 file
-for chanNum = 1:L(data)
+%for chanNum = 1:L(data)
+for chanNum = 1:size(data,1)
     fprintf('.');
     filename = constructDataPath(dirTemplate, grid, expt, sweepNum, chanNum);
     h = fopen(filename, 'w');
-    fwrite(h, data{chanNum}, 'float32');
+    %fwrite(h, data{chanNum}, 'float32');
+    fwrite(h, data(chanNum,1:nSamples), 'float32');
     fclose(h);
 end
 

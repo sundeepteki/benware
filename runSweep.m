@@ -1,4 +1,4 @@
-function [data,spikeTimes,timeStamp] = runSweep(sweepLen,stim,nextStim,plotFunctions,detectSpikes,spikeFilter)
+function [data,nSamples,spikeTimes,timeStamp] = runSweep(sweepLen,stim,nextStim,plotFunctions,detectSpikes,spikeFilter)
 %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
 %% Upload the next stimulus at the same time, then reset the stimDevice
 %% and inform the stimDevice of the stimulus length
@@ -28,10 +28,12 @@ end
 
 %keyboard;
 % make matlab buffer for data
-data = {};
-for chan = 1:32
-  data{chan} = zeros(1,ceil(sweepLen*fs_in));
-end
+nSamplesExpected = ceil(sweepLen*fs_in)+1; % actually, we may get one fewer than this
+%data = cell(1,32);
+%for chan = 1:32
+%  data{chan} = zeros(1,nSamplesExpected);
+%end
+data = zeros(32,nSamplesExpected);
 index = zeros(1,32);
 
 % cell array for storing spike times
@@ -59,12 +61,12 @@ fprintf('Sweep triggered.\n');
 
 if ~isempty(fakedata)
   for chan = 1:32
-    data{chan} = rand(1,ceil(sweepLen*fs_in))/5000;
+    data{chan} = rand(1,nSamplesExpected)/5000;
   end
   data{1}(1:size(fakedata.signal,1)) = fakedata.signal(:,floor(rand*size(fakedata.signal,2)+1));
 end
 
-while any(index~=index(1)) || any(abs(index-round(sweepLen*fs_in))>1)
+while any(index~=index(1)) || (nSamplesExpected-index(1)>2)
   maxStimIndex = getStimIndex;
   if ~isempty(nextStim)
     if stimIndex==(size(nextStim,2)-1)
@@ -78,7 +80,8 @@ while any(index~=index(1)) || any(abs(index-round(sweepLen*fs_in))>1)
   for chan = 1:32
     newdata = downloadData(chan,index(chan));
     if isempty(fakedata)
-      data{chan}(index(chan)+1:index(chan)+length(newdata)) = newdata;
+      %data{chan}(index(chan)+1:index(chan)+length(newdata)) = newdata;
+      data(chan,index(chan)+1:index(chan)+length(newdata)) = newdata;
     end
     index(chan) = index(chan)+length(newdata)-1;
     %plot(channelAxes(chan),(1:100:length(data{chan}))/fs_in,data{chan}(1:100:end));
@@ -109,14 +112,25 @@ if detectSpikes
 end
 
 % check all channels have the same amount of data
-dataLen = length(data{1});
-for ii = 2:32
-  if length(data{ii})~=dataLen
-    error('Different amounts of data from different channels');
-  end
+nSamples = unique(index+1);
+if length(nSamples)>1
+  error('Different amounts of data from different channels');
 end
 
-fprintf(['Got ' num2str(dataLen) ' samples from 32 channels (' num2str(dataLen/fs_in) ' sec).\n']);
+fprintf(['Got ' num2str(nSamples) ' samples (expecting ' num2str(nSamplesExpected) ') from 32 channels (' num2str(nSamples/fs_in) ' sec).\n']);
+
+% check that we got approximately the expected amount of data
+% we'll accept one sample fewer than we expected, but no extra samples
+if (nSamples>nSamplesExpected) || (nSamples-nSamplesExpected)>1
+  fprintf(['Got ' num2str(nSamples) ' samples, expecting ' num2str(nSamplesExpected)]);
+  error('Wrong amount of data');
+end
+%elseif (nSamplesExpected-nSamples)==1
+  %for chan = 1:length(data)     
+  %  data{chan} = data{chan}(1:end-1);
+  %end
+%  data = data(:,1:end-1);
+%end
 
 resetStimDevice;
 
@@ -124,19 +138,20 @@ global checkdata
 if checkdata
   fprintf('Checking stim...');
   teststim = downloadStim(0,size(nextStim,2));
-  d = max(abs(nextStim-teststim));
+  d = max(max(abs(nextStim-teststim)));
   if d>10e-7
+    keyboard
     error('Stimulus mismatch!');
   end
-  fprintf([num2str(size(d,2)) ' samples verified.\n']);
+  fprintf([num2str(size(teststim,2)) ' samples verified.\n']);
   fprintf('Checking data...');
   testdata = downloadAllData;
   for chan = 1:32
-    d = max(abs(data{chan}-testdata{chan}));
+    d = max(abs(data{chan}(1:nSamples)-testdata{chan}(1:nSamples)));
     if d>0
       error('Data mismatch!');
     end
   end
-  fprintf([num2str(length(data{chan})) ' samples verified.\n']);
+  fprintf([num2str(nSamples) ' samples verified.\n']);
   fprintf(['done after ' num2str(toc) ' sec.\n']);
 end

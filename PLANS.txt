@@ -1,5 +1,11 @@
 == PLANS
 
+* Work out how many samples we should actually expect from TDT, and set data buffer
+  to the appropriate size. At the moment, we're messing with +/- because the TDT's
+  algorithm isn't quite obvious. It can't be that hard either (ceil,floor or round)
+* Once the above is fixed, get rid of nSamples from the saving code, and just save the 
+  whole lot (which will no longer have a trailing zero)
+
 * stereoPlay16bit
 * More careful checks of device status in stim/dataDeviceIinit and ZBusInit
 * Save expt structure somewhere
