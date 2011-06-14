@@ -2,7 +2,7 @@ function grid = grid_sparseness_highlights
 
   % essentials
   grid.name = 'sparseness.highlights';
-  grid.stimFilename = 'sparseness.set.2.stimnum.%1.%L.f32';
+  grid.stimFilename = 'sparseness.set.%1.stimnum.%2.%L.f32';
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStereo';
@@ -11,11 +11,11 @@ function grid = grid_sparseness_highlights
 
   % stimulus grid structure
   grid.stimGridTitles = {'StimID', 'Level'};
-  grid.stimGrid = createPermutationGrid(1:12, 80);
+  grid.stimGrid = createPermutationGrid(2,1:12, 80);
   
   % sweep parameters
   grid.postStimSilence = 0.2; %seconds
   grid.repeatsPerCondition = 30;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -120;
+  grid.stimLevelOffsetDB = -128;

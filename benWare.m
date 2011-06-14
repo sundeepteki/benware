@@ -45,7 +45,7 @@ end
 % experiment details
 clear expt grid;
 
-expt.exptNum = 29;
+expt.exptNum = 30;
 % fs_in and fs_out should be stored here or in grid.foo
 %expt.stimDeviceName = 'RX6';
 expt.penetrationNum = 98;
@@ -56,7 +56,7 @@ expt.headstage.rhs = 9999;
 channelMapping = [9 8 10 7 13 4 12 5 15 2 16 1 14 3 11 6];
 expt.channelMapping = [channelMapping channelMapping+16];
 if ispc
-    expt.dataDir = 'F:\expt-%E\%P-%N\';
+    expt.dataDir = 'F:\auditory-objects.data\expt%E\%P-%N\';
     expt.dataFilename = 'raw.f32\%P.%N.sweep.%S.channel.%C.f32';
 else
     expt.dataDir = './expt-%E/%P-%N/';
@@ -78,7 +78,10 @@ grid = chooseGrid;
 
 % check that the grid is valid, and that stim files are there
 verifyGridFields(grid);
-verifyStimFilesExist(grid, expt);
+
+if isequal(grid.stimGenerationFunctionName,'loadStereo')
+  verifyStimFilesExist(grid, expt);
+end
 
 % add extra fields
 grid.saveName = '';

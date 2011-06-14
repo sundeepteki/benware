@@ -27,8 +27,10 @@ fprintf('  - # sets: %d\n', size(grid.stimGrid, 3));
 fprintf('  - # repeats: %d\n', grid.repeatsPerCondition);
 fprintf('  - # sweeps: %d\n', ...
 	size(grid.stimGrid, 3) * grid.repeatsPerCondition);
-fprintf('  - stimulus dir: %s\n', ...
-	split_path(constructStimPath(grid, expt, 1)));
+
+if isequal(grid.stimGenerationFunctionName,'loadStereo')
+  fprintf('  - stimulus dir: %s\n', split_path(constructStimPath(grid, expt, 1)));
+end
 
 
 r = demandinput('\nis this ok? [y/n]: ', {'y', 'n'},'y',true);

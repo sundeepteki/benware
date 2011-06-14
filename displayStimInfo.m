@@ -21,9 +21,11 @@ function displayStimInfo(sweeps, grid, sweepNum)
 	    stimInfo.stimParameters(ii));
   end
   
-  % source files
-  fprintf('\nSource files:\n');
-  fprintf('  - %s\n', stimInfo.stimFileL);
-  fprintf('  - %s\n', stimInfo.stimFileR);
-
+  if isequal(grid.stimGenerationFunctionName,'loadStereo')
+    % source files
+    fprintf('\nSource files:\n');
+    fprintf('  - %s\n', stimInfo.stimFileL);
+    fprintf('  - %s\n', stimInfo.stimFileR);
+  end
+  
   fprintf('\n');
