@@ -19,7 +19,7 @@ function grid = grid_quning()
    9000, 10100, 11300, 12700, 14250, 16000, 17950, 20150, 22650];
  
   levels = 40:10:100;
- 
+
   grid.stimGrid = createPermutationGrid(freqs, levels);
 
   % sweep parameters

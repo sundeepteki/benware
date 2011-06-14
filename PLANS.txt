@@ -5,17 +5,17 @@
   algorithm isn't quite obvious. It can't be that hard either (ceil,floor or round)
 * Once the above is fixed, get rid of nSamples from the saving code, and just save the 
   whole lot (which will no longer have a trailing zero)
+* Store fs_in and fs_out in one of the data structures
 
 * stereoPlay16bit
 * More careful checks of device status in stim/dataDeviceIinit and ZBusInit
 * Save expt structure somewhere
 * UI for modifying expt structure
 * UI for seeing incoming data
-* Why is having data as a {} faster than a []? This suggests that something
-  can be fixed, and then it will be faster than both.
-
 
 == DONE
 
 * Grids for sparseness/highlights
 * UI for choosing grid
+* Why is having data as a {} faster than a []? This suggests that something
+  can be fixed, and then it will be faster than both.

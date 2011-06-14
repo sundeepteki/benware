@@ -5,17 +5,17 @@ n.rows = 8;
 n.cols = 4;
 
 w = struct;
-w.L = 0.05;
-w.R = 0.05;
-w.gap = 0.05;
+w.L = 0.025;
+w.R = 0.025;
+w.gap = 0.025;
 w.allGaps = w.gap * (n.cols - 1);
 w.allPlots = 1 - w.L - w.R - w.allGaps;
 w.plot = w.allPlots / n.cols;
 
 h = struct;
-h.T = 0.05;
-h.B = 0.05;
-h.gap = 0.05;
+h.T = 0.025;
+h.B = 0.025;
+h.gap = 0.025;
 h.allGaps = h.gap * (n.rows - 1);
 h.allPlots = 1 - h.T - h.B - h.allGaps;
 h.plot = h.allPlots / n.rows;

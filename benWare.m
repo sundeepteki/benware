@@ -46,6 +46,7 @@ end
 clear expt grid;
 
 expt.exptNum = 29;
+% fs_in and fs_out should be stored here or in grid.foo
 %expt.stimDeviceName = 'RX6';
 expt.penetrationNum = 98;
 expt.probe.lhs = 9999;
@@ -64,6 +65,7 @@ end
 expt.plotFunctions.init = 'scopeTraceInit';
 expt.plotFunctions.plot = 'scopeTracePlot';
 expt.detectSpikes = true;
+expt.spikeThreshold = -5;
 %expt.plotFunctions.preGrid = 'rasterPreGrid';
 %expt.plotFunctions.preSweep = 'rasterPreSweep';
 %expt.plotFunctions.plot = 'rasterPlot';
@@ -153,12 +155,19 @@ for sweepNum = 1:grid.nSweepsDesired
     nextStim = [];
   end
 
-  % sweep duration in seconds
+  % store stimulus duration
+  sweeps(sweepNum).stimLen.samples = size(stim,2);
+  sweeps(sweepNum).stimLen.ms = sweeps(sweepNum).stimLen.samples/fs_out*1000;
+  
   sweepLen = size(stim, 2)/fs_out + grid.postStimSilence;
   
   % run the sweep
-  [data, nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim,expt.plotFunctions,expt.detectSpikes,spikeFilter);    
-
+  [data, nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim,expt.plotFunctions,expt.detectSpikes,spikeFilter,expt.spikeThreshold);    
+  
+  % store sweep duration
+  sweeps(sweepNum).sweepLen.samples = nSamples;
+  sweeps(sweepNum).sweepLen.ms = sweeps(sweepNum).sweepLen.samples/fs_in*1000;
+  
   % save this sweep
   saveData(data, grid, expt, sweepNum, nSamples);
   saveSweepInfo(sweeps, grid, expt);

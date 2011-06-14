@@ -1,4 +1,4 @@
-function [data,nSamples,spikeTimes,timeStamp] = runSweep(sweepLen,stim,nextStim,plotFunctions,detectSpikes,spikeFilter)
+function [data,nSamples,spikeTimes,timeStamp] = runSweep(sweepLen,stim,nextStim,plotFunctions,detectSpikes,spikeFilter,spikeThreshold)
 %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
 %% Upload the next stimulus at the same time, then reset the stimDevice
 %% and inform the stimDevice of the stimulus length
@@ -36,7 +36,7 @@ index = zeros(1,32);
 spikeTimes = cell(1,32);
 spikeIndex = 0;
 
-spikeThreshold = -4;
+%spikeThreshold = -3;
 
 % keep track of how much of stimulus has been uploaded
 stimIndex = 0;
