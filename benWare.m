@@ -63,7 +63,7 @@ else
 end
 expt.plotFunctions.init = 'scopeTraceInit';
 expt.plotFunctions.plot = 'scopeTracePlot';
-expt.detectSpikes = false;
+expt.detectSpikes = true;
 %expt.plotFunctions.preGrid = 'rasterPreGrid';
 %expt.plotFunctions.preSweep = 'rasterPreSweep';
 %expt.plotFunctions.plot = 'rasterPlot';

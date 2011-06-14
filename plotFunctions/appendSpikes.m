@@ -5,7 +5,7 @@ global fs_in;
 maxlen = min(dataIndex);
 
 if maxlen-index<(fs_in)
-  fprintf('Skipping spike finding\n');
+  %fprintf('Skipping spike finding\n');
   return;
 end
 
@@ -16,11 +16,17 @@ for chan = 1:nChan
   datacube(:,chan) = data{chan}(index+1:maxlen);
 end
 
-newSpikeTimes = findSpikesFast(datacube,spikeFilter,fs_in,threshold);
+%keyboard;
+validChans = find(sum(datacube)>0);
+newSpikeTimes = findSpikesFast(datacube(:,validChans),spikeFilter,fs_in,threshold);
 %newSpikeTimes
 
-for chan = 1:nChan
-  spikeTimes{chan} = [spikeTimes{chan}; newSpikeTimes{chan}];
+for ii = 1:length(newSpikeTimes)
+  if length(newSpikeTimes{ii})>((maxlen-index)/fs_in)*1000
+    fprintf(['Too many spikes on channel ' num2str(validChans(ii)) '. Ignoring.\n']);
+  else
+    spikeTimes{validChans(ii)} = [spikeTimes{validChans(ii)}; newSpikeTimes{ii}];
+  end
 end
 
 index = maxlen;
