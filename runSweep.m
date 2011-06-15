@@ -43,7 +43,8 @@ spikeIndex = 0;
 stimIndex = 0;
 
 % prepare data display
-plotData = feval(plotFunctions.init, []);
+%plotData = feval(plotFunctions.init, []);
+plotData = feval(plotFunctions.init, [], nSamplesExpected);
 
 % trigger stimulus presentation and data collection
 timeStamp = clock;

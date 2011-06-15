@@ -1,4 +1,6 @@
-function plotData = scopeTraceInit(plotData, nSamplesExpected)
+function plotData = scopeTraceFastInit(plotData, nSamplesExpected)
+
+global fs_in;
 
 % positions
 n.rows = 8;
@@ -44,9 +46,5 @@ pos = pos';
 figure(1);
 clf;
 for ii = 1:32
-	plotData.subplotHandles(ii) = axes('position', pos{ii});
-  
-  if ii <= 28
-    set(plotData.subplotHandles(ii), 'xticklabelmode', 'manual', 'xticklabel', {});
-  end
+  plotData.subplotHandles(ii) = axes('position', pos{ii}, 'xtick', [], 'ytick', [], 'xlim', [1 nSamplesExpected]/fs_in, 'drawmode', 'fast');
 end

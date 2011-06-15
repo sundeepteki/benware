@@ -1,6 +1,18 @@
 %% initial setup
 % =================
 
+% path
+if ispc
+  addpath(genpath('D:\auditory-objects\NeilLib'));
+  addpath([pwd '\plotFunctions\']);
+  addpath([pwd '\grids']);
+else
+  addpath([pwd '/../NeilLib/']);
+  addpath([pwd '/plotFunctions/']);
+  addpath([pwd '/grids/']);
+end
+
+% welcome
 printGreetings()
 
 % core variables
@@ -30,16 +42,7 @@ if truncate~=0 || ~isempty(fakedata) || checkdata
   pause;
 end
 
-% path
-if ispc
-  addpath(genpath('D:\auditory-objects\NeilLib'));
-  addpath([pwd '\plotFunctions\']);
-  addpath([pwd '\grids']);
-else
-  addpath([pwd '/../NeilLib/']);
-  addpath([pwd '/plotFunctions/']);
-  addpath([pwd '/grids/']);
-end
+
 
 
 %% stim/data setup: USER
@@ -65,8 +68,8 @@ else
     expt.dataDir = './expt-%E/%P-%N/';
     expt.dataFilename = 'raw.f32/%P.%N.sweep.%S.channel.%C.f32';
 end
-expt.plotFunctions.init = 'scopeTraceInit';
-expt.plotFunctions.plot = 'scopeTracePlot';
+expt.plotFunctions.init = 'scopeTraceFastInit';
+expt.plotFunctions.plot = 'scopeTraceFastPlot';
 expt.detectSpikes = true;
 expt.spikeThreshold = -5;
 %expt.plotFunctions.preGrid = 'rasterPreGrid';
