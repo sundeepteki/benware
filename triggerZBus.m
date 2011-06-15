@@ -1,4 +1,5 @@
-function triggerZBus
+function triggerZBus()
+% triggerZBus()
 
 global zBus
 

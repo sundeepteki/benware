@@ -44,6 +44,9 @@ pos = pos';
 figure(1);
 clf;
 for ii = 1:32
-  %plotData.subplotHandles(ii) = subplot(8,4,ii);
-    plotData.subplotHandles(ii) = axes('position', pos{ii});
+	plotData.subplotHandles(ii) = axes('position', pos{ii});
+  
+  if ii <= 28
+    set(plotData.subplotHandles(ii), 'xticklabelmode', 'manual', 'xticklabel', {});
+  end
 end

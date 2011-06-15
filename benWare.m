@@ -164,7 +164,7 @@ for sweepNum = 1:grid.nSweepsDesired
   % store stimulus duration
   sweeps(sweepNum).stimLen.samples = size(stim, 2);
   sweeps(sweepNum).stimLen.ms = sweeps(sweepNum).stimLen.samples/fs_out*1000;
-  
+  % actual sweep length
   sweepLen = size(stim, 2)/fs_out + grid.postStimSilence;
   
   % run the sweep
