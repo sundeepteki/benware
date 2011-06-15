@@ -68,6 +68,7 @@ else
     expt.dataDir = './expt-%E/%P-%N/';
     expt.dataFilename = 'raw.f32/%P.%N.sweep.%S.channel.%C.f32';
 end
+expt.logFilename = 'benWare.log';
 expt.plotFunctions.init = 'scopeTraceFastInit';
 expt.plotFunctions.plot = 'scopeTraceFastPlot';
 expt.detectSpikes = true;
@@ -114,10 +115,13 @@ stimGenerationFunction = str2func(grid.stimGenerationFunctionName);
 % save grid metadata
 saveGridMetadata(grid, expt);
 
+% start recording a log
+diary(constructDataPath([expt.dataDir expt.logFilename], grid, expt));
 
 %% Begin recording
 % =================
 
+fprintf_title('Preparing to record');
 tic;
 
 % make filter for spike detection
@@ -155,6 +159,7 @@ for sweepNum = 1:grid.nSweepsDesired
   
   stim = nextStim;
   displayStimInfo(sweeps, grid, sweepNum);
+  fprintf('Progress:\n');
 
   % retrieve the stimulus for the NEXT sweep
   isLastSweep = (sweepNum == grid.nSweepsDesired);
@@ -169,6 +174,7 @@ for sweepNum = 1:grid.nSweepsDesired
   sweeps(sweepNum).stimLen.ms = sweeps(sweepNum).stimLen.samples/fs_out*1000;
   % actual sweep length
   sweepLen = size(stim, 2)/fs_out + grid.postStimSilence;
+  fprintf(['  * sweep length: ' num2str(sweepLen) ' s\n']);
   
   % run the sweep
   [data, nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim, expt.plotFunctions, expt.detectSpikes, spikeFilter, expt.spikeThreshold);     %#ok<*SAGROW>
@@ -181,5 +187,7 @@ for sweepNum = 1:grid.nSweepsDesired
   saveData(data, grid, expt, sweepNum, nSamples);
   saveSweepInfo(sweeps, grid, expt);
 
-  fprintf(['Finished sweep after ' num2str(toc) ' sec.\n\n']);
+  fprintf(['  * Finished sweep after ' num2str(toc) ' sec.\n\n']);
 end
+
+diary off

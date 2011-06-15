@@ -2,8 +2,6 @@ function plotData = scopeTraceFastPlot(plotData, data, spikeTimes)
 
 global fs_in;
 
-%figure(1);
-
 x = (1:100:size(data, 2))/fs_in;
 for chan = 1:32
   ax = plotData.subplotHandles(chan);
