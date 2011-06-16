@@ -207,6 +207,8 @@ for sweepNum = 1:grid.nSweepsDesired
     for chan = 1:32
       sweeps(sweepNum).dataFiles{chan} = constructDataPath([expt.dataDir expt.dataFilename2],grid,expt,sweepNum,chan);
     end
+    dataDir = split_path(sweeps(sweepNum).dataFiles{chan});
+    mkdir_nowarning(dataDir);
   end
   
   % run the sweep
@@ -217,9 +219,9 @@ for sweepNum = 1:grid.nSweepsDesired
   sweeps(sweepNum).sweepLen.ms = sweeps(sweepNum).sweepLen.samples/fs_in*1000;
   
   % save waveforms
-  if ~saveDataDuringSweep
-    saveData(data, grid, expt, sweepNum, nSamples);
-  end
+  %if ~saveDataDuringSweep
+  saveData(data, grid, expt, sweepNum, nSamples);
+  %end
 
   % save spikes separately or as part of sweep info
   if oldStyleSpikeTimes
