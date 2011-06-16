@@ -2,16 +2,43 @@
 
 * Work out how many samples we should actually expect from TDT, and set data buffer
   to the appropriate size. At the moment, we're messing with +/- because the TDT's
-  algorithm isn't quite obvious. It can't be that hard either (ceil,floor or round)
+  algorithm isn't quite obvious. It can't be that hard either (ceil,floor or
+  round)
+  -- thinking about it:
+  * We know that you get the expected number when the sweep is a round number
+  of seconds
+  * We know that you get expected number - 1 otherwise.
+  -- I'm pretty sure this adds up to simply floor() rather than ceil()
+
 * Once the above is fixed, get rid of nSamples from the saving code, and just save the 
   whole lot (which will no longer have a trailing zero)
+
 * Store fs_in and fs_out in one of the data structures
 
-* stereoPlay16bit
+* Save spike data for each sweep in a separate file (saving is too slow when
+  there are lots of spikes)
+
+* Offer to append data to existing directory if grid and penetration match
+
+* Fixed ylim on scope trace
+
+* Ability to plot filtered data on scope trace
+
+* Scope trace using linspace for a fixed number of points
+* Save data during sweep, not afterwards
+* Show spikes in scope if there are not too many
+* Ability to plot averaged LFP signal
+* Ability to not save data?
 * More careful checks of device status in stim/dataDeviceIinit and ZBusInit
 * Save expt structure somewhere
 * UI for modifying expt structure
 * UI for seeing incoming data
+
+
+== ON HOLD
+
+* stereoPlay16bit
+
 
 == DONE
 
