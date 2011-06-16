@@ -16,6 +16,6 @@ for chan = 1:32
   ax = plotData.subplotHandles(chan);
   cla(ax);
   %line(x, data(chan, 1:100:end), 'parent', ax);
-  line(sampleTimes,data(chan,samplesToPlot),'parent','ax');
+  line(sampleTimes,data(chan,samplesToPlot),'parent',ax);
 end
 

@@ -72,8 +72,8 @@ else
 end
 expt.logFilename = 'benWare.log';
 expt.plotFunctions.init = 'scopeTraceFastInit';
-expt.plotFunctions.plot = 'scopeTraceFastPlot';
-expt.dataGain = 0.5e-3;
+expt.plotFunctions.plot = 'scopeTraceSpikesPlot';
+expt.dataGain = 1e-3;
 expt.detectSpikes = true;
 expt.spikeThreshold = -2.8;
 %expt.plotFunctions.preGrid = 'rasterPreGrid';

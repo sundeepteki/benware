@@ -1,4 +1,4 @@
-function plotData = scopeTraceRasterPlot(plotData, data, index, spikeTimes)
+function plotData = scopeTraceSpikesPlot(plotData, data, index, spikeTimes)
 
 global fs_in dataGain;
 
@@ -16,7 +16,7 @@ end
 for chan = 1:32
   ax = plotData.subplotHandles(chan);
   cla(ax);  
-  line(sampleTimes,data(chan,samplesToPlot),'parent','ax');
+  line(sampleTimes,data(chan,samplesToPlot),'parent',ax);
   
   % also mark the times of up to 500 spikes
   l = length(spikeTimes{chan});
@@ -26,8 +26,10 @@ for chan = 1:32
     spikesToPlot = round(linspace(1,l,500));
   end
 
-  h = line(spikeTimes{chan}(spikesToPlot),0.9*dataGain*ones(1,size(spikesToPlot)), 'parent',ax');
-  set(h,'LineStyle','None','MarkerStyle','.');
+  %get(ax,'ylim')
+  %length(spikesToPlot)
+  h = line(spikeTimes{chan}(spikesToPlot)/1000,0.9*dataGain*ones(size(spikesToPlot)), 'parent',ax);
+  set(h,'LineStyle','None','Marker','.');
   
 end
 

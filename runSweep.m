@@ -93,7 +93,6 @@ while any(index~=index(1)) || (nSamplesExpected-index(1)>2)
 end
 
 fprintf(['  * Sweep done after ' num2str(toc) ' sec.\n']);
-plotData = feval(plotFunctions.plot, plotData, data, index, spikeTimes);
 
 if ~isempty(nextStim)
   if stimIndex~=(size(nextStim, 2)-1)
@@ -105,8 +104,11 @@ end
 if detectSpikes
   [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, data, index, spikeIndex, spikeFilter, spikeThreshold,true);
 %spikeTimes
-  fprintf(['  * Spikes detected after ' num2str(toc) ' sec.\n']);
+  fprintf(['  * ' num2str(sum(cellfun(@(i) length(i),spikeTimes))) ' spikes detected after ' num2str(toc) ' sec.\n']);
 end
+
+plotData = feval(plotFunctions.plot, plotData, data, index, spikeTimes);
+drawnow;
 
 % check all channels have the same amount of data
 nSamples = unique(index+1);
