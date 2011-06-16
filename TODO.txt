@@ -15,9 +15,6 @@
 
 * Store fs_in and fs_out in one of the data structures
 
-* Save spike data for each sweep in a separate file (saving is too slow when
-  there are lots of spikes)
-
 * Offer to append data to existing directory if grid and penetration match
 
 * Ability to plot filtered data on scope trace
@@ -37,6 +34,8 @@
 * UI for seeing incoming data
 
 * Set which channel is selected on audio monitor of RZ6
+
+* Consider saving sweeps structure as separate files (is saving it slow?)
 
 
 == ON HOLD
@@ -58,3 +57,6 @@
 * Scope trace using linspace for a fixed number of points
 
 * Show spikes in scope if there are not too many
+
+* Save spike data for each sweep in a separate file (saving is too slow when
+  there are lots of spikes)
