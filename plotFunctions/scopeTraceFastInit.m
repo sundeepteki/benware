@@ -1,6 +1,6 @@
 function plotData = scopeTraceFastInit(plotData, nSamplesExpected)
 
-global fs_in;
+global fs_in dataGain;
 
 % positions
 n.rows = 8;
@@ -46,5 +46,5 @@ pos = pos';
 figure(1);
 clf;
 for ii = 1:32
-  plotData.subplotHandles(ii) = axes('position', pos{ii}, 'xtick', [], 'ytick', [], 'xlim', [1 nSamplesExpected]/fs_in, 'ylim', 0.5e-3*[-1 1], 'drawmode', 'fast');
+  plotData.subplotHandles(ii) = axes('position', pos{ii}, 'xtick', [], 'ytick', [], 'xlim', [1 nSamplesExpected]/fs_in, 'ylim', dataGain*[-1 1], 'drawmode', 'fast');
 end

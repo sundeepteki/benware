@@ -19,6 +19,7 @@ printGreetings()
 global zBus stimDevice dataDevice;
 global fs_in fs_out
 global channelOrder
+global dataGain
 
 fs_in = 24414.0625;
 
@@ -72,6 +73,7 @@ end
 expt.logFilename = 'benWare.log';
 expt.plotFunctions.init = 'scopeTraceFastInit';
 expt.plotFunctions.plot = 'scopeTraceFastPlot';
+expt.dataGain = 0.5e-3;
 expt.detectSpikes = true;
 expt.spikeThreshold = -2.8;
 %expt.plotFunctions.preGrid = 'rasterPreGrid';
@@ -83,6 +85,9 @@ grid = chooseGrid();
 
 %% stim/data setup: AUTO
 % =======================
+
+% gain of scope trace
+dataGain = expt.dataGain;
 
 % check that the grid is valid
 verifyGridFields(grid);

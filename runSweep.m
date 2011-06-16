@@ -88,12 +88,12 @@ while any(index~=index(1)) || (nSamplesExpected-index(1)>2)
     %sp
   end
   
-  plotData = feval(plotFunctions.plot, plotData, data, spikeTimes);
+  plotData = feval(plotFunctions.plot, plotData, data, index, spikeTimes);
   drawnow;
 end
 
 fprintf(['  * Sweep done after ' num2str(toc) ' sec.\n']);
-plotData = feval(plotFunctions.plot, plotData, data, spikeTimes);
+plotData = feval(plotFunctions.plot, plotData, data, index, spikeTimes);
 
 if ~isempty(nextStim)
   if stimIndex~=(size(nextStim, 2)-1)
