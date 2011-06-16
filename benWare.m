@@ -20,7 +20,6 @@ global zBus stimDevice dataDevice;
 global fs_in fs_out
 global channelOrder
 global dataGain
-global saveDataDuringSweep
 
 fs_in = 24414.0625;
 
@@ -32,33 +31,22 @@ checkdata = false; % for testing only. should normally be FALSE
 oldStyleSpikeTimes = false; % temporary flag to allow us to switch back
                             % to saving all spike times in one file if necessary
 
-saveDataDuringSweep = true; % temporary flag to choose between saving
-                            % data during sweep and saving after sweep
-
 % testing notices
-needWarning = false;
-
 if truncate~=0
-  fprintf('Truncating stimuli! This is for testing only!\n');
-  needWarning = true;
+    fprintf('Truncating stimuli! This is for testing only!\n');
 end
 if ~isempty(fakedata)
-  fprintf('RECORDING FAKE DATA! this is for testing only!\n');
-  needWarning = true;
+    fprintf('RECORDING FAKE DATA! this is for testing only!\n');
 end
 if checkdata
-  fprintf('Downloading all data twice! this is for testing only!\n');
-  needWarning = true;
+    fprintf('Downloading all data twice! this is for testing only!\n');
 end
-if saveDataDuringSweep
-  fprintf('Saving waveform data during the sweep. Experimental!\n');
-  needWarning = true;
-end
-
-if needWarning
+if truncate~=0 || ~isempty(fakedata) || checkdata
   fprintf('Press a key to continue.\n');
   pause;
 end
+
+
 
 
 %% stim/data setup: USER
@@ -81,7 +69,6 @@ expt.channelMapping = [channelMapping channelMapping+16];
 if ispc
     expt.dataDir = 'F:\auditory-objects.data\expt%E\%P-%N\';
     expt.dataFilename = 'raw.f32\%P.%N.sweep.%S.channel.%C.f32';
-    expt.dataFilename2 = 'raw2.f32\%P.%N.sweep.%S.channel.%C.f32';
     expt.spikeFilename = 'spike.mat\%P.%N.sweep.%S.mat';
 else
     expt.dataDir = './expt-%E/%P-%N/';
@@ -197,29 +184,19 @@ for sweepNum = 1:grid.nSweepsDesired
   % store stimulus duration
   sweeps(sweepNum).stimLen.samples = size(stim, 2);
   sweeps(sweepNum).stimLen.ms = sweeps(sweepNum).stimLen.samples/fs_out*1000;
-
   % actual sweep length
   sweepLen = size(stim, 2)/fs_out + grid.postStimSilence;
   fprintf(['  * sweep length: ' num2str(sweepLen) ' s\n']);
-
-  % get filenames for saving data
-  if saveDataDuringSweep
-    for chan = 1:32
-      sweeps(sweepNum).dataFiles{chan} = constructDataPath([expt.dataDir expt.dataFilename2],grid,expt,sweepNum,chan);
-    end
-  end
   
   % run the sweep
-  [data, nSamples, spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim, expt.plotFunctions, expt.detectSpikes, spikeFilter, expt.spikeThreshold,sweeps(sweepNum).dataFiles);     %#ok<*SAGROW>
+  [data, nSamples, spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim, expt.plotFunctions, expt.detectSpikes, spikeFilter, expt.spikeThreshold);     %#ok<*SAGROW>
   
   % store sweep duration
   sweeps(sweepNum).sweepLen.samples = nSamples;
   sweeps(sweepNum).sweepLen.ms = sweeps(sweepNum).sweepLen.samples/fs_in*1000;
   
   % save waveforms
-  if ~saveDataDuringSweep
-    saveData(data, grid, expt, sweepNum, nSamples);
-  end
+  saveData(data, grid, expt, sweepNum, nSamples);
 
   % save spikes separately or as part of sweep info
   if oldStyleSpikeTimes
