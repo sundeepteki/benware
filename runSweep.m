@@ -1,14 +1,16 @@
-function [data, nSamples, spikeTimes, timeStamp] = runSweep(sweepLen, stim, nextStim, plotFunctions, detectSpikes, spikeFilter, spikeThreshold)
+function [data, nSamples, spikeTimes, timeStamp] = runSweep(sweepLen, stim, nextStim, plotFunctions, detectSpikes, spikeFilter, spikeThreshold,dataFiles)
 %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
 %% Will fail if next stimulus is not on the TDT
 %% Upload the next stimulus at the same time, then reset the stimDevice
 %% and inform the stimDevice of the stimulus length
 
 % It should now be possible to remove nSamples from the return variables
-% and streamline saveData() accordingly
+% and streamline saveData() accordingly. However, data saving is going to
+% move into runSweep.m anyway
 
 global zBus stimDevice dataDevice;
 global fs_in fs_out;
+global saveDataDuringSweep;
 global fakedata;
 
 % reset data device and tell it how long the sweep will be
@@ -34,6 +36,14 @@ end
 nSamplesExpected = floor(sweepLen*fs_in)+1;
 data = zeros(32, nSamplesExpected);
 index = zeros(1, 32);
+
+% open data files
+if saveDataDuringSweep
+  dataFileHandles = nan(1,32);
+  for chan = 1:32
+    dataFileHandles(chan) = fopen(dataFiles{chan},'w');
+  end
+end
 
 % cell array for storing spike times
 spikeTimes = cell(1, 32);
@@ -84,6 +94,9 @@ while any(index~=index(1)) || (nSamplesExpected-index(1)~=1)
       data(chan, index(chan)+1:index(chan)+length(newdata)) = newdata;
     end
     index(chan) = index(chan)+length(newdata)-1;
+    if saveDataDuringSweep
+      fwrite(dataFileHandles(chan), newdata, 'float32');
+    end
   end
 
   % detect spikes
@@ -113,6 +126,12 @@ end
 % final plot
 plotData = feval(plotFunctions.plot, plotData, data, index, spikeTimes);
 drawnow;
+
+if saveDataDuringSweep
+  for chan = 1:32
+    fclose(dataFileHandles(chan));
+  end
+end
 
 % data integrity check:
 % 1. check all channels have the same amount of data
