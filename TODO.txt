@@ -1,16 +1,10 @@
 == PLANS
 
-* Work out how many samples we should actually expect from TDT, and set data buffer
-  to the appropriate size. At the moment, we're messing with +/- because the TDT's
-  algorithm isn't quite obvious. It can't be that hard either (ceil,floor or
-  round)
-  -- thinking about it:
-  * We know that you get the expected number when the sweep is a round number
-  of seconds
-  * We know that you get expected number - 1 otherwise.
-  -- I'm pretty sure this adds up to simply floor() rather than ceil()
+* Include data filenames in sweepInfo.mat (this happens naturally if runSweep
+  is informed about which files to use by benWare.m), which itself happens
+  naturally in runSweep has to save data during the sweep
 
-* Once the above is fixed, get rid of nSamples from the saving code, and just save the 
+* Get rid of nSamples from the saving code, and just save the 
   whole lot (which will no longer have a trailing zero)
 
 * Store fs_in and fs_out in one of the data structures
@@ -19,7 +13,9 @@
 
 * Ability to plot filtered data on scope trace
 
-* Save data during sweep, not afterwards
+* Save data during sweep, not afterwards. This is half-done on testing
+  branch. Not working right yet -- look at the saved data files from the two
+  saving methods to find out what is going on.
 
 * Ability to plot averaged LFP signal
 
@@ -60,3 +56,14 @@
 
 * Save spike data for each sweep in a separate file (saving is too slow when
   there are lots of spikes)
+
+* Work out how many samples we should actually expect from TDT, and set data buffer
+  to the appropriate size. At the moment, we're messing with +/- because the TDT's
+  algorithm isn't quite obvious. It can't be that hard either (ceil,floor or
+  round)
+  -- thinking about it:
+  * We know that you get the expected number when the sweep is a round number
+  of seconds
+  * We know that you get expected number - 1 otherwise.
+  -- I'm pretty sure this adds up to simply floor() rather than ceil()
+
