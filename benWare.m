@@ -202,7 +202,7 @@ for sweepNum = 1:grid.nSweepsDesired
   if oldStyleSpikeTimes
     sweeps(sweepNum).spikeTimes = spikeTimes;
   else
-    saveSpikeTimes(spikeTimes, grid, expt, sweepNum);
+    sweeps(sweepNum).spikeFile = saveSpikeTimes(spikeTimes, grid, expt, sweepNum);
   end
 
   % save sweep metadata
