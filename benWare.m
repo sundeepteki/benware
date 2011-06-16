@@ -219,9 +219,9 @@ for sweepNum = 1:grid.nSweepsDesired
   sweeps(sweepNum).sweepLen.ms = sweeps(sweepNum).sweepLen.samples/fs_in*1000;
   
   % save waveforms
-  %if ~saveDataDuringSweep
-  saveData(data, grid, expt, sweepNum, nSamples);
-  %end
+  if ~saveDataDuringSweep
+    saveData(data, grid, expt, sweepNum, nSamples);
+  end
 
   % save spikes separately or as part of sweep info
   if oldStyleSpikeTimes
