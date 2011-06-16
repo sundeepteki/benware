@@ -123,9 +123,8 @@ end
 
 fprintf(['  * Got ' num2str(nSamples) ' samples (expecting ' num2str(nSamplesExpected) ') from 32 channels (' num2str(nSamples/fs_in) ' sec).\n']);
 
-% 2. check that we got exacctly the expected number of samples
+% 2. check that we got exactly the expected number of samples
 if (nSamples~=nSamplesExpected)
-  fprintf(['  * Got ' num2str(nSamples) ' samples.\n']);
   error('Wrong number of samples');
 end
 
