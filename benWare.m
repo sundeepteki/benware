@@ -28,6 +28,9 @@ truncate = 0; % for testing only. should normally be 0
 fakedata = []; %load('fakedata.mat'); % for testing only. should normally be []
 checkdata = false; % for testing only. should normally be FALSE
 
+oldStyleSpikeTimes = false; % temporary flag to allow us to switch back
+                            % to saving all spike times in one file if necessary
+
 % testing notices
 if truncate~=0
     fprintf('Truncating stimuli! This is for testing only!\n');
@@ -192,10 +195,18 @@ for sweepNum = 1:grid.nSweepsDesired
   sweeps(sweepNum).sweepLen.samples = nSamples;
   sweeps(sweepNum).sweepLen.ms = sweeps(sweepNum).sweepLen.samples/fs_in*1000;
   
-  % save this sweep
+  % save waveforms
   saveData(data, grid, expt, sweepNum, nSamples);
+
+  % save spikes separately or as part of sweep info
+  if oldStyleSpikeTimes
+    sweeps(sweepNum).spikeTimes = spikeTimes;
+  else
+    saveSpikeTimes(spikeTimes, grid, expt, sweepNum);
+  end
+
+  % save sweep metadata
   saveSweepInfo(sweeps, grid, expt);
-  saveSpikeTimes(spikeTimes, grid, expt, sweepNum);
 
   fprintf(['  * Finished sweep after ' num2str(toc) ' sec.\n\n']);
 end

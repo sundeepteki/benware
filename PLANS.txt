@@ -36,6 +36,8 @@
 
 * UI for seeing incoming data
 
+* Set which channel is selected on audio monitor of RZ6
+
 
 == ON HOLD
 
