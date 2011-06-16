@@ -20,18 +20,20 @@
 
 * Offer to append data to existing directory if grid and penetration match
 
-* Fixed ylim on scope trace
-
 * Ability to plot filtered data on scope trace
 
-* Scope trace using linspace for a fixed number of points
 * Save data during sweep, not afterwards
-* Show spikes in scope if there are not too many
+
 * Ability to plot averaged LFP signal
+
 * Ability to not save data?
+
 * More careful checks of device status in stim/dataDeviceIinit and ZBusInit
+
 * Save expt structure somewhere
+
 * UI for modifying expt structure
+
 * UI for seeing incoming data
 
 
@@ -43,6 +45,14 @@
 == DONE
 
 * Grids for sparseness/highlights
+
 * UI for choosing grid
+
 * Why is having data as a {} faster than a []? This suggests that something
   can be fixed, and then it will be faster than both.
+
+* Fixed ylim on scope trace
+
+* Scope trace using linspace for a fixed number of points
+
+* Show spikes in scope if there are not too many

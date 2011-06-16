@@ -1,7 +1,7 @@
 function saveData(data, grid, expt, sweepNum, nSamples)
 % saveData(data, grid, expt, sweepNum)
 
-fprintf(['  * Saving data']);
+fprintf(['  * Saving data\n']);
 
 % ensure target directory exists
 dirTemplate = [expt.dataDir expt.dataFilename];
@@ -18,4 +18,4 @@ for chanNum = 1:size(data,1)
     fclose(h);
 end
 
-fprintf(['  * done after ' num2str(toc) ' sec.\n']);
+fprintf(['  * Done after ' num2str(toc) ' sec.\n']);

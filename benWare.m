@@ -66,10 +66,13 @@ expt.channelMapping = [channelMapping channelMapping+16];
 if ispc
     expt.dataDir = 'F:\auditory-objects.data\expt%E\%P-%N\';
     expt.dataFilename = 'raw.f32\%P.%N.sweep.%S.channel.%C.f32';
+    expt.spikeFilename = 'spike.mat\%P.%N.sweep.%S.mat';
 else
     expt.dataDir = './expt-%E/%P-%N/';
     expt.dataFilename = 'raw.f32/%P.%N.sweep.%S.channel.%C.f32';
+    expt.spikeFilename = 'spike.mat/%P.%N.sweep.%S.mat';
 end
+
 expt.logFilename = 'benWare.log';
 expt.plotFunctions.init = 'scopeTraceFastInit';
 expt.plotFunctions.plot = 'scopeTraceSpikesPlot';
@@ -147,7 +150,7 @@ fprintf('  * Post-initialisation pause...');
 pause(2);
 fprintf('done.\n');
 
-clear sweeps stim nextStim sweepNum data sweepLen;
+clear sweeps stim nextStim sweepNum data sweepLen spikeTimes;
 tic;
 
 % upload first stimulus
@@ -183,7 +186,7 @@ for sweepNum = 1:grid.nSweepsDesired
   fprintf(['  * sweep length: ' num2str(sweepLen) ' s\n']);
   
   % run the sweep
-  [data, nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim, expt.plotFunctions, expt.detectSpikes, spikeFilter, expt.spikeThreshold);     %#ok<*SAGROW>
+  [data, nSamples, spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim, expt.plotFunctions, expt.detectSpikes, spikeFilter, expt.spikeThreshold);     %#ok<*SAGROW>
   
   % store sweep duration
   sweeps(sweepNum).sweepLen.samples = nSamples;
@@ -192,6 +195,7 @@ for sweepNum = 1:grid.nSweepsDesired
   % save this sweep
   saveData(data, grid, expt, sweepNum, nSamples);
   saveSweepInfo(sweeps, grid, expt);
+  saveSpikeTimes(spikeTimes, grid, expt, sweepNum);
 
   fprintf(['  * Finished sweep after ' num2str(toc) ' sec.\n\n']);
 end

@@ -13,7 +13,7 @@ end
 saved = false;
 while ~saved
   try
-    save(fullPath, 'sweeps', '-v6');    
+    save(fullPath, 'sweeps', '-v6');
     saved = true;
   catch
     fprintf(['couldn''t save, trying again']);
