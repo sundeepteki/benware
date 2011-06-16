@@ -58,8 +58,8 @@ clear expt grid;
 expt.exptNum = 30;
 % fs_in and fs_out should be stored here or in grid.foo
 %expt.stimDeviceName = 'RX6';
-expt.penetrationNum = 8;
-expt.probe.lhs = 2849;
+expt.penetrationNum = 9;
+expt.probe.lhs = 2920;
 expt.probe.rhs = 2940;
 expt.headstage.lhs = 3455;
 expt.headstage.rhs = 3078;
@@ -78,7 +78,7 @@ end
 
 expt.logFilename = 'benWare.log';
 expt.plotFunctions.init = 'scopeTraceFastInit';
-expt.plotFunctions.plot = 'scopeTraceSpikesPlot';
+expt.plotFunctions.plot = 'scopeTraceFastPlot';
 expt.dataGain = 1000;
 expt.detectSpikes = true;
 expt.spikeThreshold = -2.8;
