@@ -16,7 +16,7 @@ end
 printGreetings()
 
 % core variables
-global zBus stimDevice dataDevice; %#ok<*NUSED>
+global zBus stimDevice dataDevice;
 global fs_in fs_out
 global channelOrder
 
@@ -54,13 +54,14 @@ clear expt grid;
 expt.exptNum = 30;
 % fs_in and fs_out should be stored here or in grid.foo
 %expt.stimDeviceName = 'RX6';
-expt.penetrationNum = 98;
-expt.probe.lhs = 9999;
-expt.probe.rhs = 9999;
-expt.headstage.lhs = 9999;
-expt.headstage.rhs = 9999;
+expt.penetrationNum = 8;
+expt.probe.lhs = 2849;
+expt.probe.rhs = 2940;
+expt.headstage.lhs = 3455;
+expt.headstage.rhs = 3078;
 channelMapping = [9 8 10 7 13 4 12 5 15 2 16 1 14 3 11 6];
 expt.channelMapping = [channelMapping channelMapping+16];
+
 if ispc
     expt.dataDir = 'F:\auditory-objects.data\expt%E\%P-%N\';
     expt.dataFilename = 'raw.f32\%P.%N.sweep.%S.channel.%C.f32';
@@ -72,7 +73,7 @@ expt.logFilename = 'benWare.log';
 expt.plotFunctions.init = 'scopeTraceFastInit';
 expt.plotFunctions.plot = 'scopeTraceFastPlot';
 expt.detectSpikes = true;
-expt.spikeThreshold = -5;
+expt.spikeThreshold = -2.8;
 %expt.plotFunctions.preGrid = 'rasterPreGrid';
 %expt.plotFunctions.preSweep = 'rasterPreSweep';
 %expt.plotFunctions.plot = 'rasterPlot';

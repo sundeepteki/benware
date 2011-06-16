@@ -1,8 +1,10 @@
-function grid = grid_ctuning_ss()
+function grid = grid_ctuning_ss_specific_channel()
+
+  grid.sourceChannel = 23;
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStereo';
-  grid.stimDir = 'D:\auditory-objects\sounds.calib.expt%E\%N\%P-%N\';
+  grid.stimDir = ['D:\auditory-objects\sounds.calib.expt%E\%N\%P-%N.source_channel.' num2str(grid.sourceChannel) '\'];
   grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   % essentials
@@ -36,7 +38,7 @@ function grid = grid_ctuning_ss()
 
   % sweep parameters
   grid.postStimSilence = 0;
-  grid.repeatsPerCondition = 1;
+  grid.repeatsPerCondition = 2;
   
   % set this using absolute calibration
   grid.stimLevelOffsetDB = -92;

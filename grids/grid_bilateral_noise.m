@@ -13,7 +13,7 @@ function grid = grid_bilateral_noise
   
   % sweep parameters
   grid.postStimSilence = 0.2; %seconds
-  grid.repeatsPerCondition = 30;
+  grid.repeatsPerCondition = 200;
   
   % set this using absolute calibration
   grid.stimLevelOffsetDB = -128;

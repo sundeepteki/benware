@@ -84,7 +84,8 @@ while any(index~=index(1)) || (nSamplesExpected-index(1)>2)
   end  
 
   if detectSpikes
-    [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, data, index, spikeIndex, spikeFilter, spikeThreshold);
+    [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, data, index, spikeIndex, spikeFilter, spikeThreshold, false);
+    %sp
   end
   
   plotData = feval(plotFunctions.plot, plotData, data, spikeTimes);
@@ -102,7 +103,8 @@ if ~isempty(nextStim)
 end
 
 if detectSpikes
-  [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, data, index, spikeIndex, spikeFilter, spikeThreshold);
+  [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, data, index, spikeIndex, spikeFilter, spikeThreshold,true);
+%spikeTimes
   fprintf(['  * Spikes detected after ' num2str(toc) ' sec.\n']);
 end
 

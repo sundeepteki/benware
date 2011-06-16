@@ -10,9 +10,9 @@ fprintf_subtitle('experiment');
 fprintf('  - experiment #: %d\n', expt.exptNum);
 fprintf('  - penetration #: %d\n', expt.penetrationNum);
 fprintf('  - LHS probe: %d \n', expt.probe.lhs);
-fprintf('  - RHS probe: %d \n', expt.probe.lhs);
+fprintf('  - RHS probe: %d \n', expt.probe.rhs);
 fprintf('  - LHS headstage: %d \n', expt.headstage.lhs);
-fprintf('  - RHS headstage: %d \n', expt.headstage.lhs);
+fprintf('  - RHS headstage: %d \n', expt.headstage.rhs);
 
 r = demandinput('\nIs this ok? [Y/n]: ', {'y', 'n'}, 'y', true);
 if r=='n'

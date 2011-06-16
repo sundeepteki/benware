@@ -9,6 +9,15 @@ fullPath = [dataDir 'sweepInfo.mat'];
 if exist(fullPath, 'file')
     movefile(fullPath, [fullPath '.old']);
 end
-save(fullPath, 'sweeps');
 
+saved = false;
+while ~saved
+  try
+    save(fullPath, 'sweeps', '-v6');    
+    saved = true;
+  catch
+    fprintf(['couldn''t save, trying again']);
+  end
+end
+  
 fprintf(['done.\n']);

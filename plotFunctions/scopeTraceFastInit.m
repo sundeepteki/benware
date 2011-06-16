@@ -46,5 +46,5 @@ pos = pos';
 figure(1);
 clf;
 for ii = 1:32
-  plotData.subplotHandles(ii) = axes('position', pos{ii}, 'xtick', [], 'ytick', [], 'xlim', [1 nSamplesExpected]/fs_in, 'drawmode', 'fast');
+  plotData.subplotHandles(ii) = axes('position', pos{ii}, 'xtick', [], 'ytick', [], 'xlim', [1 nSamplesExpected]/fs_in, 'ylim', 0.5e-3*[-1 1], 'drawmode', 'fast');
 end
