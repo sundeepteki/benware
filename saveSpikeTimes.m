@@ -13,6 +13,6 @@ mkdir_nowarning(dirName);
 save(fullPath, 'spikeTimes', '-v6');
 
 % return relative path to the saved file
-relPath = constructDataPath(expt.spikeFilename);
+relPath = constructDataPath(expt.spikeFilename, grid, expt, sweepNum);
 
 fprintf(['  * Done after ' num2str(toc) ' sec.\n']);

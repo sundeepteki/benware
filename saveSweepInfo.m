@@ -11,12 +11,16 @@ if exist(fullPath, 'file')
 end
 
 saved = false;
+warned = false;
 while ~saved
   try
     save(fullPath, 'sweeps', '-v6');
     saved = true;
   catch
-    fprintf(['couldn''t save, trying again']);
+    if ~warned
+      fprintf(['Couldn''t save, retrying.\n']);
+      warned = true;
+    end
   end
 end
   
