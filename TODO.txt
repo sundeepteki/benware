@@ -13,7 +13,9 @@
 
 * Ability to plot filtered data on scope trace
 
-* Save data during sweep, not afterwards
+* Save data during sweep, not afterwards. This is half-done on testing
+  branch. Not working right yet -- look at the saved data files from the two
+  saving methods to find out what is going on.
 
 * Ability to plot averaged LFP signal
 

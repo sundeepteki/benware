@@ -30,10 +30,14 @@ fakedata = []; %load('fakedata.mat'); % for testing only. should normally be []
 checkdata = false; % for testing only. should normally be FALSE
 
 oldStyleSpikeTimes = false; % temporary flag to allow us to switch back
-                            % to saving all spike times in one file if necessary
+                           % to saving all spike times in one file if necessary
 
-saveDataDuringSweep = true; % temporary flag to choose between saving
+saveDataDuringSweep = false; % temporary flag to choose between saving
                             % data during sweep and saving after sweep
+
+% NB this is not currently working right -- extra bytes are getting
+% inserted. Not sure why. Use md5sum on the saved files to work it out.
+
 
 % testing notices
 needWarning = false;
