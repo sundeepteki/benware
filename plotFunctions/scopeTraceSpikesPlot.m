@@ -16,7 +16,7 @@ end
 for chan = 1:32
   ax = plotData.subplotHandles(chan);
   cla(ax);  
-  line(sampleTimes,data(chan,samplesToPlot),'parent',ax);
+  line(sampleTimes,data(chan,samplesToPlot)*dataGain,'parent',ax);
   
   % also mark the times of up to 500 spikes
   l = length(spikeTimes{chan});
@@ -28,7 +28,7 @@ for chan = 1:32
 
   %get(ax,'ylim')
   %length(spikesToPlot)
-  h = line(spikeTimes{chan}(spikesToPlot)/1000,0.9*dataGain*ones(size(spikesToPlot)), 'parent',ax);
+  h = line(spikeTimes{chan}(spikesToPlot)/1000,0.9*ones(size(spikesToPlot)), 'parent',ax);
   set(h,'LineStyle','None','Marker','.');
   
 end
