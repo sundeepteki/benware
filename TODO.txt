@@ -1,11 +1,13 @@
 == PLANS
 
-* Save data during sweep, not afterwards
+* Faster for short stimuli -- HOW?
 
-* More careful checks of device status in stim/dataDeviceIinit and ZBusInit,
+* VAS?
+
+* More careful checks of device status in stim/dataDeviceInit and ZBusInit,
   e.g. check RCX circuit using a fake tag, and any circuit status stuff necessary. Be paranoid!
 
-* On error, close all files and diary
+* Neil's TDT error in log from expt 30
 
 * Compensate stimuli on TDT (saves 50% stimulus upload time).
   Can be done through matlab, no RPVDS req'd
@@ -19,7 +21,8 @@
 
 * Store fs_in and fs_out in one of the data structures
 
-* Offer to append data to existing directory if grid and penetration match
+* Offer to append data to existing directory if grid and penetration match.
+  OR have a way of continuing an interrupted grid.
 
 * Ability to plot filtered data on scope trace
 
@@ -27,17 +30,17 @@
 
 * Ability to not save data?
 
-
-
 * Save expt structure somewhere
 
 * UI for modifying expt structure
 
 * UI for seeing incoming data
 
-* Set which channel is selected on audio monitor of RZ6
+* Set which channel is selected on audio monitor of RZ5
 
 * Consider saving sweeps structure as separate files (is saving it slow?)
+
+* ontehfly: List directories in date order and default to most recent
 
 
 == ON HOLD
@@ -46,6 +49,10 @@
 
 
 == DONE
+
+* Save data during sweep, not afterwards
+
+* Check that SAVED data exactly matches TDT buffer when checkData is true
 
 * Grids for sparseness/highlights
 
@@ -73,3 +80,4 @@
   * We know that you get expected number - 1 otherwise.
   -- I'm pretty sure this adds up to simply floor() rather than ceil()
 
+* On error, close all files and diary
