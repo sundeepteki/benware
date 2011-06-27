@@ -3,11 +3,11 @@
 * Make sure stimulus device knows how long the stimulus is and doesn't play junk samples at the end --
   or truncate long stimuli come to that (i.e. when stimulus length changes within grid)
 
+* Is stereoplay actually behaving correctly re the above?
+
 * Faster for short stimuli -- HOW?
 
 * VAS?
-
-* Neil's TDT error in log from expt 30
 
 * Compensate stimuli on TDT (saves 50% stimulus upload time).
   Can be done through matlab, no RPVDS req'd
@@ -84,4 +84,7 @@
 * Include data filenames in sweepInfo.mat (this happens naturally if runSweep
   is informed about which files to use by benWare.m), which itself happens
   naturally in runSweep has to save data during the sweep
+
+* Neil's TDT error in log from expt 30
+
 

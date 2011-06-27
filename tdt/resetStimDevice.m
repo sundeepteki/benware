@@ -1,3 +1,3 @@
 function resetStimDevice(stimDevice)
 
-invoke(stimDevice,'SoftTrg',9);
+stimDevice.SoftTrg(9);

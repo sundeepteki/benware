@@ -1,3 +1,3 @@
 function index = getStimIndex(stimDevice)
 
-index=stimDevice.GetTagVal('StimIndex1');
+index=stimDevice.GetTagVal('StimIndex');

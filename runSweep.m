@@ -15,18 +15,26 @@ if any(countAllData(dataDevice) ~= 0)
 end
 
 % check that the correct stimulus is in the stimDevice buffer
-sz = size(stim, 2);
-rnd = floor(100+rand*(sz-300));
-checkData = [downloadStim(stimDevice, 0, 100) downloadStim(stimDevice, rnd, 100) downloadStim(stimDevice, sz-100, 100)];
+stimLen = size(stim, 2);
+rnd = floor(100+rand*(stimLen-300));
+checkData = [downloadStim(stimDevice, 0, 100) downloadStim(stimDevice, rnd, 100) downloadStim(stimDevice, stimLen-100, 100)];
 d = max(max(abs(checkData - [stim(:, 1:100) stim(:, rnd+1:rnd+100) stim(:, end-99:end)])));
 
 if d>10e-7
   error('Stimulus on stimDevice is not correct!');
 end
 
+% check stimulus length is correct
+if getStimLength(stimDevice) ~= stimLen
+  error('Stimulus length on stimDevice is not correct');
+end
+
 % reset stimulus device so it reads out from the beginning of the buffer
 % when triggered
 resetStimDevice(stimDevice);
+if getStimIndex(stimDevice)~=0
+  error('Stimulus index not equal to zero at start of sweep');
+end
 
 % make matlab buffer for data
 nSamplesExpected = floor(sweepLen*fs_in)+1;
@@ -44,7 +52,7 @@ spikeTimes = cell(1, 32);
 spikeIndex = 0;
 
 % keep track of how much of stimulus has been uploaded
-stimIndex = 0;
+samplesUploaded = 0;
 
 % prepare data display
 %plotData = feval(plotFunctions.init, []);
@@ -72,14 +80,17 @@ end
 while any(nSamplesReceived~=nSamplesExpected)
 
   % upload stimulus
-  maxStimIndex = getStimIndex(stimDevice);
   if ~isempty(nextStim)
-    if stimIndex==(size(nextStim, 2)-1)
-      fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
-    elseif maxStimIndex>stimIndex
-      uploadStimulus(stimDevice, nextStim(:, stimIndex+1:maxStimIndex), stimIndex);
-      stimIndex = maxStimIndex;
+    maxStimIndex = min(getStimIndex(stimDevice),stimLen);
+
+    if maxStimIndex>samplesUploaded
+      uploadStim(stimDevice, nextStim(:, samplesUploaded+1:maxStimIndex), samplesUploaded);
+      samplesUploaded = maxStimIndex;
+      if samplesUploaded==stimLen
+        fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
+      end
     end
+    
   end
 
   % download data
@@ -102,12 +113,15 @@ end
 
 fprintf(['  * Waveforms received and saved after ' num2str(toc) ' sec.\n']);
 
-% finish uploading stimulus if necessary
 if ~isempty(nextStim)
-  if stimIndex~=(size(nextStim, 2)-1)
-    uploadStimulus(stimDevice, nextStim(:, stimIndex+1:end), stimIndex);
+  % finish uploading stimulus if necessary
+  if samplesUploaded~=stimLen
+    uploadStim(stimDevice, nextStim(:, samplesUploaded+1:end), samplesUploaded);
     fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
   end
+  
+  % inform stimDevice about length of stimulus
+  setStimLength(stimDevice, stimLen);
 end
 
 % finish detecting spikes
@@ -144,7 +158,8 @@ global checkdata
 
 if checkdata
   fprintf('  * Checking stim...');
-  teststim = downloadStim(stimDevice, 0, size(nextStim, 2));
+  teststim = downloadStim(stimDevice, 0, samplesUploaded);
+
   d = max(max(abs(nextStim-teststim)));
   if d>10e-7
     error('Stimulus mismatch!');

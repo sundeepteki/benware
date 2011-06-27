@@ -19,7 +19,7 @@ global dataGain
 global truncate fakedata checkdata;
 truncate = 0; % for testing only. should normally be 0
 fakedata = []; %load('fakedata.mat'); % for testing only. should normally be []
-checkdata = true; % for testing only. should normally be FALSE
+checkdata = false; % for testing only. should normally be FALSE
 
 % testing notices
 needWarning = false;

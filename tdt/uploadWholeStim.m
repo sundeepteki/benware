@@ -1,15 +1,17 @@
 function uploadWholeStim(stimDevice, stim)
-  % uploadWholeStimulus(stim)
+% uploadWholeStimulus(stimDevice, stim)
+%
+% Upload a stereo stimulus to stimDevice, and inform the device
+% about the stimulus length
 
-if invoke(stimDevice,'SetTagVal','NumPoints',size(stim,2)) == 0,
-    error('WriteTag NumPoints failed');
-end;
-if invoke(stimDevice,'WriteTagVex','WaveForm1',0,'F32',stim(1,:)) == 0,
-    error('WriteTagVEX WaveForm1 failed');
-end;
-if invoke(stimDevice,'WriteTagVex','WaveForm2',0,'F32',stim(2,:)) == 0,
-    error('WriteTagVEX WaveForm2 failed');
-end;
+if ~stimDevice.SetTagVal('nSamples',size(stim,2))
+    error('WriteTag nSamples failed');
+end
 
-% soft trigger needed here?
-invoke(stimDevice,'SoftTrg',9);
+if ~stimDevice.WriteTagV('WaveformL',0,stim(1,:))
+    error('WriteTagV WaveformL failed');
+end
+
+if ~stimDevice.WriteTagV('WaveformR',0,stim(2,:))
+    error('WriteTagV WaveformR failed');
+end
