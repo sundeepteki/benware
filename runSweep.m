@@ -81,6 +81,8 @@ while any(nSamplesReceived~=nSamplesExpected)
 
   % upload stimulus
   if ~isempty(nextStim)
+    % stimulus upload is limited by length of stimulus, or where the
+    % stimDevice has got to in reading out the stimulus, whichever is lower
     maxStimIndex = min(getStimIndex(stimDevice),stimLen);
 
     if maxStimIndex>samplesUploaded
