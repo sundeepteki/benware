@@ -1,5 +1,15 @@
 == PLANS
 
+* Save data during sweep, not afterwards
+
+* More careful checks of device status in stim/dataDeviceIinit and ZBusInit,
+  e.g. check RCX circuit using a fake tag, and any circuit status stuff necessary. Be paranoid!
+
+* On error, close all files and diary
+
+* Compensate stimuli on TDT (saves 50% stimulus upload time).
+  Can be done through matlab, no RPVDS req'd
+
 * Include data filenames in sweepInfo.mat (this happens naturally if runSweep
   is informed about which files to use by benWare.m), which itself happens
   naturally in runSweep has to save data during the sweep
@@ -13,13 +23,11 @@
 
 * Ability to plot filtered data on scope trace
 
-* Save data during sweep, not afterwards
-
 * Ability to plot averaged LFP signal
 
 * Ability to not save data?
 
-* More careful checks of device status in stim/dataDeviceIinit and ZBusInit
+
 
 * Save expt structure somewhere
 

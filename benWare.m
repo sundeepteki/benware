@@ -29,9 +29,6 @@ truncate = 0; % for testing only. should normally be 0
 fakedata = []; %load('fakedata.mat'); % for testing only. should normally be []
 checkdata = false; % for testing only. should normally be FALSE
 
-oldStyleSpikeTimes = false; % temporary flag to allow us to switch back
-                            % to saving all spike times in one file if necessary
-
 saveDataDuringSweep = true; % temporary flag to choose between saving
                             % data during sweep and saving after sweep
 
@@ -224,11 +221,7 @@ for sweepNum = 1:grid.nSweepsDesired
   %end
 
   % save spikes separately or as part of sweep info
-  if oldStyleSpikeTimes
-    sweeps(sweepNum).spikeTimes = spikeTimes;
-  else
-    sweeps(sweepNum).spikeFile = saveSpikeTimes(spikeTimes, grid, expt, sweepNum);
-  end
+  sweeps(sweepNum).spikeFile = saveSpikeTimes(spikeTimes, grid, expt, sweepNum);
 
   % save sweep metadata
   saveSweepInfo(sweeps, grid, expt);
