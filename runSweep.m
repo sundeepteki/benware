@@ -1,4 +1,4 @@
-function [spikeTimes, timeStamp] = runSweep(stimDevice, fs_out, dataDevice, fs_in, zBus, sweepLen, stim, nextStim, plotFunctions, detectSpikes, spikeFilter, spikeThreshold, dataFiles)
+function [nSamples, spikeTimes, timeStamp] = runSweep(stimDevice, fs_out, dataDevice, fs_in, zBus, sweepLen, stim, nextStim, plotFunctions, detectSpikes, spikeFilter, spikeThreshold, dataFiles)
 %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
 %% Will fail if next stimulus is not on the TDT
 %% Upload the next stimulus at the same time, then reset the stimDevice
@@ -146,7 +146,7 @@ global checkdata
 
 if checkdata
   fprintf('  * Checking stim...');
-  teststim = downloadStim(0, size(nextStim, 2));
+  teststim = downloadStim(stimDevice, 0, size(nextStim, 2));
   d = max(max(abs(nextStim-teststim)));
   if d>10e-7
     error('Stimulus mismatch!');
@@ -154,7 +154,7 @@ if checkdata
   fprintf([' ' num2str(size(teststim, 2)) ' samples verified.\n']);
 
   fprintf('  * Checking data...');
-  testData = downloadAllData();
+  testData = downloadAllData(dataDevice);
   for chan = 1:32
     diffInMem = max(abs(data(chan,:) - testData{chan}));
     if diffInMem > 0

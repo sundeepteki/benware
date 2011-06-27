@@ -4,12 +4,10 @@
 % path
 if ispc
   addpath(genpath('D:\auditory-objects\NeilLib'));
-  addpath([pwd '\plotFunctions\']);
-  addpath([pwd '\grids']);
+  addpath(genpath(pwd));
 else
   addpath([pwd '/../NeilLib/']);
-  addpath([pwd '/plotFunctions/']);
-  addpath([pwd '/grids/']);
+  addpath(genpath(pwd));
 end
 
 % welcome
@@ -18,7 +16,7 @@ printGreetings()
 % core variables
 %global zBus stimDevice dataDevice;
 %global fs_in fs_out
-%global dataGain
+global dataGain
 
 %expt.fs_in = 24414.0625;
 %expt.fs_out = expt.fs_in * 2;
@@ -214,7 +212,7 @@ try
     mkdir_nowarning(dataDir);
     
     % run the sweep
-    [spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(stimDevice, grid.sampleRate, dataDevice, expt.dataDeviceSampleRate, zBus, sweepLen, stim, nextStim, expt.plotFunctions, expt.detectSpikes, spikeFilter, expt.spikeThreshold,sweeps(sweepNum).dataFiles);     %#ok<*SAGROW>
+    [nSamples, spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(stimDevice, grid.sampleRate, dataDevice, expt.dataDeviceSampleRate, zBus, sweepLen, stim, nextStim, expt.plotFunctions, expt.detectSpikes, spikeFilter, expt.spikeThreshold,sweeps(sweepNum).dataFiles);     %#ok<*SAGROW>
     
     % store sweep duration
     sweeps(sweepNum).sweepLen.samples = nSamples;
