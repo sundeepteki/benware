@@ -1,6 +1,4 @@
-function data = downloadData(chan, offset)
-
-global dataDevice;
+function data = downloadData(dataDevice, chan, offset)
 
 maxIndex=dataDevice.GetTagVal(['ADidx' num2str(chan)]);
 if maxIndex-offset==0

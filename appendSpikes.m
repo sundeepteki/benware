@@ -1,6 +1,4 @@
-function [spikeTimes,index] = appendSpikes(spikeTimes,data,dataIndex,index,spikeFilter,threshold,force)
-
-global fs_in;
+function [spikeTimes,index] = appendSpikes(spikeTimes, fs_in, data, dataIndex, index, spikeFilter, threshold, force)
 
 maxlen = min(dataIndex);
 

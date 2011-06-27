@@ -16,12 +16,12 @@ end
 printGreetings()
 
 % core variables
-global zBus stimDevice dataDevice;
-global fs_in fs_out
-global channelOrder
-global dataGain
+%global zBus stimDevice dataDevice;
+%global fs_in fs_out
+%global dataGain
 
-fs_in = 24414.0625;
+%expt.fs_in = 24414.0625;
+%expt.fs_out = expt.fs_in * 2;
 
 global truncate fakedata checkdata;
 truncate = 0; % for testing only. should normally be 0
@@ -57,8 +57,12 @@ end
 clear expt grid;
 
 expt.exptNum = 98;
-% fs_in and fs_out should be stored here or in grid.foo
-%expt.stimDeviceName = 'RX6';
+
+expt.stimDeviceName = 'RX6';
+
+expt.dataDeviceName = 'RZ5';
+expt.dataDeviceSampleRate = 24414.0625;
+
 expt.penetrationNum = 99;
 expt.probe.lhs = 2920;
 expt.probe.rhs = 2940;
@@ -140,18 +144,28 @@ try
   tic;
   
   % make filter for spike detection
-  spikeFilter = makeSpikeFilter(fs_in);
+  spikeFilter = makeSpikeFilter(expt.dataDeviceSampleRate);
   
   % prepare TDT
   figure(99);
   set_fig_size(100, 100, 99);
   put_fig_in_bottom_right;
-  fs_out = grid.sampleRate;
-  zBusInit();
-  %pause(2);
-  stimDeviceInit('RX6', fs_out);
-  %pause(2);
-  dataDeviceInit(expt.channelMapping);
+
+  if ~exist('zBus','var')
+    zBus = [];
+  end
+  zBus = zBusInit(zBus);
+  
+  if ~exist('stimDevice','var')
+    stimDevice = [];
+  end
+  stimDevice = stimDeviceInit(stimDevice, expt.stimDeviceName, grid.sampleRate);
+  
+  if ~exist('dataDevice','var')
+    dataDevice = [];
+  end
+  dataDevice = dataDeviceInit(dataDevice, expt.dataDeviceName, expt.dataDeviceSampleRate, expt.channelMapping);
+  
   fprintf('  * Post-initialisation pause...');
   pause(2);
   fprintf('done.\n');
@@ -162,7 +176,7 @@ try
   % upload first stimulus
   [nextStim sweeps(1).stimInfo] = stimGenerationFunction(1, grid, expt);
   fprintf('  * Uploading first stimulus...');
-  uploadWholeStim(nextStim);
+  uploadWholeStim(stimDevice, nextStim);
   fprintf(['done after ' num2str(toc) ' sec.\n']);
   
   
@@ -186,10 +200,10 @@ try
     
     % store stimulus duration
     sweeps(sweepNum).stimLen.samples = size(stim, 2);
-    sweeps(sweepNum).stimLen.ms = sweeps(sweepNum).stimLen.samples/fs_out*1000;
+    sweeps(sweepNum).stimLen.ms = sweeps(sweepNum).stimLen.samples/grid.sampleRate*1000;
     
     % actual sweep length
-    sweepLen = size(stim, 2)/fs_out + grid.postStimSilence;
+    sweepLen = size(stim, 2)/grid.sampleRate + grid.postStimSilence;
     fprintf(['  * sweep length: ' num2str(sweepLen) ' s\n']);
     
     % get filenames for saving data
@@ -200,11 +214,11 @@ try
     mkdir_nowarning(dataDir);
     
     % run the sweep
-    [spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(sweepLen, stim, nextStim, expt.plotFunctions, expt.detectSpikes, spikeFilter, expt.spikeThreshold,sweeps(sweepNum).dataFiles);     %#ok<*SAGROW>
+    [spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(stimDevice, grid.sampleRate, dataDevice, expt.dataDeviceSampleRate, zBus, sweepLen, stim, nextStim, expt.plotFunctions, expt.detectSpikes, spikeFilter, expt.spikeThreshold,sweeps(sweepNum).dataFiles);     %#ok<*SAGROW>
     
     % store sweep duration
     sweeps(sweepNum).sweepLen.samples = nSamples;
-    sweeps(sweepNum).sweepLen.ms = sweeps(sweepNum).sweepLen.samples/fs_in*1000;
+    sweeps(sweepNum).sweepLen.ms = sweeps(sweepNum).sweepLen.samples/expt.dataDeviceSampleRate*1000;
         
     % save spikes separately or as part of sweep info
     sweeps(sweepNum).spikeFile = saveSpikeTimes(spikeTimes, grid, expt, sweepNum);

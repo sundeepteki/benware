@@ -1,8 +1,9 @@
-function uploadWholeStimulus(stim)
+function uploadWholeStimulus(stimDevice, stim)
   % uploadWholeStimulus(stim)
 
-global stimDevice
-
+error('Deprecated! doing nothing');
+return;
+  
 if invoke(stimDevice,'SetTagVal','NumPoints',size(stim,2)) == 0,
     error('WriteTag NumPoints failed');
 end;

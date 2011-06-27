@@ -1,6 +1,4 @@
-function data = downloadAllData
-
-global dataDevice;
+function data = downloadAllData(dataDevice)
 
 for chan = 1:32
     maxIndex=dataDevice.GetTagVal(['ADidx' num2str(chan)]);

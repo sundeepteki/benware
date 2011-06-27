@@ -1,6 +1,8 @@
 function plotData = scopeTraceFastPlot(plotData, data, dataIndex, spikeTimes)
 
-global fs_in dataGain;
+global dataGain;
+
+fs_in = plotData.fs_in;
 
 nSamplesToPlot = 2000;
 

@@ -1,25 +1,25 @@
-function [spikeTimes, timeStamp] = runSweep(sweepLen, stim, nextStim, plotFunctions, detectSpikes, spikeFilter, spikeThreshold, dataFiles)
+function [spikeTimes, timeStamp] = runSweep(stimDevice, fs_out, dataDevice, fs_in, zBus, sweepLen, stim, nextStim, plotFunctions, detectSpikes, spikeFilter, spikeThreshold, dataFiles)
 %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
 %% Will fail if next stimulus is not on the TDT
 %% Upload the next stimulus at the same time, then reset the stimDevice
 %% and inform the stimDevice of the stimulus length
 
-global zBus stimDevice dataDevice;
-global fs_in fs_out;
+%global zBus stimDevice dataDevice;
+%global fs_in fs_out;
 global fakedata;
 
 % reset data device and tell it how long the sweep will be
-resetDataDevice(sweepLen*1000);
+resetDataDevice(dataDevice, sweepLen*1000);
 
 % check for stale data in data device buffer
-if any(countAllData() ~= 0)
+if any(countAllData(dataDevice) ~= 0)
   error('Stale data in data buffer');
 end
 
 % check that the correct stimulus is in the stimDevice buffer
 sz = size(stim, 2);
 rnd = floor(100+rand*(sz-300));
-checkData = [downloadStim(0, 100) downloadStim(rnd, 100) downloadStim(sz-100, 100)];
+checkData = [downloadStim(stimDevice, 0, 100) downloadStim(stimDevice, rnd, 100) downloadStim(stimDevice, sz-100, 100)];
 d = max(max(abs(checkData - [stim(:, 1:100) stim(:, rnd+1:rnd+100) stim(:, end-99:end)])));
 
 if d>10e-7
@@ -46,11 +46,11 @@ stimIndex = 0;
 
 % prepare data display
 %plotData = feval(plotFunctions.init, []);
-plotData = feval(plotFunctions.init, [], nSamplesExpected);
+plotData = feval(plotFunctions.init, [], fs_in, nSamplesExpected);
 
 % trigger stimulus presentation and data collection
 timeStamp = clock;
-triggerZBus();
+triggerZBus(zBus);
 
 fprintf('  * Sweep triggered.\n');
 
@@ -70,19 +70,19 @@ end
 while any(nSamplesReceived~=nSamplesExpected)
 
   % upload stimulus
-  maxStimIndex = getStimIndex;
+  maxStimIndex = getStimIndex(stimDevice);
   if ~isempty(nextStim)
     if stimIndex==(size(nextStim, 2)-1)
       fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
     elseif maxStimIndex>stimIndex
-      uploadStimulus(nextStim(:, stimIndex+1:maxStimIndex), stimIndex);
+      uploadStimulus(stimDevice, nextStim(:, stimIndex+1:maxStimIndex), stimIndex);
       stimIndex = maxStimIndex;
     end
   end
 
   % download data
   for chan = 1:32
-    newdata = downloadData(chan, nSamplesReceived(chan));
+    newdata = downloadData(dataDevice, chan, nSamplesReceived(chan));
     if isempty(fakedata) % I.E. NOT using fakedata
       data(chan, nSamplesReceived(chan)+1:nSamplesReceived(chan)+length(newdata)) = newdata;
     end
@@ -91,7 +91,7 @@ while any(nSamplesReceived~=nSamplesExpected)
   end
 
   % detect spikes
-  [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, data, nSamplesReceived, spikeIndex, spikeFilter, spikeThreshold, false);
+  [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, fs_in, data, nSamplesReceived, spikeIndex, spikeFilter, spikeThreshold, false);
 
   % plot data
   plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, spikeTimes);
@@ -103,14 +103,14 @@ fprintf(['  * Waveforms received and saved after ' num2str(toc) ' sec.\n']);
 % finish uploading stimulus if necessary
 if ~isempty(nextStim)
   if stimIndex~=(size(nextStim, 2)-1)
-    uploadStimulus(nextStim(:, stimIndex+1:end), stimIndex);
+    uploadStimulus(stimDevice, nextStim(:, stimIndex+1:end), stimIndex);
     fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
   end
 end
 
 % finish detecting spikes
 if detectSpikes
-  [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, data, nSamplesReceived, spikeIndex, spikeFilter, spikeThreshold,true);
+  [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, fs_in, data, nSamplesReceived, spikeIndex, spikeFilter, spikeThreshold,true);
   fprintf(['  * ' num2str(sum(cellfun(@(i) length(i),spikeTimes))) ' spikes detected after ' num2str(toc) ' sec.\n']);
 end
 
@@ -139,7 +139,7 @@ end
 
 % reset stimulus device so it reads out from the beginning of the buffer
 % when triggered (might be more sensible at start of sweep)
-resetStimDevice;
+resetStimDevice(stimDevice);
 
 % optional: check data thoroughly (too slow to be used normally)
 global checkdata

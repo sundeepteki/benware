@@ -1,6 +1,6 @@
-function plotData = scopeTraceFastInit(plotData, nSamplesExpected)
+function plotData = scopeTraceFastInit(plotData, fs_in, nSamplesExpected)
 
-global fs_in;
+plotData.fs_in = fs_in;
 
 % positions
 n.rows = 8;

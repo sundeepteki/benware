@@ -1,7 +1,5 @@
-function uploadWholeStim(stim)
+function uploadWholeStim(stimDevice, stim)
   % uploadWholeStimulus(stim)
-
-global stimDevice
 
 if invoke(stimDevice,'SetTagVal','NumPoints',size(stim,2)) == 0,
     error('WriteTag NumPoints failed');
