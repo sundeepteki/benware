@@ -26,6 +26,10 @@ if d>10e-7
   error('Stimulus on stimDevice is not correct!');
 end
 
+% reset stimulus device so it reads out from the beginning of the buffer
+% when triggered
+resetStimDevice(stimDevice);
+
 % make matlab buffer for data
 nSamplesExpected = floor(sweepLen*fs_in)+1;
 data = zeros(32, nSamplesExpected);
@@ -136,10 +140,6 @@ fprintf(['  * Got ' num2str(nSamples) ' samples (expecting ' num2str(nSamplesExp
 if (nSamples~=nSamplesExpected)
   error('Wrong number of samples');
 end
-
-% reset stimulus device so it reads out from the beginning of the buffer
-% when triggered (might be more sensible at start of sweep)
-resetStimDevice(stimDevice);
 
 % optional: check data thoroughly (too slow to be used normally)
 global checkdata
