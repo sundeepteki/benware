@@ -1,16 +1,12 @@
 == PLANS
 
-* Make sure stimulus device knows how long the stimulus is and doesn't play junk samples at the end --
-  or truncate long stimuli come to that (i.e. when stimulus length changes within grid)
+* Faster for short stimuli -- HOW? (and are we slower than brainware still?)
 
-* Is stereoplay actually behaving correctly re the above?
-
-* Faster for short stimuli -- HOW?
+* Not actually catching ctrl-c and handling file closing -- works for errors only
 
 * VAS?
 
-* Compensate stimuli on TDT (saves 50% stimulus upload time).
-  Can be done through matlab, no RPVDS req'd
+* Clean up parameters of runSweep
 
 * Offer to append data to existing directory if grid and penetration match.
   OR have a way of continuing an interrupted grid.
@@ -36,8 +32,11 @@
 
 == ON HOLD
 
-* stereoPlay16bit
+* stereoPlay16bit -- is it OK to lose resolution? we don't really know
 
+* Compensate stimuli on TDT (saves 50% stimulus upload time).
+  Can be done through matlab, no RPVDS req'd
+  -- it's too slow! RX6 can cope at 50k but not 100k. See calibplay.rcx
 
 == DONE
 
@@ -87,4 +86,7 @@
 
 * Neil's TDT error in log from expt 30
 
+* Make sure stimulus device knows how long the stimulus is and doesn't play junk samples at the end --
+  or truncate long stimuli come to that (i.e. when stimulus length changes within grid)
 
+* Is stereoplay actually behaving correctly re the above?

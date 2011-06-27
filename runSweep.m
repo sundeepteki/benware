@@ -56,13 +56,15 @@ samplesUploaded = 0;
 
 % prepare data display
 %plotData = feval(plotFunctions.init, []);
+%fprintf(['before  ' num2str(toc) ' sec.\n']);
 plotData = feval(plotFunctions.init, [], fs_in, nSamplesExpected);
+%fprintf([' after ' num2str(toc) ' sec.\n']);
 
 % trigger stimulus presentation and data collection
 timeStamp = clock;
 triggerZBus(zBus);
 
-fprintf('  * Sweep triggered.\n');
+fprintf(['  * Sweep triggered after ' num2str(toc) ' sec.\n']);
 
 % while trial is running:
 % * upload next stimulus as far as possible
