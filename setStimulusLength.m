@@ -1,6 +1,7 @@
-function setStimulusLength(samples)
+function setStimulusLength(stimDevice, samples)
 
-global stimDevice
+error('Deprecated! Doing nothing');
+return;
 
 if ~stimDevice.SetTagVal('NumPoints',samples)
     error('WriteTag NumPoints failed');

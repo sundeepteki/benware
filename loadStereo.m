@@ -1,7 +1,7 @@
 function [stim, stimInfo] = loadStereo(sweepNum, grid, expt)
   % [stim, stimInfo] = loadStereo(sweepNum, grid, expt)
 
-global fs_out truncate
+global truncate
 
 fprintf(['  * Loading stimulus ' num2str(sweepNum) '...']);
 
@@ -18,7 +18,7 @@ stim = loadStim(stimInfo.stimFileL, stimInfo.stimFileR, ...
 % hack to present 1 second stimulus instead of 30
 if truncate > 0
     fprintf(' ==Truncating stimulus== ');
-    stim = stim(:, 1:round(truncate*fs_out)); 
+    stim = stim(:, 1:round(truncate*grid.sampleRate)); 
 end
 
 fprintf(['done after ' num2str(toc) ' sec.\n']);

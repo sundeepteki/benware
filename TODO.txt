@@ -1,25 +1,16 @@
 == PLANS
 
+* Make sure stimulus device knows how long the stimulus is and doesn't play junk samples at the end --
+  or truncate long stimuli come to that (i.e. when stimulus length changes within grid)
+
 * Faster for short stimuli -- HOW?
 
 * VAS?
-
-* More careful checks of device status in stim/dataDeviceInit and ZBusInit,
-  e.g. check RCX circuit using a fake tag, and any circuit status stuff necessary. Be paranoid!
 
 * Neil's TDT error in log from expt 30
 
 * Compensate stimuli on TDT (saves 50% stimulus upload time).
   Can be done through matlab, no RPVDS req'd
-
-* Include data filenames in sweepInfo.mat (this happens naturally if runSweep
-  is informed about which files to use by benWare.m), which itself happens
-  naturally in runSweep has to save data during the sweep
-
-* Get rid of nSamples from the saving code, and just save the 
-  whole lot (which will no longer have a trailing zero)
-
-* Store fs_in and fs_out in one of the data structures
 
 * Offer to append data to existing directory if grid and penetration match.
   OR have a way of continuing an interrupted grid.
@@ -34,7 +25,7 @@
 
 * UI for modifying expt structure
 
-* UI for seeing incoming data
+* UI for seeing incoming data - F for filtered, R for raw, etc.
 
 * Set which channel is selected on audio monitor of RZ5
 
@@ -81,3 +72,16 @@
   -- I'm pretty sure this adds up to simply floor() rather than ceil()
 
 * On error, close all files and diary
+
+* More careful checks of device status in stim/dataDeviceInit and ZBusInit,
+  e.g. check RCX circuit using a fake tag, and any circuit status stuff necessary. Be paranoid!
+
+* Get rid of nSamples from the saving code, and just save the 
+  whole lot (which will no longer have a trailing zero)
+
+* Store fs_in and fs_out in one of the data structures
+
+* Include data filenames in sweepInfo.mat (this happens naturally if runSweep
+  is informed about which files to use by benWare.m), which itself happens
+  naturally in runSweep has to save data during the sweep
+

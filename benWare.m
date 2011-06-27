@@ -13,13 +13,8 @@ end
 % welcome
 printGreetings()
 
-% core variables
-%global zBus stimDevice dataDevice;
-%global fs_in fs_out
+% variables intended for manipulation by future UI
 global dataGain
-
-%expt.fs_in = 24414.0625;
-%expt.fs_out = expt.fs_in * 2;
 
 global truncate fakedata checkdata;
 truncate = 0; % for testing only. should normally be 0

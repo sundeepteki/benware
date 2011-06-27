@@ -4,8 +4,6 @@ function [nSamples, spikeTimes, timeStamp] = runSweep(stimDevice, fs_out, dataDe
 %% Upload the next stimulus at the same time, then reset the stimDevice
 %% and inform the stimDevice of the stimulus length
 
-%global zBus stimDevice dataDevice;
-%global fs_in fs_out;
 global fakedata;
 
 % reset data device and tell it how long the sweep will be
