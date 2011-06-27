@@ -1,8 +1,12 @@
 == PLANS
 
 * Faster for short stimuli -- HOW? (and are we slower than brainware still?)
+  -- numerous small optimisations are possible (and worthwhile) but turning plotting off
+     make a big difference (quning from 0.6+ to 0.3+ sec per sweep). Need to investigate 
+     saving of the mat file, which does take longer and longer through a grid.
 
 * Not actually catching ctrl-c and handling file closing -- works for errors only
+  -- investigate onCleanup
 
 * VAS?
 

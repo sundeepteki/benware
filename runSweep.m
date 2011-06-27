@@ -1,4 +1,4 @@
-function [nSamples, spikeTimes, timeStamp] = runSweep(stimDevice, fs_out, dataDevice, fs_in, zBus, sweepLen, stim, nextStim, plotFunctions, detectSpikes, spikeFilter, spikeThreshold, dataFiles)
+function [nSamples, spikeTimes, timeStamp] = runSweep(stimDevice, fs_out, dataDevice, fs_in, zBus, sweepLen, stim, nextStim, plotFunctions, detectSpikes, spikeFilter, spikeThreshold, dataFiles, plotData)
 %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
 %% Will fail if next stimulus is not on the TDT
 %% Upload the next stimulus at the same time, then reset the stimDevice
@@ -29,6 +29,7 @@ if getStimLength(stimDevice) ~= stimLen
   error('Stimulus length on stimDevice is not correct');
 end
 
+
 % reset stimulus device so it reads out from the beginning of the buffer
 % when triggered
 resetStimDevice(stimDevice);
@@ -55,10 +56,8 @@ spikeIndex = 0;
 samplesUploaded = 0;
 
 % prepare data display
-%plotData = feval(plotFunctions.init, []);
-%fprintf(['before  ' num2str(toc) ' sec.\n']);
-plotData = feval(plotFunctions.init, [], fs_in, nSamplesExpected);
-%fprintf([' after ' num2str(toc) ' sec.\n']);
+%plotData = feval(plotFunctions.init, [], fs_in, nSamplesExpected);
+
 
 % trigger stimulus presentation and data collection
 timeStamp = clock;

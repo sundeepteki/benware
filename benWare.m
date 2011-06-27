@@ -76,7 +76,7 @@ end
 
 expt.logFilename = 'benWare.log';
 expt.plotFunctions.init = 'scopeTraceFastInit';
-expt.plotFunctions.plot = 'scopeTraceFastPlot';
+expt.plotFunctions.plot = 'noPlot';
 expt.dataGain = 1000;
 expt.detectSpikes = true;
 expt.spikeThreshold = -2.8;
@@ -172,6 +172,9 @@ try
   uploadWholeStim(stimDevice, nextStim);
   fprintf(['done after ' num2str(toc) ' sec.\n']);
   
+  % set up plot -- FIXME assumes all stimuli will be the same length as the first
+  nSamplesExpected = floor((size(nextStim,2)/grid.sampleRate+grid.postStimSilence)*expt.dataDeviceSampleRate)+1;
+  plotData = feval(expt.plotFunctions.init, [], expt.dataDeviceSampleRate, nSamplesExpected);
   
   %% run sweeps
   % =============
@@ -182,7 +185,7 @@ try
     stim = nextStim;
     displayStimInfo(sweeps, grid, sweepNum);
     fprintf('Progress:\n');
-    
+
     % retrieve the stimulus for the NEXT sweep
     isLastSweep = (sweepNum == grid.nSweepsDesired);
     if ~isLastSweep
@@ -200,14 +203,16 @@ try
     fprintf(['  * sweep length: ' num2str(sweepLen) ' s\n']);
     
     % get filenames for saving data
-    for chan = 1:32
-      sweeps(sweepNum).dataFiles{chan} = constructDataPath([expt.dataDir expt.dataFilename],grid,expt,sweepNum,chan);
-    end
+    %for chan = 1:32
+    %  sweeps(sweepNum).dataFiles{chan} = constructDataPath([expt.dataDir expt.dataFilename],grid,expt,sweepNum,chan);
+    %end
+    sweeps(sweepNum).dataFiles = constructDataPaths([expt.dataDir expt.dataFilename],grid,expt,sweepNum,32);
     dataDir = split_path(sweeps(sweepNum).dataFiles{chan});
     mkdir_nowarning(dataDir);
     
     % run the sweep
-    [nSamples, spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(stimDevice, grid.sampleRate, dataDevice, expt.dataDeviceSampleRate, zBus, sweepLen, stim, nextStim, expt.plotFunctions, expt.detectSpikes, spikeFilter, expt.spikeThreshold,sweeps(sweepNum).dataFiles);     %#ok<*SAGROW>
+    [nSamples, spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(stimDevice, grid.sampleRate, dataDevice, expt.dataDeviceSampleRate, zBus, ...
+      sweepLen, stim, nextStim, expt.plotFunctions, expt.detectSpikes, spikeFilter, expt.spikeThreshold, sweeps(sweepNum).dataFiles, plotData);     %#ok<*SAGROW>
     
     % store sweep duration
     sweeps(sweepNum).sweepLen.samples = nSamples;
