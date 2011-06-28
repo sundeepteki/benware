@@ -1,5 +1,15 @@
 == TO DO TODAY
 
+* check that new data files are OK (sweeps in individual files)
+
+* Set which channel is selected on audio monitor of RZ5
+
+* try to get a search GUI going and possibly different kinds of plots
+
+* test each stimulus type
+
+* make it easy to switch plotting off
+
 
 == PLANS
 
