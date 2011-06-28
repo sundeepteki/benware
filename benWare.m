@@ -19,7 +19,7 @@ global dataGain
 global truncate fakedata checkdata;
 truncate = 0; % for testing only. should normally be 0
 fakedata = []; %load('fakedata.mat'); % for testing only. should normally be []
-checkdata = false; % for testing only. should normally be FALSE
+checkdata = true; % for testing only. should normally be FALSE
 
 % testing notices
 needWarning = false;
@@ -67,17 +67,17 @@ expt.channelMapping = [channelMapping channelMapping+16];
 if ispc
   expt.dataDir = 'F:\auditory-objects.data\expt%E\%P-%N\';
   expt.dataFilename = 'raw.f32\%P.%N.sweep.%S.channel.%C.f32';
-  expt.spikeFilename = 'spike.mat\%P.%N.sweep.%S.mat';
+  expt.sweepFilename = 'sweep.mat\%P.%N.sweep.%S.mat';
 else
   expt.dataDir = './expt-%E/%P-%N/';
   expt.dataFilename = 'raw.f32/%P.%N.sweep.%S.channel.%C.f32';
-  expt.spikeFilename = 'spike.mat/%P.%N.sweep.%S.mat';
+  expt.sweepFilename = 'sweep.mat/%P.%N.sweep.%S.mat';
 end
 
 expt.logFilename = 'benWare.log';
 expt.plotFunctions.init = 'scopeTraceFastInit';
-expt.plotFunctions.plot = 'noPlot';
-expt.dataGain = 1000;
+expt.plotFunctions.plot = 'scopeTraceFastPlot';
+expt.dataGain = 100;
 expt.detectSpikes = true;
 expt.spikeThreshold = -2.8;
 %expt.plotFunctions.preGrid = 'rasterPreGrid';
@@ -87,42 +87,9 @@ expt.spikeThreshold = -2.8;
 % load grid from grids/ directory
 grid = chooseGrid();
 
-% prepare TDT
-figure(99);
-set_fig_size(100, 100, 99);
-put_fig_in_bottom_right;
-
-if ~exist('tdt','var')
-  tdt = struct();
-end
-
-if ~isfield(tdt,'zBus')
-  tdt.zBus = [];
-end
-tdt.zBus = zBusInit(tdt.zBus);
-
-if ~isfield(tdt,'stimDevice')
-  tdt.stimDevice = [];
-end
-[tdt.stimDevice, tdt.stimSampleRate] = stimDeviceInit(tdt.stimDevice, expt.stimDeviceName, grid.sampleRate);
-
-if ~isfield(tdt,'dataDevice')
-  tdt.dataDevice = [];
-end
-[tdt.dataDevice, tdt.dataSampleRate] = dataDeviceInit(tdt.dataDevice, expt.dataDeviceName, expt.dataDeviceSampleRate, expt.channelMapping);
-
-fprintf('  * Post-initialisation pause...');
-pause(2);
-fprintf('done.\n');
-
-% check sample rates are identical to those requested
-if tdt.stimSampleRate ~= grid.sampleRate
-  error('stimDevice sample rate is wrong');
-end
-
-if tdt.dataSampleRate ~= expt.dataDeviceSampleRate
-  error('dataDevice sample rate is wrong');
-end
-
 % run grid
-runGrid(expt, grid, tdt);
+if ~exist('tdt','var')
+  tdt = [];
+end
+
+tdt = runGrid(tdt, expt, grid);

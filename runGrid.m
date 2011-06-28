@@ -1,6 +1,8 @@
-function runGrid(expt, grid, tdt)
+function tdt = runGrid(tdt, expt, grid)
 %% stim/data setup: AUTO
 % =======================
+
+global dataGain;
 
 % close open files if there is an error or ctrl-c
 cleanupObject = onCleanup(@()cleanup(tdt));
@@ -49,11 +51,12 @@ diary(constructDataPath([expt.dataDir expt.logFilename], grid, expt));
 fprintf_title('Preparing to record');
 tic;
 
+tdt = prepareTDT(tdt, expt, grid);
+
 % make filter for spike detection
 spikeFilter = makeSpikeFilter(expt.dataDeviceSampleRate);
 
 clear sweeps stim nextStim sweepNum data sweepLen spikeTimes; % no longer needed now this is a function?
-tic;
 
 % upload first stimulus
 [nextStim sweeps(1).stimInfo] = stimGenerationFunction(1, grid, expt);
@@ -64,6 +67,7 @@ fprintf(['done after ' num2str(toc) ' sec.\n']);
 % set up plot -- FIXME assumes all stimuli will be the same length as the first
 nSamplesExpected = floor((size(nextStim,2)/grid.sampleRate+grid.postStimSilence)*expt.dataDeviceSampleRate)+1;
 plotData = feval(expt.plotFunctions.init, [], expt.dataDeviceSampleRate, nSamplesExpected);
+%plotData = [];
 
 %% run sweeps
 % =============
@@ -83,6 +87,8 @@ for sweepNum = 1:grid.nSweepsDesired
     nextStim = [];
   end
   
+  sweeps(sweepNum).sweepNum = sweepNum;
+  
   % store stimulus duration
   sweeps(sweepNum).stimLen.samples = size(stim, 2);
   sweeps(sweepNum).stimLen.ms = sweeps(sweepNum).stimLen.samples/grid.sampleRate*1000;
@@ -92,26 +98,20 @@ for sweepNum = 1:grid.nSweepsDesired
   fprintf(['  * sweep length: ' num2str(sweepLen) ' s\n']);
   
   % get filenames for saving data
-  %for chan = 1:32
-  %  sweeps(sweepNum).dataFiles{chan} = constructDataPath([expt.dataDir expt.dataFilename],grid,expt,sweepNum,chan);
-  %end
   sweeps(sweepNum).dataFiles = constructDataPaths([expt.dataDir expt.dataFilename],grid,expt,sweepNum,32);
   dataDir = split_path(sweeps(sweepNum).dataFiles{1});
   mkdir_nowarning(dataDir);
   
   % run the sweep
-  [nSamples, spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(tdt, sweepLen, stim, nextStim, expt.plotFunctions, ...
+  [nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(tdt, sweepLen, stim, nextStim, expt.plotFunctions, ...
     expt.detectSpikes, spikeFilter, expt.spikeThreshold, sweeps(sweepNum).dataFiles, plotData);     %#ok<*SAGROW>
   
   % store sweep duration
   sweeps(sweepNum).sweepLen.samples = nSamples;
   sweeps(sweepNum).sweepLen.ms = sweeps(sweepNum).sweepLen.samples/expt.dataDeviceSampleRate*1000;
   
-  % save spikes separately or as part of sweep info
-  sweeps(sweepNum).spikeFile = saveSpikeTimes(spikeTimes, grid, expt, sweepNum);
-  
   % save sweep metadata
-  saveSweepInfo(sweeps, grid, expt);
+  saveSingleSweepInfo(sweeps(sweepNum), grid, expt, sweepNum);
   
   fprintf(['  * Finished sweep after ' num2str(toc) ' sec.\n\n']);
   

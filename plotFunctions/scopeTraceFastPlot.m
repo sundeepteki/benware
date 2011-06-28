@@ -4,7 +4,7 @@ global dataGain;
 
 fs_in = plotData.fs_in;
 
-nSamplesToPlot = 2000;
+nSamplesToPlot = 500;
 
 if size(data,2)<nSamplesToPlot
   samplesToPlot = 1:size(data,2);

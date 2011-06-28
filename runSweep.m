@@ -113,13 +113,14 @@ while any(nSamplesReceived~=nSamplesExpected)
   plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, spikeTimes);
   drawnow;
 end
-a =foo;
+
 fprintf(['  * Waveforms received and saved after ' num2str(toc) ' sec.\n']);
 
 if ~isempty(nextStim)
   % finish uploading stimulus if necessary
   if samplesUploaded~=stimLen
     uploadStim(tdt.stimDevice, nextStim(:, samplesUploaded+1:end), samplesUploaded);
+    samplesUploaded = stimLen;
     fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
   end
   
@@ -162,7 +163,6 @@ global checkdata
 if checkdata
   fprintf('  * Checking stim...');
   teststim = downloadStim(tdt.stimDevice, 0, samplesUploaded);
-
   d = max(max(abs(nextStim-teststim)));
   if d>10e-7
     error('Stimulus mismatch!');
