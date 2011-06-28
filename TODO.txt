@@ -13,6 +13,8 @@
 
 == PLANS
 
+* Lose access to tdt structure when ctrl-C is pressed :-(
+
 * Faster for short stimuli -- HOW? (and are we slower than brainware still?)
   -- numerous small optimisations are possible (and worthwhile) but turning plotting off
      make a big difference (quning from 0.6+ to 0.3+ sec per sweep). Need to investigate 
@@ -21,6 +23,8 @@
 * Not actually catching ctrl-c and handling file closing -- works for errors only
   -- investigate onCleanup 
   -- now using onCleanup -- maybe fixed?
+
+* Save spike times in separate files again, with sweep metadata separately
 
 * VAS?
 
