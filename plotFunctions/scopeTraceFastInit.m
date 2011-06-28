@@ -1,6 +1,18 @@
 function plotData = scopeTraceFastInit(plotData, fs_in, nSamplesExpected)
 
 plotData.fs_in = fs_in;
+plotData.nSamplesExpected = nSamplesExpected;
+
+plotData.nSamplesToPlot = 2000;
+
+if plotData.nSamplesExpected<plotData.nSamplesToPlot
+  plotData.samplesToPlot = 1:plotData.nSamplesExpected;
+else
+  plotData.samplesToPlot = round(linspace(1,nSamplesExpected,plotData.nSamplesToPlot));
+end
+
+plotData.sampleTimes = plotData.samplesToPlot/fs_in;
+
 
 % positions
 n.rows = 8;
@@ -43,9 +55,13 @@ end
 pos = pos';
   
 % create figure
-figure(1);
+f = figure(1);
+set(f,'color',[1 1 1],'KeyPressFcn',{'keyPress'});
 clf;
 for ii = 1:32
   plotData.subplotHandles(ii) = axes('position', pos{ii}, 'xtick', [], 'ytick', [], ...
-    'xlim', [1 nSamplesExpected]/fs_in, 'ylim', [-1 1], 'drawmode', 'fast','ButtonDownFcn',{'clickOnSubplot',ii});
+    'xlim', [1 nSamplesExpected]/fs_in, 'ylim', [-1 1], 'drawmode', 'fast', ...
+    'xcolor',get(f,'color'), 'ButtonDownFcn', {'clickOnSubplot',ii});
 end
+
+plotData.clean = false;

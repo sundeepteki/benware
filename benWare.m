@@ -14,12 +14,12 @@ end
 printGreetings()
 
 % variables intended for manipulation by future UI
-global dataGain
+global state
 
 global truncate fakedata checkdata;
 truncate = 0; % for testing only. should normally be 0
 fakedata = []; %load('fakedata.mat'); % for testing only. should normally be []
-checkdata = true; % for testing only. should normally be FALSE
+checkdata = false; % for testing only. should normally be FALSE
 
 % testing notices
 needWarning = false;
@@ -76,8 +76,9 @@ end
 
 expt.logFilename = 'benWare.log';
 expt.plotFunctions.init = 'scopeTraceFastInit';
+expt.plotFunctions.reset = 'scopeTraceFastReset';
 expt.plotFunctions.plot = 'scopeTraceFastPlot';
-expt.dataGain = 100;
+%expt.dataGain = 100;
 expt.detectSpikes = true;
 expt.spikeThreshold = -2.8;
 %expt.plotFunctions.preGrid = 'rasterPreGrid';

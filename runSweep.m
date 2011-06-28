@@ -1,10 +1,10 @@
-function [nSamples, spikeTimes, timeStamp] = runSweep(tdt, sweepLen, stim, nextStim, plotFunctions, detectSpikes, spikeFilter, spikeThreshold, dataFiles, plotData)
+function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, stim, nextStim, plotFunctions, detectSpikes, spikeFilter, spikeThreshold, dataFiles, plotData)
 %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
 %% Will fail if next stimulus is not on the TDT
 %% Upload the next stimulus at the same time, then reset the stimDevice
 %% and inform the stimDevice of the stimulus length
 
-global fakedata;
+global state fakedata;
 
 % reset data device and tell it how long the sweep will be
 resetDataDevice(tdt.dataDevice, sweepLen*1000);
@@ -57,7 +57,7 @@ samplesUploaded = 0;
 
 % prepare data display
 %plotData = feval(plotFunctions.init, [], tdt.dataSampleRate, nSamplesExpected);
-
+plotData = feval(plotFunctions.reset, plotData);
 
 % trigger stimulus presentation and data collection
 timeStamp = clock;
@@ -106,6 +106,12 @@ while any(nSamplesReceived~=nSamplesExpected)
     fwrite(dataFileHandles(chan), newdata, 'float32');
   end
 
+  % check audio monitor is on the right channel
+  if state.audioMonitor.changed
+    setAudioMonitorChannel(tdt, state.audioMonitor.channel);
+    state.audioMonitor.changed = false;
+  end
+  
   % detect spikes
   [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, tdt.dataSampleRate, data, nSamplesReceived, spikeIndex, spikeFilter, spikeThreshold, false);
 

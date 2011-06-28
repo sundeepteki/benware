@@ -1,22 +1,23 @@
 function plotData = scopeTraceFastPlot(plotData, data, dataIndex, spikeTimes)
 
-global dataGain;
+global state;
+
+if ~state.plot.enabled
+  return;
+end
+
+plotData.clean = false;
 
 fs_in = plotData.fs_in;
 
-nSamplesToPlot = 500;
-
-if size(data,2)<nSamplesToPlot
-  samplesToPlot = 1:size(data,2);
-else
-  samplesToPlot = round(linspace(1,size(data,2),nSamplesToPlot));
-end
-
-sampleTimes = samplesToPlot/fs_in;
-
 for chan = 1:32
-  ax = plotData.subplotHandles(chan);
-  cla(ax);
-  line(sampleTimes,data(chan,samplesToPlot)*dataGain,'parent',ax);
+  if state.audioMonitor.channel==chan
+    col = [1 0 0];
+  else
+    col = [0 0 1];
+  end
+  toPlot = (plotData.samplesToPlot >= plotData.plotIndex(chan)) & (plotData.samplesToPlot < dataIndex(chan));
+  line(plotData.sampleTimes(toPlot), data(chan,plotData.samplesToPlot(toPlot))*state.dataGain, 'color', col, 'parent', plotData.subplotHandles(chan),'hittest','off');
+  plotData.plotIndex(chan) = dataIndex(chan);
 end
 

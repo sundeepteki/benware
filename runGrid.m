@@ -2,13 +2,27 @@ function tdt = runGrid(tdt, expt, grid)
 %% stim/data setup: AUTO
 % =======================
 
-global dataGain;
+global state;
 
 % close open files if there is an error or ctrl-c
 cleanupObject = onCleanup(@()cleanup(tdt));
 
-% gain of scope trace
-dataGain = expt.dataGain;
+% gain of scope trace and other UI variables
+if ~exist('state','var')
+  state = struct;
+end
+state.plot.enabled = true;
+state.plot.waveform = true;
+state.plot.filtered = false;
+state.plot.lfp = false;
+state.plot.raster = false;
+if ~isfield(state, 'dataGain')
+  state.dataGain = 100;
+end
+if ~isfield(state, 'audioMonitor') || ~isfield(state.audioMonitor, 'channel')
+  state.audioMonitor.channel = 1;
+end
+state.audioMonitor.changed = true;
 
 % check that the grid is valid
 verifyGridFields(grid);
@@ -103,7 +117,7 @@ for sweepNum = 1:grid.nSweepsDesired
   mkdir_nowarning(dataDir);
   
   % run the sweep
-  [nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp] = runSweep(tdt, sweepLen, stim, nextStim, expt.plotFunctions, ...
+  [nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp, plotData] = runSweep(tdt, sweepLen, stim, nextStim, expt.plotFunctions, ...
     expt.detectSpikes, spikeFilter, expt.spikeThreshold, sweeps(sweepNum).dataFiles, plotData);     %#ok<*SAGROW>
   
   % store sweep duration

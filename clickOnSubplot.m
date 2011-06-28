@@ -1,5 +1,6 @@
 function clickOnSubplot(src, eventInfo, chan)
 
-global audioMonitorChannel
+global state
 
-audioMonitorChannel = chan;
+state.audioMonitor.changed = true;
+state.audioMonitor.channel = chan;
