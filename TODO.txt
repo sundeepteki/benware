@@ -1,45 +1,69 @@
+== TO DO TODAY
+
+* check that new data files are OK (sweeps in individual files)
+
+* Set which channel is selected on audio monitor of RZ5
+
+* try to get a search GUI going and possibly different kinds of plots
+
+* test each stimulus type
+
+* make it easy to switch plotting off
+
+
 == PLANS
 
-* Include data filenames in sweepInfo.mat (this happens naturally if runSweep
-  is informed about which files to use by benWare.m), which itself happens
-  naturally in runSweep has to save data during the sweep
+* Faster for short stimuli -- HOW? (and are we slower than brainware still?)
+  -- numerous small optimisations are possible (and worthwhile) but turning plotting off
+     make a big difference (quning from 0.6+ to 0.3+ sec per sweep). Need to investigate 
+     saving of the mat file, which does take longer and longer through a grid.
 
-* Get rid of nSamples from the saving code, and just save the 
-  whole lot (which will no longer have a trailing zero)
+* Not actually catching ctrl-c and handling file closing -- works for errors only
+  -- investigate onCleanup 
+  -- now using onCleanup -- maybe fixed?
 
-* Store fs_in and fs_out in one of the data structures
+* VAS?
 
-* Offer to append data to existing directory if grid and penetration match
+* Clean up parameters of runSweep
+
+* init TDT devices in a function, remove post-init pause if nothing done(?)
+
+* post-init pause may no longer be necessary
+
+* Offer to append data to existing directory if grid and penetration match.
+  OR have a way of continuing an interrupted grid.
 
 * Ability to plot filtered data on scope trace
-
-* Save data during sweep, not afterwards. This is half-done on testing
-  branch. Not working right yet -- look at the saved data files from the two
-  saving methods to find out what is going on.
 
 * Ability to plot averaged LFP signal
 
 * Ability to not save data?
 
-* More careful checks of device status in stim/dataDeviceIinit and ZBusInit
-
 * Save expt structure somewhere
 
 * UI for modifying expt structure
 
-* UI for seeing incoming data
+* UI for seeing incoming data - F for filtered, R for raw, etc.
 
-* Set which channel is selected on audio monitor of RZ6
+* Set which channel is selected on audio monitor of RZ5
 
-* Consider saving sweeps structure as separate files (is saving it slow?)
+
+* ontehfly: List directories in date order and default to most recent
 
 
 == ON HOLD
 
-* stereoPlay16bit
+* stereoPlay16bit -- is it OK to lose resolution? we don't really know
 
+* Compensate stimuli on TDT (saves 50% stimulus upload time).
+  Can be done through matlab, no RPVDS req'd
+  -- it's too slow! RX6 can cope at 50k but not 100k. See calibplay.rcx
 
 == DONE
+
+* Save data during sweep, not afterwards
+
+* Check that SAVED data exactly matches TDT buffer when checkData is true
 
 * Grids for sparseness/highlights
 
@@ -66,4 +90,27 @@
   of seconds
   * We know that you get expected number - 1 otherwise.
   -- I'm pretty sure this adds up to simply floor() rather than ceil()
+
+* On error, close all files and diary
+
+* More careful checks of device status in stim/dataDeviceInit and ZBusInit,
+  e.g. check RCX circuit using a fake tag, and any circuit status stuff necessary. Be paranoid!
+
+* Get rid of nSamples from the saving code, and just save the 
+  whole lot (which will no longer have a trailing zero)
+
+* Store fs_in and fs_out in one of the data structures
+
+* Include data filenames in sweepInfo.mat (this happens naturally if runSweep
+  is informed about which files to use by benWare.m), which itself happens
+  naturally in runSweep has to save data during the sweep
+
+* Neil's TDT error in log from expt 30
+
+* Make sure stimulus device knows how long the stimulus is and doesn't play junk samples at the end --
+  or truncate long stimuli come to that (i.e. when stimulus length changes within grid)
+
+* Is stereoplay actually behaving correctly re the above?
+
+* Saving sweeps structure as separate files (is saving it slow?)
 

@@ -1,56 +1,69 @@
-function [data, nSamples, spikeTimes, timeStamp] = runSweep(sweepLen, stim, nextStim, plotFunctions, detectSpikes, spikeFilter, spikeThreshold)
+function [nSamples, spikeTimes, timeStamp] = runSweep(tdt, sweepLen, stim, nextStim, plotFunctions, detectSpikes, spikeFilter, spikeThreshold, dataFiles, plotData)
 %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
 %% Will fail if next stimulus is not on the TDT
 %% Upload the next stimulus at the same time, then reset the stimDevice
 %% and inform the stimDevice of the stimulus length
 
-% It should now be possible to remove nSamples from the return variables
-% and streamline saveData() accordingly
-
-global zBus stimDevice dataDevice;
-global fs_in fs_out;
 global fakedata;
 
 % reset data device and tell it how long the sweep will be
-resetDataDevice(sweepLen*1000);
+resetDataDevice(tdt.dataDevice, sweepLen*1000);
 
 % check for stale data in data device buffer
-if any(countAllData() ~= 0)
+if any(countAllData(tdt.dataDevice) ~= 0)
   error('Stale data in data buffer');
 end
 
 % check that the correct stimulus is in the stimDevice buffer
-sz = size(stim, 2);
-rnd = floor(100+rand*(sz-300));
-checkData = [downloadStim(0, 100) downloadStim(rnd, 100) downloadStim(sz-100, 100)];
+stimLen = size(stim, 2);
+rnd = floor(100+rand*(stimLen-300));
+checkData = [downloadStim(tdt.stimDevice, 0, 100) downloadStim(tdt.stimDevice, rnd, 100) downloadStim(tdt.stimDevice, stimLen-100, 100)];
 d = max(max(abs(checkData - [stim(:, 1:100) stim(:, rnd+1:rnd+100) stim(:, end-99:end)])));
 
 if d>10e-7
-  fprintf('Stimulus mismatch!\n');
-  keyboard;
+  error('Stimulus on stimDevice is not correct!');
+end
+
+% check stimulus length is correct
+if getStimLength(tdt.stimDevice) ~= stimLen
+  error('Stimulus length on stimDevice is not correct');
+end
+
+
+% reset stimulus device so it reads out from the beginning of the buffer
+% when triggered
+resetStimDevice(tdt.stimDevice);
+if getStimIndex(tdt.stimDevice)~=0
+  error('Stimulus index not equal to zero at start of sweep');
 end
 
 % make matlab buffer for data
-nSamplesExpected = floor(sweepLen*fs_in)+1;
+nSamplesExpected = floor(sweepLen*tdt.dataSampleRate)+1;
 data = zeros(32, nSamplesExpected);
-index = zeros(1, 32);
+nSamplesReceived = zeros(1, 32);
+
+% open data files
+dataFileHandles = nan(1,32);
+for chan = 1:32
+  dataFileHandles(chan) = fopen(dataFiles{chan},'w');
+end
 
 % cell array for storing spike times
 spikeTimes = cell(1, 32);
 spikeIndex = 0;
 
 % keep track of how much of stimulus has been uploaded
-stimIndex = 0;
+samplesUploaded = 0;
 
 % prepare data display
-%plotData = feval(plotFunctions.init, []);
-plotData = feval(plotFunctions.init, [], nSamplesExpected);
+%plotData = feval(plotFunctions.init, [], tdt.dataSampleRate, nSamplesExpected);
+
 
 % trigger stimulus presentation and data collection
 timeStamp = clock;
-triggerZBus();
+triggerZBus(tdt.zBus);
 
-fprintf('  * Sweep triggered.\n');
+fprintf(['  * Sweep triggered after ' num2str(toc) ' sec.\n']);
 
 % while trial is running:
 % * upload next stimulus as far as possible
@@ -64,95 +77,115 @@ if ~isempty(fakedata)
   data{1}(1:size(fakedata.signal, 1)) = fakedata.signal(:, floor(rand*size(fakedata.signal, 2)+1));
 end
 
-while any(index~=index(1)) || (nSamplesExpected-index(1)~=1)
+% loop until we've received all data
+while any(nSamplesReceived~=nSamplesExpected)
 
   % upload stimulus
-  maxStimIndex = getStimIndex;
   if ~isempty(nextStim)
-    if stimIndex==(size(nextStim, 2)-1)
-      fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
-    elseif maxStimIndex>stimIndex
-      uploadStimulus(nextStim(:, stimIndex+1:maxStimIndex), stimIndex);
-      stimIndex = maxStimIndex;
+    % stimulus upload is limited by length of stimulus, or where the
+    % stimDevice has got to in reading out the stimulus, whichever is lower
+    maxStimIndex = min(getStimIndex(tdt.stimDevice),stimLen);
+
+    if maxStimIndex>samplesUploaded
+      uploadStim(tdt.stimDevice, nextStim(:, samplesUploaded+1:maxStimIndex), samplesUploaded);
+      samplesUploaded = maxStimIndex;
+      if samplesUploaded==stimLen
+        fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
+      end
     end
+    
   end
 
   % download data
   for chan = 1:32
-    newdata = downloadData(chan, index(chan));
+    newdata = downloadData(tdt.dataDevice, chan, nSamplesReceived(chan));
     if isempty(fakedata) % I.E. NOT using fakedata
-      data(chan, index(chan)+1:index(chan)+length(newdata)) = newdata;
+      data(chan, nSamplesReceived(chan)+1:nSamplesReceived(chan)+length(newdata)) = newdata;
     end
-    index(chan) = index(chan)+length(newdata)-1;
+    nSamplesReceived(chan) = nSamplesReceived(chan)+length(newdata);
+    fwrite(dataFileHandles(chan), newdata, 'float32');
   end
 
   % detect spikes
-  [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, data, index, spikeIndex, spikeFilter, spikeThreshold, false);
+  [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, tdt.dataSampleRate, data, nSamplesReceived, spikeIndex, spikeFilter, spikeThreshold, false);
 
   % plot data
-  plotData = feval(plotFunctions.plot, plotData, data, index, spikeTimes);
+  plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, spikeTimes);
   drawnow;
 end
 
-fprintf(['  * Sweep done after ' num2str(toc) ' sec.\n']);
+fprintf(['  * Waveforms received and saved after ' num2str(toc) ' sec.\n']);
 
-% finish uploading stimulus if necessary
 if ~isempty(nextStim)
-  if stimIndex~=(size(nextStim, 2)-1)
-    uploadStimulus(nextStim(:, stimIndex+1:end), stimIndex);
+  % finish uploading stimulus if necessary
+  if samplesUploaded~=stimLen
+    uploadStim(tdt.stimDevice, nextStim(:, samplesUploaded+1:end), samplesUploaded);
+    samplesUploaded = stimLen;
     fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
   end
+  
+  % inform stimDevice about length of stimulus
+  setStimLength(tdt.stimDevice, stimLen);
 end
 
 % finish detecting spikes
 if detectSpikes
-  [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, data, index, spikeIndex, spikeFilter, spikeThreshold,true);
+  [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, tdt.dataSampleRate, data, nSamplesReceived, spikeIndex, spikeFilter, spikeThreshold,true);
   fprintf(['  * ' num2str(sum(cellfun(@(i) length(i),spikeTimes))) ' spikes detected after ' num2str(toc) ' sec.\n']);
 end
 
 % final plot
-plotData = feval(plotFunctions.plot, plotData, data, index, spikeTimes);
+plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, spikeTimes);
 drawnow;
+
+% close data files
+for chan = 1:32
+  fclose(dataFileHandles(chan));
+end
 
 % data integrity check:
 % 1. check all channels have the same amount of data
-nSamples = unique(index+1);
+nSamples = unique(nSamplesReceived);
 if length(nSamples)>1
   error('Different amounts of data from different channels');
 end
 
-fprintf(['  * Got ' num2str(nSamples) ' samples (expecting ' num2str(nSamplesExpected) ') from 32 channels (' num2str(nSamples/fs_in) ' sec).\n']);
+fprintf(['  * Got ' num2str(nSamples) ' samples (expecting ' num2str(nSamplesExpected) ') from 32 channels (' num2str(nSamples/tdt.dataSampleRate) ' sec).\n']);
 
-% 2. check that we got exactly the expected number of samples
+% 2. check that we got the expected number of samples
 if (nSamples~=nSamplesExpected)
   error('Wrong number of samples');
 end
-
-% reset stimulus device so it reads out from the beginning of the buffer
-% when triggered (might be more sensible at start of sweep)
-resetStimDevice;
 
 % optional: check data thoroughly (too slow to be used normally)
 global checkdata
 
 if checkdata
   fprintf('  * Checking stim...');
-  teststim = downloadStim(0, size(nextStim, 2));
+  teststim = downloadStim(tdt.stimDevice, 0, samplesUploaded);
   d = max(max(abs(nextStim-teststim)));
   if d>10e-7
-    keyboard
     error('Stimulus mismatch!');
   end
   fprintf([' ' num2str(size(teststim, 2)) ' samples verified.\n']);
 
   fprintf('  * Checking data...');
-  testdata = downloadAllData();
+  testData = downloadAllData(tdt.dataDevice);
   for chan = 1:32
-    d = max(abs(data(chan,:)-testdata{chan}));
-    if d>0
-      error('Data mismatch!');
+    diffInMem = max(abs(data(chan,:) - testData{chan}));
+    if diffInMem > 0
+      error('Data in memory doesn''t match TDT buffer!');
     end
+
+    h = fopen(dataFiles{chan}, 'r');
+    savedData = fread(h, inf, 'float32')';
+    fclose(h);
+    diffOnDisk = max(abs(savedData - testData{chan}));
+    if diffOnDisk > 0
+      error('Data on disk doesn''t match TDT buffer!');
+    end
+    
   end
   fprintf([' ' num2str(nSamples) ' samples verified.\n']);
-  fprintf(['  * Done after ' num2str(toc) ' sec.\n']);
+  fprintf(['  * Check complete after ' num2str(toc) ' sec.\n']);
 end

@@ -1,6 +1,8 @@
 function plotData = scopeTraceSpikesPlot(plotData, data, index, spikeTimes)
 
-global fs_in dataGain;
+global dataGain;
+
+fs_in = plotData.fs_in;
 
 % plot 2000 equally spaced samples, or the whole signal, whichever is shorter
 nSamplesToPlot = 2000;

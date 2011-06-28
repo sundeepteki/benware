@@ -1,7 +1,5 @@
-function index = countAllData()
+function index = countAllData(dataDevice)
 % index = countAllData()
-
-global dataDevice;
 
 index = nan(1, 32);
 for chan = 1:32
