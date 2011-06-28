@@ -8,9 +8,15 @@
 * Not actually catching ctrl-c and handling file closing -- works for errors only
   -- investigate onCleanup
 
+* Saving sweeps structure as separate files (is saving it slow?)
+
 * VAS?
 
 * Clean up parameters of runSweep
+
+* init TDT devices in a function, remove post-init pause if nothing done(?)
+
+* post-init pause may no longer be necessary
 
 * Offer to append data to existing directory if grid and penetration match.
   OR have a way of continuing an interrupted grid.
@@ -29,7 +35,6 @@
 
 * Set which channel is selected on audio monitor of RZ5
 
-* Consider saving sweeps structure as separate files (is saving it slow?)
 
 * ontehfly: List directories in date order and default to most recent
 

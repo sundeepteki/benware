@@ -1,3 +1,3 @@
-function device = stimDeviceInit(device, deviceName, requestedSampleRate)
+function [device, sampleRate] = stimDeviceInit(device, deviceName, requestedSampleRate)
 
-device = deviceInit(device, deviceName, 'tdt/stereoplay.rcx', 'StereoPlayVer', 2, requestedSampleRate);
+[device, sampleRate] = deviceInit(device, deviceName, 'tdt/stereoplay.rcx', 'StereoPlayVer', 3, requestedSampleRate);
