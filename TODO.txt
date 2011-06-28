@@ -1,26 +1,24 @@
-== TO DO TODAY
-
-* try to get a search GUI going and possibly different kinds of plots
-
-* test each stimulus type
-
-
 == PLANS
+
+* Document code
+
+* Show gain factor in main plot, plus other plot labels
 
 * Not really happy with tdt structure -- should it be global after all?
   -- don't think so but current situtation is not ideal either
   -- Lose access to tdt structure when ctrl-C is pressed :-(
+
+* Also consider plotData and state structures -- should they be combined?
+  -- both global?
+  -- both local?
 
 * Faster for short stimuli -- HOW? (and are we slower than brainware still?)
   -- numerous small optimisations are possible (and worthwhile) but turning plotting off
      make a big difference (quning from 0.6+ to 0.3+ sec per sweep). Need to investigate 
      saving of the mat file, which does take longer and longer through a grid.
 
-* Not actually catching ctrl-c and handling file closing -- works for errors only
-  -- investigate onCleanup 
-  -- now using onCleanup -- maybe fixed?
-  -- have removed onCleanup, it's causing as many errors as it fixes
-  -- would be good to bring it back in a working form
+* onCleanup (for closing files when ctrl-c is used) isn't working all the time
+  -- when does it, why doesn't it??
 
 * Save spike times in separate files again, with sweep metadata separately
 
@@ -32,8 +30,7 @@
 
 * post-init pause may no longer be necessary
 
-* Offer to append data to existing directory if grid and penetration match.
-  OR have a way of continuing an interrupted grid.
+* Have a way of continuing an interrupted grid (an option instead of choosing from grids/)
 
 * Ability to plot filtered data on scope trace
 
@@ -47,8 +44,6 @@
 
 * UI for seeing incoming data - F for filtered, R for raw, etc.
 
-* Ability to pause
-
 * ontehfly: List directories in date order and default to most recent
 
 
@@ -60,7 +55,10 @@
   Can be done through matlab, no RPVDS req'd
   -- it's too slow! RX6 can cope at 50k but not 100k. See calibplay.rcx
 
+
 == DONE
+
+* Ability to pause
 
 * Save data during sweep, not afterwards
 
