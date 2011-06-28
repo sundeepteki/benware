@@ -47,8 +47,7 @@
 
 * UI for seeing incoming data - F for filtered, R for raw, etc.
 
-* Set which channel is selected on audio monitor of RZ5
-
+* Ability to pause
 
 * ontehfly: List directories in date order and default to most recent
 
@@ -122,3 +121,4 @@
 
 * check that new data files are OK (sweeps in individual files)
 
+* Set which channel is selected on audio monitor of RZ5

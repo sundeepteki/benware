@@ -23,6 +23,8 @@ if ~isfield(state, 'audioMonitor') || ~isfield(state.audioMonitor, 'channel')
   state.audioMonitor.channel = 1;
 end
 state.audioMonitor.changed = true;
+state.shouldPause = false;
+state.paused = false;
 
 % check that the grid is valid
 verifyGridFields(grid);
@@ -128,6 +130,16 @@ for sweepNum = 1:grid.nSweepsDesired
   saveSingleSweepInfo(sweeps(sweepNum), grid, expt, sweepNum);
   
   fprintf(['  * Finished sweep after ' num2str(toc) ' sec.\n\n']);
+  
+  % pause if requested (through key press in main window)
+  if state.shouldPause
+    state.paused = true;
+    fprintf_title('Paused -- press space to continue');
+    while state.shouldPause
+      pause(0.2);
+    end
+    state.paused = false;
+  end
   
 end
 

@@ -11,6 +11,12 @@ switch eventInfo.Key
     state.dataGain = state.dataGain*1.25;
   case 'downarrow'
     state.dataGain = state.dataGain/1.25;
+  case 'space'
+    if state.paused
+      state.shouldPause = false;
+    else
+      state.shouldPause = true;
+    end
 end
 
 switch eventInfo.Character
