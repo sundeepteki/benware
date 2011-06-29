@@ -13,7 +13,7 @@ function grid = grid_ctuning_ss()
   % stimulus grid structure
   grid.stimGridTitles = {'Smoothed', 'Token', 'Embedded', 'Level'};
   
-  smoothedIdxs = 0; % use 0 if not smoothed, 1 if smoothed, 0:1 if both
+  smoothedIdxs = 1; % use 0 if not smoothed, 1 if smoothed, 0:1 if both
   tokenIdxs = 1:10;
   embeddedIdxs = 0:1;
   levels = 70;
@@ -22,7 +22,7 @@ function grid = grid_ctuning_ss()
 
   % sweep parameters
   grid.postStimSilence = 0;
-  grid.repeatsPerCondition = 1;
+  grid.repeatsPerCondition = 2;
   
   % set this using absolute calibration
   grid.stimLevelOffsetDB = -92;
