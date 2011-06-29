@@ -32,6 +32,8 @@ end
 
 % reset stimulus device so it reads out from the beginning of the buffer
 % when triggered
+% probably not necessary (since circuit resets itself)
+% replace with a check that it is in correct state?
 resetStimDevice(tdt.stimDevice);
 if getStimIndex(tdt.stimDevice)~=0
   error('Stimulus index not equal to zero at start of sweep');

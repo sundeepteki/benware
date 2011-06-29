@@ -22,6 +22,13 @@ end
 switch eventInfo.Character
   case 'p'
     state.plot.enabled = ~state.plot.enabled;
+  case 'a'
+    if ~state.plot.enabled
+      state.plot.onlyActiveChannel = true;
+    else
+      state.plot.onlyActiveChannel = ~state.plot.onlyActiveChannel;
+    end
+    state.plot.enabled = true;
   case 'r'
     state.plot.raster = ~state.plot.raster;
   case 'w'

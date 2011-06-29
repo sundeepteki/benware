@@ -7,6 +7,7 @@
 * Not really happy with tdt structure -- should it be global after all?
   -- don't think so but current situtation is not ideal either
   -- Lose access to tdt structure when ctrl-C is pressed :-(
+  -- could be part of state, which has (I think) to be global
 
 * Also consider plotData and state structures -- should they be combined?
   -- both global?

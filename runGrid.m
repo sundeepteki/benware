@@ -12,6 +12,7 @@ if ~exist('state','var')
   state = struct;
 end
 state.plot.enabled = true;
+state.plot.onlyActiveChannel = false;
 state.plot.waveform = true;
 state.plot.filtered = false;
 state.plot.lfp = false;

@@ -64,4 +64,4 @@ for ii = 1:32
     'xcolor',get(f,'color'), 'ButtonDownFcn', {'clickOnSubplot',ii});
 end
 
-plotData.clean = false;
+plotData.clean = false(1,32);
