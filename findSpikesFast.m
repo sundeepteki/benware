@@ -1,4 +1,4 @@
-function spikeTimes = findSpikesFast(data, spikeFilter, fs, threshold, deadTime)
+function [spikeTimes, filteredData] = findSpikesFast(data, spikeFilter, fs, threshold, deadTime)
 
 % initialise spiketimes
 spikeTimes = cell(1, size(data, 2));
@@ -9,14 +9,14 @@ if size(data, 1) < (2*deadTime + 3)
 end
 
 % filter signal
-sig = filtfilt(spikeFilter.B, spikeFilter.A, data);
+filteredData = filtfilt(spikeFilter.B, spikeFilter.A, data);
 
 % normalise
-nSamples = size(sig, 1);
-nChannels = size(sig, 2);
-sigMean = repmat(mean(sig, 1), nSamples, 1);
-sigStd = repmat(std(sig, [], 1), nSamples, 1);
-sig = (sig - sigMean) ./ sigStd - threshold;
+nSamples = size(filteredData, 1);
+nChannels = size(filteredData, 2);
+sigMean = repmat(mean(filteredData, 1), nSamples, 1);
+sigStd = repmat(std(filteredData, [], 1), nSamples, 1);
+sig = (filteredData - sigMean) ./ sigStd - threshold;
 
 % find threshold crossings
 sig = sign(sig(deadTime:end-deadTime, :));

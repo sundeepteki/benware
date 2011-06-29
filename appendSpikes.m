@@ -1,4 +1,4 @@
-function [spikeTimes,index] = appendSpikes(spikeTimes, fs_in, data, dataIndex, index, spikeFilter, threshold, force)
+function [spikeTimes, index, filteredData] = appendSpikes(spikeTimes, fs_in, data, dataIndex, index, spikeFilter, threshold, force)
 
 maxlen = min(dataIndex);
 
@@ -11,17 +11,17 @@ end
 % and overlap chunks so that the whole signal is processed.
 deadTime = 50; % this is a function of spikeFilter, and should really be stored with spikeFilter itself
 
-datacube = data(:,index+1:maxlen)';
-validChans = find(sum(abs(datacube))>0);
-newSpikeTimes = findSpikesFast(datacube(:,validChans),spikeFilter,fs_in,threshold,deadTime);
+datacube = data(:, index+1:maxlen)';
+validChans = find(sum(abs(datacube)) > 0);
+[newSpikeTimes, filteredData] = findSpikesFast(datacube(:, validChans), spikeFilter, fs_in, threshold, deadTime);
 
 for ii = 1:length(newSpikeTimes)
-  if length(newSpikeTimes{ii})>((maxlen-index)/fs_in)*1000
+  if length(newSpikeTimes{ii}) > ((maxlen-index) / fs_in) * 1000
     fprintf(['Too many spikes on channel ' num2str(validChans(ii)) '. Ignoring.\n']);
   else
-    spikeTimes{validChans(ii)} = [spikeTimes{validChans(ii)}; newSpikeTimes{ii}+index/fs_in*1000];
+    spikeTimes{validChans(ii)} = [spikeTimes{validChans(ii)}; newSpikeTimes{ii} +index/fs_in*1000];
   end
 end
 
 % chunks need to overlap by twice the filter dead time.
-index = maxlen-deadTime*2;
+index = maxlen - deadTime*2;
