@@ -18,8 +18,7 @@ function grid = grid_ctuning_ss()
   embeddedIdxs = 0:1;
   levels = 70;
   
-  grid.stimGrid = createPermutationGrid(smoothedIdxs, tokenIdxs, embeddedIdxs, levels);
-  grid.stimGrid = [grid.stimGrid; createPermutationGrid(1, tokenIdxs, 0, levels)];
+  grid.stimGrid = createPermutationGrid(smoothedIdxs, tokenIdxs, embeddedIdxs, levels);  
   
   % sweep parameters
   grid.postStimSilence = 0;
