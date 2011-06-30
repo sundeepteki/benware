@@ -28,6 +28,9 @@ end
 if getStimLength(tdt.stimDevice) ~= stimLen
   error('Stimulus length on stimDevice is not correct');
 end
+%if abs(getStimLength(tdt.stimDevice) - stimLen) > 2
+%  error('Stimulus length on stimDevice is not correct');
+%end
 
 
 % reset stimulus device so it reads out from the beginning of the buffer
@@ -132,8 +135,9 @@ if ~isempty(nextStim)
     fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
   end
   
-  % inform stimDevice about length of stimulus
-  setStimLength(tdt.stimDevice, stimLen);
+  % inform stimDevice about length of the stimulus that has been uploaded
+  % (i.e. the stimulus for the next sweep)
+  setStimLength(tdt.stimDevice, size(nextStim,2));
 end
 
 % finish detecting spikes

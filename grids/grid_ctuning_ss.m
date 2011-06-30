@@ -13,13 +13,14 @@ function grid = grid_ctuning_ss()
   % stimulus grid structure
   grid.stimGridTitles = {'Smoothed', 'Token', 'Embedded', 'Level'};
   
-  smoothedIdxs = 1; % use 0 if not smoothed, 1 if smoothed, 0:1 if both
+  smoothedIdxs = 0; % use 0 if not smoothed, 1 if smoothed, 0:1 if both
   tokenIdxs = 1:10;
   embeddedIdxs = 0:1;
   levels = 70;
   
   grid.stimGrid = createPermutationGrid(smoothedIdxs, tokenIdxs, embeddedIdxs, levels);
-
+  grid.stimGrid = [grid.stimGrid; createPermutationGrid(1, tokenIdxs, 0, levels)];
+  
   % sweep parameters
   grid.postStimSilence = 0;
   grid.repeatsPerCondition = 2;
