@@ -1,4 +1,4 @@
-function plotData = scopeTraceFastPlot(plotData, data, dataIndex, filteredData, fDataIndex, spikeTimesOld, spikeTimes)
+function plotData = scopeTraceFastPlot(plotData, data, dataIndex, filteredData, fDataIndex, spikeTimes)
 % plotData = scopeTraceFastPlot(plotData, data, dataIndex, filteredData, fDataIndex, spikeTimesOld, spikeTimes)
 % 
 % Update the plots in the main window. Run numerous times per sweep
@@ -40,14 +40,11 @@ for chan = 1:32
 
   
   if state.plot.raster
-    t_s = spikeTimesOld{chan}/1000;
-    t_s = t_s(t_s>plotData.plotIndex(chan)/fs_in)';
-    line(t_s,.9*ones(size(t_s)),'marker','.','linestyle','none', 'parent', plotData.subplotHandles(chan),'hittest','off','markercolor',[0 1 0]);
-
-
-    t_s = spikeTimes{chan}/1000;
-    t_s = t_s(t_s>plotData.plotIndex(chan)/fs_in)';
-    line(t_s,.9*ones(size(t_s)),'marker','.','linestyle','none', 'parent', plotData.subplotHandles(chan),'hittest','off','markercolor',[0 0 1]);
+    if length(spikeTimes{chan})<50
+      t_s = spikeTimes{chan}'/1000;
+      t_s = t_s(t_s>plotData.plotIndex(chan)/fs_in)';
+      line(t_s,.5*ones(size(t_s)),'marker','.','linestyle','none', 'parent', plotData.subplotHandles(chan),'hittest','off','markeredgecolor',col);
+    end
   end
   
   plotData.plotIndex(chan) = d(chan);

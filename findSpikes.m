@@ -6,9 +6,8 @@ function spikeTimes = findSpikes(sig, threshold)
 % as the mean plus a multiple of the SD.
 
 % normalise
-nSamples = size(sig, 1);
-sigMean = mean(sig, 1);
-sigStd = std(sig, [], 1)
+sigMean = mean(sig);
+sigStd = std(sig);
 sig = (sig - sigMean) ./ sigStd - threshold;
 
 % find threshold crossings

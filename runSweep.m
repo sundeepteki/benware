@@ -60,9 +60,6 @@ end
 spikeTimes = cell(1, 32);
 spikeIndex = zeros(1,32);
 
-spikeTimesOld = cell(1,32);
-spikeIndexOld = 0;
-
 % keep track of how much of stimulus has been uploaded
 samplesUploaded = 0;
 
@@ -90,13 +87,13 @@ end
 
 % loop until we've received all data
 while any(nSamplesReceived~=nSamplesExpected)
-
+  
   % upload stimulus
   if ~isempty(nextStim)
     % stimulus upload is limited by length of stimulus, or where the
     % stimDevice has got to in reading out the stimulus, whichever is lower
     maxStimIndex = min(getStimIndex(tdt.stimDevice),stimLen);
-
+    
     if maxStimIndex>samplesUploaded
       uploadStim(tdt.stimDevice, nextStim(:, samplesUploaded+1:maxStimIndex), samplesUploaded);
       samplesUploaded = maxStimIndex;
@@ -106,49 +103,48 @@ while any(nSamplesReceived~=nSamplesExpected)
     end
     
   end
-
+  
   % download data
   for chan = 1:32
-
+    
     newdata = downloadData(tdt.dataDevice, chan, nSamplesReceived(chan));
-
+    
     if isempty(fakedata) % I.E. NOT using fakedata
       data(chan, nSamplesReceived(chan)+1:nSamplesReceived(chan)+length(newdata)) = newdata;
     end
-
+    
     nSamplesReceived(chan) = nSamplesReceived(chan)+length(newdata);
     fwrite(dataFileHandles(chan), newdata, 'float32');
     
     % filter data
     % previously, this would refuse to do less than 1 sec of data at a time
     % now, it's not restricted
-    filtSig = filterSignal(data(chan, filterIndex(chan)+1:nSamplesReceived(chan)), spikeFilter);
-    filteredData(chan, filterIndex(chan)+spikeFilter.deadTime+1:filterIndex(chan)+spikeFilter.deadTime+length(filtSig)) = filtSig;
-    filterIndex(chan) = filterIndex(chan) + length(filtSig);
-    
-    % find spikes
-    spikeSamples = findSpikes(data(chan,spikeIndex(chan):end), spikeThreshold);
-    if length(times)>length(data(chan, spikeIndex(chan):end))/fs_in*1000
-      spikeSamples = [];
-      fprintf(['Too many spikes on channel ' num2str(chan) '. Ignoring.\n']);
+    if nSamplesReceived(chan)>filterIndex(chan)+tdt.dataSampleRate/2;
+      filtSig = filterSignal(data(chan, filterIndex(chan)+1:nSamplesReceived(chan)), spikeFilter);
+      filteredData(chan, filterIndex(chan)+spikeFilter.deadTime+1:filterIndex(chan)+spikeFilter.deadTime+length(filtSig)) = filtSig;
+      filterIndex(chan) = filterIndex(chan) + length(filtSig);
+      
+      % find spikes
+      spikeSamples = findSpikes(filteredData(chan,spikeIndex(chan)+1:end), spikeThreshold);
+      if length(spikeSamples)>length(data(chan, spikeIndex(chan)+1:end))/tdt.dataSampleRate*1000
+        spikeSamples = [];
+        fprintf(['Too many spikes on channel ' num2str(chan) '. Ignoring.\n']);
+      end
+      
+      newSpikeTimes = (spikeIndex(chan) + spikeSamples)/tdt.dataSampleRate * 1000;
+      spikeTimes{chan} = [spikeTimes{chan} newSpikeTimes];
     end
-    newSpikeTimes = (spikeIndex + spikeSamples)/fs_in * 1000;
-    
-    spikeTimes{chan} = [spikeTimes{chan}; newSpikeTimes];
     
   end
-
+  
   % check audio monitor is on the right channel
   if state.audioMonitor.changed
     setAudioMonitorChannel(tdt, state.audioMonitor.channel);
     state.audioMonitor.changed = false;
   end
   
-  % filter new data
-  [spikeTimesOld, spikeIndexOld] = appendSpikesOld(spikeTimesOld, tdt.dataSampleRate, data, nSamplesReceived, spikeIndexOld, spikeFilter, spikeThreshold, false);
-
   % plot data
-  plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimesOld, spikeTimes);
+  plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
   drawnow;
 end
 
@@ -168,13 +164,25 @@ if ~isempty(nextStim)
 end
 
 % finish detecting spikes
-if detectSpikes
-  [spikeTimesOld, spikeIndexOld] = appendSpikes(spikeTimesOld, tdt.dataSampleRate, data, nSamplesReceived, spikeIndexOld, spikeFilter, spikeThreshold,true);
-  fprintf(['  * ' num2str(sum(cellfun(@(i) length(i),spikeTimesOld))) ' spikes detected after ' num2str(toc) ' sec.\n']);
+for chan = 1:32
+  filtSig = filterSignal(data(chan, filterIndex(chan)+1:nSamplesReceived(chan)), spikeFilter);
+  filteredData(chan, filterIndex(chan)+spikeFilter.deadTime+1:filterIndex(chan)+spikeFilter.deadTime+length(filtSig)) = filtSig;
+  filterIndex(chan) = filterIndex(chan) + length(filtSig);
+  
+  % find spikes
+  spikeSamples = findSpikes(filteredData(chan,spikeIndex(chan)+1:end), spikeThreshold);
+  if length(spikeSamples)>length(data(chan, spikeIndex(chan)+1:end))/tdt.dataSampleRate*1000
+    spikeSamples = [];
+    fprintf(['Too many spikes on channel ' num2str(chan) '. Ignoring.\n']);
+  end
+  
+  newSpikeTimes = (spikeIndex(chan) + spikeSamples)/tdt.dataSampleRate * 1000;
+  spikeTimes{chan} = [spikeTimes{chan} newSpikeTimes];
 end
+fprintf(['  * ' num2str(sum(cellfun(@(i) length(i),spikeTimes))) ' spikes detected after ' num2str(toc) ' sec.\n']);
 
 % final plot
-plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimesOld, spikeTimes);
+plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
 drawnow;
 
 % close data files
@@ -207,7 +215,7 @@ if checkdata
     error('Stimulus mismatch!');
   end
   fprintf([' ' num2str(size(teststim, 2)) ' samples verified.\n']);
-
+  
   fprintf('  * Checking data...');
   testData = downloadAllData(tdt.dataDevice);
   for chan = 1:32
@@ -215,7 +223,7 @@ if checkdata
     if diffInMem > 0
       error('Data in memory doesn''t match TDT buffer!');
     end
-
+    
     h = fopen(dataFiles{chan}, 'r');
     savedData = fread(h, inf, 'float32')';
     fclose(h);
