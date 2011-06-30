@@ -1,5 +1,7 @@
 function saveSweepInfo(sweeps, grid, expt)
-  % saveSweepInfo(sweeps, grid, expt)
+% saveSweepInfo(sweeps, grid, expt)
+%
+% Save entire sweeps structure to disk. Slow, and therefore not currently used
 
 fprintf(['  * Saving sweep metadata...']);
 

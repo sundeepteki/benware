@@ -1,4 +1,7 @@
 function plotData = scopeTraceFastInit(plotData, fs_in, nSamplesExpected)
+% plotData = scopeTraceFastInit(plotData, fs_in, nSamplesExpected)
+%
+% Initialise main figure window. This is run once per grid, at the start
 
 plotData.fs_in = fs_in;
 plotData.nSamplesExpected = nSamplesExpected;
@@ -64,4 +67,6 @@ for ii = 1:32
     'xcolor',get(f,'color'), 'ButtonDownFcn', {'clickOnSubplot',ii});
 end
 
+% the axis lines haven't yet been drawn, so mark the plots dirty so that
+% scopeTraceFastPlot will know that it has to drawn them
 plotData.clean = false(1,32);

@@ -1,4 +1,3 @@
-
 function dirExists = checkForDataDir(grid,expt)
 % probably deprecated
 

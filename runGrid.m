@@ -1,4 +1,8 @@
 function tdt = runGrid(tdt, expt, grid)
+% tdt = runGrid(tdt, expt, grid)
+% 
+% Run a whole grid
+
 %% stim/data setup: AUTO
 % =======================
 

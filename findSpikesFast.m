@@ -1,4 +1,7 @@
 function spikeTimes = findSpikesFast(data, spikeFilter, fs, threshold, deadTime)
+% spikeTimes = findSpikesFast(data, spikeFilter, fs, threshold, deadTime)
+%
+% Becoming obsolete
 
 % initialise spiketimes
 spikeTimes = cell(1, size(data, 2));

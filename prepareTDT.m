@@ -1,5 +1,17 @@
 function tdt = prepareTDT(tdt, expt, grid)
-% prepare TDT
+% tdt = prepareTDT(tdt, expt, grid)
+%
+% Given expt and grid structures, set the TDT up appropriately.
+% 
+% tdt: A previously initialised tdt structure, or []
+% expt, grid: Standard benWare structures
+% 
+% Returns:
+% tdt.zBus -- zBus handle
+% tdt.stimDevice -- stimulus device handle
+% tdt.stimSampleRate -- stimulus device sample rate
+% tdt.dataDevice -- data device handle
+% tdt.dataSampleRate -- data device sample rate
 
 figure(99);
 set_fig_size(100, 100, 99);

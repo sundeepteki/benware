@@ -1,7 +1,13 @@
 function path = constructDataPath(pathTemplate, grid, expt, sweepNum, channelNum)
 % path = constructDataPath(pathTemplate, grid, expt, sweepNum, channelNum)
 %
-% filename tokens:
+% Replaces % tokens in a data filename with appropriate values. The tokens are:
+%
+% pathTemplate: pathname containing % tokens
+% grid, expt: standard benWare data structures
+% sweepNum: the sweep number
+% 
+% The % tokens (for data paths) are:
 % %E = expt number, e.g. '29'
 % %1, %2... %9 = stimulus parameter value
 % %N = grid name

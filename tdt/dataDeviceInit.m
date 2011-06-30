@@ -1,4 +1,5 @@
 function [device, sampleRate] = dataDeviceInit(device, deviceName, requestedSampleRate, channelMapping)
+% [device, sampleRate] = dataDeviceInit(device, deviceName, requestedSampleRate, channelMapping)
 
 [device, sampleRate] = deviceInit(device, deviceName, ['tdt/' deviceName '-nogain.rcx'], [deviceName 'NoGainVer'], 3, requestedSampleRate);
    

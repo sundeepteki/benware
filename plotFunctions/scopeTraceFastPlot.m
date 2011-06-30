@@ -1,7 +1,11 @@
 function plotData = scopeTraceFastPlot(plotData, data, dataIndex, filteredData, fDataIndex, spikeTimesOld, spikeTimes)
+% plotData = scopeTraceFastPlot(plotData, data, dataIndex, filteredData, fDataIndex, spikeTimesOld, spikeTimes)
+% 
+% Update the plots in the main window. Run numerous times per sweep
 
 global state;
 
+% if plotting is switched off, do nothing
 if ~state.plot.enabled
   return;
 end
@@ -22,6 +26,8 @@ for chan = 1:32
     continue
   end
   
+  % record the fact that we've plotted on the axes (so they'll eventually
+  % need to be cleared by scopeTraceFastReset)
   plotData.clean(chan) = false;
   
   if state.audioMonitor.channel==chan

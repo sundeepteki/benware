@@ -1,5 +1,7 @@
 function saveSingleSweepInfo(sweep, grid, expt, sweepNum)
-  % saveSweepInfo(sweeps, grid, expt)
+% saveSweepInfo(sweeps, grid, expt)
+%
+% Save data from one sweep to the appropriate place
 
 fprintf(['  * Saving sweep metadata...']);
 

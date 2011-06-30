@@ -1,4 +1,9 @@
 function spikeTimes = findSpikes(sig, threshold)
+% spikeTimes = findSpikes(sig, threshold)
+%
+% Find spikes in a previously filtered signal
+% Simply finds points at which the signal crosses a threshold defined
+% as the mean plus a multiple of the SD.
 
 % normalise
 nSamples = size(sig, 1);

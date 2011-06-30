@@ -1,8 +1,8 @@
 function stim = loadStim(stimFileL, stimFileR, stimLevelOffsetDB)
-  % stim = loadStim(stimFileL, stimFileR, stimLevelOffsetDB)
-  %
-  % Loads a stimulus from the given files.
-  % Applies the offset specified by stimLevelOffsetDB
+% stim = loadStim(stimFileL, stimFileR, stimLevelOffsetDB)
+%
+% Loads a stimulus from the given files.
+% Applies the offset specified by stimLevelOffsetDB
 
 fL = fopen(stimFileL);
 fR = fopen(stimFileR);

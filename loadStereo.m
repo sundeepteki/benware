@@ -1,5 +1,12 @@
 function [stim, stimInfo] = loadStereo(sweepNum, grid, expt)
-  % [stim, stimInfo] = loadStereo(sweepNum, grid, expt)
+% [stim, stimInfo] = loadStereo(sweepNum, grid, expt)
+%
+% Load a pair of stimulus files. The correct stimulus files are found by
+% finding experiment parameters in the grid and expt structures, and 
+% using constructStimPath to replace % tokens with appropriate values
+% (sweepNum, etc)
+% 
+% sweepNum, grid, expt: standard benWare variables
 
 global truncate
 

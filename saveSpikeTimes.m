@@ -1,5 +1,7 @@
 function relPath = saveSpikeTimes(spikeTimes, grid, expt, sweepNum)
 % saveSpikeTimes(spikeTimes, grid, expt, sweepNum)
+%
+% Not currently used
 
 fprintf(['  * Saving spike times...\n']);
 
