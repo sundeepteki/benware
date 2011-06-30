@@ -28,6 +28,9 @@ end
 if getStimLength(tdt.stimDevice) ~= stimLen
   error('Stimulus length on stimDevice is not correct');
 end
+%if abs(getStimLength(tdt.stimDevice) - stimLen) > 2
+%  error('Stimulus length on stimDevice is not correct');
+%end
 
 
 % reset stimulus device so it reads out from the beginning of the buffer
@@ -43,6 +46,9 @@ end
 nSamplesExpected = floor(sweepLen*tdt.dataSampleRate)+1;
 data = zeros(32, nSamplesExpected);
 nSamplesReceived = zeros(1, 32);
+
+filteredData = zeros(32, nSamplesExpected);
+filterIndex = zeros(1,32);
 
 % open data files
 dataFileHandles = nan(1,32);
@@ -100,12 +106,22 @@ while any(nSamplesReceived~=nSamplesExpected)
 
   % download data
   for chan = 1:32
+
     newdata = downloadData(tdt.dataDevice, chan, nSamplesReceived(chan));
+
     if isempty(fakedata) % I.E. NOT using fakedata
       data(chan, nSamplesReceived(chan)+1:nSamplesReceived(chan)+length(newdata)) = newdata;
     end
+
     nSamplesReceived(chan) = nSamplesReceived(chan)+length(newdata);
     fwrite(dataFileHandles(chan), newdata, 'float32');
+    
+    filtSig = filterSignal(data(chan, filterIndex(chan):nSamplesReceived(chan)), spikeFilter);
+    filteredData(chan, filterIndex(chan)+ spikeFilter.deadTime+1:filterIndex(chan)+spikeFilter.deadTime+length(filtSig)) = filtSig;
+    filterIndex(chan) = filterIndex(chan) + length(filtSig);
+    
+    
+    
   end
 
   % check audio monitor is on the right channel
@@ -114,11 +130,11 @@ while any(nSamplesReceived~=nSamplesExpected)
     state.audioMonitor.changed = false;
   end
   
-  % detect spikes
+  % filter new data
   [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, tdt.dataSampleRate, data, nSamplesReceived, spikeIndex, spikeFilter, spikeThreshold, false);
 
   % plot data
-  plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, spikeTimes);
+  plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
   drawnow;
 end
 
@@ -132,8 +148,9 @@ if ~isempty(nextStim)
     fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
   end
   
-  % inform stimDevice about length of stimulus
-  setStimLength(tdt.stimDevice, stimLen);
+  % inform stimDevice about length of the stimulus that has been uploaded
+  % (i.e. the stimulus for the next sweep)
+  setStimLength(tdt.stimDevice, size(nextStim,2));
 end
 
 % finish detecting spikes

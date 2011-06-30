@@ -9,8 +9,13 @@ fprintf_title('BenWare parameters');
 fprintf_subtitle('experiment');
 fprintf('  - experiment #: %d\n', expt.exptNum);
 fprintf('  - penetration #: %d\n', expt.penetrationNum);
-fprintf('  - LHS probe: %d \n', expt.probe.lhs);
-fprintf('  - RHS probe: %d \n', expt.probe.rhs);
+if isnumeric(expt.probe.lhs)
+  fprintf('  - LHS probe: %d \n', expt.probe.lhs);
+  fprintf('  - RHS probe: %d \n', expt.probe.rhs);
+else
+  fprintf('  - LHS probe: %s \n', expt.probe.lhs);
+  fprintf('  - RHS probe: %s \n', expt.probe.rhs);
+end
 fprintf('  - LHS headstage: %d \n', expt.headstage.lhs);
 fprintf('  - RHS headstage: %d \n', expt.headstage.rhs);
 

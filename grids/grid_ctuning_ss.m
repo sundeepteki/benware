@@ -19,10 +19,11 @@ function grid = grid_ctuning_ss()
   levels = 70;
   
   grid.stimGrid = createPermutationGrid(smoothedIdxs, tokenIdxs, embeddedIdxs, levels);
-
+  grid.stimGrid = [grid.stimGrid; createPermutationGrid(1, tokenIdxs, 0, levels)];
+  
   % sweep parameters
   grid.postStimSilence = 0;
-  grid.repeatsPerCondition = 1;
+  grid.repeatsPerCondition = 2;
   
   % set this using absolute calibration
   grid.stimLevelOffsetDB = -92;

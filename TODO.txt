@@ -1,5 +1,16 @@
 == PLANS
 
+* Numerous WriteTag errors on WaveformL -- make this not crash
+
+* == Resetting devices...Warning: The following error was caught while executing 'onCleanup' class destructor:
+Attempt to reference field of non-structure array. 
+> In benWare at 96
+??? Operation terminated by user during ==> downloadData at 10
+
+In ==> runSweep at 106
+    newdata = downloadData(tdt.dataDevice, chan, nSamplesReceived(chan));
+
+
 * Document code
 
 * Show gain factor in main plot, plus other plot labels
@@ -121,3 +132,7 @@
 * check that new data files are OK (sweeps in individual files)
 
 * Set which channel is selected on audio monitor of RZ5
+
+* stimDevice stimulus length is getting set to length of CURRENT stim, not next stim
+  -- fixed
+
