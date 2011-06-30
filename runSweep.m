@@ -116,9 +116,9 @@ while any(nSamplesReceived~=nSamplesExpected)
     nSamplesReceived(chan) = nSamplesReceived(chan)+length(newdata);
     fwrite(dataFileHandles(chan), newdata, 'float32');
     
-    %filtSig = filterSignal(data(chan, filterIndex(chan)+1:nSamplesReceived(chan)), spikeFilter);
-    %filteredData(chan, filterIndex(chan)+spikeFilter.deadTime+1:filterIndex(chan)+spikeFilter.deadTime+length(filtSig)) = filtSig;
-    %filterIndex(chan) = filterIndex(chan) + length(filtSig);
+    filtSig = filterSignal(data(chan, filterIndex(chan)+1:nSamplesReceived(chan)), spikeFilter);
+    filteredData(chan, filterIndex(chan)+spikeFilter.deadTime+1:filterIndex(chan)+spikeFilter.deadTime+length(filtSig)) = filtSig;
+    filterIndex(chan) = filterIndex(chan) + length(filtSig);
     
     
     
@@ -160,7 +160,7 @@ if detectSpikes
 end
 
 % final plot
-plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, spikeTimes);
+plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
 drawnow;
 
 % close data files
