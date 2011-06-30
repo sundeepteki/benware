@@ -31,8 +31,6 @@ switch eventInfo.Character
     state.plot.enabled = true;
   case 'r'
     state.plot.raster = ~state.plot.raster;
-  case 'w'
-    state.plot.waveform = ~state.plot.waveform;
   case 'f'
     state.plot.filtered = ~state.plot.filtered;
   case 'l'

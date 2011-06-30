@@ -1,4 +1,4 @@
-function plotData = scopeTraceFastPlot(plotData, data, dataIndex, spikeTimes)
+function plotData = scopeTraceFastPlot(plotData, data, dataIndex, filteredData, fDataIndex, spikeTimes)
 
 global state;
 
@@ -7,6 +7,14 @@ if ~state.plot.enabled
 end
 
 fs_in = plotData.fs_in;
+
+if state.plot.filtered
+  d = filteredData;
+  ii = fDataIndex;
+else
+  d = data;
+  ii = dataIndex;
+end
 
 for chan = 1:32
   
@@ -21,9 +29,9 @@ for chan = 1:32
   else
     col = [0 0 1];
   end
-  toPlot = (plotData.samplesToPlot >= plotData.plotIndex(chan)) & (plotData.samplesToPlot < dataIndex(chan));
-  line(plotData.sampleTimes(toPlot), data(chan, plotData.samplesToPlot(toPlot)) * state.dataGain, 'color', col, 'parent', plotData.subplotHandles(chan),'hittest','off');
-  plotData.plotIndex(chan) = dataIndex(chan);
+  toPlot = (plotData.samplesToPlot >= plotData.plotIndex(chan)) & (plotData.samplesToPlot < ii(chan));
+  line(plotData.sampleTimes(toPlot), d(chan, plotData.samplesToPlot(toPlot)) * state.dataGain, 'color', col, 'parent', plotData.subplotHandles(chan),'hittest','off');
+  plotData.plotIndex(chan) = d(chan);
 
 end
 
