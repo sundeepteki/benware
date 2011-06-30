@@ -9,4 +9,4 @@ if any(signal)
   signal = filtfilt(spikeFilter.B, spikeFilter.A, signal);
 end
 
-signal = signal(deadtime:end-deadtime);
+signal = signal(spikeFilter.deadTime:end-spikeFilter.deadTime);
