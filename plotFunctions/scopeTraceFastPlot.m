@@ -1,4 +1,4 @@
-function plotData = scopeTraceFastPlot(plotData, data, dataIndex, filteredData, fDataIndex, spikeTimes)
+function plotData = scopeTraceFastPlot(plotData, data, dataIndex, filteredData, fDataIndex, spikeTimesOld, spikeTimes)
 
 global state;
 
@@ -34,9 +34,14 @@ for chan = 1:32
 
   
   if state.plot.raster
+    t_s = spikeTimesOld{chan}/1000;
+    t_s = t_s(t_s>plotData.plotIndex(chan)/fs_in)';
+    line(t_s,.9*ones(size(t_s)),'marker','.','linestyle','none', 'parent', plotData.subplotHandles(chan),'hittest','off','markercolor',[0 1 0]);
+
+
     t_s = spikeTimes{chan}/1000;
     t_s = t_s(t_s>plotData.plotIndex(chan)/fs_in)';
-    line(t_s,.9*ones(size(t_s)),'marker','.','linestyle','none', 'parent', plotData.subplotHandles(chan),'hittest','off');
+    line(t_s,.9*ones(size(t_s)),'marker','.','linestyle','none', 'parent', plotData.subplotHandles(chan),'hittest','off','markercolor',[0 0 1]);
   end
   
   plotData.plotIndex(chan) = d(chan);

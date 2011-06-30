@@ -58,7 +58,10 @@ end
 
 % cell array for storing spike times
 spikeTimes = cell(1, 32);
-spikeIndex = 0;
+spikeIndex = zeros(1,32);
+
+spikeTimesOld = cell(1,32);
+spikeIndexOld = 0;
 
 % keep track of how much of stimulus has been uploaded
 samplesUploaded = 0;
@@ -116,11 +119,22 @@ while any(nSamplesReceived~=nSamplesExpected)
     nSamplesReceived(chan) = nSamplesReceived(chan)+length(newdata);
     fwrite(dataFileHandles(chan), newdata, 'float32');
     
+    % filter data
+    % previously, this would refuse to do less than 1 sec of data at a time
+    % now, it's not restricted
     filtSig = filterSignal(data(chan, filterIndex(chan)+1:nSamplesReceived(chan)), spikeFilter);
     filteredData(chan, filterIndex(chan)+spikeFilter.deadTime+1:filterIndex(chan)+spikeFilter.deadTime+length(filtSig)) = filtSig;
     filterIndex(chan) = filterIndex(chan) + length(filtSig);
     
+    % find spikes
+    spikeSamples = findSpikes(data(chan,spikeIndex(chan):end), spikeThreshold);
+    if length(times)>length(data(chan, spikeIndex(chan):end))/fs_in*1000
+      spikeSamples = [];
+      fprintf(['Too many spikes on channel ' num2str(chan) '. Ignoring.\n']);
+    end
+    newSpikeTimes = (spikeIndex + spikeSamples)/fs_in * 1000;
     
+    spikeTimes{chan} = [spikeTimes{chan}; newSpikeTimes];
     
   end
 
@@ -131,10 +145,10 @@ while any(nSamplesReceived~=nSamplesExpected)
   end
   
   % filter new data
-  [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, tdt.dataSampleRate, data, nSamplesReceived, spikeIndex, spikeFilter, spikeThreshold, false);
+  [spikeTimesOld, spikeIndexOld] = appendSpikesOld(spikeTimesOld, tdt.dataSampleRate, data, nSamplesReceived, spikeIndexOld, spikeFilter, spikeThreshold, false);
 
   % plot data
-  plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
+  plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimesOld, spikeTimes);
   drawnow;
 end
 
@@ -155,12 +169,12 @@ end
 
 % finish detecting spikes
 if detectSpikes
-  [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, tdt.dataSampleRate, data, nSamplesReceived, spikeIndex, spikeFilter, spikeThreshold,true);
-  fprintf(['  * ' num2str(sum(cellfun(@(i) length(i),spikeTimes))) ' spikes detected after ' num2str(toc) ' sec.\n']);
+  [spikeTimesOld, spikeIndexOld] = appendSpikes(spikeTimesOld, tdt.dataSampleRate, data, nSamplesReceived, spikeIndexOld, spikeFilter, spikeThreshold,true);
+  fprintf(['  * ' num2str(sum(cellfun(@(i) length(i),spikeTimesOld))) ' spikes detected after ' num2str(toc) ' sec.\n']);
 end
 
 % final plot
-plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
+plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimesOld, spikeTimes);
 drawnow;
 
 % close data files
