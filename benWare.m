@@ -56,7 +56,7 @@ expt.stimDeviceName = 'RX6';
 expt.dataDeviceName = 'RZ5';
 expt.dataDeviceSampleRate = 24414.0625;
 
-expt.penetrationNum = 14;
+expt.penetrationNum = 15;
 expt.probe.lhs = '284B';
 expt.probe.rhs = '2840';
 expt.headstage.lhs = 3078;
