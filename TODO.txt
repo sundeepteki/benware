@@ -1,5 +1,14 @@
 == PLANS
 
+* Make a noise at the start of every sweep so user can monitor what is going
+  on?
+
+* Make it possible to hear unfiltered waveforms -- switch between filtered and
+  unfiltered when the user changes the display
+
+* I had to turn write caching off because of crashes. Why is this? It's slow
+  now!
+
 * Numerous WriteTag errors on WaveformL -- make this not crash
 
 * == Resetting devices...Warning: The following error was caught while executing 'onCleanup' class destructor:
@@ -36,6 +45,8 @@ In ==> runSweep at 106
 
 * VAS?
 
+* Variable length sweeps
+
 * Clean up parameters of runSweep
 
 * init TDT devices in a function, remove post-init pause if nothing done(?)
@@ -53,11 +64,6 @@ In ==> runSweep at 106
 * Save expt structure somewhere
 
 * UI for modifying expt structure
-
-* UI for seeing incoming data - F for filtered, R for raw, etc.
-
-* ontehfly: List directories in date order and default to most recent
-
 
 == ON HOLD
 
@@ -135,4 +141,8 @@ In ==> runSweep at 106
 
 * stimDevice stimulus length is getting set to length of CURRENT stim, not next stim
   -- fixed
+
+* ontehfly: List directories in date order and default to most recent
+
+* UI for seeing incoming data - F for filtered, R for raw, etc.
 
