@@ -1,8 +1,13 @@
 function path = constructStimPath(grid, expt, sweepNum, side)
-% path = constructStimPath(grid, expt, sweepNum)
 % path = constructStimPath(grid, expt, sweepNum, side)
 %
-% filename tokens:
+% Works out stimulus filenames, replacing % tokens where necessary.
+%
+% grid, expt: standard benWare data structures
+% sweepNum: the sweep number
+% side: headphone for which stimulus is destined
+% 
+% The % tokens (for stim paths) are:
 % %E = expt number, e.g. '29'
 % %1, %2... %9 = stimulus parameter value
 % %N = grid name
@@ -10,6 +15,9 @@ function path = constructStimPath(grid, expt, sweepNum, side)
 % %P = penetration number
 % %S = sweep number
 % %C = channel number
+% 
+% Note, this doesn't quite match constructDataPath -- it doesn't allow 
+% you to operate on an arbitrary path. This might need fixing.
 
 stimParameters = grid.randomisedGrid(sweepNum, :);
 

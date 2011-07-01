@@ -1,4 +1,7 @@
 function grid = chooseGrid
+% grid = chooseGrid
+% 
+% Allows user to choose a grid from the subdirectory grids/
 
 % what is in the directory
 gridFunctions = dir('grids/grid_*.m');

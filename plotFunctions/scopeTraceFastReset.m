@@ -1,18 +1,22 @@
 function plotData = scopeTraceFastReset(plotData)
+% plotData = scopeTraceFastReset(plotData)
+% 
+% Clear the axes of the graphs in the main window, if necessary
 
 nSamplesExpected = plotData.nSamplesExpected;
 fs_in = plotData.fs_in;
 plotData.plotIndex = zeros(1,32);
 
-if plotData.clean
-  return;
-end
-
 for chan = 1:32
+  
+  % for maximum speed, check whether anything has been plotted on the axes in
+  % question. If not, don't reset
   
   if plotData.clean(chan)
     continue
   end
+  
+  % otherwise, clear the axes and draw some axis lines
   
   ax = plotData.subplotHandles(chan);
   cla(ax);

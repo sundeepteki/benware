@@ -1,5 +1,7 @@
 function saveData(data, grid, expt, sweepNum, nSamples)
 % saveData(data, grid, expt, sweepNum)
+%
+% This function is no longer used
 
 fprintf(['  * Saving data']);
 

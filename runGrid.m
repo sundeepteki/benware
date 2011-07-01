@@ -1,4 +1,8 @@
 function tdt = runGrid(tdt, expt, grid)
+% tdt = runGrid(tdt, expt, grid)
+% 
+% Run a whole grid
+
 %% stim/data setup: AUTO
 % =======================
 
@@ -145,3 +149,6 @@ for sweepNum = 1:grid.nSweepsDesired
 end
 
 diary off
+
+%[snd, fs] = wavread(['sounds/bugle-' num2str(randi(3),'%02d') '.wav']);
+%soundsc(snd, fs);

@@ -1,5 +1,8 @@
 function saveGridMetadata(grid, expt)
-  % saveGridMetadata(grid, expt)
+% saveGridMetadata(grid, expt)
+% 
+% Save grid and expt structures to disk in the appropriate place specified by 
+% those structures
 
 fprintf(['  * Saving grid metadata...']);
 

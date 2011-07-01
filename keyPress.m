@@ -1,4 +1,10 @@
 function keyPress(src, eventInfo)
+% keyPress(src, eventInfo)
+% 
+% GUI callback. This function is associated with the main window, and 
+% is called when a key is pressed. This function alters the global 'state'
+% variable, and these changes are picked up by various parts of the program
+% that need to know about them.
 
 global state;
 
@@ -31,8 +37,6 @@ switch eventInfo.Character
     state.plot.enabled = true;
   case 'r'
     state.plot.raster = ~state.plot.raster;
-  case 'w'
-    state.plot.waveform = ~state.plot.waveform;
   case 'f'
     state.plot.filtered = ~state.plot.filtered;
   case 'l'

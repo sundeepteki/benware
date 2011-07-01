@@ -1,7 +1,7 @@
 function verifyExpt(grid, expt)
-  % verifyExpt(grid, expt)
-  % 
-  % checks that all is ok by the user
+% verifyExpt(grid, expt)
+% 
+% checks that all is ok by the user
 
 fprintf_title('BenWare parameters');
 
@@ -21,7 +21,7 @@ fprintf('  - RHS headstage: %d \n', expt.headstage.rhs);
 
 r = demandinput('\nIs this ok? [Y/n]: ', {'y', 'n'}, 'y', true);
 if r=='n'
-  error('parameter:error', 'Error in verifyExpt');
+error('parameter:error', 'Error in verifyExpt');
 end
 
 % stimulus
@@ -33,21 +33,21 @@ fprintf('  - # repeats: %d\n', grid.repeatsPerCondition);
 fprintf('  - # sweeps: %d\n', size(grid.stimGrid, 1) * grid.repeatsPerCondition);
 
 if isequal(grid.stimGenerationFunctionName, 'loadStereo')
-  fprintf('  - stimulus dir: %s\n', split_path(constructStimPath(grid, expt, 1)));
+fprintf('  - stimulus dir: %s\n', split_path(constructStimPath(grid, expt, 1)));
 end
 
 
 r = demandinput('\nIs this ok? [Y/n]: ', {'y', 'n'}, 'y', true);
 if r=='n'
-  error('parameter:error', 'Error in verifyExpt');
+error('parameter:error', 'Error in verifyExpt');
 end
 
 % recording
 fprintf_subtitle('recording');
 fprintf('  - data dir: %s\n', ...
-	constructDataPath(expt.dataDir, grid, expt))
+constructDataPath(expt.dataDir, grid, expt))
 
 r = demandinput('\nIs this ok? [Y/n]: ', {'y', 'n'}, 'y', true);
 if r=='n'
-  error('parameter:error', 'Error in verifyExpt');
+error('parameter:error', 'Error in verifyExpt');
 end
