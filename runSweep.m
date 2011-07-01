@@ -4,7 +4,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
   %% Upload the next stimulus at the same time, then reset the stimDevice
   %% and inform the stimDevice of the stimulus length
 
-  global state fakedata;
+  global state fakedata newSpikeAlgorithm;
 
   % reset data device and tell it how long the sweep will be
   resetDataDevice(tdt.dataDevice, sweepLen*1000);
@@ -48,7 +48,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
   nSamplesReceived = zeros(1, 32);
 
   filteredData = zeros(32, nSamplesExpected);
-  filterIndex = zeros(1,32);
+  filterIndex = 0;
 
   % open data files
   dataFileHandles = nan(1,32);
@@ -60,7 +60,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
   spikeTimesNew = cell(1, 32);
   
   spikeTimes = cell(1, 32);
-  spikeIndex = zeros(1,32);
+  spikeIndex = 0;
 
   % keep track of how much of stimulus has been uploaded
   samplesUploaded = 0;
@@ -121,14 +121,16 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
     end
 
     % bandpass filter data and detect spikes
-    minSamplesReceived = min(nSamplesReceived);
-    if (minSamplesReceived-filterIndex) > (tdt.dataSampleRate/2)
-      [filtData, offset] = filterData(data(chan, filterIndex+1:minSamplesReceived), spikeFilter);
-      filteredData(chan, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
-      spikeTimesNew = appendSpikeTimes(spikeTimesNew, filtData, filterIndex+offset+1, tdt.dataSampleRate, spikeThreshold);
-      filterIndex = filterIndex + size(filtData,2);
+    if newSpikeAlgorithm
+      minSamplesReceived = min(nSamplesReceived);
+      if (minSamplesReceived-filterIndex) > (tdt.dataSampleRate/2)
+        [filtData, offset] = filterData(data(:, filterIndex+1:minSamplesReceived), spikeFilter);
+        filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
+        spikeTimesNew = appendSpikeTimes(spikeTimesNew, filtData, filterIndex+offset+1, tdt.dataSampleRate, spikeThreshold);
+        filterIndex = filterIndex + size(filtData,2);
+      end
     end
-
+    
     % detect spikes
     [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, tdt.dataSampleRate, data, nSamplesReceived, spikeIndex, spikeFilter, spikeThreshold, false);
 
@@ -140,7 +142,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
     end
 
     % plot data
-    plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
+    plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes, spikeTimesNew);
     drawnow;
   end
 
@@ -162,15 +164,17 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
   % finish detecting spikes
   [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, tdt.dataSampleRate, data, nSamplesReceived, spikeIndex, spikeFilter, spikeThreshold,true);
   
-  [filtData, offset] = filterData(data(chan, filterIndex+1:minSamplesReceived), spikeFilter);
-  filteredData(chan, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
-  spikeTimesNew = appendSpikeTimes(spikeTimesNew, filtData, filterIndex+offset+1, tdt.dataSampleRate, spikeThreshold);
-  filterIndex = filterIndex + size(filtData,2);
-
+  if newSpikeAlgorithm
+    [filtData, offset] = filterData(data(:, filterIndex+1:minSamplesReceived), spikeFilter);
+    filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
+    spikeTimesNew = appendSpikeTimes(spikeTimesNew, filtData, filterIndex+offset+1, tdt.dataSampleRate, spikeThreshold);
+    filterIndex = filterIndex + size(filtData,2);
+  end
+  
   fprintf(['  * ' num2str(sum(cellfun(@(i) length(i),spikeTimes))) ' spikes detected after ' num2str(toc) ' sec.\n']);
 
   % final plot
-  plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
+  plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes, spikeTimesNew);
   drawnow;
 
   % close data files

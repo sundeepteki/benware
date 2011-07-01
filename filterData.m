@@ -13,6 +13,7 @@ function [data, offset] = filterData(data, spikeFilter)
 
 if size(data, 2) < (2*spikeFilter.deadTime + 3)
     data = zeros(32,0);
+    offset = spikeFilter.deadTime;
     return
 end
 
@@ -21,11 +22,11 @@ end
 validChans = any(data, 2);
 
 % replace valid channels with filtered versions
-if length(validChans) > 0
-  filtData(validChans,:) = filtfilt(spikeFilter.B, spikeFilter.A, data(validChans,:)')';
+if ~isempty(validChans)
+  data(validChans,:) = filtfilt(spikeFilter.B, spikeFilter.A, data(validChans,:)')';
 end
 
 % chop off the invalid ends of the filtered signals
-signal = signal(spikeFilter.deadTime:end-spikeFilter.deadTime);
+data = data(:,spikeFilter.deadTime:end-spikeFilter.deadTime);
 
 offset = spikeFilter.deadTime;

@@ -150,5 +150,5 @@ end
 
 diary off
 
-[snd, fs] = wavread(['sounds/bugle' num2str(randi(3),'%02d') '.wav'])
-soundsc(snd, fs);
+%[snd, fs] = wavread(['sounds/bugle-' num2str(randi(3),'%02d') '.wav']);
+%soundsc(snd, fs);

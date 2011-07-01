@@ -1,8 +1,10 @@
-function spikeTimes = appendSpikeTimes(spikeTimes, data, offset, fs_in, threshold)
+function spikeTimes = appendSpikeTimes(spikeTimes, data, offset, fs, threshold)
 
-validChans = any(data, 2);
+data = data';
 
-sig = data(validChans,:);
+validChans = find(any(data, 1));
+
+sig = data(:, validChans);
 
 % normalise
 nSamples = size(sig, 1);
@@ -11,7 +13,7 @@ sigStd = repmat(std(sig, [], 1), nSamples, 1);
 sig = (sig - sigMean) ./ sigStd - threshold;
 
 % find threshold crossings
-sig = sign(sig(deadTime:end-deadTime, :));
+sig = sign(sig);
 sig = diff(sig)<0;
 
 % append new spike times to spikeTimes

@@ -20,6 +20,7 @@ global truncate fakedata checkdata;
 truncate = 0; % for testing only. should normally be 0
 fakedata = []; %load('fakedata.mat'); % for testing only. should normally be []
 checkdata = false; % for testing only. should normally be FALSE
+newSpikeAlgorithm = false; % for testing only. normally FALSE
 
 % testing notices
 needWarning = false;
@@ -32,8 +33,8 @@ if ~isempty(fakedata)
   fprintf('RECORDING FAKE DATA! this is for testing only!\n');
   needWarning = true;
 end
-if checkdata
-  fprintf('Downloading all data twice! this is for testing only!\n');
+if newSpikeAlgorithm
+  fprintf('Detecting spikes twice! this is for testing only!\n');
   needWarning = true;
 end
 
@@ -56,7 +57,7 @@ expt.stimDeviceName = 'RX6';
 expt.dataDeviceName = 'RZ5';
 expt.dataDeviceSampleRate = 24414.0625;
 
-expt.penetrationNum = 14;
+expt.penetrationNum = 99;
 expt.probe.lhs = '284B';
 expt.probe.rhs = '2840';
 expt.headstage.lhs = 3078;
