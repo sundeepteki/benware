@@ -16,11 +16,11 @@ printGreetings()
 % variables intended for manipulation by future UI
 global state
 
-global truncate fakedata checkdata;
+global truncate fakedata checkdata newSpikeAlgorithm;
 truncate = 0; % for testing only. should normally be 0
 fakedata = []; %load('fakedata.mat'); % for testing only. should normally be []
 checkdata = false; % for testing only. should normally be FALSE
-newSpikeAlgorithm = false; % for testing only. normally FALSE
+newSpikeAlgorithm = true; % for testing only. normally FALSE
 
 % testing notices
 needWarning = false;
@@ -57,7 +57,7 @@ expt.stimDeviceName = 'RX6';
 expt.dataDeviceName = 'RZ5';
 expt.dataDeviceSampleRate = 24414.0625;
 
-expt.penetrationNum = 18;
+expt.penetrationNum = 19;
 expt.probe.lhs = '284C';
 expt.probe.rhs = '2840';
 expt.headstage.lhs = 3078;
