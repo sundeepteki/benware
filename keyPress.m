@@ -41,4 +41,6 @@ switch eventInfo.Character
     state.plot.filtered = ~state.plot.filtered;
   case 'l'
     state.plot.lfp = ~state.plot.lfp;
+  case 'q'
+    state.userQuit = true;
 end

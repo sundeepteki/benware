@@ -30,6 +30,7 @@ end
 state.audioMonitor.changed = true;
 state.shouldPause = false;
 state.paused = false;
+state.userQuit = false;
 
 % check that the grid is valid
 verifyGridFields(grid);
@@ -146,9 +147,20 @@ for sweepNum = 1:grid.nSweepsDesired
     state.paused = false;
   end
   
+  if state.userQuit
+    fprintf_title('Do you really want to quit?');
+    if lower(demandinput('Do you really want to terminate this grid? ','yn','n',true))=='y'
+      break;
+    else
+      state.userQuit = false;
+    end
+  end
+  
 end
 
 diary off
 
-[snd, fs] = wavread(['sounds/bugle-' num2str(randi(3),'%02d') '.wav']);
-soundsc(snd, fs);
+if ~state.userQuit
+  [snd, fs] = wavread(['sounds/bugle-' num2str(randi(3),'%02d') '.wav']);
+  soundsc(snd, fs);
+end
