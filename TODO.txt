@@ -1,7 +1,8 @@
 == PLANS
 
 * Make a noise at the start of every sweep so user can monitor what is going
-  on?
+  on? Or make sure something is moving on screen all the time, even if graphs
+  are off?
 
 * Make it possible to hear unfiltered waveforms -- switch between filtered and
   unfiltered when the user changes the display
@@ -23,6 +24,9 @@ In ==> runSweep at 106
 * Document code
 
 * Show gain factor in main plot, plus other plot labels
+
+* Gain factor is supposed to be persistent, but isn't. Also it will be lost
+  when quitting matlab
 
 * Not really happy with tdt structure -- should it be global after all?
   -- don't think so but current situtation is not ideal either

@@ -1,5 +1,7 @@
 function cleanup(tdt)
 
 fprintf('\n');
-resetDevices(tdt);
+if ~isempty(tdt)
+  resetDevices(tdt);
+end
 closeOpenFiles;

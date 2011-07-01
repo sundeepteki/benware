@@ -8,9 +8,6 @@ function tdt = runGrid(tdt, expt, grid)
 
 global state;
 
-% close open files if there is an error or ctrl-c
-cleanupObject = onCleanup(@()cleanup(tdt));
-
 % gain of scope trace and other UI variables
 if ~exist('state','var')
   state = struct;
@@ -76,6 +73,9 @@ fprintf_title('Preparing to record');
 tic;
 
 tdt = prepareTDT(tdt, expt, grid);
+
+% close open files if there is an error or ctrl-c
+cleanupObject = onCleanup(@()cleanup(tdt));
 
 % make filter for spike detection
 spikeFilter = makeSpikeFilter(expt.dataDeviceSampleRate);
