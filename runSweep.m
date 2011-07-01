@@ -57,10 +57,10 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
   end
 
   % cell array for storing spike times
-  spikeTimesNew = cell(1, 32);
-  
   spikeTimes = cell(1, 32);
-  spikeIndex = 0;
+  
+  spikeTimesOld = cell(1, 32);
+  spikeIndexOld = 0;
 
   % keep track of how much of stimulus has been uploaded
   samplesUploaded = 0;
@@ -89,13 +89,13 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
 
   % loop until we've received all data
   while any(nSamplesReceived~=nSamplesExpected)
-
+    
     % upload stimulus
     if ~isempty(nextStim)
       % stimulus upload is limited by length of stimulus, or where the
       % stimDevice has got to in reading out the stimulus, whichever is lower
       maxStimIndex = min(getStimIndex(tdt.stimDevice),stimLen);
-
+      n = samplesUploaded + 1;
       if maxStimIndex>samplesUploaded
         uploadStim(tdt.stimDevice, nextStim(:, samplesUploaded+1:maxStimIndex), samplesUploaded);
         samplesUploaded = maxStimIndex;
@@ -103,9 +103,10 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
           fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
         end
       end
-
+    
     end
-
+    %fprintf(['  * Stim: ' num2str((maxStimIndex-n)/tdt.stimSampleRate) ' sec of stim done in ' num2str(toc) ' sec.\n']);tic;
+    
     % download data
     for chan = 1:32
 
@@ -119,22 +120,28 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
       fwrite(dataFileHandles(chan), newdata, 'float32');
 
     end
+    
+    %fprintf(['  * Data: ' num2str(length(newdata)/tdt.dataSampleRate) ' sec of data done in ' num2str(toc) ' sec.\n']);tic;
 
     % bandpass filter data and detect spikes
     if newSpikeAlgorithm
       minSamplesReceived = min(nSamplesReceived);
-      if (minSamplesReceived-filterIndex) > (tdt.dataSampleRate/2)
+      if (minSamplesReceived-filterIndex) > (tdt.dataSampleRate/10)
         [filtData, offset] = filterData(data(:, filterIndex+1:minSamplesReceived), spikeFilter);
         filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
-        spikeTimesNew = appendSpikeTimes(spikeTimesNew, filtData, filterIndex+offset+1, tdt.dataSampleRate, spikeThreshold);
+        spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, tdt.dataSampleRate, spikeThreshold);
         filterIndex = filterIndex + size(filtData,2);
       end
     end
+        
+    %fprintf(['  * new filtering done after ' num2str(toc) ' sec.\n']);tic;
+   
     
     % detect spikes
-    [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, tdt.dataSampleRate, data, nSamplesReceived, spikeIndex, spikeFilter, spikeThreshold, false);
+    %[spikeTimesOld, spikeIndexOld] = appendSpikes(spikeTimesOld, tdt.dataSampleRate, data, nSamplesReceived, spikeIndexOld, spikeFilter, spikeThreshold, false);
 
-
+     %fprintf(['  * old filtering done after ' num2str(toc) ' sec.\n']);tic;
+ 
     % check audio monitor is on the right channel
     if state.audioMonitor.changed
       setAudioMonitorChannel(tdt, state.audioMonitor.channel);
@@ -142,8 +149,11 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
     end
 
     % plot data
-    plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes, spikeTimesNew);
+    plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes, spikeTimes);
     drawnow;
+
+    %fprintf(['  * draw done after ' num2str(toc) ' sec.\n']);tic;
+
   end
 
   fprintf(['  * Waveforms received and saved after ' num2str(toc) ' sec.\n']);
@@ -162,19 +172,17 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
   end
 
   % finish detecting spikes
-  [spikeTimes, spikeIndex] = appendSpikes(spikeTimes, tdt.dataSampleRate, data, nSamplesReceived, spikeIndex, spikeFilter, spikeThreshold,true);
+  %[spikeTimesOld, spikeIndexOld] = appendSpikes(spikeTimesOld, tdt.dataSampleRate, data, nSamplesReceived, spikeIndexOld, spikeFilter, spikeThreshold,true);
   
-  if newSpikeAlgorithm
-    [filtData, offset] = filterData(data(:, filterIndex+1:minSamplesReceived), spikeFilter);
-    filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
-    spikeTimesNew = appendSpikeTimes(spikeTimesNew, filtData, filterIndex+offset+1, tdt.dataSampleRate, spikeThreshold);
-    filterIndex = filterIndex + size(filtData,2);
-  end
+  [filtData, offset] = filterData(data(:, filterIndex+1:minSamplesReceived), spikeFilter);
+  filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
+  spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, tdt.dataSampleRate, spikeThreshold);
+  filterIndex = filterIndex + size(filtData,2);
   
   fprintf(['  * ' num2str(sum(cellfun(@(i) length(i),spikeTimes))) ' spikes detected after ' num2str(toc) ' sec.\n']);
 
   % final plot
-  plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes, spikeTimesNew);
+  plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes, spikeTimes);
   drawnow;
 
   % close data files

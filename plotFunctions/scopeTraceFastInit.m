@@ -16,6 +16,7 @@ end
 
 plotData.sampleTimes = plotData.samplesToPlot/fs_in;
 
+plotData.lineHandles = zeros(1,32)-1;
 
 % positions
 n.rows = 8;
@@ -59,7 +60,7 @@ pos = pos';
   
 % create figure
 f = figure(1);
-set(f,'color',[1 1 1],'KeyPressFcn',{'keyPress'});
+set(f,'color',[1 1 1], 'renderer', 'opengl', 'KeyPressFcn',{'keyPress'});
 clf;
 for ii = 1:32
   plotData.subplotHandles(ii) = axes('position', pos{ii}, 'xtick', [], 'ytick', [], ...

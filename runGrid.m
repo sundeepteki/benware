@@ -15,7 +15,7 @@ end
 state.plot.enabled = true;
 state.plot.onlyActiveChannel = false;
 state.plot.waveform = true;
-state.plot.filtered = false;
+state.plot.filtered = true;
 state.plot.lfp = false;
 state.plot.raster = false;
 if ~isfield(state, 'dataGain')

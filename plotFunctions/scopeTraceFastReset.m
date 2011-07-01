@@ -23,6 +23,9 @@ for chan = 1:32
   line([1 nSamplesExpected]/fs_in, [0 0], 'color', [0 0 0], 'parent', plotData.subplotHandles(chan),'hittest','off');
   line([1 1]/fs_in, [-1 1], 'color', [0 0 0],'parent',plotData.subplotHandles(chan),'hittest','off');
   
+  plotData.lineHandles(chan) = line(0, 0, 'parent', plotData.subplotHandles(chan),'hittest','off', 'visible', 'off');
+  plotData.rasterHandles(chan) = line(0, 0, 'marker', '.', 'linestyle', 'none', 'parent', plotData.subplotHandles(chan),'hittest','off', 'visible', 'off');
+  
   plotData.clean(chan) = true;
 
 end

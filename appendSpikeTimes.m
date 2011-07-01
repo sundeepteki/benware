@@ -8,9 +8,15 @@ sig = data(:, validChans);
 
 % normalise
 nSamples = size(sig, 1);
-sigMean = repmat(mean(sig, 1), nSamples, 1);
-sigStd = repmat(std(sig, [], 1), nSamples, 1);
-sig = (sig - sigMean) ./ sigStd - threshold;
+%sigMean = repmat(mean(sig, 1), nSamples, 1);
+%sigStd = repmat(std(sig, [], 1), nSamples, 1);
+%sig = (sig - sigMean) ./ sigStd - threshold;
+
+mn = mean(sig, 1);
+sd = std(sig, [], 1);
+for ii = 1:size(sig, 2)
+  sig(:,ii) = (sig(:,ii)-mn(ii)) / sd(ii) - threshold;
+end
 
 % find threshold crossings
 sig = sign(sig);

@@ -28,6 +28,8 @@ end
 switch eventInfo.Character
   case 'p'
     state.plot.enabled = ~state.plot.enabled;
+  case 'w'
+    state.plot.waveform = ~state.plot.waveform;
   case 'a'
     if ~state.plot.enabled
       state.plot.onlyActiveChannel = true;

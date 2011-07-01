@@ -19,12 +19,15 @@ end
 
 % leave empty signals unchanged
 % (note that any() is fast -- it returns as soon as it finds something)
-validChans = any(data, 2);
+%validChans = any(data, 2);
 
 % replace valid channels with filtered versions
-if ~isempty(validChans)
-  data(validChans,:) = filtfilt(spikeFilter.B, spikeFilter.A, data(validChans,:)')';
-end
+%if ~isempty(validChans)
+% data(validChans,:) = filtfilt(spikeFilter.B, spikeFilter.A, data(validChans,:)')';
+%end
+data = data';
+data = filtfilt(spikeFilter.B, spikeFilter.A, data);
+data = data';
 
 % chop off the invalid ends of the filtered signals
 data = data(:,spikeFilter.deadTime:end-spikeFilter.deadTime);
