@@ -1,23 +1,36 @@
-== PLANS
+== BEFORE NEXT EXPERIMENT 
 
-* Make a noise at the start of every sweep so user can monitor what is going
-  on? Or make sure something is moving on screen all the time, even if graphs
-  are off?
+* Plot actual rasters (not just a single sweep)
 
-* Make it possible to hear unfiltered waveforms -- switch between filtered and
+* Plot PSTHes
+
+* Make it possible to HEAR unfiltered waveforms -- switch between filtered and
   unfiltered when the user changes the display
 
 * I had to turn write caching off because of crashes. Why is this? It's slow
   now!
 
-* Numerous WriteTag errors on WaveformL -- make this not crash
-
-* Document code
+* Numerous WriteTag errors on WaveformL -- try again instead of crashing?
 
 * Show gain factor in main plot, plus other plot labels
 
-* Gain factor is supposed to be persistent, but isn't. Also it will be lost
-  when quitting matlab
+* Save spike times in separate files again, with sweep metadata separately
+
+* VAS?
+
+* Variable length sweeps
+
+
+== PLANS
+
+* Plot averaged LFP? (different filtering required, may not be easy to do it
+  fast enough)
+
+* Make a noise at the start of every sweep so user can monitor what is going
+  on? Or make sure something is moving on screen all the time, even if graphs
+  are off?
+
+* Document code
 
 * Not really happy with tdt structure -- should it be global after all?
   -- don't think so but current situtation is not ideal either
@@ -33,32 +46,26 @@
      make a big difference (quning from 0.6+ to 0.3+ sec per sweep). Need to investigate 
      saving of the mat file, which does take longer and longer through a grid.
 
-* onCleanup (for closing files when ctrl-c is used) isn't working all the time
-  -- when does it, why doesn't it??
-
-* Save spike times in separate files again, with sweep metadata separately
-
-* VAS?
-
-* Variable length sweeps
-
 * Clean up parameters of runSweep
 
 * init TDT devices in a function, remove post-init pause if nothing done(?)
 
 * post-init pause may no longer be necessary
 
-* Have a way of continuing an interrupted grid (an option instead of choosing from grids/)
-
-* Ability to plot filtered data on scope trace
+* Have a way of continuing an interrupted grid (an option instead of choosing
+  from grids/) 
 
 * Ability to plot averaged LFP signal
 
 * Ability to not save data?
 
+* Gain factor is supposed to be persistent, but isn't. Also it will be lost
+  when quitting matlab (make it part of expt structure, see	 next point)
+
 * Save expt structure somewhere
 
 * UI for modifying expt structure
+
 
 == ON HOLD
 
@@ -148,4 +155,10 @@ Attempt to reference field of non-structure array.
 
 In ==> runSweep at 106
     newdata = downloadData(tdt.dataDevice, chan, nSamplesReceived(chan));
+
+* onCleanup (for closing files when ctrl-c is used) isn't working all the time
+  -- when does it, why doesn't it??
+
+* Ability to plot filtered data on scope trace
+
 
