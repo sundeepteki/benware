@@ -31,6 +31,8 @@ state.audioMonitor.changed = true;
 state.shouldPause = false;
 state.paused = false;
 state.userQuit = false;
+state.noData.alreadyWarned = false;
+state.noData.warnUser = false;
 
 % check that the grid is valid
 verifyGridFields(grid);
@@ -145,6 +147,16 @@ for sweepNum = 1:grid.nSweepsDesired
       pause(0.2);
     end
     state.paused = false;
+  end
+  
+  if state.noData.warnUser
+    fprintf_title('Some incoming channels are empty -- perhaps your Medusa batteries ran out?');
+    if lower(demandinput('Do you want to carry on anyway? ','yn','n',true))=='y'
+      state.noData.alreadyWarned = true;
+      state.noData.warnUser = false;
+    else
+      state.userQuit = true;
+    end
   end
   
   if state.userQuit

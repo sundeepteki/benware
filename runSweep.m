@@ -182,6 +182,11 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
     fclose(dataFileHandles(chan));
   end
 
+  % check for blank data channels
+  if ~state.noData.alreadyWarned && ~isempty(data) &&  any(all(sig==0,2))
+    state.noData.warnUser = true;
+  end
+
   % data integrity check:
   % 1. check all channels have the same amount of data
   nSamples = unique(nSamplesReceived);
