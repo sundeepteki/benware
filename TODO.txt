@@ -12,15 +12,6 @@
 
 * Numerous WriteTag errors on WaveformL -- make this not crash
 
-* == Resetting devices...Warning: The following error was caught while executing 'onCleanup' class destructor:
-Attempt to reference field of non-structure array. 
-> In benWare at 96
-??? Operation terminated by user during ==> downloadData at 10
-
-In ==> runSweep at 106
-    newdata = downloadData(tdt.dataDevice, chan, nSamplesReceived(chan));
-
-
 * Document code
 
 * Show gain factor in main plot, plus other plot labels
@@ -149,4 +140,12 @@ In ==> runSweep at 106
 * ontehfly: List directories in date order and default to most recent
 
 * UI for seeing incoming data - F for filtered, R for raw, etc.
+
+* == Resetting devices...Warning: The following error was caught while executing 'onCleanup' class destructor:
+Attempt to reference field of non-structure array. 
+> In benWare at 96
+??? Operation terminated by user during ==> downloadData at 10
+
+In ==> runSweep at 106
+    newdata = downloadData(tdt.dataDevice, chan, nSamplesReceived(chan));
 
