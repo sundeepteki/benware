@@ -149,3 +149,6 @@ for sweepNum = 1:grid.nSweepsDesired
 end
 
 diary off
+
+[snd, fs] = wavread(['sounds/bugle' num2str(randi(3),'%02d') '.wav'])
+soundsc(snd, fs);
