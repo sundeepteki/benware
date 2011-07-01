@@ -34,4 +34,4 @@ if ~filesExist(ii)
 end
 end
 
-error('stimulus:files', missingFilesStr);
+errorBeep('stimulus:files', missingFilesStr);

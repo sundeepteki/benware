@@ -142,6 +142,7 @@ for sweepNum = 1:grid.nSweepsDesired
   % pause if requested (through key press in main window)
   if state.shouldPause
     state.paused = true;
+    bbeep;
     fprintf_title('Paused -- press space to continue');
     while state.shouldPause
       pause(0.2);
@@ -150,6 +151,7 @@ for sweepNum = 1:grid.nSweepsDesired
   end
   
   if state.noData.warnUser
+    bbeep;
     fprintf_title('Some incoming channels are empty -- perhaps your Medusa batteries ran out?');
     if lower(demandinput('Do you want to carry on anyway? ','yn','n',true))=='y'
       state.noData.alreadyWarned = true;
@@ -160,6 +162,7 @@ for sweepNum = 1:grid.nSweepsDesired
   end
   
   if state.userQuit
+    bbeep;
     fprintf_title('Do you really want to quit?');
     if lower(demandinput('Do you really want to terminate this grid? ','yn','n',true))=='y'
       break;

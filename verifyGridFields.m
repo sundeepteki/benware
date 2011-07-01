@@ -26,4 +26,4 @@ for ii=1:L(missing_fields)
 end
 str = droptail(str, 2);
 
-error('grid:error', str);
+errorBeep('grid:error', str);

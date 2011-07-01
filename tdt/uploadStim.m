@@ -3,8 +3,8 @@ function uploadStim(stimDevice, stim, offset)
 
 %[offset offset+size(stim,2) getStimIndex]
 if ~stimDevice.WriteTagV('WaveformL',offset,stim(1,:))
-    error('WriteTagV WaveformL failed');
+    errorBeep('WriteTagV WaveformL failed');
 end
 if ~stimDevice.WriteTagV('WaveformR',offset,stim(2,:))
-    error('WriteTagV WaveformR failed');
+    errorBeep('WriteTagV WaveformR failed');
 end;

@@ -13,7 +13,7 @@ mkdir_nowarning(dataDir);
 % target file
 fullPath = [dataDir 'gridInfo.mat'];
 if exist(fullPath, 'file')
-    error(['Grid metadata file -- ' fullPath ' -- already exists']);
+    errorBeep(['Grid metadata file -- ' fullPath ' -- already exists']);
 end
 
 save(fullPath, 'expt', 'grid', '-v6');

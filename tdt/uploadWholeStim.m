@@ -5,13 +5,13 @@ function uploadWholeStim(stimDevice, stim)
 % about the stimulus length
 
 if ~stimDevice.SetTagVal('nSamples',size(stim,2))
-    error('WriteTag nSamples failed');
+    errorBeep('WriteTag nSamples failed');
 end
 
 if ~stimDevice.WriteTagV('WaveformL',0,stim(1,:))
-    error('WriteTagV WaveformL failed');
+    errorBeep('WriteTagV WaveformL failed');
 end
 
 if ~stimDevice.WriteTagV('WaveformR',0,stim(2,:))
-    error('WriteTagV WaveformR failed');
+    errorBeep('WriteTagV WaveformR failed');
 end

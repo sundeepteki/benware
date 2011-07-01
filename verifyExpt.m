@@ -21,7 +21,7 @@ fprintf('  - RHS headstage: %d \n', expt.headstage.rhs);
 
 r = demandinput('\nIs this ok? [Y/n]: ', {'y', 'n'}, 'y', true);
 if r=='n'
-error('parameter:error', 'Error in verifyExpt');
+errorBeep('parameter:error', 'Error in verifyExpt');
 end
 
 % stimulus
@@ -39,7 +39,7 @@ end
 
 r = demandinput('\nIs this ok? [Y/n]: ', {'y', 'n'}, 'y', true);
 if r=='n'
-error('parameter:error', 'Error in verifyExpt');
+errorBeep('parameter:error', 'Error in verifyExpt');
 end
 
 % recording
@@ -49,5 +49,5 @@ constructDataPath(expt.dataDir, grid, expt))
 
 r = demandinput('\nIs this ok? [Y/n]: ', {'y', 'n'}, 'y', true);
 if r=='n'
-error('parameter:error', 'Error in verifyExpt');
+errorBeep('parameter:error', 'Error in verifyExpt');
 end

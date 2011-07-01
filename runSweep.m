@@ -11,7 +11,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
 
   % check for stale data in data device buffer
   if any(countAllData(tdt.dataDevice) ~= 0)
-    error('Stale data in data buffer');
+    errorBeep('Stale data in data buffer');
   end
 
   % check that the correct stimulus is in the stimDevice buffer
@@ -21,15 +21,15 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
   d = max(max(abs(checkData - [stim(:, 1:100) stim(:, rnd+1:rnd+100) stim(:, end-99:end)])));
 
   if d>10e-7
-    error('Stimulus on stimDevice is not correct!');
+    errorBeep('Stimulus on stimDevice is not correct!');
   end
 
   % check stimulus length is correct
   if getStimLength(tdt.stimDevice) ~= stimLen
-    error('Stimulus length on stimDevice is not correct');
+    errorBeep('Stimulus length on stimDevice is not correct');
   end
   %if abs(getStimLength(tdt.stimDevice) - stimLen) > 2
-  %  error('Stimulus length on stimDevice is not correct');
+  %  errorBeep('Stimulus length on stimDevice is not correct');
   %end
 
 
@@ -39,7 +39,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
   % replace with a check that it is in correct state?
   resetStimDevice(tdt.stimDevice);
   if getStimIndex(tdt.stimDevice)~=0
-    error('Stimulus index not equal to zero at start of sweep');
+    errorBeep('Stimulus index not equal to zero at start of sweep');
   end
 
   % make matlab buffer for data
@@ -191,14 +191,14 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
   % 1. check all channels have the same amount of data
   nSamples = unique(nSamplesReceived);
   if length(nSamples)>1
-    error('Different amounts of data from different channels');
+    errorBeep('Different amounts of data from different channels');
   end
 
   fprintf(['  * Got ' num2str(nSamples) ' samples (expecting ' num2str(nSamplesExpected) ') from 32 channels (' num2str(nSamples/tdt.dataSampleRate) ' sec).\n']);
 
   % 2. check that we got the expected number of samples
   if (nSamples~=nSamplesExpected)
-    error('Wrong number of samples');
+    errorBeep('Wrong number of samples');
   end
 
   % optional: check data thoroughly (too slow to be used normally)
@@ -209,7 +209,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
     teststim = downloadStim(tdt.stimDevice, 0, samplesUploaded);
     d = max(max(abs(nextStim-teststim)));
     if d>10e-7
-      error('Stimulus mismatch!');
+      errorBeep('Stimulus mismatch!');
     end
     fprintf([' ' num2str(size(teststim, 2)) ' samples verified.\n']);
 
@@ -218,7 +218,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
     for chan = 1:32
       diffInMem = max(abs(data(chan,:) - testData{chan}));
       if diffInMem > 0
-        error('Data in memory doesn''t match TDT buffer!');
+        errorBeep('Data in memory doesn''t match TDT buffer!');
       end
 
       h = fopen(dataFiles{chan}, 'r');
@@ -226,7 +226,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
       fclose(h);
       diffOnDisk = max(abs(savedData - testData{chan}));
       if diffOnDisk > 0
-        error('Data on disk doesn''t match TDT buffer!');
+        errorBeep('Data on disk doesn''t match TDT buffer!');
       end
 
     end

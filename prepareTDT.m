@@ -42,9 +42,9 @@ fprintf('done.\n');
 
 % check sample rates are identical to those requested
 if tdt.stimSampleRate ~= grid.sampleRate
-  error('stimDevice sample rate is wrong');
+  errorBeep('stimDevice sample rate is wrong');
 end
 
 if tdt.dataSampleRate ~= expt.dataDeviceSampleRate
-  error('dataDevice sample rate is wrong');
+  errorBeep('dataDevice sample rate is wrong');
 end
