@@ -183,7 +183,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
   end
 
   % check for blank data channels
-  if ~state.noData.alreadyWarned && ~isempty(data) &&  any(all(sig==0,2))
+  if ~state.noData.alreadyWarned && ~isempty(data) &&  any(all(data==0,2))
     state.noData.warnUser = true;
   end
 
