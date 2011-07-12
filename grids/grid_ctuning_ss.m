@@ -25,5 +25,5 @@ function grid = grid_ctuning_ss()
   grid.repeatsPerCondition = 2;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -92;
+  grid.stimLevelOffsetDB = -102;
   

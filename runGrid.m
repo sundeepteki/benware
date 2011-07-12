@@ -14,10 +14,9 @@ if ~exist('state','var')
 end
 state.plot.enabled = true;
 state.plot.onlyActiveChannel = false;
-state.plot.waveform = true;
 state.plot.filtered = true;
-state.plot.lfp = false;
-state.plot.raster = false;
+state.plot.type = 'w';
+state.plot.typeShouldChange = false;
 if ~isfield(state, 'dataGainRaw')
   state.dataGainRaw = 500;
 end
@@ -94,7 +93,7 @@ fprintf(['done after ' num2str(toc) ' sec.\n']);
 
 % set up plot -- FIXME assumes all stimuli will be the same length as the first
 nSamplesExpected = floor((size(nextStim,2)/grid.sampleRate+grid.postStimSilence)*expt.dataDeviceSampleRate)+1;
-plotData = feval(expt.plotFunctions.init, [], expt.dataDeviceSampleRate, nSamplesExpected);
+plotData = plotInit([], expt.dataDeviceSampleRate, nSamplesExpected);
 %plotData = [];
 
 %% run sweeps
@@ -131,8 +130,8 @@ for sweepNum = 1:grid.nSweepsDesired
   mkdir_nowarning(dataDir);
   
   % run the sweep
-  [nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp, plotData] = runSweep(tdt, sweepLen, stim, nextStim, expt.plotFunctions, ...
-    expt.detectSpikes, spikeFilter, expt.spikeThreshold, sweeps(sweepNum).dataFiles, plotData);     %#ok<*SAGROW>
+  [nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp, plotData] = runSweep(tdt, sweepLen, stim, nextStim, ...
+    spikeFilter, expt.spikeThreshold, sweeps(sweepNum).dataFiles, plotData);     %#ok<*SAGROW>
   
   % store sweep duration
   sweeps(sweepNum).sweepLen.samples = nSamples;

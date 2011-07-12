@@ -71,15 +71,10 @@ else
 end
 
 expt.logFilename = 'benWare.log';
-expt.plotFunctions.init = 'scopeTraceFastInit';
-expt.plotFunctions.reset = 'scopeTraceFastReset';
-expt.plotFunctions.plot = 'scopeTraceFastPlot';
 %expt.dataGain = 100;
 expt.detectSpikes = true;
-expt.spikeThreshold = -2.8; % -2.8
-%expt.plotFunctions.preGrid = 'rasterPreGrid';
-%expt.plotFunctions.preSweep = 'rasterPreSweep';
-%expt.plotFunctions.plot = 'rasterPlot';
+expt.spikeThreshold = -2; % -2.8
+
 
 % load grid from grids/ directory
 grid = chooseGrid();

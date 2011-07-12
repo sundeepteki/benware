@@ -1,4 +1,4 @@
-function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, stim, nextStim, plotFunctions, detectSpikes, spikeFilter, spikeThreshold, dataFiles, plotData)
+function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, stim, nextStim, spikeFilter, spikeThreshold, dataFiles, plotData)
   %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
   %% Will fail if next stimulus is not on the TDT
   %% Upload the next stimulus at the same time, then reset the stimDevice
@@ -64,7 +64,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
 
   % prepare data display
   %plotData = feval(plotFunctions.init, [], tdt.dataSampleRate, nSamplesExpected);
-  plotData = feval(plotFunctions.reset, plotData);
+  %plotData = feval(plotFunctions.reset, plotData);
 
   % trigger stimulus presentation and data collection
   timeStamp = clock;
@@ -72,6 +72,9 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
 
   fprintf(['  * Sweep triggered after ' num2str(toc) ' sec.\n']);
 
+  plotData = plotReset(plotData);
+
+  
   % while trial is running:
   % * upload next stimulus as far as possible
   % * download data as fast as possible while trial is running
@@ -145,9 +148,8 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
     end
 
     % plot data
-    plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
-    drawnow;
-    
+    plotData = plotUpdate(plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
+ 
     %fprintf(['  * draw done after ' num2str(toc) ' sec.\n']);tic;
 
   end
@@ -178,8 +180,8 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
   fprintf(['  * ' num2str(sum(cellfun(@(i) length(i),spikeTimes))) ' spikes detected after ' num2str(toc) ' sec.\n']);
 
   % final plot
-  plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
-  drawnow;
+  plotData = plotUpdate(plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
+  plotData.lastSweepSpikes = spikeTimes;
 
   % close data files
   for chan = 1:32

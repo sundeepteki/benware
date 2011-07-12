@@ -34,23 +34,27 @@ switch eventInfo.Key
 end
 
 switch eventInfo.Character
-  case 'p'
+  case 'o'
+    if state.plot.enabled
+      state.plot.shouldDisable = true;
+    else
+      state.plot.typeShouldChange = true;
+    end
     state.plot.enabled = ~state.plot.enabled;
-  case 'w'
-    state.plot.waveform = ~state.plot.waveform;
+  case {'w', 'r', 'p'}
+    state.plot.enabled = true;
+    state.plot.type = eventInfo.Character;
+    state.plot.typeShouldChange = true;
   case 'a'
     if ~state.plot.enabled
       state.plot.onlyActiveChannel = true;
     else
       state.plot.onlyActiveChannel = ~state.plot.onlyActiveChannel;
     end
+    state.plot.activeChannelShouldChange = true;
     state.plot.enabled = true;
-  case 'r'
-    state.plot.raster = ~state.plot.raster;
   case 'f'
     state.plot.filtered = ~state.plot.filtered;
-  case 'l'
-    state.plot.lfp = ~state.plot.lfp;
   case 'q'
     state.userQuit = true;
 end
