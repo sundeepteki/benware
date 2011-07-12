@@ -7,9 +7,6 @@
 * Make it possible to HEAR unfiltered waveforms -- switch between filtered and
   unfiltered when the user changes the display
 
-* I had to turn write caching off because of crashes. Why is this? It's slow
-  now!
-
 * Numerous WriteTag errors on WaveformL -- try again instead of crashing?
 
 * Show gain factor in main plot, plus other plot labels
@@ -22,6 +19,8 @@
 
 
 == PLANS
+
+* get rid of drawnow when not drawing
 
 * Plot averaged LFP? (different filtering required, may not be easy to do it
   fast enough)
@@ -161,4 +160,5 @@ In ==> runSweep at 106
 
 * Ability to plot filtered data on scope trace
 
-
+* I had to turn write caching off because of crashes. Why is this? It's slow
+  now!

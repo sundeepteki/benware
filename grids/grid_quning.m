@@ -6,7 +6,7 @@ function grid = grid_quning()
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStereo';
-  grid.stimDir = 'D:\auditory-objects\sounds.calib.expt%E\%N\';
+  grid.stimDir = 'E:\auditory-objects\sounds.calib.expt%E\%N\';
   grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   
@@ -27,6 +27,6 @@ function grid = grid_quning()
   grid.repeatsPerCondition = 10;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -96;
+  grid.stimLevelOffsetDB = -106;
   
   

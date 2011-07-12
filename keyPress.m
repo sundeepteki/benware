@@ -14,9 +14,17 @@ end
 
 switch eventInfo.Key
   case 'uparrow'
-    state.dataGain = state.dataGain*1.25;
+    if state.plot.filtered
+        state.dataGainFiltered = state.dataGainFiltered*1.25;
+    else
+        state.dataGainRaw = state.dataGainRaw*1.25;
+    end
   case 'downarrow'
-    state.dataGain = state.dataGain/1.25;
+    if state.plot.filtered
+        state.dataGainFiltered = state.dataGainFiltered/1.25;
+    else
+        state.dataGainRaw = state.dataGainRaw/1.25;
+    end
   case 'space'
     if state.paused
       state.shouldPause = false;

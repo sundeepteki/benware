@@ -4,7 +4,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
   %% Upload the next stimulus at the same time, then reset the stimDevice
   %% and inform the stimDevice of the stimulus length
 
-  global state fakedata newSpikeAlgorithm;
+  global state fakedata;
 
   % reset data device and tell it how long the sweep will be
   resetDataDevice(tdt.dataDevice, sweepLen*1000);
@@ -58,9 +58,6 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
 
   % cell array for storing spike times
   spikeTimes = cell(1, 32);
-  
-  spikeTimesOld = cell(1, 32);
-  spikeIndexOld = 0;
 
   % keep track of how much of stimulus has been uploaded
   samplesUploaded = 0;
@@ -124,14 +121,13 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
     %fprintf(['  * Data: ' num2str(length(newdata)/tdt.dataSampleRate) ' sec of data done in ' num2str(toc) ' sec.\n']);tic;
 
     % bandpass filter data and detect spikes
-    if newSpikeAlgorithm
-      minSamplesReceived = min(nSamplesReceived);
-      if (minSamplesReceived-filterIndex) > (tdt.dataSampleRate/10)
-        [filtData, offset] = filterData(data(:, filterIndex+1:minSamplesReceived), spikeFilter);
-        filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
-        spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, tdt.dataSampleRate, spikeThreshold);
-        filterIndex = filterIndex + size(filtData,2);
-      end
+
+    minSamplesReceived = min(nSamplesReceived);
+    if (minSamplesReceived-filterIndex) > (tdt.dataSampleRate/10)
+      [filtData, offset] = filterData(data(:, filterIndex+1:minSamplesReceived), spikeFilter);
+      filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
+      spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, tdt.dataSampleRate, spikeThreshold);
+      filterIndex = filterIndex + size(filtData,2);
     end
         
     %fprintf(['  * new filtering done after ' num2str(toc) ' sec.\n']);tic;
@@ -149,9 +145,9 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
     end
 
     % plot data
-    plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes, spikeTimes);
+    plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
     drawnow;
-
+    
     %fprintf(['  * draw done after ' num2str(toc) ' sec.\n']);tic;
 
   end
@@ -182,7 +178,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
   fprintf(['  * ' num2str(sum(cellfun(@(i) length(i),spikeTimes))) ' spikes detected after ' num2str(toc) ' sec.\n']);
 
   % final plot
-  plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes, spikeTimes);
+  plotData = feval(plotFunctions.plot, plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
   drawnow;
 
   % close data files

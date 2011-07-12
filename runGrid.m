@@ -18,8 +18,11 @@ state.plot.waveform = true;
 state.plot.filtered = true;
 state.plot.lfp = false;
 state.plot.raster = false;
-if ~isfield(state, 'dataGain')
-  state.dataGain = 100;
+if ~isfield(state, 'dataGainRaw')
+  state.dataGainRaw = 500;
+end
+if ~isfield(state, 'dataGainFiltered')
+  state.dataGainFiltered = 1000;
 end
 if ~isfield(state, 'audioMonitor') || ~isfield(state.audioMonitor, 'channel')
   state.audioMonitor.channel = 1;
@@ -73,6 +76,7 @@ fprintf_title('Preparing to record');
 tic;
 
 tdt = prepareTDT(tdt, expt, grid);
+setAudioMonitorChannel(tdt, state.audioMonitor.channel);
 
 % close open files if there is an error or ctrl-c
 cleanupObject = onCleanup(@()cleanup(tdt));

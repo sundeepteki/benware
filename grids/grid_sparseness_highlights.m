@@ -6,7 +6,7 @@ function grid = grid_sparseness_highlights
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStereo';
-  grid.stimDir = 'D:\auditory-objects\sounds.calib.expt%E\sparseness\';
+  grid.stimDir = 'E:\auditory-objects\sounds.calib.expt%E\sparseness\';
   grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   % stimulus grid structure
