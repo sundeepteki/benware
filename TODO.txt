@@ -1,13 +1,11 @@
-== BEFORE NEXT EXPERIMENT 
+== PLANS
 
-* Plot actual rasters (not just a single sweep)
+* PSTH of active channel should be highlighted
 
-* Plot PSTHes
+* More psth-like PSTHes
 
 * Make it possible to HEAR unfiltered waveforms -- switch between filtered and
   unfiltered when the user changes the display
-
-* Numerous WriteTag errors on WaveformL -- try again instead of crashing?
 
 * Show gain factor in main plot, plus other plot labels
 
@@ -17,10 +15,10 @@
 
 * Variable length sweeps
 
-
-== PLANS
-
-* get rid of drawnow when not drawing
+* Numerous WriteTag errors on WaveformL -- currently retrying. Does this help? 
+  Why do we get this error? Perhaps we're trying to write one sample too many
+  (and thus write the sample that is being read....?). This would be much less 
+  severe if we could restart interrupted grids.
 
 * Plot averaged LFP? (different filtering required, may not be easy to do it
   fast enough)
@@ -39,11 +37,6 @@
 * Also consider plotData and state structures -- should they be combined?
   -- both global?
   -- both local?
-
-* Faster for short stimuli -- HOW? (and are we slower than brainware still?)
-  -- numerous small optimisations are possible (and worthwhile) but turning plotting off
-     make a big difference (quning from 0.6+ to 0.3+ sec per sweep). Need to investigate 
-     saving of the mat file, which does take longer and longer through a grid.
 
 * Clean up parameters of runSweep
 
@@ -162,3 +155,16 @@ In ==> runSweep at 106
 
 * I had to turn write caching off because of crashes. Why is this? It's slow
   now!
+
+
+* Plot actual rasters (not just a single sweep)
+
+* Plot PSTHes
+
+* get rid of drawnow when not drawing
+
+* Faster for short stimuli -- HOW? (and are we slower than brainware still?)
+  -- numerous small optimisations are possible (and worthwhile) but turning plotting off
+     make a big difference (quning from 0.6+ to 0.3+ sec per sweep). Need to investigate 
+     saving of the mat file, which does take longer and longer through a grid.
+

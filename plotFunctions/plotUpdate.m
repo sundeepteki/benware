@@ -100,7 +100,6 @@ for chan = plotChans
       if length(t_s)>maxSpikes
         t_s = t_s(round(linspace(1,length(t_s),maxSpikes)));
       end
-      length(t_s)
       set(plotData.raster(chan).currentSweep, 'XData', t_s, 'YData', ones(size(t_s)), 'markeredgecolor', col);
       set(plotData.raster(chan).oldSweeps, 'markeredgecolor', col);
   end

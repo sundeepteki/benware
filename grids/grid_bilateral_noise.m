@@ -16,4 +16,4 @@ function grid = grid_bilateral_noise
   grid.repeatsPerCondition = 200;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -128;
+  grid.stimLevelOffsetDB = -138;

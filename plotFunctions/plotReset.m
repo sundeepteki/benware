@@ -35,7 +35,7 @@ for chan = 1:32
     plotData.psth(chan).data = plotData.psth(chan).data + h(1:end-1);
     scaled = plotData.psth(chan).data/max(plotData.psth(chan).data)*2-1;
     set(plotData.psth(chan).line,'ydata',scaled);
-    %
+
   end
   
 end

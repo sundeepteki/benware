@@ -52,11 +52,11 @@ expt.stimDeviceName = 'RX6';
 expt.dataDeviceName = 'RZ5';
 expt.dataDeviceSampleRate = 24414.0625;
 
-expt.penetrationNum = 99;
+expt.penetrationNum = 0;
 expt.probe.lhs = '284C';
 expt.probe.rhs = '2840';
-expt.headstage.lhs = 3078;
-expt.headstage.rhs = 3455;
+expt.headstage.lhs = 3469;
+expt.headstage.rhs = 3078;
 channelMapping = [9 8 10 7 13 4 12 5 15 2 16 1 14 3 11 6];
 expt.channelMapping = [channelMapping channelMapping+16];
 
@@ -73,7 +73,7 @@ end
 expt.logFilename = 'benWare.log';
 %expt.dataGain = 100;
 expt.detectSpikes = true;
-expt.spikeThreshold = -2; % -2.8
+expt.spikeThreshold = -3.2; % -2.8
 
 
 % load grid from grids/ directory
