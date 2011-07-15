@@ -6,18 +6,7 @@ function verifyExpt(grid, expt)
 fprintf_title('BenWare parameters');
 
 % experiment
-fprintf_subtitle('experiment');
-fprintf('  - experiment #: %d\n', expt.exptNum);
-fprintf('  - penetration #: %d\n', expt.penetrationNum);
-if isnumeric(expt.probe.lhs)
-  fprintf('  - LHS probe: %d \n', expt.probe.lhs);
-  fprintf('  - RHS probe: %d \n', expt.probe.rhs);
-else
-  fprintf('  - LHS probe: %s \n', expt.probe.lhs);
-  fprintf('  - RHS probe: %s \n', expt.probe.rhs);
-end
-fprintf('  - LHS headstage: %d \n', expt.headstage.lhs);
-fprintf('  - RHS headstage: %d \n', expt.headstage.rhs);
+printExpt(expt);
 
 r = demandinput('\nIs this ok? [Y/n]: ', {'y', 'n'}, 'y', true);
 if r=='n'

@@ -1,17 +1,11 @@
 %% initial setup
 % =================
 
-% path
-if ispc
-  addpath(genpath('E:\auditory-objects\NeilLib'));
-  addpath(genpath(pwd));
-else
-  addpath([pwd '/../NeilLib/']);
-  addpath(genpath(pwd));
-end
+% set path
+setPath;
 
 % welcome
-printGreetings()
+printGreetings;
 
 % variables intended for manipulation by future UI
 global state
@@ -39,29 +33,18 @@ if needWarning
 end
 
 
-%% stim/data setup: USER
-% =======================
+%% load and set defaults for expt structure
+%% which contains persistent information about the experiment
 
 % experiment details
 clear expt grid;
 
-expt.exptNum = 32;
+% load the structure
+load expt.mat;
 
-expt.stimDeviceName = 'RX6';
-
-expt.dataDeviceName = 'RZ5';
-expt.dataDeviceSampleRate = 24414.0625;
-
-expt.penetrationNum = 17;
-expt.probe.lhs = '2845';
-expt.probe.rhs = '284B';
-expt.headstage.lhs = 3469;
-expt.headstage.rhs = 3078;
-channelMapping = [9 8 10 7 13 4 12 5 15 2 16 1 14 3 11 6];
-expt.channelMapping = [channelMapping channelMapping+16];
-
+% set defaults
 if ispc
-  expt.dataDir = 'E:\auditory-objects.data\expt%E\%P-%N\';
+  expt.dataDir = [expt.dataRoot 'expt%E\%P-%N\'];
   expt.dataFilename = 'raw.f32\%P.%N.sweep.%S.channel.%C.f32';
   expt.sweepFilename = 'sweep.mat\%P.%N.sweep.%S.mat';
 else
@@ -73,7 +56,10 @@ end
 expt.logFilename = 'benWare.log';
 expt.spikeThreshold = -3.2; % -2.8
 
-% load grid from grids/ directory
+%% load and set defaults for grid structure
+%% which contains specifications for the current grid
+
+%load grid from grids/ directory
 grid = chooseGrid();
 
 % run grid
