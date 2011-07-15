@@ -18,6 +18,7 @@ while ~success && nRetries<maxRetries
   success = stimDevice.WriteTagV('WaveformL',offset,stim(1,:));
   if ~success
     fprintf('== WriteTagV WaveformL failed\n');
+    nRetries = nRetries + 1;
   end
 end
 
@@ -32,6 +33,7 @@ while ~success && nRetries<maxRetries
   success = stimDevice.WriteTagV('WaveformR',offset,stim(2,:));
   if ~success
     fprintf('== WriteTagV WaveformR failed\n');
+    nRetries = nRetries + 1;
   end
 end
 

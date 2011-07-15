@@ -1,7 +1,7 @@
-function grid = grid_bilateral_noise
+function grid = grid_bilateral_noise_search
 
   % essentials
-  grid.name = 'bilateral.noise';
+  grid.name = 'search';
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'makeBilateralNoise';
@@ -13,7 +13,7 @@ function grid = grid_bilateral_noise
   
   % sweep parameters
   grid.postStimSilence = 0.2; %seconds
-  grid.repeatsPerCondition = 200;
+  grid.repeatsPerCondition = 2000;
   
   % set this using absolute calibration
   grid.stimLevelOffsetDB = -128;
