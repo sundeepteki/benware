@@ -32,6 +32,8 @@ if needWarning
   pause;
 end
 
+%% initialise global variables (state)
+initGlobalVariables;
 
 %% load and set defaults for expt structure
 %% which contains persistent information about the experiment
@@ -44,7 +46,8 @@ load expt.mat;
 
 % set defaults
 if ispc
-  expt.dataDir = [expt.dataRoot 'expt%E\%P-%N\'];
+  expt.exptDir = [expt.dataRoot 'expt%E\'];
+  expt.dataDir = [expt.exptDir '%P-%N\'];
   expt.dataFilename = 'raw.f32\%P.%N.sweep.%S.channel.%C.f32';
   expt.sweepFilename = 'sweep.mat\%P.%N.sweep.%S.mat';
 else
@@ -59,12 +62,47 @@ expt.spikeThreshold = -3.2; % -2.8
 %% load and set defaults for grid structure
 %% which contains specifications for the current grid
 
-%load grid from grids/ directory
-grid = chooseGrid();
+% check whether the most recent grid was interreupted. if so, offer to load
+% it and continue with it.
+gotGrid = false;
+[gridFile, lastSweep] = checkForInterruptedGrid(constructDataPath(expt.exptDir, [], expt), expt);
+if ~isempty(gridFile)
+  l = load(gridFile);
+  fprintf_title('Interrupted grid found!');
+  if isempty(l.grid.saveName)
+    name = l.grid.name;
+  else
+    name = l.grid.saveName;
+  end
+  i = demandinput(sprintf('Do you want to resume %s? [y/N] ', name), 'yn', 'n', true);
+  
+  if lower(i)=='y'
+    fprintf('The last recorded sweep was %d.\n', lastSweep);
+    firstSweep = demandnumberinput(sprintf('Which sweep do you want to resume from? [%d] ', lastSweep+1), 1:lastSweep+1, lastSweep+1);
+    gotGrid = true;
+    grid = l.grid;    
+  end
+  
+end
 
-% run grid
+if ~gotGrid
+  % load grid from grids/ directory
+  grid = chooseGrid();
+  
+  % verify grid, randomise it, save grid metadata to disk
+  grid = prepareGrid(grid, expt);
+  
+  firstSweep = 1;
+end
+
+
+%% prepare TDT
 if ~exist('tdt','var')
   tdt = [];
 end
+tdt = prepareTDT(tdt, expt, grid);
 
-tdt = runGrid(tdt, expt, grid);
+%% run the grid
+runGrid(tdt, expt, grid, firstSweep);
+
+

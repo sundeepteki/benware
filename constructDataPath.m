@@ -19,10 +19,12 @@ function path = constructDataPath(pathTemplate, grid, expt, sweepNum, channelNum
 path = regexprep(pathTemplate, '%E', n2s(expt.exptNum));
 path = regexprep(path, '%P', ['P' n2s(expt.penetrationNum, 2)]);
 
-if isempty(grid.saveName)
-    path = regexprep(path, '%N', grid.name);
-else
-    path = regexprep(path, '%N', grid.saveName);
+if ~isempty(grid)
+  if isempty(grid.saveName)
+      path = regexprep(path, '%N', grid.name);
+  else
+      path = regexprep(path, '%N', grid.saveName);
+  end
 end
 
 if exist('sweepNum', 'var')
