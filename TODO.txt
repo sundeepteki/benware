@@ -11,14 +11,15 @@
 
 * Save spike times in separate files again, with sweep metadata separately
 
-* VAS?
+* compensate stimuli online?
 
 * Variable length sweeps
 
-* Numerous WriteTag errors on WaveformL -- currently retrying. Does this help? 
-  Why do we get this error? Perhaps we're trying to write one sample too many
-  (and thus write the sample that is being read....?). This would be much less 
-  severe if we could restart interrupted grids.
+* Variable number of channels (use length(expt.channelMapping))
+
+* Numerous WriteTag errors on WaveformL. Why do we get this error?
+
+* Pause/hang when reconnecting with activeX objects after ctrl-c. Why?
 
 * Plot averaged LFP? (different filtering required, may not be easy to do it
   fast enough)
@@ -29,37 +30,24 @@
 
 * Document code
 
-* Not really happy with tdt structure -- should it be global after all?
-  -- don't think so but current situtation is not ideal either
-  -- Lose access to tdt structure when ctrl-C is pressed :-(
-  -- could be part of state, which has (I think) to be global
-
 * Also consider plotData and state structures -- should they be combined?
   -- both global?
   -- both local?
 
 * Clean up parameters of runSweep
 
-* init TDT devices in a function, remove post-init pause if nothing done(?)
-
 * post-init pause may no longer be necessary
-
-* Have a way of continuing an interrupted grid (an option instead of choosing
-  from grids/) 
-
-* Ability to plot averaged LFP signal
 
 * Ability to not save data?
 
-* Gain factor is supposed to be persistent, but isn't. Also it will be lost
-  when quitting matlab (make it part of expt structure, see	 next point)
+* Gain factors will be lost when quitting matlab (make it part of expt or state structures?)
 
-* Save expt structure somewhere
-
-* UI for modifying expt structure
+* Crash due to PSTH issue when the signal is all zeros
 
 
 == ON HOLD
+
+* VAS?
 
 * stereoPlay16bit -- is it OK to lose resolution? we don't really know
 
@@ -69,6 +57,20 @@
 
 
 == DONE
+
+* Have a way of continuing an interrupted grid (an option instead of choosing
+  from grids/) 
+
+* Save expt structure somewhere
+
+* UI for modifying expt structure
+
+* Not really happy with tdt structure -- should it be global after all?
+  -- don't think so but current situtation is not ideal either
+  -- Lose access to tdt structure when ctrl-C is pressed :-(
+  -- could be part of state, which has (I think) to be global
+
+* init TDT devices in a function, remove post-init pause if nothing done(?)
 
 * Ability to pause
 

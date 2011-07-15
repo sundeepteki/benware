@@ -10,7 +10,7 @@ function grid = grid_sparseness_highlights
   grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   % stimulus grid structure
-  grid.stimGridTitles = {'StimID', 'Level'};
+  grid.stimGridTitles = {'Set', 'StimID', 'Level'};
   grid.stimGrid = createPermutationGrid(2,1:12, 80);
   
   % sweep parameters

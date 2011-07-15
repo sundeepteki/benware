@@ -23,7 +23,7 @@ cleanupObject = onCleanup(@()cleanup(tdt));
 % make filter for spike detection
 spikeFilter = makeSpikeFilter(expt.dataDeviceSampleRate);
 
-clear sweeps stim nextStim sweepNum data sweepLen spikeTimes; % no longer needed now this is a function?
+%clear sweeps stim nextStim sweepNum data sweepLen spikeTimes; % no longer needed now this is a function?
 
 % upload first stimulus
 [nextStim sweeps(firstSweep).stimInfo] = grid.stimGenerationFunction(firstSweep, grid, expt);

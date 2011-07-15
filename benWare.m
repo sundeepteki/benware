@@ -62,7 +62,7 @@ expt.spikeThreshold = -3.2; % -2.8
 %% load and set defaults for grid structure
 %% which contains specifications for the current grid
 
-% check whether the most recent grid was interreupted. if so, offer to load
+% check whether the most recent grid was interrupted. if so, offer to load
 % it and continue with it.
 gotGrid = false;
 [gridFile, lastSweep] = checkForInterruptedGrid(constructDataPath(expt.exptDir, [], expt), expt);
