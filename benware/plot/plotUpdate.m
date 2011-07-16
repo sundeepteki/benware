@@ -7,7 +7,7 @@ global state;
 
 % if plotting is switched off, do nothing
 if state.plot.shouldDisable
-  for chan = 1:32
+  for chan = 1:plotData.nChannels
     makeInvisible(plotData.activeHandles{chan});
   end
   state.plot.shouldDisable = false;
@@ -27,7 +27,7 @@ fs_in = plotData.fs_in;
 
 if state.plot.filtered
   d = filteredData;
-  ii = repmat(fDataIndex,1,32);
+  ii = repmat(fDataIndex,1,plotData.nChannels);
   gain = state.dataGainFiltered;
 else
   d = data;
@@ -38,11 +38,11 @@ end
 if state.plot.onlyActiveChannel
   plotChans = state.audioMonitor.channel;
 else
-  plotChans = 1:32;
+  plotChans = 1:plotData.nChannels;
 end
 
 if state.plot.typeShouldChange
-  for chan = 1:32
+  for chan = 1:plotData.nChannels
     makeInvisible(plotData.activeHandles{chan});
     switch state.plot.type
       case 'w'
@@ -61,12 +61,12 @@ end
 
 if state.plot.activeChannelShouldChange
   if state.plot.onlyActiveChannel
-    for chan = 1:32
+    for chan = 1:plotData.nChannels
       makeInvisible(plotData.dataHandles{chan});
     end
     makeVisible(plotData.activeHandles{state.audioMonitor.channel});
   else
-    for chan = 1:32
+    for chan = 1:plotData.nChannels
       makeVisible(plotData.activeHandles{chan});
     end
   end

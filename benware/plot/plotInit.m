@@ -1,12 +1,14 @@
-function plotData = plotInit(plotData, fs_in, nSamplesExpected)
+function plotData = plotInit(fs_in, nChannels, nSamplesExpected)
 % plotData = scopeTraceFastInit(plotData, fs_in, nSamplesExpected)
 %
 % Initialise main figure window. This is run once per grid, at the start
 
 global state
 
+plotData = struct;
 plotData.fs_in = fs_in;
 plotData.nSamplesExpected = nSamplesExpected;
+plotData.nChannels = nChannels;
 
 plotData.nSamplesToPlot = 2000;
 
@@ -18,7 +20,7 @@ end
 
 plotData.sampleTimes = plotData.samplesToPlot/fs_in;
 
-plotData.lineHandles = zeros(1,32)-1;
+plotData.lineHandles = zeros(1,plotData.nChannels)-1;
 
 % positions
 n.rows = 8;
@@ -67,12 +69,12 @@ clf;
 
 nSamplesExpected = plotData.nSamplesExpected;
 fs_in = plotData.fs_in;
-plotData.plotIndex = zeros(1,32);
+plotData.plotIndex = zeros(1,plotData.nChannels);
 
 plotData.psthEdges = linspace(0,plotData.nSamplesExpected/fs_in,50);
 plotData.psthCentres = (plotData.psthEdges(1:end-1)+plotData.psthEdges(2:end))/2;
 
-for chan = 1:32
+for chan = 1:plotData.nChannels
     ax =  axes('position', pos{chan}, 'xtick', [], 'ytick', [], ...
         'xlim', [1 nSamplesExpected]/fs_in, 'ylim', [-1 1], ...
         'drawmode', 'fast', 'ticklength', [0 0], ...

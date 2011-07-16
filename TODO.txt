@@ -1,22 +1,33 @@
 == PLANS
 
+* Save spike times in separate files again, with sweep metadata separately
+  (also one per file)
+
+* Variable length sweeps
+
+* Fixed length sweeps when stimulus length varies
+
+* Search mode -- a particular grid can specify that we won't save waveform
+  data (e.g. bilateral noise)
+
+* Show gain factor in main plot, plus other plot labels
+
+* Gain factors will be lost when quitting matlab (make it part of expt or state structures?)
+
 * PSTH of active channel should be highlighted
+
+* allow user to choose visual alert instead of bugle and turn both off
+
+* Crash due to PSTH issue when the signal is all zeros
+
+* Fake hardware mode for testing
+
+* Sort out business where verifyExpt/Grid/etc assume loadStereo is being used 
 
 * More psth-like PSTHes
 
 * Make it possible to HEAR unfiltered waveforms -- switch between filtered and
   unfiltered when the user changes the display
-
-* Show gain factor in main plot, plus other plot labels
-
-* Save spike times in separate files again, with sweep metadata separately
-
-* compensate stimuli online?
-
-* Variable length sweeps
-
-* Variable number of channels (use length(expt.channelMapping))
-
 * Numerous WriteTag errors on WaveformL. Why do we get this error?
 
 * Pause/hang when reconnecting with activeX objects after ctrl-c. Why?
@@ -38,12 +49,6 @@
 
 * post-init pause may no longer be necessary
 
-* Ability to not save data?
-
-* Gain factors will be lost when quitting matlab (make it part of expt or state structures?)
-
-* Crash due to PSTH issue when the signal is all zeros
-
 
 == ON HOLD
 
@@ -57,6 +62,8 @@
 
 
 == DONE
+
+* compensate stimuli online?
 
 * Have a way of continuing an interrupted grid (an option instead of choosing
   from grids/) 
@@ -158,7 +165,6 @@ In ==> runSweep at 106
 * I had to turn write caching off because of crashes. Why is this? It's slow
   now!
 
-
 * Plot actual rasters (not just a single sweep)
 
 * Plot PSTHes
@@ -169,4 +175,6 @@ In ==> runSweep at 106
   -- numerous small optimisations are possible (and worthwhile) but turning plotting off
      make a big difference (quning from 0.6+ to 0.3+ sec per sweep). Need to investigate 
      saving of the mat file, which does take longer and longer through a grid.
+
+* Allow other channel counts than 32 (use length(expt.channelMapping))
 

@@ -5,9 +5,9 @@ function plotData = plotReset(plotData)
 
 nSamplesExpected = plotData.nSamplesExpected;
 fs_in = plotData.fs_in;
-plotData.plotIndex = zeros(1,32);
+plotData.plotIndex = zeros(1,plotData.nChannels);
 
-for chan = 1:32
+for chan = 1:plotData.nChannels
   
   % for maximum speed, we should check whether anything has been plotted on the axes in
   % question. If not, don't reset

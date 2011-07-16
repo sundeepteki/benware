@@ -33,7 +33,7 @@ fprintf(['done after ' num2str(toc) ' sec.\n']);
 
 % set up plot -- FIXME assumes all stimuli will be the same length as the first
 nSamplesExpected = floor((size(nextStim,2)/grid.sampleRate+grid.postStimSilence)*expt.dataDeviceSampleRate)+1;
-plotData = plotInit([], expt.dataDeviceSampleRate, nSamplesExpected);
+plotData = plotInit(expt.dataDeviceSampleRate, nChannels, nSamplesExpected);
 
 
 %% run sweeps
