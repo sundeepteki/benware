@@ -4,13 +4,15 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
   %% Upload the next stimulus at the same time, then reset the stimDevice
   %% and inform the stimDevice of the stimulus length
 
-  global state fakedata;
+  global state;
+
+  nChannels = expt.nChannels;
 
   % reset data device and tell it how long the sweep will be
   resetDataDevice(tdt.dataDevice, sweepLen*1000);
 
   % check for stale data in data device buffer
-  if any(countAllData(tdt.dataDevice) ~= 0)
+  if any(countAllData(tdt.dataDevice, nChannels) ~= 0)
     errorBeep('Stale data in data buffer');
   end
 
@@ -44,20 +46,20 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
 
   % make matlab buffer for data
   nSamplesExpected = floor(sweepLen*tdt.dataSampleRate)+1;
-  data = zeros(32, nSamplesExpected);
-  nSamplesReceived = zeros(1, 32);
+  data = zeros(nChannels, nSamplesExpected);
+  nSamplesReceived = zeros(1, nChannels);
 
-  filteredData = zeros(32, nSamplesExpected);
+  filteredData = zeros(nChannels, nSamplesExpected);
   filterIndex = 0;
 
   % open data files
-  dataFileHandles = nan(1,32);
-  for chan = 1:32
+  dataFileHandles = nan(1,nChannels);
+  for chan = 1:nChannels
     dataFileHandles(chan) = fopen(dataFiles{chan},'w');
   end
 
   % cell array for storing spike times
-  spikeTimes = cell(1, 32);
+  spikeTimes = cell(1, nChannels);
 
   % keep track of how much of stimulus has been uploaded
   samplesUploaded = 0;
@@ -80,13 +82,6 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
   % * download data as fast as possible while trial is running
   % * plot incoming data
 
-  if ~isempty(fakedata)
-    for chan = 1:32
-      data{chan} = rand(1, nSamplesExpected)/5000;
-    end
-    data{1}(1:size(fakedata.signal, 1)) = fakedata.signal(:, floor(rand*size(fakedata.signal, 2)+1));
-  end
-
   % loop until we've received all data
   while any(nSamplesReceived~=nSamplesExpected)
     
@@ -108,13 +103,10 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
     %fprintf(['  * Stim: ' num2str((maxStimIndex-n)/tdt.stimSampleRate) ' sec of stim done in ' num2str(toc) ' sec.\n']);tic;
     
     % download data
-    for chan = 1:32
+    for chan = 1:nChannels
 
       newdata = downloadData(tdt.dataDevice, chan, nSamplesReceived(chan));
-
-      if isempty(fakedata) % I.E. NOT using fakedata
-        data(chan, nSamplesReceived(chan)+1:nSamplesReceived(chan)+length(newdata)) = newdata;
-      end
+      data(chan, nSamplesReceived(chan)+1:nSamplesReceived(chan)+length(newdata)) = newdata;
 
       nSamplesReceived(chan) = nSamplesReceived(chan)+length(newdata);
       fwrite(dataFileHandles(chan), newdata, 'float32');
@@ -184,7 +176,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
   plotData.lastSweepSpikes = spikeTimes;
 
   % close data files
-  for chan = 1:32
+  for chan = 1:nChannels
     fclose(dataFileHandles(chan));
   end
 
@@ -200,7 +192,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
     errorBeep('Different amounts of data from different channels');
   end
 
-  fprintf(['  * Got ' num2str(nSamples) ' samples (expecting ' num2str(nSamplesExpected) ') from 32 channels (' num2str(nSamples/tdt.dataSampleRate) ' sec).\n']);
+  fprintf(['  * Got ' num2str(nSamples) ' samples (expecting ' num2str(nSamplesExpected) ') from ' num2str(nChannels) ' channels (' num2str(nSamples/tdt.dataSampleRate) ' sec).\n']);
 
   % 2. check that we got the expected number of samples
   if (nSamples~=nSamplesExpected)
@@ -220,8 +212,8 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
     fprintf([' ' num2str(size(teststim, 2)) ' samples verified.\n']);
 
     fprintf('  * Checking data...');
-    testData = downloadAllData(tdt.dataDevice);
-    for chan = 1:32
+    testData = downloadAllData(tdt.dataDevice, nChannels);
+    for chan = 1:nChannels
       diffInMem = max(abs(data(chan,:) - testData{chan}));
       if diffInMem > 0
         errorBeep('Data in memory doesn''t match TDT buffer!');

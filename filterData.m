@@ -12,7 +12,7 @@ function [data, offset] = filterData(data, spikeFilter)
 % check the signal is long enough to provide a meaningful output
 
 if size(data, 2) < (2*spikeFilter.deadTime + 3)
-    data = zeros(32,0);
+    data = zeros(size(data,1),0);
     offset = spikeFilter.deadTime;
     return
 end

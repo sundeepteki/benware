@@ -65,7 +65,7 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   fprintf(['  * sweep length: ' num2str(sweepLen) ' s\n']);
   
   % get filenames for saving data
-  sweeps(sweepNum).dataFiles = constructDataPaths([expt.dataDir expt.dataFilename],grid,expt,sweepNum,32);
+  sweeps(sweepNum).dataFiles = constructDataPaths([expt.dataDir expt.dataFilename],grid,expt,sweepNum,expt.nChannels);
   dataDir = split_path(sweeps(sweepNum).dataFiles{1});
   mkdir_nowarning(dataDir);
   

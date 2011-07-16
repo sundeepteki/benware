@@ -1,4 +1,5 @@
-function [ok, message] = checkDevice(device, sampleRateHz, versionTagName, versionTagValue)
+function [ok, message] = checkDevice(device, sampleRateHz, ...
+  versionTagName, versionTagValue)
 % [ok, message] = checkDevice(device, sampleRateHz, versionTagName, version)
 % 
 % Check whether a TDT device is in the desired state. If not, return ok=false

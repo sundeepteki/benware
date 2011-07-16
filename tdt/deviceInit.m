@@ -1,5 +1,17 @@
-function [device, sampleRateHz] = deviceInit(device, deviceName, rcxFilename, versionTagName, versionTagValue, requestedSampleRateHz)
-% stimDeviceInit(deviceName, sampleRateHz)
+function [device, sampleRateHz] = deviceInit(device, deviceName, ...
+  rcxFilename, versionTagName, versionTagValue, requestedSampleRateHz)
+% [device, sampleRateHz] = deviceInit(device, deviceName, ...
+%  rcxFilename, versionTagName, versionTagValue, requestedSampleRateHz)
+% 
+% Initialise a TDT device, set sample rate and rcx circuit, and check
+% that version tag on the circuit is correct
+% 
+% device: Existing handle to the device, or [] if you don't have one
+% deviceName: e.g. 'RZ5'
+% rcxFilename: filename of RCX circuit
+% versionTagName: tag in circuit that contains version number
+% versionTagValue: the expected version number
+% requestedSampleRateHz: desired sample rate
 
 if requestedSampleRateHz>20000 && requestedSampleRateHz<=25000
   sampleRate = 2;

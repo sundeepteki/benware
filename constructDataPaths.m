@@ -33,7 +33,7 @@ if exist('sweepNum', 'var')
     path = regexprep(path, '%S', n2s(sweepNum));
 end
 
-paths = cell(1,32);
+paths = cell(1,maxChannelNum);
 
 f = findstr(path,'%C');
 for channelNum = 1:maxChannelNum
