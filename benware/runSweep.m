@@ -125,13 +125,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
       filterIndex = filterIndex + size(filtData,2);
     end
         
-    %fprintf(['  * new filtering done after ' num2str(toc) ' sec.\n']);tic;
-   
-    
-    % detect spikes
-    %[spikeTimesOld, spikeIndexOld] = appendSpikes(spikeTimesOld, tdt.dataSampleRate, data, nSamplesReceived, spikeIndexOld, spikeFilter, spikeThreshold, false);
-
-     %fprintf(['  * old filtering done after ' num2str(toc) ' sec.\n']);tic;
+     %fprintf(['  * filtering done after ' num2str(toc) ' sec.\n']);tic;
  
     % check audio monitor is on the right channel
     if state.audioMonitor.changed
@@ -161,9 +155,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, s
     setStimLength(tdt.stimDevice, size(nextStim,2));
   end
 
-  % finish detecting spikes
-  %[spikeTimesOld, spikeIndexOld] = appendSpikes(spikeTimesOld, tdt.dataSampleRate, data, nSamplesReceived, spikeIndexOld, spikeFilter, spikeThreshold,true);
-  
+  % finish detecting spikes  
   [filtData, offset] = filterData(data(:, filterIndex+1:minSamplesReceived), spikeFilter);
   filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
   spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, tdt.dataSampleRate, spikeThreshold);
