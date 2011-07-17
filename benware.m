@@ -43,7 +43,7 @@ load expt.mat;
 if ispc
   expt.exptDir = [expt.dataRoot 'expt%E\'];
 else
-  expt.exptDir = './expt%E/';
+  expt.exptDir = '.\expt%E\';
 end
   
 expt.dataDir = [expt.exptDir '%P-%N\'];
