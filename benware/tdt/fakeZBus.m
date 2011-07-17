@@ -23,27 +23,14 @@ classdef fakeZBus
         out = 1;
       end
 
-      function out = ZBusTrigA(obj, a, b, c)
+      function out = zBusTrigA(obj, a, b, c)
         if ~isempty(obj.stimDevice)
-          obj.stimDevice.fakeZBusTrigger()
+          obj.stimDevice.zBusTrigA();
         end          
         if ~isempty(obj.dataDevice)
-          obj.dataDevice.fakeZBusTrigger()
+          obj.dataDevice.zBusTrigA();
         end
         out = 1;
       end
-      
-      %function out = isFake
-      %  out = true;
-      %end
-      %function error = ConnectZBus(interface)
-      %  error = 1;
-      %end
    end
-   %events
-   %   EventName
-   %end
-   %enumeration
-   %   EnumName (arg)
-   %end
 end 

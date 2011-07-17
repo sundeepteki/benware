@@ -3,10 +3,12 @@ classdef fakeStimDevice < handle
      deviceName = ''
      sampleRate = -1
      fake = 1
-     nSamples = -1;
-     WaveformL = zeros(1,2000000);
-     WaveformR = zeros(1,2000000);
-     StimIndex = 1;
+     nSamples = -1
+     triggerTime = -1
+     timer = []
+     WaveformL = zeros(1,2000000)
+     WaveformR = zeros(1,2000000)
+     StimIndex = 0
    end
    
    methods
@@ -56,49 +58,24 @@ classdef fakeStimDevice < handle
       end
       
       function out = SoftTrg(obj, n)
+        obj.StimIndex = 0;
+        if isobject(obj.timer)
+          delete(obj.timer);
+          obj.timer = [];
+        end
         out = 1;
       end
 
-      %function out = ConnectRX6(obj, interface, rack)
-      %  obj.deviceType = 'RX6';
-      %  out = 1;
-      %end
-
-      %function out = ConnectRZ5(obj, interface, rack)
-      %  deviceType = 'RZ5';
-      %  out = 1;
-      %end
-
-      %function out = LoadCOFsf(obj, circuitFilename, sampleRateID)
-      %  [dir, filename] = split_path(circuitFilename);
-      %  obj.circuitFilename = filename;
-      %
-      %  obj.sampleRateID = sampleRateID;
-      %
-      %    switch sampleRateID
-      %    case 3
-      %      obj.sampleRateHz = 24414.0625;
-      % 
-      %   case 4
-      %     obj.sampleRateHz = 24414.0625*2;
-      % 
-      %   otherwise
-      %     error('Unknown sample rate');
-      %  
-      %  end
-      %
-      %  out = 1;
-      %end
-      
-      %function out = Run(obj)
-      %  out = 1;
-      %end
-
+      function out = zBusTrigA(obj)
+        obj.triggerTime = now;
+        if isobject(obj.timer)
+          delete(obj.timer);
+          obj.timer = [];
+        end
+        obj.timer = timer('timerfcn', {@updateFakeStimDevice, obj}, ...
+          'ExecutionMode', 'fixedRate', 'BusyMode', 'drop', 'Period', .05);
+        start(obj.timer);
+        out = 1;
+      end
    end
-   %events
-   %   EventName
-   %end
-   %enumeration
-   %   EnumName (arg)
-   %end
 end 
