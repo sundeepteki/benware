@@ -5,6 +5,7 @@ global fakeHardware
 if fakeHardware
 
   if isempty(zBus) || ~deviceIsFake(zBus)
+    fprintf('  * Initialising fake ZBus\n');
     zBus = fakeZBus(stimDevice, dataDevice);
   else
     fprintf('  * Fake ZBus already connected, doing nothing\n');

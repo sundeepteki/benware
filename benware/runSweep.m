@@ -105,7 +105,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, n
 
       newdata = downloadData(tdt.dataDevice, chan, nSamplesReceived(chan));
       data(chan, nSamplesReceived(chan)+1:nSamplesReceived(chan)+length(newdata)) = newdata;
-
+      
       nSamplesReceived(chan) = nSamplesReceived(chan)+length(newdata);
       fwrite(dataFileHandles(chan), newdata, 'float32');
 

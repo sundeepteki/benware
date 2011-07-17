@@ -52,7 +52,8 @@ classdef fakeDataDevice < handle
       end
       
       function out = ReadTagV(obj, varName, offset, len)
-        out = rand(1,len);
+        r = rand(1,len);
+        out = r*.0001 - (r>.999)*.001;
       end
       
       function out = SoftTrg(obj, n)
