@@ -1,12 +1,10 @@
-function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, stim, nextStim, spikeFilter, spikeThreshold, dataFiles, plotData)
+function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, nChannels, stim, nextStim, spikeFilter, spikeThreshold, dataFiles, plotData)
   %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
   %% Will fail if next stimulus is not on the TDT
   %% Upload the next stimulus at the same time, then reset the stimDevice
   %% and inform the stimDevice of the stimulus length
 
   global state;
-
-  nChannels = expt.nChannels;
 
   % reset data device and tell it how long the sweep will be
   resetDataDevice(tdt.dataDevice, sweepLen*1000);

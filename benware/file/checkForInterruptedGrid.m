@@ -13,7 +13,7 @@ if isempty(newestDir)
 end
 
 % load the grid from this directory
-gridInfo = load([exptDir newestDir.name '\gridInfo.mat']);
+gridInfo = load([exptDir newestDir.name filesep 'gridInfo.mat']);
 
 filename = constructDataPath([gridInfo.expt.dataDir gridInfo.expt.sweepFilename], gridInfo.grid, gridInfo.expt, gridInfo.grid.nSweepsDesired);
 if exist(filename, 'file')
@@ -28,6 +28,6 @@ else
       break
     end
   end
-  gridFile = [exptDir newestDir.name '\gridInfo.mat'];
+  gridFile = [exptDir newestDir.name filesep 'gridInfo.mat'];
   lastSweep = ii-1;
 end

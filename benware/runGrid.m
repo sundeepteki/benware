@@ -33,7 +33,7 @@ fprintf(['done after ' num2str(toc) ' sec.\n']);
 
 % set up plot -- FIXME assumes all stimuli will be the same length as the first
 nSamplesExpected = floor((size(nextStim,2)/grid.sampleRate+grid.postStimSilence)*expt.dataDeviceSampleRate)+1;
-plotData = plotInit(expt.dataDeviceSampleRate, nChannels, nSamplesExpected);
+plotData = plotInit(expt.dataDeviceSampleRate, expt.nChannels, nSamplesExpected);
 
 
 %% run sweeps
@@ -70,7 +70,7 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   mkdir_nowarning(dataDir);
   
   % run the sweep
-  [nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp, plotData] = runSweep(tdt, sweepLen, stim, nextStim, ...
+  [nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp, plotData] = runSweep(tdt, sweepLen, expt.nChannels, stim, nextStim, ...
     spikeFilter, expt.spikeThreshold, sweeps(sweepNum).dataFiles, plotData);     %#ok<*SAGROW>
   
   % store sweep duration

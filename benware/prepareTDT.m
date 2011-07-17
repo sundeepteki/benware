@@ -21,11 +21,6 @@ if isempty(tdt)
   tdt = struct();
 end
 
-if ~isfield(tdt,'zBus')
-  tdt.zBus = [];
-end
-tdt.zBus = zBusInit(tdt.zBus);
-
 if ~isfield(tdt,'stimDevice')
   tdt.stimDevice = [];
 end
@@ -35,6 +30,11 @@ if ~isfield(tdt,'dataDevice')
   tdt.dataDevice = [];
 end
 [tdt.dataDevice, tdt.dataSampleRate] = dataDeviceInit(tdt.dataDevice, expt.dataDeviceName, expt.dataDeviceSampleRate, expt.channelMapping);
+
+if ~isfield(tdt,'zBus')
+  tdt.zBus = [];
+end
+tdt.zBus = zBusInit(tdt.zBus, tdt.stimDevice, tdt.dataDevice);
 
 fprintf('  * Post-initialisation pause...');
 pause(2);
