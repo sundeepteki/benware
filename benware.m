@@ -50,6 +50,8 @@ else
   expt.dataDir = [expt.exptDir '%P-%N/'];
   expt.dataFilename = 'raw.f32/%P.%N.sweep.%S.channel.%C.f32';
   expt.sweepFilename = 'sweep.mat/%P.%N.sweep.%S.mat';
+  global fakeHardware
+  fakeHardware = true;
 end
 
 expt.logFilename = 'benWare.log';
