@@ -42,15 +42,13 @@ load expt.mat;
 % set defaults
 if ispc
   expt.exptDir = [expt.dataRoot 'expt%E\'];
-  expt.dataDir = [expt.exptDir '%P-%N\'];
-  expt.dataFilename = 'raw.f32\%P.%N.sweep.%S.channel.%C.f32';
-  expt.sweepFilename = 'sweep.mat\%P.%N.sweep.%S.mat';
 else
-  expt.dataDir = './expt-%E/%P-%N/';
-  expt.dataFilename = 'raw.f32/%P.%N.sweep.%S.channel.%C.f32';
-  expt.sweepFilename = 'sweep.mat/%P.%N.sweep.%S.mat';
+  expt.exptDir = './expt%E/';
 end
-
+  
+expt.dataDir = [expt.exptDir '%P-%N\'];
+expt.dataFilename = 'raw.f32\%P.%N.sweep.%S.channel.%C.f32';
+expt.sweepFilename = 'sweep.mat\%P.%N.sweep.%S.mat';
 expt.logFilename = 'benWare.log';
 expt.spikeThreshold = -3.2; % -2.8
 expt.nChannels = length(expt.channelMapping);
