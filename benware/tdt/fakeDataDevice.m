@@ -51,8 +51,12 @@ classdef fakeDataDevice < handle
         out = 1;
       end
       
+      function out = ReadTagV(obj, varName, offset, len)
+        out = rand(1,len);
+      end
+      
       function out = SoftTrg(obj, n)
-        obj.StimIndex = 0;
+        obj.ADidx = zeros(1,32);
         if isobject(obj.timer)
           delete(obj.timer);
           obj.timer = [];
@@ -61,6 +65,7 @@ classdef fakeDataDevice < handle
       end
       
       function out = zBusTrigA(obj)
+        obj.ADidx = zeros(1,32);
         obj.triggerTime = now;
         if isobject(obj.timer)
           delete(obj.timer);
