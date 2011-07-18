@@ -82,7 +82,6 @@ for chan = plotChans
   
   switch state.plot.type
     case 'w'
-      %keyboard
       toPlot = plotData.samplesToPlot < ii(chan);
       set(plotData.waveform(chan).line, 'XData', plotData.sampleTimes(toPlot), 'YData', d(chan, plotData.samplesToPlot(toPlot)) * gain, 'color', col);
       

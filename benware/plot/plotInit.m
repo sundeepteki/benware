@@ -73,6 +73,8 @@ fs_in = plotData.fs_in;
 plotData.plotIndex = zeros(1,plotData.nChannels);
 
 plotData.psthEdges = linspace(0,plotData.nSamplesExpected/fs_in,50);
+psthX = reshape(repmat(plotData.psthEdges,2,1),1,2*length(plotData.psthEdges));
+plotData.psthX = psthX(2:end-1);
 plotData.psthCentres = (plotData.psthEdges(1:end-1)+plotData.psthEdges(2:end))/2;
 
 % on Mac, need to set the y axis slightly right of the minimum possible value
@@ -114,14 +116,14 @@ for chan = 1:plotData.nChannels
     plotData.raster(chan).dataHandles = [plotData.raster(chan).currentSweep plotData.raster(chan).oldSweeps];
 
     plotData.psth(chan).data = zeros(size(plotData.psthCentres));
+    psthY = reshape(repmat(plotData.psth(chan).data,2,1),1,2*length(plotData.psth(chan).data));
     plotData.psth(chan).axis.x = line([1 nSamplesExpected]/fs_in, [minY minY], ...
         'color', [0 0 0], 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
     plotData.psth(chan).axis.y = line([minX minX], [-1 1], ...
         'color', [0 0 0],'parent',plotData.subplot(chan),'hittest','off', 'visible', 'off');
-    plotData.psth(chan).line = line(plotData.psthCentres, plotData.psth(chan).data, 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
+    plotData.psth(chan).line = line(plotData.psthX, psthY, 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
     plotData.psth(chan).handles = [plotData.psth(chan).axis.x plotData.psth(chan).axis.y plotData.psth(chan).line];
     plotData.psth(chan).dataHandles = [plotData.psth(chan).line];
-    
     
     plotData.activeHandles{chan} = plotData.waveform(chan).handles;
 end

@@ -43,10 +43,12 @@ for chan = 1:plotData.nChannels
       h = histc(newSpikes, plotData.psthEdges);
       plotData.psth(chan).data = plotData.psth(chan).data + h(1:end-1);
     end
-    
-    scaled = plotData.psth(chan).data/max(plotData.psth(chan).data)*2-1;
 
-    set(plotData.psth(chan).line,'ydata',scaled, 'color', col);
+    % scaling / axis label should change even when newSpikes is empty
+    scaled = plotData.psth(chan).data/max(plotData.psth(chan).data)*2-1;
+    psthY = reshape(repmat(scaled,2,1),1,2*length(scaled));
+
+    set(plotData.psth(chan).line,'ydata',psthY, 'color', col);
 
   end
   
