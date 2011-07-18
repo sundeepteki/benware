@@ -34,6 +34,12 @@ switch eventInfo.Key
 end
 
 switch eventInfo.Character
+  case 'k'
+    if ishandle(2)
+      close(2);
+    else
+      cheatSheet;
+    end
   case 'o'
     if state.plot.enabled
       state.plot.shouldDisable = true;
