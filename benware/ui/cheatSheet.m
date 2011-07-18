@@ -1,6 +1,6 @@
 function cheatSheet
 
-f = figure(2);
+f = figure(102);
 set(f, 'color', [1 1 1], 'menubar', 'none', 'toolbar', 'none', ...
   'KeyPressFcn', {'keyPress'}, ...
   'numbertitle', 'off', 'name', 'BenWare keys');

@@ -35,8 +35,9 @@ end
 
 switch eventInfo.Character
   case 'k'
-    if ishandle(2)
-      close(2);
+    % check whether cheat sheet is already open
+    if ishandle(102)
+      close(102);
     else
       cheatSheet;
     end

@@ -63,7 +63,7 @@ end
 pos = pos';
 
 % create figure
-f = figure(1);
+f = figure(101);
 set(f,'color',[1 1 1], 'renderer', 'opengl', 'KeyPressFcn',{'keyPress'}, ...
   'name', 'BenWare', 'numbertitle', 'off', 'toolbar', 'none', 'menubar', 'none');
 clf;

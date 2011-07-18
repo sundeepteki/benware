@@ -13,10 +13,10 @@ function tdt = prepareTDT(tdt, expt, grid)
 % tdt.dataDevice -- data device handle
 % tdt.dataSampleRate -- data device sample rate
 
-f=figure(99);
+f=figure(103);
 set(f,'color',[1 1 1], 'name', 'TDT', 'numbertitle', 'off', ...
   'toolbar', 'none', 'menubar', 'none');
-set_fig_size(100, 100, 99);
+set_fig_size(100, 1, 103);
 put_fig_in_bottom_right;
 
 if isempty(tdt)
