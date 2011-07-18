@@ -21,11 +21,6 @@
 
 * Display looks very crappy on Mac. Why / does it matter?
 
-* Better fakeHardware that (a) passes checkdata test and (b) has spike rates
-  that depend on stimulus (will need to inform dataDevice about stimDevice so
-  it can measure running SD (or mean(abs())) of stimulus and modulate spike
-  rate accordingly
-
 * Sort out business where verifyExpt/Grid/etc assume loadStereo is being used 
 
 * More psth-like PSTHes
@@ -187,4 +182,9 @@ In ==> runSweep at 106
 
 * Search mode -- a particular grid can specify that we won't save waveform
   data (e.g. bilateral noise)
+
+* Better fakeHardware that (a) passes checkdata test and (b) has spike rates
+  that depend on stimulus (will need to inform dataDevice about stimDevice so
+  it can measure running SD (or mean(abs())) of stimulus and modulate spike
+  rate accordingly
 

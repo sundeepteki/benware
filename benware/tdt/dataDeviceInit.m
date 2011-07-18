@@ -1,5 +1,6 @@
 function [device, sampleRate] = ...
-  dataDeviceInit(device, deviceName, requestedSampleRateHz, channelMapping)
+  dataDeviceInit(device, deviceName, requestedSampleRateHz,  ...
+  channelMapping, stimDevice)
 % [device, sampleRate] = ...
 %   dataDeviceInit(device, deviceName, requestedSampleRate, channelMapping)
 % 
@@ -9,13 +10,14 @@ function [device, sampleRate] = ...
 % deviceName: e.g. 'RZ5'
 % requestedSampleRateHz: desired sample rate, e.g. 48828.125
 % channelMapping: A vector specifying the order you want the channels in
+% stimDevice: Handle to stim device if available (used for fake device only)
 
 global fakeHardware
 
 if fakeHardware
 
   if isempty(device) || ~deviceIsFake(device)
-    device = fakeDataDevice(deviceName, requestedSampleRateHz);
+    device = fakeDataDevice(deviceName, requestedSampleRateHz, stimDevice);
     sampleRate = device.sampleRate;
     fprintf('  * Initialising fake data device\n');
 

@@ -5,6 +5,8 @@ classdef fakeDataDevice < handle
      fake = 1
      triggerTime = -1
      timer = []
+     stimDevice = []
+     buffer = [];
      MonChan = 1
      ChanMap = zeros(1, 32)
      recdur = 0
@@ -13,9 +15,10 @@ classdef fakeDataDevice < handle
    
    methods
    
-      function obj = fakeDataDevice(deviceName, sampleRate)
+      function obj = fakeDataDevice(deviceName, sampleRate, stimDevice)
         obj.deviceName = deviceName;
         obj.sampleRate = sampleRate;
+        obj.stimDevice = stimDevice;
       end
       
       function out = invoke(obj, methodName, varargin)
@@ -52,8 +55,10 @@ classdef fakeDataDevice < handle
       end
       
       function out = ReadTagV(obj, varName, offset, len)
-        r = rand(1,len);
-        out = r*.0001 - (r>.999)*.001;
+        offset = offset+1;
+        out = obj.buffer(offset:offset+len-1);
+        %r = rand(1,len);
+        %out = r*.0001 - (r>.999)*.001;
       end
       
       function out = SoftTrg(obj, n)
@@ -67,6 +72,21 @@ classdef fakeDataDevice < handle
       end
       
       function out = zBusTrigA(obj)
+        waveformTmp = obj.stimDevice.intactWaveformL + ...
+          obj.stimDevice.intactWaveformR;
+        len=100*ceil(length(waveformTmp)/100);
+        waveform = zeros(1,len);
+        waveform(1:length(waveformTmp)) = waveformTmp;
+        s = std(reshape(waveform,100,len/100));
+        origSamplePoints = (1:length(s))/obj.stimDevice.sampleRate*100;
+        maxSamples = floor(obj.recdur/1000*obj.sampleRate)+1;
+        newSamplePoints = (1:maxSamples)/obj.sampleRate;
+        s = interp1(origSamplePoints,s,newSamplePoints);
+        responseProbability = s/max(s)/obj.sampleRate*20;
+        responseProbability(isnan(responseProbability)) = 0;
+        r = rand(1, maxSamples);
+        obj.buffer = single((0.1*r - (r<responseProbability)) *.002);
+
         obj.ADidx = zeros(1,32);
         obj.triggerTime = now;
         if isobject(obj.timer)

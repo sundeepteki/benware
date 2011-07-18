@@ -227,6 +227,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
         fclose(h);
         diffOnDisk = max(abs(savedData - testData{chan}));
         if diffOnDisk > 0
+          keyboard;
           errorBeep('Data on disk doesn''t match TDT buffer!');
         end
 

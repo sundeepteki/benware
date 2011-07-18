@@ -34,7 +34,7 @@ if ~isfield(tdt,'dataDevice')
 end
 [tdt.dataDevice, tdt.dataSampleRate] = ...
   dataDeviceInit(tdt.dataDevice, expt.dataDeviceName, ...
-  expt.dataDeviceSampleRate, expt.channelMapping);
+  expt.dataDeviceSampleRate, expt.channelMapping, tdt.stimDevice);
 
 if ~isfield(tdt,'zBus')
   tdt.zBus = [];

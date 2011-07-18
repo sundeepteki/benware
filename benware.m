@@ -12,13 +12,18 @@ global state
 
 global truncate checkdata;
 truncate = 0; % for testing only. should normally be 0
-checkdata = false; % for testing only. should normally be FALSE
+checkdata = true; % for testing only. should normally be FALSE
 
 % testing notices
 needWarning = false;
 
 if truncate~=0
   fprintf('Truncating stimuli! This is for testing only!\n');
+  needWarning = true;
+end
+
+if checkdata~=0
+  fprintf('Reloading data for checking. For testing only!\n');
   needWarning = true;
 end
 

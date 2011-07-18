@@ -5,6 +5,8 @@ classdef fakeStimDevice < handle
      fake = 1
      nSamples = -1
      triggerTime = -1
+     intactWaveformL = [];
+     intactWaveformR = [];
      timer = []
      WaveformL = zeros(1,2000000)
      WaveformR = zeros(1,2000000)
@@ -68,6 +70,9 @@ classdef fakeStimDevice < handle
       end
 
       function out = zBusTrigA(obj)
+        obj.intactWaveformL = obj.WaveformL(1:obj.nSamples);
+        obj.intactWaveformR = obj.WaveformR(1:obj.nSamples);
+        
         obj.triggerTime = now;
         if isobject(obj.timer)
           delete(obj.timer);
