@@ -12,7 +12,7 @@ global state
 
 global truncate checkdata;
 truncate = 0; % for testing only. should normally be 0
-checkdata = true; % for testing only. should normally be FALSE
+checkdata = false; % for testing only. should normally be FALSE
 
 % testing notices
 needWarning = false;

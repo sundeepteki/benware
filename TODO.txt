@@ -13,11 +13,7 @@
 * Gain factors will be lost when quitting matlab (make it part of expt or
   state structures?)
 
-* PSTH of active channel should be highlighted
-
 * allow user to choose visual alert instead of bugle and turn both off
-
-* Crash due to PSTH issue when the signal is all zeros
 
 * Display looks very crappy on Mac. Why / does it matter?
 
@@ -187,4 +183,8 @@ In ==> runSweep at 106
   that depend on stimulus (will need to inform dataDevice about stimDevice so
   it can measure running SD (or mean(abs())) of stimulus and modulate spike
   rate accordingly
+
+* PSTH of active channel should be highlighted
+
+* Crash due to PSTH issue when the signal is all zeros
 

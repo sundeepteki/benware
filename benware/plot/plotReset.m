@@ -3,6 +3,8 @@ function plotData = plotReset(plotData)
 %
 % Clear the axes of the graphs in the main window, if necessary
 
+global state;
+
 nSamplesExpected = plotData.nSamplesExpected;
 fs_in = plotData.fs_in;
 plotData.plotIndex = zeros(1,plotData.nChannels);
@@ -16,6 +18,12 @@ for chan = 1:plotData.nChannels
   set(plotData.waveform(chan).dots, 'XData', [], 'YData', []);
   
   if ~plotData.firstSweep
+    if state.audioMonitor.channel==chan
+      col = [1 0 0];
+    else
+      col = [0 0 1];
+    end
+    
     set(plotData.raster(chan).currentSweep, 'XData', [], 'YData', []);
     
     oldSpikeX = get(plotData.raster(chan).oldSweeps,'XData');
@@ -31,10 +39,14 @@ for chan = 1:plotData.nChannels
     oldSpikeY = [ones(size(newSpikes)) oldSpikeY(keep)]-0.05;
     set(plotData.raster(chan).oldSweeps, 'XData', oldSpikeX, 'YData', oldSpikeY);
     
-    h = histc(newSpikes, plotData.psthEdges);
-    plotData.psth(chan).data = plotData.psth(chan).data + h(1:end-1);
+    if ~isempty(newSpikes)
+      h = histc(newSpikes, plotData.psthEdges);
+      plotData.psth(chan).data = plotData.psth(chan).data + h(1:end-1);
+    end
+    
     scaled = plotData.psth(chan).data/max(plotData.psth(chan).data)*2-1;
-    set(plotData.psth(chan).line,'ydata',scaled);
+
+    set(plotData.psth(chan).line,'ydata',scaled, 'color', col);
 
   end
   

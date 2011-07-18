@@ -7,7 +7,15 @@ dataDir = constructDataPath(expt.dataDir(1:end-1), grid, expt);
 
 % use the default dir if it doesn't yet exist
 if ~exist(dataDir, 'dir')
+  fprintf_subtitle('Recording');
+  fprintf('  - data dir: %s\n', ...
+    constructDataPath(expt.dataDir, grid, expt));
+  r = demandinput('\nIs this ok? [Y/n]: ', {'y', 'n'}, 'y', true);
+  if r=='n'
+    errorBeep('parameter:error', 'Error in verifySaveDir');
+  end
   saveName = '';
+
   return
 end
 

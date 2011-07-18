@@ -102,6 +102,10 @@ for chan = plotChans
       end
       set(plotData.raster(chan).currentSweep, 'XData', t_s, 'YData', ones(size(t_s)), 'markeredgecolor', col);
       set(plotData.raster(chan).oldSweeps, 'markeredgecolor', col);
+      
+    case 'p'
+      set(plotData.psth(chan).line, 'color', col);
+
   end
   
   plotData.plotIndex(chan) = ii(chan);

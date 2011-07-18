@@ -1,4 +1,4 @@
-function verifyExpt(grid, expt)
+function [grid, expt] = verifyExpt(grid, expt)
 % verifyExpt(grid, expt)
 % 
 % checks that all is ok by the user
@@ -14,7 +14,7 @@ errorBeep('parameter:error', 'Error in verifyExpt');
 end
 
 % stimulus
-fprintf_subtitle('stimulus');
+fprintf_subtitle('Stimulus');
 fprintf('  - name: %s\n', grid.name);
 fprintf('  - sample rate: %d\n', round(grid.sampleRate));
 fprintf('  - # sets: %d\n', size(grid.stimGrid, 1));
@@ -32,11 +32,10 @@ errorBeep('parameter:error', 'Error in verifyExpt');
 end
 
 % recording
-fprintf_subtitle('recording');
-fprintf('  - data dir: %s\n', ...
-constructDataPath(expt.dataDir, grid, expt))
+%fprintf('  - data dir: %s\n', ...
+%constructDataPath(expt.dataDir, grid, expt))
 
-r = demandinput('\nIs this ok? [Y/n]: ', {'y', 'n'}, 'y', true);
-if r=='n'
-errorBeep('parameter:error', 'Error in verifyExpt');
-end
+%r = demandinput('\nIs this ok? [Y/n]: ', {'y', 'n'}, 'y', true);
+%if r=='n'
+%errorBeep('parameter:error', 'Error in verifyExpt');
+%end
