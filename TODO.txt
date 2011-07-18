@@ -4,9 +4,11 @@
   (also one per file)
 
 * Variable length sweeps (check correct # of samples are played and recorded)
+  -- need to generate a test grid with random length stimuli
 
 * Fixed length sweeps when stimulus length varies (check correct # of samples 
   are played and recorded)
+  -- similarly to above
 
 * Show gain factor in main plot, plus other plot labels
 
