@@ -59,6 +59,7 @@ classdef fakeDataDevice < handle
       function out = SoftTrg(obj, n)
         obj.ADidx = zeros(1,32);
         if isobject(obj.timer)
+          stop(obj.timer);
           delete(obj.timer);
           obj.timer = [];
         end

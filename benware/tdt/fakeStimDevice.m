@@ -60,6 +60,7 @@ classdef fakeStimDevice < handle
       function out = SoftTrg(obj, n)
         obj.StimIndex = 0;
         if isobject(obj.timer)
+          stop(obj.timer);
           delete(obj.timer);
           obj.timer = [];
         end
