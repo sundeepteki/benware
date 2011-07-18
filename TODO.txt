@@ -73,7 +73,7 @@
 
 * Fake hardware mode for testing
 
-* compensate stimuli online?
+* compensate stimuli online? no. too slow (6 sec / channel for a 30sec stim)
 
 * Have a way of continuing an interrupted grid (an option instead of choosing
   from grids/) 
