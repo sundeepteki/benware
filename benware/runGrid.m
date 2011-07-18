@@ -23,8 +23,6 @@ cleanupObject = onCleanup(@()cleanup(tdt));
 % make filter for spike detection
 spikeFilter = makeSpikeFilter(expt.dataDeviceSampleRate);
 
-%clear sweeps stim nextStim sweepNum data sweepLen spikeTimes; % no longer needed now this is a function?
-
 % upload first stimulus
 [nextStim sweeps(firstSweep).stimInfo] = grid.stimGenerationFunction(firstSweep, grid, expt);
 fprintf('  * Uploading first stimulus...');
@@ -67,11 +65,15 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   % get filenames for saving data
   sweeps(sweepNum).dataFiles = constructDataPaths([expt.dataDir expt.dataFilename],grid,expt,sweepNum,expt.nChannels);
   dataDir = split_path(sweeps(sweepNum).dataFiles{1});
-  mkdir_nowarning(dataDir);
+  if grid.saveWaveforms
+    mkdir_nowarning(dataDir);
+  end
   
   % run the sweep
-  [nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp, plotData] = runSweep(tdt, sweepLen, expt.nChannels, stim, nextStim, ...
-    spikeFilter, expt.spikeThreshold, sweeps(sweepNum).dataFiles, plotData);     %#ok<*SAGROW>
+  [nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp, ...
+    plotData] = runSweep(tdt, sweepLen, expt.nChannels, stim, nextStim, ...
+    spikeFilter, expt.spikeThreshold, grid.saveWaveforms, ...
+    sweeps(sweepNum).dataFiles, plotData);
   
   % store sweep duration
   sweeps(sweepNum).sweepLen.samples = nSamples;

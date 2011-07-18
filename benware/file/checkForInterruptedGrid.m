@@ -21,13 +21,24 @@ end
 
 gridInfo = load(gridFilename);
 
-filename = constructDataPath([gridInfo.expt.dataDir gridInfo.expt.sweepFilename], gridInfo.grid, gridInfo.expt, gridInfo.grid.nSweepsDesired);
+if gridInfo.grid.repeatsPerCondition==Inf
+  % then 'infinite' repeats were specified, i.e. it's a search grid
+  return;
+end
+
+filename = constructDataPath(...
+  [gridInfo.expt.dataDir gridInfo.expt.sweepFilename], ...
+   gridInfo.grid, gridInfo.expt, gridInfo.grid.nSweepsDesired);
+
 if exist(filename, 'file')
   % then the last grid is complete
   return;
+
 else
   for ii = 1:gridInfo.grid.nSweepsDesired
-    filename = constructDataPath([gridInfo.expt.dataDir gridInfo.expt.sweepFilename], gridInfo.grid, gridInfo.expt, ii);
+    filename = constructDataPath(...
+      [gridInfo.expt.dataDir gridInfo.expt.sweepFilename], ...
+       gridInfo.grid, gridInfo.expt, ii);
     if ~exist(filename, 'file')
       break
     end

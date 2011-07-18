@@ -12,8 +12,17 @@ end
 grid.saveName = '';
 grid.nStimConditions = size(grid.stimGrid, 1);
 
+if ~isfield(grid, 'saveWaveforms')
+  grid.saveWaveforms = true;
+end
+
 % randomise grid
-repeatedGrid = repmat(grid.stimGrid, [grid.repeatsPerCondition, 1]);
+if isfinite(grid.repeatsPerCondition)
+  repeatsPerCondition = grid.repeatsPerCondition;
+else
+  repeatsPerCondition = 10000;
+end
+repeatedGrid = repmat(grid.stimGrid, [repeatsPerCondition, 1]);
 grid.nSweepsDesired = size(repeatedGrid, 1);
 grid.randomisedGrid = repeatedGrid(randperm(grid.nSweepsDesired), :);
 [junk grid.randomisedGridSetIdx] = ...

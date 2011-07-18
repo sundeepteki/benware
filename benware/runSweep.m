@@ -1,4 +1,6 @@
-function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, nChannels, stim, nextStim, spikeFilter, spikeThreshold, dataFiles, plotData)
+function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
+  sweepLen, nChannels, stim, nextStim, spikeFilter, spikeThreshold, ...
+  saveWaveforms, dataFiles, plotData)
   %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
   %% Will fail if next stimulus is not on the TDT
   %% Upload the next stimulus at the same time, then reset the stimDevice
@@ -17,7 +19,11 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, n
   % check that the correct stimulus is in the stimDevice buffer
   stimLen = size(stim, 2);
   rnd = floor(100+rand*(stimLen-300));
-  checkData = [downloadStim(tdt.stimDevice, 0, 100) downloadStim(tdt.stimDevice, rnd, 100) downloadStim(tdt.stimDevice, stimLen-100, 100)];
+  
+  checkData = [downloadStim(tdt.stimDevice, 0, 100) ...
+    downloadStim(tdt.stimDevice, rnd, 100) ...
+    downloadStim(tdt.stimDevice, stimLen-100, 100)];
+  
   d = max(max(abs(checkData - [stim(:, 1:100) stim(:, rnd+1:rnd+100) stim(:, end-99:end)])));
 
   if d>10e-7
@@ -28,10 +34,6 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, n
   if getStimLength(tdt.stimDevice) ~= stimLen
     errorBeep('Stimulus length on stimDevice is not correct');
   end
-  %if abs(getStimLength(tdt.stimDevice) - stimLen) > 2
-  %  errorBeep('Stimulus length on stimDevice is not correct');
-  %end
-
 
   % reset stimulus device so it reads out from the beginning of the buffer
   % when triggered
@@ -49,13 +51,15 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, n
 
   filteredData = zeros(nChannels, nSamplesExpected);
   filterIndex = 0;
-
+  
   % open data files
-  dataFileHandles = nan(1,nChannels);
-  for chan = 1:nChannels
-    dataFileHandles(chan) = fopen(dataFiles{chan},'w');
+  if saveWaveforms
+    dataFileHandles = nan(1,nChannels);
+    for chan = 1:nChannels
+      dataFileHandles(chan) = fopen(dataFiles{chan},'w');
+    end
   end
-
+  
   % cell array for storing spike times
   spikeTimes = cell(1, nChannels);
 
@@ -107,8 +111,10 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, n
       data(chan, nSamplesReceived(chan)+1:nSamplesReceived(chan)+length(newdata)) = newdata;
       
       nSamplesReceived(chan) = nSamplesReceived(chan)+length(newdata);
-      fwrite(dataFileHandles(chan), newdata, 'float32');
-
+      if saveWaveforms
+        fwrite(dataFileHandles(chan), newdata, 'float32');
+      end
+      
     end
     
     %fprintf(['  * Data: ' num2str(length(newdata)/tdt.dataSampleRate) ' sec of data done in ' num2str(toc) ' sec.\n']);tic;
@@ -166,8 +172,10 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, n
   plotData.lastSweepSpikes = spikeTimes;
 
   % close data files
-  for chan = 1:nChannels
-    fclose(dataFileHandles(chan));
+  if saveWaveforms
+    for chan = 1:nChannels
+      fclose(dataFileHandles(chan));
+    end
   end
 
   % check for blank data channels
@@ -193,6 +201,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, n
   global checkdata
 
   if checkdata
+    
     fprintf('  * Checking stim...');
     teststim = downloadStim(tdt.stimDevice, 0, samplesUploaded);
     d = max(max(abs(nextStim-teststim)));
@@ -201,23 +210,29 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, sweepLen, n
     end
     fprintf([' ' num2str(size(teststim, 2)) ' samples verified.\n']);
 
-    fprintf('  * Checking data...');
-    testData = downloadAllData(tdt.dataDevice, nChannels);
-    for chan = 1:nChannels
-      diffInMem = max(abs(data(chan,:) - testData{chan}));
-      if diffInMem > 0
-        errorBeep('Data in memory doesn''t match TDT buffer!');
-      end
+    if ~saveWaveforms
+      fprintf('No waveforms saved -- can''t check waveform data\n');
+    
+    else
+      fprintf('  * Checking data...');
+      testData = downloadAllData(tdt.dataDevice, nChannels);
+      for chan = 1:nChannels
+        diffInMem = max(abs(data(chan,:) - testData{chan}));
+        if diffInMem > 0
+          errorBeep('Data in memory doesn''t match TDT buffer!');
+        end
 
-      h = fopen(dataFiles{chan}, 'r');
-      savedData = fread(h, inf, 'float32')';
-      fclose(h);
-      diffOnDisk = max(abs(savedData - testData{chan}));
-      if diffOnDisk > 0
-        errorBeep('Data on disk doesn''t match TDT buffer!');
-      end
+        h = fopen(dataFiles{chan}, 'r');
+        savedData = fread(h, inf, 'float32')';
+        fclose(h);
+        diffOnDisk = max(abs(savedData - testData{chan}));
+        if diffOnDisk > 0
+          errorBeep('Data on disk doesn''t match TDT buffer!');
+        end
 
+      end
+      fprintf([' ' num2str(nSamples) ' samples verified.\n']);
     end
-    fprintf([' ' num2str(nSamples) ' samples verified.\n']);
+    
     fprintf(['  * Check complete after ' num2str(toc) ' sec.\n']);
   end

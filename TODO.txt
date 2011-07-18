@@ -8,9 +8,6 @@
 * Fixed length sweeps when stimulus length varies (check correct # of samples 
   are played and recorded)
 
-* Search mode -- a particular grid can specify that we won't save waveform
-  data (e.g. bilateral noise)
-
 * Show gain factor in main plot, plus other plot labels
 
 * Gain factors will be lost when quitting matlab (make it part of expt or
@@ -187,4 +184,7 @@ In ==> runSweep at 106
      saving of the mat file, which does take longer and longer through a grid.
 
 * Allow other channel counts than 32 (use length(expt.channelMapping))
+
+* Search mode -- a particular grid can specify that we won't save waveform
+  data (e.g. bilateral noise)
 
