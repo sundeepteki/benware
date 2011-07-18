@@ -13,7 +13,9 @@ function tdt = prepareTDT(tdt, expt, grid)
 % tdt.dataDevice -- data device handle
 % tdt.dataSampleRate -- data device sample rate
 
-figure(99);
+f=figure(99);
+set(f,'color',[1 1 1], 'name', 'TDT', 'numbertitle', 'off', ...
+  'toolbar', 'none', 'menubar', 'none');
 set_fig_size(100, 100, 99);
 put_fig_in_bottom_right;
 
@@ -24,12 +26,15 @@ end
 if ~isfield(tdt,'stimDevice')
   tdt.stimDevice = [];
 end
-[tdt.stimDevice, tdt.stimSampleRate] = stimDeviceInit(tdt.stimDevice, expt.stimDeviceName, grid.sampleRate);
+[tdt.stimDevice, tdt.stimSampleRate] = ...
+  stimDeviceInit(tdt.stimDevice, expt.stimDeviceName, grid.sampleRate);
 
 if ~isfield(tdt,'dataDevice')
   tdt.dataDevice = [];
 end
-[tdt.dataDevice, tdt.dataSampleRate] = dataDeviceInit(tdt.dataDevice, expt.dataDeviceName, expt.dataDeviceSampleRate, expt.channelMapping);
+[tdt.dataDevice, tdt.dataSampleRate] = ...
+  dataDeviceInit(tdt.dataDevice, expt.dataDeviceName, ...
+  expt.dataDeviceSampleRate, expt.channelMapping);
 
 if ~isfield(tdt,'zBus')
   tdt.zBus = [];

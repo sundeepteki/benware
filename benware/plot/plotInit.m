@@ -64,7 +64,8 @@ pos = pos';
 
 % create figure
 f = figure(1);
-set(f,'color',[1 1 1], 'renderer', 'opengl', 'KeyPressFcn',{'keyPress'});
+set(f,'color',[1 1 1], 'renderer', 'opengl', 'KeyPressFcn',{'keyPress'}, ...
+  'name', 'BenWare', 'numbertitle', 'off', 'toolbar', 'none', 'menubar', 'none');
 clf;
 
 nSamplesExpected = plotData.nSamplesExpected;
@@ -73,6 +74,16 @@ plotData.plotIndex = zeros(1,plotData.nChannels);
 
 plotData.psthEdges = linspace(0,plotData.nSamplesExpected/fs_in,50);
 plotData.psthCentres = (plotData.psthEdges(1:end-1)+plotData.psthEdges(2:end))/2;
+
+% on Mac, need to set the y axis slightly right of the minimum possible value
+% for it to actually be seen. Similarly for a axis
+if ispc
+  minX = 1/fs_in;
+  minY = -1;
+else
+  minX = 1.25/fs_in;
+  minY = -1+1e-4;
+end
 
 for chan = 1:plotData.nChannels
     ax =  axes('position', pos{chan}, 'xtick', [], 'ytick', [], ...
@@ -84,16 +95,16 @@ for chan = 1:plotData.nChannels
     
     plotData.waveform(chan).axis.x = line([1 nSamplesExpected]/fs_in, [0 0], ...
         'color', [0 0 0], 'parent', plotData.subplot(chan),'hittest','off');
-    plotData.waveform(chan).axis.y = line([1 1]/fs_in, [-1 1], ...
+    plotData.waveform(chan).axis.y = line([minX minX], [-1 1], ...
         'color', [0 0 0],'parent',plotData.subplot(chan),'hittest','off');
     plotData.waveform(chan).line = line(0, 0, 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
     plotData.waveform(chan).dots = line(0, 0, 'marker', '.', 'linestyle', 'none', 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
     plotData.waveform(chan).handles = [plotData.waveform(chan).axis.x plotData.waveform(chan).axis.y plotData.waveform(chan).line plotData.waveform(chan).dots];
     plotData.waveform(chan).dataHandles = [plotData.waveform(chan).line plotData.waveform(chan).dots];
     
-    plotData.raster(chan).axis.x = line([1 nSamplesExpected]/fs_in, [-1 -1], ...
+    plotData.raster(chan).axis.x = line([1 nSamplesExpected]/fs_in, [minY minY], ...
         'color', [0 0 0], 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
-    plotData.raster(chan).axis.y = line([1 1]/fs_in, [-1 1], ...
+    plotData.raster(chan).axis.y = line([minX minX], [-1 1], ...
         'color', [0 0 0],'parent',plotData.subplot(chan),'hittest','off', 'visible', 'off');
     plotData.raster(chan).currentSweep = line(0, 0, 'marker', '.', 'linestyle', 'none', 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
     plotData.raster(chan).oldSweeps = line(0, 0, 'marker', '.', 'linestyle', 'none', 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
@@ -103,9 +114,9 @@ for chan = 1:plotData.nChannels
     plotData.raster(chan).dataHandles = [plotData.raster(chan).currentSweep plotData.raster(chan).oldSweeps];
 
     plotData.psth(chan).data = zeros(size(plotData.psthCentres));
-    plotData.psth(chan).axis.x = line([1 nSamplesExpected]/fs_in, [-1 -1], ...
+    plotData.psth(chan).axis.x = line([1 nSamplesExpected]/fs_in, [minY minY], ...
         'color', [0 0 0], 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
-    plotData.psth(chan).axis.y = line([1 1]/fs_in, [-1 1], ...
+    plotData.psth(chan).axis.y = line([minX minX], [-1 1], ...
         'color', [0 0 0],'parent',plotData.subplot(chan),'hittest','off', 'visible', 'off');
     plotData.psth(chan).line = line(plotData.psthCentres, plotData.psth(chan).data, 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
     plotData.psth(chan).handles = [plotData.psth(chan).axis.x plotData.psth(chan).axis.y plotData.psth(chan).line];
