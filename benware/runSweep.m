@@ -27,6 +27,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
   d = max(max(abs(checkData - [stim(:, 1:100) stim(:, rnd+1:rnd+100) stim(:, end-99:end)])));
 
   if d>10e-7
+    keyboard;
     errorBeep('Stimulus on stimDevice is not correct!');
   end
 
@@ -34,6 +35,9 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
   if getStimLength(tdt.stimDevice) ~= stimLen
     errorBeep('Stimulus length on stimDevice is not correct');
   end
+
+  % record length of next stimulus for uploading
+  nextStimLen = size(nextStim,2);
 
   % reset stimulus device so it reads out from the beginning of the buffer
   % when triggered
@@ -91,12 +95,12 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
     if ~isempty(nextStim)
       % stimulus upload is limited by length of stimulus, or where the
       % stimDevice has got to in reading out the stimulus, whichever is lower
-      maxStimIndex = min(getStimIndex(tdt.stimDevice),stimLen);
+      maxStimIndex = min(getStimIndex(tdt.stimDevice),nextStimLen);
       n = samplesUploaded + 1;
       if maxStimIndex>samplesUploaded
         uploadStim(tdt.stimDevice, nextStim(:, samplesUploaded+1:maxStimIndex), samplesUploaded);
         samplesUploaded = maxStimIndex;
-        if samplesUploaded==stimLen
+        if samplesUploaded==nextStimLen
           fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
         end
       end
@@ -148,15 +152,15 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
 
   if ~isempty(nextStim)
     % finish uploading stimulus if necessary
-    if samplesUploaded~=stimLen
+    if samplesUploaded~=nextStimLen
       uploadStim(tdt.stimDevice, nextStim(:, samplesUploaded+1:end), samplesUploaded);
-      samplesUploaded = stimLen;
+      samplesUploaded = nextStimLen;
       fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
     end
 
     % inform stimDevice about length of the stimulus that has been uploaded
     % (i.e. the stimulus for the next sweep)
-    setStimLength(tdt.stimDevice, size(nextStim,2));
+    setStimLength(tdt.stimDevice, nextStimLen);
   end
 
   % finish detecting spikes  

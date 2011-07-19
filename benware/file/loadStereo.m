@@ -18,6 +18,7 @@ stimInfo.stimGridTitles = grid.stimGridTitles;
 stimInfo.stimParameters = grid.randomisedGrid(sweepNum, :);
 stimInfo.stimFileL = constructStimPath(grid, expt, sweepNum, 'L');
 stimInfo.stimFileR = constructStimPath(grid, expt, sweepNum, 'R');
+
 % load the stimulus
 stim = loadStim(stimInfo.stimFileL, stimInfo.stimFileR, ...
 		grid.stimLevelOffsetDB + stimInfo.stimParameters(end));

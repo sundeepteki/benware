@@ -5,8 +5,7 @@ function verifyGridFields(grid)
 
 required_fields = {'name', 'sampleRate', 'stimGenerationFunctionName', ...
 'stimGridTitles', ...
-'stimGrid', 'stimLevelOffsetDB', ...
-'postStimSilence'};
+'stimGrid', 'stimLevelOffsetDB'};
 
 if isequal(grid.stimGenerationFunctionName,'loadStereo')
   required_fields(end+1:end+2) = {'stimDir', 'stimFilename'};

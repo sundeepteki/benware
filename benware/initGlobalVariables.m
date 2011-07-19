@@ -26,3 +26,4 @@ state.paused = false;
 state.userQuit = false;
 state.noData.alreadyWarned = false;
 state.noData.warnUser = false;
+state.sweepTooShort.userWarned = false;

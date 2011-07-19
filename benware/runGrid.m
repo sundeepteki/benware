@@ -29,8 +29,14 @@ fprintf('  * Uploading first stimulus...');
 uploadWholeStim(tdt.stimDevice, nextStim);
 fprintf(['done after ' num2str(toc) ' sec.\n']);
 
-% set up plot -- FIXME assumes all stimuli will be the same length as the first
-nSamplesExpected = floor((size(nextStim,2)/grid.sampleRate+grid.postStimSilence)*expt.dataDeviceSampleRate)+1;
+% set up plot
+if isfield(grid, 'sweepLen')
+  nSamplesExpected = floor(grid.sweepLen*expt.dataDeviceSampleRate)+1;
+elseif isfield(grid, 'maxSweepLen')
+  nSamplesExpected = floor(grid.maxSweepLen*expt.dataDeviceSampleRate)+1;
+else
+  nSamplesExpected = floor((size(nextStim,2)/grid.sampleRate+grid.postStimSilence)*expt.dataDeviceSampleRate)+1;
+end
 plotData = plotInit(expt.dataDeviceSampleRate, expt.nChannels, nSamplesExpected);
 
 
@@ -59,7 +65,23 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   sweeps(sweepNum).stimLen.ms = sweeps(sweepNum).stimLen.samples/grid.sampleRate*1000;
   
   % actual sweep length
-  sweepLen = size(stim, 2)/grid.sampleRate + grid.postStimSilence;
+  if isfield(grid, 'sweepLen')
+    % then use a fixed sweep length
+    sweepLen = grid.sweepLen;
+    % if sweep length < stimulus length, warn user
+    if (size(stim, 2)/grid.sampleRate)>sweepLen && ~state.sweepTooShort.userWarned
+      bbeep;
+      fprintf_title('Stimulus length is longer than sweep length!');
+      if lower(demandinput('Do you want to carry on anyway? ','yn','n',true))=='n'
+        break;
+        state.userQuit = true;
+      end
+      state.sweepTooShort.userWarned = true;
+    end
+  else
+    % sweep length = stimulus length + post stimulus silence
+    sweepLen = size(stim, 2)/grid.sampleRate + grid.postStimSilence;
+  end
   fprintf(['  * sweep length: ' num2str(sweepLen) ' s\n']);
   
   % get filenames for saving data
