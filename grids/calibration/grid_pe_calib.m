@@ -1,4 +1,4 @@
-function grid = grid_pe_83dB()
+function grid = grid_pe()
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStereo';
@@ -11,11 +11,11 @@ function grid = grid_pe_83dB()
   
   % stimulus grid structure
   grid.stimGridTitles = {'ID', 'Token', 'Level'};
-  grid.stimGrid = sortrows(combvec(408:436, 1:50, 83)');
+  grid.stimGrid = [381 1 90];
   
   % sweep parameters
-  grid.sweepLength = 0.42; % seconds
-  grid.repeatsPerCondition = 1;
+  grid.repeatsPerCondition = Inf;
+  grid.saveWaveforms = false;
   
   % set this using absolute calibration
   grid.stimLevelOffsetDB = -84;

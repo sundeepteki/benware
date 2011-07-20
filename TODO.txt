@@ -1,4 +1,4 @@
-== PLANS
+== TODO before next expt 
 
 * Save spike times in separate files again, with sweep metadata separately
   (also one per file)
@@ -12,6 +12,9 @@
   state structures?)
 
 * allow user to choose visual alert instead of bugle and turn both off
+
+
+== TODO... later 
 
 * Sort out business where verifyExpt/Grid/etc assume loadStereo is being used 
 

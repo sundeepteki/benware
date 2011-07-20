@@ -1,21 +1,21 @@
-function grid = grid_pe_83dB()
+function grid = grid_budb_hf_calib()
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStereo';
-  grid.stimDir = 'E:\auditory-objects\sounds.calib.expt%E\pe\';
+  grid.stimDir = 'E:\auditory-objects\sounds.calib.expt%E\bubd_hf\';
   grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   % essentials
-  grid.name = 'pe.83dB';
-  grid.stimFilename = 'pe.id.%1.token.%2.%L.f32';
+  grid.name = 'bubd_hf.83dB';
+  grid.stimFilename = 'bubd_hf.id.%1.token.%2.%L.f32';
   
   % stimulus grid structure
   grid.stimGridTitles = {'ID', 'Token', 'Level'};
-  grid.stimGrid = sortrows(combvec(408:436, 1:50, 83)');
+  grid.stimGrid = [442 1 90];
   
   % sweep parameters
-  grid.sweepLength = 0.42; % seconds
-  grid.repeatsPerCondition = 1;
+  grid.repeatsPerCondition = Inf;
+  grid.saveWaveforms = false;
   
   % set this using absolute calibration
   grid.stimLevelOffsetDB = -84;

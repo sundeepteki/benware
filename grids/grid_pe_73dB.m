@@ -1,21 +1,7 @@
-function grid = grid_pe()
+function grid = grid_pe_73dB()
 
-  % controlling the sound presentation
-  grid.stimGenerationFunctionName = 'loadStereo';
-  grid.stimDir = 'E:\auditory-objects\sounds.calib.expt%E\pe\';
-  grid.sampleRate = 24414.0625*2;  % ~50kHz
+% load 83dB grid and alter to 73dB
+grid = grid_pe_83dB;
 
-  % essentials
-  grid.name = 'pe.83dB';
-  grid.stimFilename = 'pe.id.%1.token.%2.%L.f32';
-  
-  % stimulus grid structure
-  grid.stimGridTitles = {'ID', 'Token', 'Level'};
-  grid.stimGrid = combvec(408:436, 1:50, 73)';
-  
-  % sweep parameters
-  grid.sweepLength = .42;
-  grid.repeatsPerCondition = 1;
-  
-  % set this using absolute calibration
-  grid.stimLevelOffsetDB = -84;
+grid.name = 'pe.73dB';
+grid.stimGrid(:,end) = 73;
