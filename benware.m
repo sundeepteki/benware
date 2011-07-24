@@ -8,7 +8,7 @@ setPath;
 printGreetings;
 
 % variables intended for manipulation by future UI
-global state
+global state %#ok<NUSED>
 
 global truncate checkdata;
 truncate = 0; % for testing only. should normally be 0
@@ -55,7 +55,7 @@ else
   expt.dataDir = [expt.exptDir '%P-%N/'];
   expt.dataFilename = 'raw.f32/%P.%N.sweep.%S.channel.%C.f32';
   expt.sweepFilename = 'sweep.mat/%P.%N.sweep.%S.mat';
-  global fakeHardware
+  global fakeHardware %#ok<TLEV>
   fakeHardware = true;
 end
 

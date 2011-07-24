@@ -30,6 +30,6 @@ else
   end
 
   [device, sampleRate] = deviceInit(device, deviceName, ...
-    'tdt/stereoplay.rcx', 'StereoPlayVer', 3, requestedSampleRate);
+    'benware/tdt/stereoplay.rcx', 'StereoPlayVer', 3, requestedSampleRate);
 
 end

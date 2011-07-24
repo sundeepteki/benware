@@ -30,10 +30,10 @@ uploadWholeStim(tdt.stimDevice, nextStim);
 fprintf(['done after ' num2str(toc) ' sec.\n']);
 
 % set up plot
-if isfield(grid, 'sweepLen')
-  nSamplesExpected = floor(grid.sweepLen*expt.dataDeviceSampleRate)+1;
-elseif isfield(grid, 'maxSweepLen')
-  nSamplesExpected = floor(grid.maxSweepLen*expt.dataDeviceSampleRate)+1;
+if isfield(grid, 'sweepLength')
+  nSamplesExpected = floor(grid.sweepLength*expt.dataDeviceSampleRate)+1;
+elseif isfield(grid, 'maxSweepLength')
+  nSamplesExpected = floor(grid.maxSweepLength*expt.dataDeviceSampleRate)+1;
 else
   nSamplesExpected = floor((size(nextStim,2)/grid.sampleRate+grid.postStimSilence)*expt.dataDeviceSampleRate)+1;
 end
@@ -65,9 +65,9 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   sweeps(sweepNum).stimLen.ms = sweeps(sweepNum).stimLen.samples/grid.sampleRate*1000;
   
   % actual sweep length
-  if isfield(grid, 'sweepLen')
+  if isfield(grid, 'sweepLength')
     % then use a fixed sweep length
-    sweepLen = grid.sweepLen;
+    sweepLen = grid.sweepLength;
     % if sweep length < stimulus length, warn user
     if (size(stim, 2)/grid.sampleRate)>sweepLen && ~state.sweepTooShort.userWarned
       bbeep;
