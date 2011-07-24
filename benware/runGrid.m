@@ -121,8 +121,8 @@ for sweepNum = firstSweep:grid.nSweepsDesired
     bbeep;
     fprintf_title('Some incoming channels are empty -- perhaps your Medusa batteries ran out?');
     if lower(demandinput('Do you want to carry on anyway? ','yn','n',true))=='y'
-      state.noData.alreadyWarned = true;
-      state.noData.warnUser = false;
+       state.noData.alreadyWarned = true;
+       state.noData.warnUser = false;
     else
       state.userQuit = true;
     end

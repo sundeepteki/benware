@@ -17,7 +17,7 @@ checkdata = false; % for testing only. should normally be FALSE
 % testing notices
 needWarning = false;
 
-if truncate~=0
+if truncate~=1
   fprintf('Truncating stimuli! This is for testing only!\n');
   needWarning = true;
 end
