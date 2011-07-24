@@ -18,4 +18,4 @@ function grid = grid_sparseness_highlights
   grid.repeatsPerCondition = 30;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -139;
+  grid.stimLevelOffsetDB = [-134 -129];

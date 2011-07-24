@@ -20,8 +20,8 @@ function grid = grid_po_83dB()
   grid.stimGrid(:,5)= lev;
   
   % sweep parameters
-  grid.sweepLength = 0.42; % seconds
+  grid.sweepLength = 0.22; % seconds
   grid.repeatsPerCondition = 1;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -84;
+  grid.stimLevelOffsetDB = [-128 -129.5];

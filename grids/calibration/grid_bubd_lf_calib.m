@@ -1,4 +1,4 @@
-function grid = grid_budb_lf_calib()
+function grid = grid_bubd_lf_calib()
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStereo';
@@ -14,8 +14,9 @@ function grid = grid_budb_lf_calib()
   grid.stimGrid = [441 1 90];
   
   % sweep parameters
+  grid.postStimSilence = 0;
   grid.repeatsPerCondition = Inf;
   grid.saveWaveforms = false;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -84;
+  grid.stimLevelOffsetDB = [-111.5,-111.5];

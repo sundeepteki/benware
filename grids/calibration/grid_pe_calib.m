@@ -14,8 +14,9 @@ function grid = grid_pe()
   grid.stimGrid = [381 1 90];
   
   % sweep parameters
+  grid.postStimSilence = 0;
   grid.repeatsPerCondition = Inf;
   grid.saveWaveforms = false;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -84;
+  grid.stimLevelOffsetDB = [-128 -129.5];

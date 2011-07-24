@@ -33,4 +33,14 @@ envL = [envL envBoth];
 envR = [envR envBoth];
 
 stim = stim.*[envL; envR];
-stim = stim*10^((grid.stimLevelOffsetDB + stimInfo.stimParameters(end))/20);
+
+% apply level offset
+level_offset = grid.stimLevelOffsetDB + stimInfo.stimParameters(end);
+if length(level_offset) == 1
+  stim = stim * 10^(level_offset / 20);
+elseif length(level_offset) == 2
+  stim(1, :) = stim(1, :) * 10^(level_offset(1) / 20);
+  stim(2, :) = stim(2, :) * 10^(level_offset(2) / 20);
+else
+  error('input:error', 'stimLevelOffsetDB must have length 1 or 2');
+end

@@ -18,4 +18,4 @@ function grid = grid_bubd_lf_83dB()
   grid.repeatsPerCondition = 1;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -84;
+  grid.stimLevelOffsetDB = [-111.5,-111.5];

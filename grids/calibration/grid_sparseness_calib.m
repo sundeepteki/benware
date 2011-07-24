@@ -11,11 +11,11 @@ grid.sampleRate = 24414.0625*2;  % ~50kHz
 
 % stimulus grid structure
 grid.stimGridTitles = {'StimID', 'Level'};
-grid.stimGrid = [3 1 80];
+grid.stimGrid = [3 1 90];
 
 % sweep parameters
 grid.postStimSilence = .2; % seconds
-grid.repeatsPerCondition = 30;
+grid.repeatsPerCondition = 100;
 
 % set this using absolute calibration
-grid.stimLevelOffsetDB = -139;
+grid.stimLevelOffsetDB = [-134 -129];
