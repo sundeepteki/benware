@@ -11,7 +11,7 @@ function grid = grid_sparseness_highlights
 
   % stimulus grid structure
   grid.stimGridTitles = {'Set', 'StimID', 'Level'};
-  grid.stimGrid = createPermutationGrid(2,1:12, 80);
+  grid.stimGrid = createPermutationGrid(2, 1:12, 80);
   
   % sweep parameters
   grid.postStimSilence = 0.2; %seconds

@@ -1,7 +1,7 @@
 function grid = grid_ctuning_ss_specific_channel()
 
   % this MUST be updated to reflect the current source channel
-  grid.sourceChannel = 7;
+  grid.sourceChannel = 99;
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStereo';
@@ -18,7 +18,7 @@ function grid = grid_ctuning_ss_specific_channel()
   
   smoothedIdxs = 0; % use 0 if not smoothed, 1 if smoothed, 0:1 if both
   tokenIdxs = 1:10;
-  embeddedIdxs = 0:1;
+  embeddedIdxs = 0;
   levels = 70;
   
   grid.stimGrid = createPermutationGrid(smoothedIdxs, tokenIdxs, embeddedIdxs, grid.sourceChannel, levels);
@@ -28,5 +28,5 @@ function grid = grid_ctuning_ss_specific_channel()
   grid.repeatsPerCondition = 2;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -102;
+  grid.stimLevelOffsetDB = [-111, -106];
   
