@@ -40,8 +40,10 @@ load expt.mat;
 
 % set defaults
 if ispc
+  expt.exptDir = fixpath([expt.dataRoot expt.exptSubDir]);
   expt.dataDir = fixpath([expt.dataRoot expt.exptSubDir expt.dataSubDir]);
 else
+  expt.exptDir = fixpath(['./' expt.exptSubDir]);
   expt.dataDir = fixpath(['./' expt.exptSubDir expt.dataSubDir]);
   global fakeHardware %#ok<TLEV>
   fakeHardware = true;
