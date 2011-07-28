@@ -8,6 +8,7 @@ clf;
 p = get(f, 'position');
 set(f,'position', [p(1) p(2), 380, 300]);
 put_fig_in_top_right;
+set(gcf, 'position',get(gcf, 'position') - [8 28 0 0]);
 p = get(f, 'position');
 
 xoffset = 40;

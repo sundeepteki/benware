@@ -10,6 +10,8 @@ global state;
 % start recording a log
 diary(constructDataPath([expt.dataDir expt.logFilename], grid, expt));
 
+errorBeep('asdf', 'asdf')
+
 %% Begin recording
 % =================
 

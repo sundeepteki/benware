@@ -8,7 +8,7 @@ setPath;
 printGreetings;
 
 % variables intended for manipulation by future UI
-global state %#ok<NUSED>
+global state;
 
 global checkdata;
 checkdata = false; % for testing only. should normally be FALSE
@@ -50,6 +50,10 @@ end
 expt.logFilename = 'benWare.log';
 expt.spikeThreshold = -3.2; % -2.8
 expt.nChannels = length(expt.channelMapping);
+
+if isfield(expt, 'visualBell')
+  state.visualBell = expt.visualBell;
+end
 
 %% load and set defaults for grid structure
 %% which contains specifications for the current grid
