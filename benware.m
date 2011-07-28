@@ -40,15 +40,9 @@ load expt.mat;
 
 % set defaults
 if ispc
-  expt.exptDir = [expt.dataRoot expt.exptDir];
-  expt.dataDir = [expt.exptDir expt.dataDir];
-  expt.dataFilename = 'raw.f32\%P.%N.sweep.%S.channel.%C.f32';
-  expt.sweepFilename = 'sweep.mat\%P.%N.sweep.%S.mat';
+  expt.dataDir = fixpath([expt.dataRoot expt.exptSubDir expt.dataSubDir]);
 else
-  expt.exptDir = 'expt%E/';
-  expt.dataDir = [expt.exptDir '%P-%N/'];
-  expt.dataFilename = 'raw.f32/%P.%N.sweep.%S.channel.%C.f32';
-  expt.sweepFilename = 'sweep.mat/%P.%N.sweep.%S.mat';
+  expt.dataDir = fixpath(['./' expt.exptSubDir expt.dataSubDir]);
   global fakeHardware %#ok<TLEV>
   fakeHardware = true;
 end
