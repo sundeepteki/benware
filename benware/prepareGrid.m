@@ -12,6 +12,10 @@ end
 grid.saveName = '';
 grid.nStimConditions = size(grid.stimGrid, 1);
 
+if isfield(grid, 'initFunction')
+  grid = feval(grid.initFunction, grid, expt);
+end
+
 if ~isfield(grid, 'saveWaveforms')
   grid.saveWaveforms = true;
 end
