@@ -18,4 +18,4 @@ function grid = grid_rss
   grid.repeatsPerCondition = 20;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -65;
+  grid.stimLevelOffsetDB = [-65 -65];

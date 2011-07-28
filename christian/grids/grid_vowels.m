@@ -18,4 +18,4 @@ function grid = grid_vowels
   grid.repeatsPerCondition = 20;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -70;
+  grid.stimLevelOffsetDB = [-70 -70];

@@ -19,4 +19,4 @@ function grid = grid_noise
   grid.saveWaveforms = true;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -128;
+  grid.stimLevelOffsetDB = [-128 -128];
