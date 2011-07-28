@@ -8,8 +8,6 @@ function [stim, stimInfo] = loadStereo(sweepNum, grid, expt)
 % 
 % sweepNum, grid, expt: standard benWare variables
 
-global truncate
-
 fprintf(['  * Loading stimulus ' num2str(sweepNum) '...']);
 
 % generate stimInfo structure
@@ -22,11 +20,5 @@ stimInfo.stimFileR = constructStimPath(grid, expt, sweepNum, 'R');
 % load the stimulus
 stim = loadStim(stimInfo.stimFileL, stimInfo.stimFileR, ...
 		grid.stimLevelOffsetDB + stimInfo.stimParameters(end));
-
-% hack to present 1 second stimulus instead of 30
-if truncate > 0
-    fprintf(' ==Truncating stimulus== ');
-    stim = stim(:, 1:round(truncate*grid.sampleRate)); 
-end
 
 fprintf(['done after ' num2str(toc) ' sec.\n']);
