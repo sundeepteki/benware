@@ -30,9 +30,14 @@ if isfinite(grid.repeatsPerCondition)
 else
   repeatsPerCondition = 10000;
 end
-repeatedGrid = repmat(grid.stimGrid, [repeatsPerCondition, 1]);
-grid.nSweepsDesired = size(repeatedGrid, 1);
-grid.randomisedGrid = repeatedGrid(randperm(grid.nSweepsDesired), :);
+
+idx = [];
+for ii = 1:repeatsPerCondition
+  idx = [idx randperm(size(grid.stimGrid, 1))];
+end
+grid.randomisedGrid = grid.stimGrid(idx, :);
+grid.nSweepsDesired = size(grid.randomisedGrid, 1);
+
 [junk grid.randomisedGridSetIdx] = ...
   ismember(grid.randomisedGrid, grid.stimGrid, 'rows');
 
