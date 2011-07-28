@@ -4,7 +4,11 @@ function setPath
 % set path for benWare
 
 if ispc
-  addpath(genpath('E:\auditory-objects\NeilLib'));
+  if exist('..\NeilLib', dir)
+    addpath(genpath('..\NeilLib'));
+  elseif exist('.\NeilLib', dir)
+    addpath(genpath('.\NeilLib'));
+  end
   addpath(genpath(pwd));
 else
   addpath([pwd '/../NeilLib/']);

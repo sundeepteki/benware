@@ -13,15 +13,26 @@
 
 * allow user to choose visual alert instead of bugle and turn both off
 
+* Numerous WriteTag errors on WaveformL. Why do we get this error? esp quning
+
+* RX6 playing old stimuli?!
+
 
 == TODO... later 
+
+* block randomise stimuli
+
+* multiplex grids (slow if stimuli are very different lengths)
+
+* default plot modes for different grids
+
+* progress bar
 
 * Sort out business where verifyExpt/Grid/etc assume loadStereo is being used 
 
 * Make it possible to HEAR unfiltered waveforms (don't switch between filtered
   and unfiltered when the user changes the display, probably)
 
-* Numerous WriteTag errors on WaveformL. Why do we get this error?
 
 * Pause/hang when reconnecting with activeX objects after ctrl-c. Why?
 
