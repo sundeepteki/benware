@@ -15,7 +15,11 @@ stimIdx = stimInfo.stimParameters(1);
 stimLevel = stimInfo.stimParameters(end);
 
 % load the stimulus
-stim = [grid.stim_set.stimuli(stimIdx).calib; grid.stim_set.stimuli(stimIdx).calib];
+stim = grid.stim_set.stimuli(stimIdx).calib;
+if size(stim,2)==1
+  stim = stim';
+end
+stim = [stim; stim];
 stim = stim*10^((stimLevel+grid.stimLevelOffsetDB)/20);
 
 fprintf(['done after ' num2str(toc) ' sec.\n']);
