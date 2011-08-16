@@ -2,8 +2,8 @@ function setUser(name)
 
 name = lower(name);
 
-exptFilename = [fixpath('./') 'expt.mat'];
-newPath = fixpath(['./userinfo/' name '/']);
+exptFilename = [fix_slashes('./') 'expt.mat'];
+newPath = fix_slashes(['./userinfo/' name '/']);
 if ~exist(newPath, 'dir')
   error(['No user info found in ' newPath]);
 end
@@ -18,27 +18,27 @@ if exist(exptFilename, 'file')
     error(['expt.userName is already ' name]);
   end
   
-  stashPath = fixpath(['./userinfo/' oldName '/']);
-  backupPath = fixpath(['./userinfo/' oldName '.old/']);
+  stashPath = fix_slashes(['./userinfo/' oldName '/']);
+  backupPath = fix_slashes(['./userinfo/' oldName '.old/']);
 
   if exist([stashPath 'expt.mat'], 'file') | exist([stashPath 'grids'], 'dir')
     if exist(backupPath, 'dir')
       delete(backupPath);
     end
-    fprintf(['Moving ' stashPath ' to ' backupPath '\n']);
+    fprintf(['Moving ' escapepath(stashPath) ' to ' escapepath(backupPath) '\n']);
     movefile(stashPath, backupPath);
   end
   
-  fprintf(['Moving expt.mat and grids to ' stashPath '\n']);
+  fprintf(['Moving expt.mat and grids to ' escapepath(stashPath) '\n']);
   mkdir_nowarning(stashPath);
   movefile(exptFilename, stashPath);
-  gridsPath = [fixpath('./') 'grids'];
+  gridsPath = [fix_slashes('./') 'grids'];
   if exist(gridsPath, 'dir')
     movefile(gridsPath, stashPath);
   end
 
 end
 
-fprintf(['Fetching expt.mat and grids from ' newPath '\n']);
+fprintf(['Fetching expt.mat and grids from ' escapepath(newPath) '\n']);
 movefile([newPath 'expt.mat'], '.');
 movefile([newPath 'grids'], '.');
