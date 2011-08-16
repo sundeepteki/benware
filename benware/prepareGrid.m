@@ -16,6 +16,11 @@ if isfield(grid, 'initFunction')
   grid = feval(grid.initFunction, grid, expt);
 end
 
+if ~isfield(grid, 'monoStim')
+  grid.monoStim = false;
+end
+
+
 if ~isfield(grid, 'saveWaveforms')
   grid.saveWaveforms = true;
 end

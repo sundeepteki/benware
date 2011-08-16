@@ -27,7 +27,8 @@ if ~isfield(tdt,'stimDevice')
   tdt.stimDevice = [];
 end
 [tdt.stimDevice, tdt.stimSampleRate] = ...
-  stimDeviceInit(tdt.stimDevice, expt.stimDeviceName, grid.sampleRate);
+  stimDeviceInit(tdt.stimDevice, expt.stimDeviceName, grid.sampleRate,  ...
+                  grid.monoStim);
 
 if ~isfield(tdt,'dataDevice')
   tdt.dataDevice = [];

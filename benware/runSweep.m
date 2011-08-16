@@ -17,12 +17,13 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
   end
 
   % check that the correct stimulus is in the stimDevice buffer
+  nStimChans = size(stim, 1);
   stimLen = size(stim, 2);
   rnd = floor(100+rand*(stimLen-300));
   
-  checkData = [downloadStim(tdt.stimDevice, 0, 100) ...
-    downloadStim(tdt.stimDevice, rnd, 100) ...
-    downloadStim(tdt.stimDevice, stimLen-100, 100)];
+  checkData = [downloadStim(tdt.stimDevice, 0, 100, nStimChans) ...
+      downloadStim(tdt.stimDevice, rnd, 100, nStimChans) ...
+      downloadStim(tdt.stimDevice, stimLen-100, 100, nStimChans)];
   
   d = max(max(abs(checkData - [stim(:, 1:100) stim(:, rnd+1:rnd+100) stim(:, end-99:end)])));
 
@@ -37,7 +38,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
   end
 
   % record length of next stimulus for uploading
-  nextStimLen = size(nextStim,2);
+  nextStimLen = size(nextStim, 2);
 
   % reset stimulus device so it reads out from the beginning of the buffer
   % when triggered
@@ -207,7 +208,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
   if checkdata
     
     fprintf('  * Checking stim...');
-    teststim = downloadStim(tdt.stimDevice, 0, samplesUploaded);
+    teststim = downloadStim(tdt.stimDevice, 0, samplesUploaded, nStimChans);
     d = max(max(abs(nextStim-teststim)));
     if d>10e-7
       errorBeep('Stimulus mismatch!');

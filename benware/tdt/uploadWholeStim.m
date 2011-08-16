@@ -12,6 +12,10 @@ if ~stimDevice.WriteTagV('WaveformL',0,stim(1,:))
     errorBeep('WriteTagV WaveformL failed');
 end
 
+if size(stim, 1)==1
+  return
+end
+
 if ~stimDevice.WriteTagV('WaveformR',0,stim(2,:))
     errorBeep('WriteTagV WaveformR failed');
 end
