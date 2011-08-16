@@ -6,6 +6,7 @@ function grid = grid_noise
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'makeNoiseBurst';
   grid.sampleRate = 24414.0625*2;  % ~50kHz
+  grid.monoStim = True;
 
   % stimulus grid structure
   grid.stimGridTitles = {'Duration', 'Level'};
