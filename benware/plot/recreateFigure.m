@@ -7,6 +7,7 @@ end
 % move children (subplots) to another figure
 children = get(figNum, 'children');
 figure(110876);
+set(110876, 'visible', 'off');
 for child = children
   set(child, 'parent', 110876);
 end
