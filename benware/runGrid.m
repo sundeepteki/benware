@@ -143,9 +143,12 @@ for sweepNum = firstSweep:grid.nSweepsDesired
       state.userQuit = false;
     end
   end
+  
+  visualBellOff;
 end
 
 diary off
+visualBellOff;
 
 if ~state.userQuit
   [snd, fs] = wavread(['sounds/bugle-' num2str(randi(3),'%02d') '.wav']);
