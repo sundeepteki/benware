@@ -14,7 +14,7 @@ end
 
 % store various properties of the figure
 properties = {'color', 'renderer', 'KeyPressFcn', 'name', 'numbertitle', ...
-              'toolbar', 'menubar', 'position'};
+              'toolbar', 'menubar', 'position', 'visible'};
 values = [];
 for ii = 1:length(properties)
   values{ii} = get(figNum, properties{ii});
