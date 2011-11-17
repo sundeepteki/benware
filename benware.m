@@ -64,6 +64,11 @@ if isfield(expt, 'visualBell')
   state.visualBell = expt.visualBell;
 end
 
+if isfield(expt, 'bugle')
+  state.bugle = expt.bugle;
+end
+
+
 %% load and set defaults for grid structure
 %% which contains specifications for the current grid
 
