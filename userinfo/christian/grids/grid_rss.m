@@ -8,6 +8,7 @@ function grid = grid_rss
   grid.stimGenerationFunctionName = 'getStimFromSet';
   grid.setFile = 'E:\Christian\Surgery\Stimuli\Sets\Calibrated\RSS_Anesthetized3_FRS8.mat';
   grid.sampleRate = 24414.0625*4;  % ~50kHz
+  grid.monoStim = True;
 
   % stimulus grid structure
   grid.stimGridTitles = {'StimID', 'Level'};
@@ -18,4 +19,4 @@ function grid = grid_rss
   grid.repeatsPerCondition = 20;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [-65 -65];
+  grid.stimLevelOffsetDB = -65;

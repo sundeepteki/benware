@@ -26,6 +26,10 @@ if ~success
   errorBeep('Giving up after 3 attempts!');
 end
 
+if size(stim,1)==1
+  return
+end
+
 nRetries = 0;
 success = false;
 

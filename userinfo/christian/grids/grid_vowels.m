@@ -8,6 +8,7 @@ function grid = grid_vowels
   grid.stimGenerationFunctionName = 'getStimFromSet';
   grid.setFile = 'E:\Christian\Surgery\Stimuli\Sets\Calibrated\Vowels_Anesthetized3_FRS8.mat';
   grid.sampleRate = 24414.0625*4;  % ~50kHz
+  grid.monoStim = True;
 
   % stimulus grid structure
   grid.stimGridTitles = {'StimID', 'Level'};
@@ -18,4 +19,4 @@ function grid = grid_vowels
   grid.repeatsPerCondition = 20;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [-70 -70];
+  grid.stimLevelOffsetDB = -70;

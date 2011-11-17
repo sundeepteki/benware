@@ -6,6 +6,7 @@ function grid = grid_noise_calib
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'makeNoiseBurst';
   grid.sampleRate = 24414.0625*2;  % ~50kHz
+  grid.monoStim = True;
 
   % stimulus grid structure
   grid.stimGridTitles = {'Duration', 'Level'};
@@ -19,4 +20,4 @@ function grid = grid_noise_calib
   grid.saveWaveforms = true;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [-128 -128];
+  grid.stimLevelOffsetDB = -128;

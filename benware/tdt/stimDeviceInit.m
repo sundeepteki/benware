@@ -1,5 +1,5 @@
 function [device, sampleRate] = ...
-  stimDeviceInit(device, deviceName, requestedSampleRate)
+  stimDeviceInit(device, deviceName, requestedSampleRate, mono)
 % [device, sampleRate] = ...
 %   stimDeviceInit(device, deviceName, requestedSampleRate)
 % 
@@ -28,8 +28,13 @@ else
   if deviceIsFake(device)
     device = [];
   end
-
-  [device, sampleRate] = deviceInit(device, deviceName, ...
-    'benware/tdt/stereoplay.rcx', 'StereoPlayVer', 3, requestedSampleRate);
-
+  
+  if mono
+    [device, sampleRate] = deviceInit(device, deviceName, ...
+      'benware/tdt/stereoplay.rcx', 'StereoPlayVer', 3, requestedSampleRate);
+  else
+    [device, sampleRate] = deviceInit(device, deviceName, ...
+      'benware/tdt/monoplay.rcx', 'MonoPlayVer', 3, requestedSampleRate);
+  end
+  
 end

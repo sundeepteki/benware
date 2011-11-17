@@ -106,6 +106,12 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   
   fprintf(['  * Finished sweep after ' num2str(toc) ' sec.\n\n']);
   
+  % recreate main figure
+  if rem(sweepNum, 100)==0
+    recreateFigure(101);
+    recreateFigure(103);
+  end
+  
   % pause if requested (through key press in main window)
   if state.shouldPause
     state.paused = true;
@@ -137,9 +143,12 @@ for sweepNum = firstSweep:grid.nSweepsDesired
       state.userQuit = false;
     end
   end
+  
+  visualBellOff;
 end
 
 diary off
+visualBellOff;
 
 if ~state.userQuit
   [snd, fs] = wavread(['sounds/bugle-' num2str(randi(3),'%02d') '.wav']);
