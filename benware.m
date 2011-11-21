@@ -39,7 +39,7 @@ clear expt grid;
 load expt.mat;
 
 % set defaults
-TEST = true;
+TEST = false;
 if TEST
     dataRoot = '\';
     global fakeHardware
@@ -47,6 +47,7 @@ if TEST
 end
 
 if ispc
+  dataRoot = expt.dataRoot;
   expt.exptDir = fixpath([dataRoot expt.exptSubDir]);
   expt.dataDir = fixpath([dataRoot expt.exptSubDir expt.dataSubDir]);
 else
