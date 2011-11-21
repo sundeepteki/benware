@@ -33,6 +33,7 @@ if exist(exptFilename, 'file')
   mkdir_nowarning(stashPath);
   movefile(exptFilename, stashPath);
   gridsPath = [fix_slashes('./') 'grids'];
+
   if exist(gridsPath, 'dir')
     movefile(gridsPath, stashPath);
   end
