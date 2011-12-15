@@ -107,10 +107,10 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   fprintf(['  * Finished sweep after ' num2str(toc) ' sec.\n\n']);
   
   % recreate main figure
-  if rem(sweepNum, 100)==0
-    recreateFigure(101);
-    recreateFigure(103);
-  end
+%  if rem(sweepNum, 100)==0
+%   recreateFigure(101);
+%  recreateFigure(103);
+% end
   
   % pause if requested (through key press in main window)
   if state.shouldPause

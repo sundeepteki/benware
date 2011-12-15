@@ -9,8 +9,11 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
   global state;
 
   % reset data device and tell it how long the sweep will be
-  resetDataDevice(tdt.dataDevice, sweepLen*1000);
-
+  try
+    resetDataDevice(tdt.dataDevice, sweepLen*1000);
+  catch
+    keyboard
+  end
   % check for stale data in data device buffer
   if any(countAllData(tdt.dataDevice, nChannels) ~= 0)
     errorBeep('Stale data in data buffer');
@@ -90,7 +93,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
   % * plot incoming data
 
   % loop until we've received all data
-  while any(nSamplesReceived~=nSamplesExpected)
+  while any(nSamplesReceived<nSamplesExpected)
     
     % upload stimulus
     if ~isempty(nextStim)
@@ -198,8 +201,12 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
   fprintf(['  * Got ' num2str(nSamples) ' samples (expecting ' num2str(nSamplesExpected) ') from ' num2str(nChannels) ' channels (' num2str(nSamples/tdt.dataSampleRate) ' sec).\n']);
 
   % 2. check that we got the expected number of samples
-  if (nSamples~=nSamplesExpected)
+  if (nSamples<nSamplesExpected)
     errorBeep('Wrong number of samples');
+  else
+    fprintf('  * Got %d extra samples; truncating\n', nSamples-nSamplesExpected);
+    nSamples = nSamplesExpected;
+    data = data(:, 1:nSamples);
   end
 
   % optional: check data thoroughly (too slow to be used normally)

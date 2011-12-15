@@ -16,7 +16,5 @@ t = 0:1/grid.sampleRate:duration/1000;
 stim = sin(2*pi*freq*t);
 
 % convolve with compensation filter
-cal = load('E:\Christian\Thesis\Chapter 2\Experiments\Anesthetized\Animals\R1711\Sets\Calibrated\DRCs_Anesthetized3_FRS8.mat');
-compensationFilter = cal.stim_set.stimuli(1).FIRCoeff;
-stim = conv(stim, compensationFilter);
+stim = conv(stim, grid.compensationFilter);
 stim = stim*10^((grid.stimLevelOffsetDB + level)/20);

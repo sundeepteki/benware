@@ -15,7 +15,8 @@ stimIdx = stimInfo.stimParameters(1);
 stimLevel = stimInfo.stimParameters(end);
 
 % load the stimulus
-stim = grid.stim_set.stimuli(stimIdx).calib;
+stim = grid.stim_set.stimuli(stimIdx).abscalib ;
+
 if size(stim,2)==1
   stim = stim';
 end
