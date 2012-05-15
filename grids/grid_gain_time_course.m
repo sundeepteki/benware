@@ -11,7 +11,7 @@ function grid = grid_gain_time_course()
   
   % stimulus grid structure
   grid.stimGridTitles = {'Chord_Fs', 'Token', 'Level'};
-
+  
   grid.stimGrid = [...
       10,0,70;
       10,1,70;
@@ -21,9 +21,8 @@ function grid = grid_gain_time_course()
       20,1,70;
       40,0,70;
       80,0,70;
-      160,0,70];
-  
-  %	  0,490,53]; csdprobe stimulus -- needs to be created
+      160,0,70;
+  	  0,490,53]; % csdprobe stimulus 
 
   % sweep parameters
   grid.postStimSilence = 0;
