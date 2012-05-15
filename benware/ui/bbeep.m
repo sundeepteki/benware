@@ -12,7 +12,11 @@ if isfield(state, 'visualBell') && state.visualBell
   %set(a, 'position', [0 0 1 1], 'color', [1 0 0], 'xtick', [], 'ytick', []);
   %makeFigFullscreen;
   %set(gcf, 'position', get(gcf, 'position') + [8 46 -16 -54]);
-  set(101, 'color', [1 0 0]);
+  try
+      set(101, 'color', [1 0 0]);
+  catch
+      fprintf('error\n');
+  end
 else
 
  fs= 44100;

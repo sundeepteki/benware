@@ -31,10 +31,26 @@ else
   
   if mono
     [device, sampleRate] = deviceInit(device, deviceName, ...
-      'benware/tdt/stereoplay.rcx', 'StereoPlayVer', 3, requestedSampleRate);
+      'benware/tdt/monoplay.rcx', 'MonoPlayVer', 3, requestedSampleRate);
   else
     [device, sampleRate] = deviceInit(device, deviceName, ...
-      'benware/tdt/monoplay.rcx', 'MonoPlayVer', 3, requestedSampleRate);
+      'benware/tdt/stereoplay.rcx', 'StereoPlayVer', 4, requestedSampleRate);
   end
+  
+  if strcmp(deviceName, 'RX8')
+      channel.L = 20;
+      channel.R = 18;
+      
+  elseif strcmp(deviceName, 'RX6')
+      fprintf('untested -- check left/right channel assignments\n'); 
+      channel.L = 1;
+      channel.R = 2;
+      
+  else
+      errorBeep('I don''t know the output channel numbers for this device\n');
+  end
+  
+  device.SetTagVal('LeftChannel', channel.L)
+  device.SetTagVal('RightChannel', channel.R)
   
 end
