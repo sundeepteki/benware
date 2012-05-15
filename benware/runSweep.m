@@ -31,6 +31,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
   d = max(max(abs(checkData - [stim(:, 1:100) stim(:, rnd+1:rnd+100) stim(:, end-99:end)])));
 
   if d>10e-7
+    fprintf('Stimulus on stimDevice is not correct!\n');
     keyboard;
     errorBeep('Stimulus on stimDevice is not correct!');
   end
