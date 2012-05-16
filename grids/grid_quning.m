@@ -27,6 +27,6 @@ function grid = grid_quning()
   grid.repeatsPerCondition = 10;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [-100, -95];
+  grid.stimLevelOffsetDB = [-80, -80];
   
   
