@@ -9,7 +9,7 @@ function grid = grid_bilateral_noise
 
   % stimulus grid structure
   grid.stimGridTitles = {'Duration', 'LeftDelay', 'RightDelay', 'BothDelay', 'Level'};
-  grid.stimGrid = [50 0 100 200 80];
+  grid.stimGrid = [50 0 100 200 90];
   
   % sweep parameters
   grid.postStimSilence = 0.2; %seconds
