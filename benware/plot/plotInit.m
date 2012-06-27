@@ -23,8 +23,8 @@ plotData.sampleTimes = plotData.samplesToPlot/fs_in;
 plotData.lineHandles = zeros(1,plotData.nChannels)-1;
 
 % positions
-n.rows = 8;
 n.cols = 4;
+n.rows = ceil(nChannels/n.cols);
 
 w = struct;
 w.L = 0.025;
@@ -87,6 +87,20 @@ else
   minY = -1+1e-4;
 end
 
+timeSec = nSamplesExpected/fs_in;
+xticks = tickLocations(timeSec);
+
+xticknums = xticks;
+
+if max(timeSec)<1
+    xticknums = xticknums*1000;
+end
+
+xticklabels = cell(size(xticknums));
+for ii = 1:length(xticknums)
+    xticklabels{ii} = sprintf('%0.0f', xticknums(ii));
+end
+
 for chan = 1:plotData.nChannels
     ax =  axes('position', pos{chan}, 'xtick', [], 'ytick', [], ...
         'xlim', [1 nSamplesExpected]/fs_in, 'ylim', [-1 1], ...
@@ -95,15 +109,43 @@ for chan = 1:plotData.nChannels
     
     plotData.subplot(chan) = ax;
     
+    % grid lines for all plots
+    for ticknum = 2:length(xticks)
+        plotData.xgrid(chan).line(ticknum) = line([xticks(ticknum) xticks(ticknum)], [-1 1], ...
+            'parent', plotData.subplot(chan),'hittest','off', 'visible', 'on', 'color', [.75 .75 .75]);
+    end
+
+    % waveform plots
     plotData.waveform(chan).axis.x = line([1 nSamplesExpected]/fs_in, [0 0], ...
         'color', [0 0 0], 'parent', plotData.subplot(chan),'hittest','off');
     plotData.waveform(chan).axis.y = line([minX minX], [-1 1], ...
         'color', [0 0 0],'parent',plotData.subplot(chan),'hittest','off');
     plotData.waveform(chan).line = line(0, 0, 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
     plotData.waveform(chan).dots = line(0, 0, 'marker', '.', 'linestyle', 'none', 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
-    plotData.waveform(chan).handles = [plotData.waveform(chan).axis.x plotData.waveform(chan).axis.y plotData.waveform(chan).line plotData.waveform(chan).dots];
+
+    % axis labels for waveforms
+    if chan==plotData.nChannels
+        plotData.ylabels.waveform.handles(1) = text(0, -1, sprintf('%0.2f', -1/state.dataGainRaw*1000), ...
+                'parent', plotData.subplot(chan), 'hittest', 'off', 'visible', 'on', ...
+                'horizontalalignment', 'right', 'verticalalignment', 'middle');
+        plotData.ylabels.waveform.handles(2) = text(0, 1, sprintf('%0.2f', 1/state.dataGainRaw*1000), ...
+                'parent', plotData.subplot(chan), 'hittest', 'off', 'visible', 'on', ...
+                'horizontalalignment', 'right', 'verticalalignment', 'middle');
+        plotData.ylabels.waveform.handles(3) = text(0, 0.5, 'x10^{-3}', ...
+                'parent', plotData.subplot(chan), 'hittest', 'off', 'visible', 'on', ...
+                'horizontalalignment', 'right', 'verticalalignment', 'middle');
+        state.plot.currentGain = state.dataGainRaw;
+    else
+        plotData.ylabels.waveform.handles = [];
+    end
+
+    plotData.waveform(chan).handles = [plotData.waveform(chan).axis.x plotData.waveform(chan).axis.y ...
+                            plotData.waveform(chan).line plotData.waveform(chan).dots ...
+                            plotData.ylabels.waveform.handles];
     plotData.waveform(chan).dataHandles = [plotData.waveform(chan).line plotData.waveform(chan).dots];
-    
+
+
+    % raster plots
     plotData.raster(chan).axis.x = line([1 nSamplesExpected]/fs_in, [minY minY], ...
         'color', [0 0 0], 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
     plotData.raster(chan).axis.y = line([minX minX], [-1 1], ...
@@ -115,6 +157,7 @@ for chan = 1:plotData.nChannels
         plotData.raster(chan).currentSweep plotData.raster(chan).oldSweeps];
     plotData.raster(chan).dataHandles = [plotData.raster(chan).currentSweep plotData.raster(chan).oldSweeps];
 
+    % psthes
     plotData.psth(chan).data = zeros(size(plotData.psthCentres));
     psthY = reshape(repmat(plotData.psth(chan).data,2,1),1,2*length(plotData.psth(chan).data));
     plotData.psth(chan).axis.x = line([1 nSamplesExpected]/fs_in, [minY minY], ...
@@ -122,9 +165,28 @@ for chan = 1:plotData.nChannels
     plotData.psth(chan).axis.y = line([minX minX], [-1 1], ...
         'color', [0 0 0],'parent',plotData.subplot(chan),'hittest','off', 'visible', 'off');
     plotData.psth(chan).line = line(plotData.psthX, psthY, 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
-    plotData.psth(chan).handles = [plotData.psth(chan).axis.x plotData.psth(chan).axis.y plotData.psth(chan).line];
-    plotData.psth(chan).dataHandles = [plotData.psth(chan).line];
     
+    % axis labels for psthes
+    plotData.psth(chan).labelHandles(1) = text(0, -1, '0', ...
+            'parent', plotData.subplot(chan), 'hittest', 'off', 'visible', 'off', ...
+            'horizontalalignment', 'right', 'verticalalignment', 'middle');
+    plotData.psth(chan).labelHandles(2) = text(0, 1, '0', ...
+            'parent', plotData.subplot(chan), 'hittest', 'off', 'visible', 'off', ...
+            'horizontalalignment', 'right', 'verticalalignment', 'middle');
+
+    plotData.psth(chan).handles = [plotData.psth(chan).axis.x plotData.psth(chan).axis.y plotData.psth(chan).line ...
+                                plotData.psth(chan).labelHandles];
+    plotData.psth(chan).dataHandles = [plotData.psth(chan).line];
+
+    % time axis for all plot types
+    if chan==plotData.nChannels
+        for ticknum = 1:length(xticks)
+            plotData.xlabels(chan).xlabels(ticknum) = text(xticks(ticknum), -1.1, xticklabels(ticknum), ...
+                'parent', plotData.subplot(chan), 'hittest', 'off', 'visible', 'on', ...
+                'horizontalalignment', 'center', 'verticalalignment', 'top');
+        end
+    end
+
     plotData.activeHandles{chan} = plotData.waveform(chan).handles;
 end
 

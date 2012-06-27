@@ -45,11 +45,12 @@ for chan = 1:plotData.nChannels
     end
 
     % scaling / axis label should change even when newSpikes is empty
-    scaled = plotData.psth(chan).data/max(plotData.psth(chan).data)*2-1;
+    mx = max(plotData.psth(chan).data);
+    scaled = plotData.psth(chan).data/mx*2-1;
     psthY = reshape(repmat(scaled,2,1),1,2*length(scaled));
 
     set(plotData.psth(chan).line,'ydata',psthY, 'color', col);
-
+    set(plotData.psth(chan).labelHandles(2), 'string', sprintf('%d', mx));
   end
   
 end

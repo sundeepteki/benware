@@ -93,6 +93,12 @@ for chan = plotChans
       end
       set(plotData.waveform(chan).dots, 'XData', t_s, 'YData', ones(size(t_s)), 'markeredgecolor', col);
       
+      if state.plot.currentGain~=gain
+        set(plotData.ylabels.waveform.handles(1), 'string', sprintf('%0.2f', -1/gain*1000));
+        set(plotData.ylabels.waveform.handles(2), 'string', sprintf('%0.2f', 1/gain*1000));
+        state.plot.currentGain = gain;
+      end
+
     case 'r'
       t_s = spikeTimes{chan}'/1000;
       maxSpikes = 500*ii(chan)/plotData.nSamplesExpected; %max(100, 25*plotData.nSamplesExpected/plotData.fs_in);
