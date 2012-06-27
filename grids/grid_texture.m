@@ -1,7 +1,7 @@
 function grid = grid_texture()
 
   % controlling the sound presentation
-  grid.stimGenerationFunctionName = 'loadWavAndCompensate';
+  grid.stimGenerationFunctionName = 'loadStimAndCompensate';
   grid.stimDir = '/Users/ben/scratch/texture/texture.v1/';
   grid.sampleRate = 24414.0625*2;  % ~50kHz
 
@@ -21,7 +21,7 @@ function grid = grid_texture()
 
   % sweep parameters
   grid.postStimSilence = 0;
-  grid.repeatsPerCondition = 20;
+  grid.repeatsPerCondition = 25;
   
   % set this using absolute calibration
   grid.stimLevelOffsetDB = [-82, -82];
