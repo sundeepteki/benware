@@ -54,6 +54,9 @@ if state.plot.typeShouldChange
       case 'p'
         plotData.activeHandles{chan} = plotData.psth(chan).handles;
         plotData.dataHandles{chan} = plotData.psth(chan).dataHandles;
+      case 'l'
+        plotData.activeHandles{chan} = plotData.lfp(chan).handles;
+        plotData.dataHandles{chan} = plotData.lfp(chan).dataHandles;
     end
     makeVisible(plotData.activeHandles{chan});
   end
@@ -109,7 +112,14 @@ for chan = plotChans
       set(plotData.raster(chan).oldSweeps, 'markeredgecolor', col);
       
     case 'p'
+      % nothing to do (plot is updated in plotReset)
+      % Just set color appropriately
       set(plotData.psth(chan).line, 'color', col);
+
+    case 'l'
+      % nothing to do (plot is updated in plotReset)
+      % Just set color appropriately
+      set(plotData.lfp(chan).line, 'color', col);
 
   end
   

@@ -24,6 +24,7 @@ for chan = 1:plotData.nChannels
       col = [0 0 1];
     end
     
+    % update raster
     set(plotData.raster(chan).currentSweep, 'XData', [], 'YData', []);
     
     oldSpikeX = get(plotData.raster(chan).oldSweeps,'XData');
@@ -39,6 +40,7 @@ for chan = 1:plotData.nChannels
     oldSpikeY = [ones(size(newSpikes)) oldSpikeY(keep)]-0.05;
     set(plotData.raster(chan).oldSweeps, 'XData', oldSpikeX, 'YData', oldSpikeY);
     
+    % update PSTH
     if ~isempty(newSpikes)
       h = histc(newSpikes, plotData.psthEdges);
       plotData.psth(chan).data = plotData.psth(chan).data + h(1:end-1);
@@ -51,6 +53,7 @@ for chan = 1:plotData.nChannels
 
     set(plotData.psth(chan).line,'ydata',psthY, 'color', col);
     set(plotData.psth(chan).labelHandles(2), 'string', sprintf('%d', mx));
+
   end
   
 end

@@ -177,6 +177,8 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
   fprintf(['  * ' num2str(sum(cellfun(@(i) length(i),spikeTimes))) ' spikes detected after ' num2str(toc) ' sec.\n']);
 
   % final plot
+  plotData.nSweeps = plotData.nSweeps + 1;
+  plotData = plotUpdateLFP(plotData, filteredData);
   plotData = plotUpdate(plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
   plotData.lastSweepSpikes = spikeTimes;
 
