@@ -24,4 +24,4 @@ function grid = grid_po_83dB()
   grid.repeatsPerCondition = 1;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [-128 -129.5];
+  grid.stimLevelOffsetDB = [-123 -122.5];

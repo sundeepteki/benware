@@ -1,44 +1,56 @@
-function grid = grid_SH_En_C()
-  % mega-grid for Sparseness / Environmental / CRF04
+function grid = grid_sh_en_c
 
-  % controlling the sound presentation
-  grid.stimGenerationFunctionName = 'loadStereo';
-  grid.stimDir = 'E:\auditory-objects\sounds.calib.expt%E\%N\';
-  grid.sampleRate = 24414.0625*2;  % ~50kHz
+% essentials
+grid.name = 'SH.En.C';
+grid.stimGenerationFunctionName = 'loadStereo';
+grid.stimDir = 'e:\auditory-objects\sounds.calib.expt%E\%N\';
+grid.stimFilename = 'source.%1.sound.%2.snr.%3.token.%4.fw.%5.frozen.%6.%L.f32';
+grid.sampleRate = 24414.0625*2;  % ~50kHz
 
-  % essentials
-  grid.name = 'SH.En.C';
-  grid.stimFilename = 'source.%1.mode.%2.BF.%3.token.%4.set.%5.stimnum.%6.%L.f32';
-  
-  % stimulus grid structure
-  grid.stimGridTitles = {'Source', 'Mode', 'BF', 'Token', 'Set', 'StimID', 'NominalLevel', 'Level'};
+% stimulus grid structure
+grid.stimGridTitles = {'Source', 'Mode', 'BF', 'Token', 'Set', 'StimID', 'NominalLevel', 'Level'};
 
-  grid.stimGrid = [...
-    createPermutationGrid(0, 5, 0, 0:9, 0, 0,    80, (-92 + 80)); ... % CRF04
-    createPermutationGrid(1, 0, 0, 0,   2, 1:12, 80, (-129 + 80)); ... % Sparseness Repeat 1
-    createPermutationGrid(1, 0, 0, 0,   2, 1:12, 80, (-129 + 80)); ... % Sparseness Repeat 2
-    createPermutationGrid(1, 0, 0, 0,   2, 1:12, 80, (-129 + 80)); ... % Sparseness Repeat 1
-    2, 0, 0, 0, 1, 1, 82, -48; ... % Environmental Repeat 1
-    2, 0, 0, 0, 1, 2, 80, -50; ...
-    2, 0, 0, 0, 1, 3, 80, -50; ...
-    2, 0, 0, 0, 1, 4, 80, -50; ...
-    2, 0, 0, 0, 1, 5, 80, -50; ...
-    2, 0, 0, 0, 1, 6, 80, -50; ...
-    2, 0, 0, 0, 1, 7, 75, -55; ...
-    2, 0, 0, 0, 1, 8, 80, -50; ...
-    2, 0, 0, 0, 1, 1, 82, -48; ... % Environmental Repeat 1
-    2, 0, 0, 0, 1, 2, 80, -50; ...
-    2, 0, 0, 0, 1, 3, 80, -50; ...
-    2, 0, 0, 0, 1, 4, 80, -50; ...
-    2, 0, 0, 0, 1, 5, 80, -50; ...
-    2, 0, 0, 0, 1, 6, 80, -50; ...
-    2, 0, 0, 0, 1, 7, 75, -55; ...
-    2, 0, 0, 0, 1, 8, 80, -50];
-  
-  % sweep parameters
-  grid.postStimSilence = 0.2;
-  grid.repeatsPerCondition = 10;
-  
-  % set this using absolute calibration
-  grid.stimLevelOffsetDB = [-5, 0];
-  
+grid.stimGrid = [...
+    createPermutationGrid(1, 0, 0, 0, 2, 1:12, 80, -49); % sparseness sounds, 4 times
+    createPermutationGrid(1, 0, 0, 0, 2, 1:12, 80, -49);
+    createPermutationGrid(1, 0, 0, 0, 2, 1:12, 80, -49);
+    createPermutationGrid(1, 0, 0, 0, 2, 1:12, 80, -49);
+    2   0   0   0   1   1  82 -48; % environmental sounds, 4 times
+    2   0   0   0   1   2  80 -50;
+    2   0   0   0   1   3  80 -50;
+    2   0   0   0   1   4  80 -50;
+    2   0   0   0   1   5  80 -50;
+    2   0   0   0   1   6  80 -50;
+    2   0   0   0   1   7  75 -55;
+    2   0   0   0   1   8  80 -50;
+    2   0   0   0   1   1  82 -48;
+    2   0   0   0   1   2  80 -50;
+    2   0   0   0   1   3  80 -50;
+    2   0   0   0   1   4  80 -50;
+    2   0   0   0   1   5  80 -50;
+    2   0   0   0   1   6  80 -50;
+    2   0   0   0   1   7  75 -55;
+    2   0   0   0   1   8  80 -50;
+    2   0   0   0   1   1  82 -48;
+    2   0   0   0   1   2  80 -50;
+    2   0   0   0   1   3  80 -50;
+    2   0   0   0   1   4  80 -50;
+    2   0   0   0   1   5  80 -50;
+    2   0   0   0   1   6  80 -50;
+    2   0   0   0   1   7  75 -55;
+    2   0   0   0   1   8  80 -50;
+    2   0   0   0   1   1  82 -48;
+    2   0   0   0   1   2  80 -50;
+    2   0   0   0   1   3  80 -50;
+    2   0   0   0   1   4  80 -50;
+    2   0   0   0   1   5  80 -50;
+    2   0   0   0   1   6  80 -50;
+    2   0   0   0   1   7  75 -55;
+    2   0   0   0   1   8  80 -50;
+    createPermutationGrid(9, 0, 0, 0:2, [10, 20, 30, 40], 0, 75, -13);]; % DRCs
+
+grid.repeatsPerCondition = 5;
+grid.postStimSilence = 0.2;
+
+% set this using absolute calibration
+grid.stimLevelOffsetDB = [10 10];
