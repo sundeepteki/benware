@@ -2,7 +2,7 @@ function grid = grid_texture()
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStimAndCompensate';
-  grid.stimDir = '/Users/ben/scratch/texture/texture.v1/';
+  grid.stimDir = 'e:\auditory-objects\sounds-uncalib\texture.v1\';
   grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   % essentials
@@ -16,13 +16,13 @@ function grid = grid_texture()
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    '/Users/ben/scratch/reverb-stimulus/calibration/calib.expt39/compensationFilters.mat';
-  grid.compensationFilterVarNames = {'compensationFilters.L'};
+    'e:\auditory-objects\calibration\calib.expt41/calibL_50k.mat';
+  grid.compensationFilterVarNames = {'calibL_50k.filter'};
 
   % sweep parameters
   grid.postStimSilence = 0;
   grid.repeatsPerCondition = 25;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [-82, -82];
+  grid.stimLevelOffsetDB = 50;
   

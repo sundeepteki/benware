@@ -16,5 +16,5 @@ function grid = grid_csdprobe()
   grid.repeatsPerCondition = Inf;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -82;
+  grid.stimLevelOffsetDB = -92;
   
