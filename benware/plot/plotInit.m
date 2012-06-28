@@ -80,10 +80,10 @@ plotData.psthCentres = (plotData.psthEdges(1:end-1)+plotData.psthEdges(2:end))/2
 % on Mac, need to set the y axis slightly right of the minimum possible value
 % for it to actually be seen. Similarly for a axis
 if ispc
-  minX = 1/fs_in;
+  minX = (nSamplesExpected/500)/fs_in;
   minY = -1;
 else
-  minX = 1.25/fs_in;
+  minX = (nSamplesExpected/500)/fs_in;
   minY = -1+1e-4;
 end
 
@@ -180,9 +180,9 @@ for chan = 1:plotData.nChannels
 
     % lfp running average plot
     plotData.lfp(chan).axis.x = line([1 nSamplesExpected]/fs_in, [0 0], ...
-        'color', [0 0 0], 'parent', plotData.subplot(chan),'hittest','off');
+        'color', [0 0 0], 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
     plotData.lfp(chan).axis.y = line([minX minX], [-1 1], ...
-        'color', [0 0 0],'parent',plotData.subplot(chan),'hittest','off');
+        'color', [0 0 0],'parent',plotData.subplot(chan),'hittest','off', 'visible', 'off');
     plotData.lfp(chan).line = line(0, 0, 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
     set(plotData.lfp(chan).line, 'XData', plotData.sampleTimes);
     plotData.lfp(chan).handles = [plotData.lfp(chan).axis.x plotData.lfp(chan).axis.y plotData.lfp(chan).line];
