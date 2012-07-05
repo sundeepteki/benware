@@ -1,4 +1,4 @@
-function [stim, stimInfo] = loadWavAndCompensate(sweepNum, grid, expt)
+function [stim, stimInfo] = loadStimAndCompensate(sweepNum, grid, expt)
 % [stim, stimInfo] = loadWavAndCompensate(sweepNum, grid, expt)
 %
 % Load an f32 or wav file and compensate using however many compensation
@@ -12,7 +12,7 @@ function [stim, stimInfo] = loadWavAndCompensate(sweepNum, grid, expt)
 % Ideally, this would hash the files and store the compensated versions, so
 % the compensation is not redone every sweep
 
-fprintf(['  * Loading stimulus ' num2str(sweepNum) '...']);
+fprintf(['  * Getting stimulus ' num2str(sweepNum) '...']);
 
 % generate stimInfo structure
 stimInfo.sweepNum = sweepNum;
@@ -27,9 +27,47 @@ elseif strcmp(stimInfo.stimFile(end-3:end), '.wav')
 	uncalib = wavread(stimInfo.stimFile);
 end
 
-% compensate and apply level offset
+identifyingSamples = 1:floor(length(uncalib)/10):length(uncalib);
+stimID = sum(diff(uncalib(identifyingSamples)));
+
+filterID = 0;
 for chan = 1:length(grid.compensationFilters)
-	stim(chan, :) = conv(uncalib, grid.compensationFilters{chan});
+	identifyingSamples = 1:floor(length(grid.compensationFilters{chan})/10):length(grid.compensationFilters{chan});
+	filterID = filterID + sum(diff(grid.compensationFilters{chan}(identifyingSamples)));
+end
+
+safeName = regexprep(stimInfo.stimFile, filesep, '.');
+safeName = regexprep(safeName, ':', '.');
+if safeName(1)== '.'
+	safeName = safeName(2:end);
+end
+cacheName = sprintf(['.' filesep 'stimcache' filesep safeName '.%0.8f.%0.8f.mat'], ...
+					stimID, filterID);
+if exist(cacheName, 'file')
+	% load from cache
+	fprintf('loading compensated version from cache...')
+	s = load(cacheName);
+	stim = s.stim;
+	
+else
+	fprintf('compensating...');
+	% apply compensation filter
+	for chan = 1:length(grid.compensationFilters)
+		stim(chan, :) = conv(uncalib, grid.compensationFilters{chan});
+	end
+
+	% save in cache
+	if ~exist(['.' filesep 'stimcache'], 'dir')
+		mkdir(['.' filesep 'stimcache']);
+	end
+
+	fprintf('saving compensated version to cache...')
+	save(cacheName, 'stim');
+
+end
+
+% apply level offset
+for chan = 1:length(grid.compensationFilters)
 	stim(chan, :) = stim(chan, :) * 10^(grid.stimLevelOffsetDB(chan) / 20);
 end
 
