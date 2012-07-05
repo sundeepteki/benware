@@ -178,7 +178,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
 
   % final plot
   plotData.nSweeps = plotData.nSweeps + 1;
-  plotData = plotUpdateLFP(plotData, filteredData);
+  plotData = plotUpdateLFP(plotData, data);
   plotData = plotUpdate(plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
   plotData.lastSweepSpikes = spikeTimes;
 

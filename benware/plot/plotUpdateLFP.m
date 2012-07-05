@@ -1,4 +1,4 @@
-function plotData = plotUpdateLFP(plotData, filteredData)
+function plotData = plotUpdateLFP(plotData, data)
 % update running average plots
 
 nSweeps = plotData.nSweeps;
@@ -7,10 +7,10 @@ newLFP = nan(plotData.nChannels, length(plotData.samplesToPlot));
 
 for chan = 1:plotData.nChannels
     if nSweeps==1
-	   	newLFP(chan,:) = filteredData(chan, plotData.samplesToPlot);
+	   	newLFP(chan,:) = data(chan, plotData.samplesToPlot);
     else
     	oldLFPSum = get(plotData.lfp(chan).line,'ydata')/plotData.lfpGain*(nSweeps-1);
-    	newLFP(chan,:) = (oldLFPSum+filteredData(plotData.samplesToPlot))/nSweeps;
+    	newLFP(chan,:) = (oldLFPSum+data(chan, plotData.samplesToPlot))/nSweeps;
     end
 end
 
