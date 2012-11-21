@@ -64,4 +64,14 @@ switch eventInfo.Character
     state.plot.filtered = ~state.plot.filtered;
   case 'q'
     state.userQuit = true;
+  case {'>', '.'}
+    state.spikeThreshold = state.spikeThreshold*1.1;
+    state.spikeThreshold
+  case {'<', ','}
+    state.spikeThreshold = state.spikeThreshold/1.1;
+    state.spikeThreshold
+  case {'?', '/'}
+    state.spikeThreshold = -state.spikeThreshold;
+    state.spikeThreshold
+
 end

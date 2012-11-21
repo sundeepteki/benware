@@ -12,13 +12,13 @@ function [stim, stimInfo] = loadStimAndCompensate(sweepNum, grid, expt)
 % Ideally, this would hash the files and store the compensated versions, so
 % the compensation is not redone every sweep
 
-fprintf(['  * Getting stimulus ' num2str(sweepNum) '...']);
-
 % generate stimInfo structure
 stimInfo.sweepNum = sweepNum;
 stimInfo.stimGridTitles = grid.stimGridTitles;
 stimInfo.stimParameters = grid.randomisedGrid(sweepNum, :);
 stimInfo.stimFile = constructStimPath(grid, expt, sweepNum);
+
+fprintf(['  * Getting stimulus ' num2str(sweepNum) ' from ' escapepath(stimInfo.stimFile) '...']);
 
 % load the stimulus
 if strcmp(stimInfo.stimFile(end-3:end), '.f32')
@@ -36,14 +36,15 @@ for chan = 1:length(grid.compensationFilters)
 	filterID = filterID + sum(diff(grid.compensationFilters{chan}(identifyingSamples)));
 end
 
-safeName = regexprep(stimInfo.stimFile, filesep, '.');
-safeName = regexprep(safeName, ':', '.');
-if safeName(1)== '.'
-	safeName = safeName(2:end);
-end
-cacheName = sprintf(['.' filesep 'stimcache' filesep safeName '.%0.8f.%0.8f.mat'], ...
-					stimID, filterID);
-if exist(cacheName, 'file')
+%safeName = regexprep(stimInfo.stimFile, filesep, '.');
+%safeName = regexprep(safeName, ':', '.');
+%if safeName(1)== '.'
+%	safeName = safeName(2:end);
+%end
+
+%cacheNameEnd = sprintf('.%0.8f.%0.8f.mat', stimID, filterID);
+%cacheName = ['.' cacheNameEnd];
+if 0 %%exist(cacheName, 'file')
 	% load from cache
 	fprintf('loading compensated version from cache...')
 	s = load(cacheName);
@@ -57,12 +58,12 @@ else
 	end
 
 	% save in cache
-	if ~exist(['.' filesep 'stimcache'], 'dir')
-		mkdir(['.' filesep 'stimcache']);
-	end
+	%if ~exist(['.' filesep 'stimcache'], 'dir')
+	%	mkdir(['.' filesep 'stimcache']);
+	%end
 
-	fprintf('saving compensated version to cache...')
-	save(cacheName, 'stim');
+	%fprintf('saving compensated version to cache...')
+	%save(cacheName, 'stim');
 
 end
 

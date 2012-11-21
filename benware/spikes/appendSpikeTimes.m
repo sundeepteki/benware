@@ -1,4 +1,7 @@
 function spikeTimes = appendSpikeTimes(spikeTimes, data, offset, fs, threshold)
+% NB threshold is no longer used
+
+global state;
 
 data = data';
 
@@ -15,7 +18,7 @@ nSamples = size(sig, 1);
 mn = mean(sig, 1);
 sd = std(sig, [], 1);
 for ii = 1:size(sig, 2)
-  sig(:,ii) = (sig(:,ii)-mn(ii)) / sd(ii) - threshold;
+  sig(:,ii) = (sig(:,ii)-mn(ii)) / sd(ii) - state.spikeThreshold;
 end
 
 % find threshold crossings

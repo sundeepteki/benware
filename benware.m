@@ -58,8 +58,13 @@ else
 end
 
 expt.logFilename = 'benWare.log';
-expt.spikeThreshold = -4.6; % -2.8
+expt.spikeThreshold = -3.2; % -2.8
 expt.nChannels = length(expt.channelMapping);
+
+% new, adjustable spike threshold
+if ~isfield(state, 'spikeThreshold')
+    state.spikeThreshold = expt.spikeThreshold;
+end
 
 if isfield(expt, 'visualBell')
   state.visualBell = expt.visualBell;
