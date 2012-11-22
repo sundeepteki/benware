@@ -1,5 +1,5 @@
 function grid = loadCompensationFilters(grid, expt)
-
+% load compensation filters
 l = load(grid.compensationFilterFile);
 
 for ii = 1:length(grid.compensationFilterVarNames)

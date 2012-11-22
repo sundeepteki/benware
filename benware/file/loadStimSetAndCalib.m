@@ -1,4 +1,6 @@
 function grid = loadStimSetAndCalib(grid, expt)
+% load christian-style stim set and apply compensation
+% don't use if you're not christian
 
 l = load(grid.setFile);
 grid.stim_set = l.stim_set;
