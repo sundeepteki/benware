@@ -10,6 +10,8 @@ lastSweep = 0;
 newestDir = findNewestSubdir(exptDir);
 
 if isempty(newestDir)
+  sprintf('  * Deleting empty directory %s\n', newestDir);
+  rmdir(newestDir);
   return;
 end
 
