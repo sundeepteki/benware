@@ -71,7 +71,16 @@ classdef fakeStimDevice < handle
 
       function out = zBusTrigA(obj)
         global player;
-        player = audioplayer([obj.WaveformL(1:obj.nSamples); obj.WaveformR(1:obj.nSamples)], obj.sampleRate);
+        obj.sampleRate
+        if obj.sampleRate<50000
+          fs = obj.sampleRate;
+          idx = 1:obj.nSamples;
+        elseif obj.sampleRate>190000
+          fs = obj.sampleRate/4;
+          idx = 1:4:obj.nSamples;
+        end
+        %keyboard
+        player = audioplayer([obj.WaveformL(idx); obj.WaveformR(idx)], fs);
         play(player);
         obj.intactWaveformL = obj.WaveformL(1:obj.nSamples);
         obj.intactWaveformR = obj.WaveformR(1:obj.nSamples);
