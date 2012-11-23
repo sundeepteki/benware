@@ -2,8 +2,8 @@ function grid = grid_drc200k()
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStimAndCompensate';
-  %grid.stimDir = 'e:\auditory-objects\sounds-uncalib\mouse.drc.2\';
-  grid.stimDir = '/Users/ben/scratch/texture/texture.v2/renamed/';
+  grid.stimDir = 'e:\auditory-objects\sounds-uncalib\mouse.drc.2\';
+  %grid.stimDir = '/Users/ben/scratch/texture/texture.v2/renamed/';
   grid.sampleRate = 24414.0625*8;  % ~200kHz
 
   % essentials
@@ -22,9 +22,9 @@ function grid = grid_drc200k()
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\james-mouse-1\calib200k.mat';
+    'e:\auditory-objects\calibration\james-01\calibL_200k.mat';
 
-  grid.compensationFilterVarNames = {'calib200k.filter'};
+  grid.compensationFilterVarNames = {'calibL_200k.filter'};
 
   % sweep parameters
   grid.postStimSilence = 0;

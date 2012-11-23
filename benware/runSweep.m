@@ -14,6 +14,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
   catch
     keyboard
   end
+  
   % check for stale data in data device buffer
   if any(countAllData(tdt.dataDevice, nChannels) ~= 0)
     errorBeep('Stale data in data buffer');
@@ -40,6 +41,9 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
   if getStimLength(tdt.stimDevice) ~= stimLen
     errorBeep('Stimulus length on stimDevice is not correct');
   end
+  
+  % check that correct number of stimulus channels are active
+  setActiveStimChannels(tdt.stimDevice, nStimChans);
 
   % record length of next stimulus for uploading
   nextStimLen = size(nextStim, 2);

@@ -34,7 +34,7 @@ else
       'benware/tdt/monoplay.rcx', 'MonoPlayVer', 3, requestedSampleRate);
   else
     [device, sampleRate] = deviceInit(device, deviceName, ...
-      'benware/tdt/stereoplay.rcx', 'StereoPlayVer', 4, requestedSampleRate);
+      'benware/tdt/stereoplay.rcx', 'StereoPlayVer', 5, requestedSampleRate);
   end
   
   if strcmp(deviceName, 'RX8')

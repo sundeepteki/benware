@@ -33,7 +33,7 @@ else
 
 	% load the stimulus
 	if strcmp(stimFile(end-3:end), '.f32')
-		uncalib = read32(stimFile);
+		uncalib = readf32(stimFile);
 	elseif strcmp(stimFile(end-3:end), '.wav')
 		uncalib = wavread(stimFile);
 	end
