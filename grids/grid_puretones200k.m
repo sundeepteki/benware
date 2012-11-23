@@ -7,7 +7,7 @@ function grid = grid_puretones200k()
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'makeCalibTone';
   %grid.stimDir = 'E:\auditory-objects\sounds.calib.expt%E\%N\';
-  grid.sampleRate = 24414.0625*4;  % ~200kHz
+  grid.sampleRate = 24414.0625*8;  % ~200kHz
 
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
