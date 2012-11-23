@@ -12,9 +12,22 @@ level = parameters(3);
 % time
 t = 0:1/grid.sampleRate:duration/1000;
 
-% sinusoid (not bothering with ramp)
-stim = sin(2*pi*freq*t);
+% sinusoid
+uncalib = sin(2*pi*freq*t);
+
+% ramp up and down
+ramplen_samples = round(5/1000*grid.sampleRate);
+ramp = (1-cos(pi*(1:ramplen_samples)/ramplen_samples))/2;
+env = [ramp ones(1,length(uncalib)-2*length(ramp)) fliplr(ramp)];
+uncalib = uncalib.*env;
 
 % convolve with compensation filter
-stim = conv(stim, grid.compensationFilter);
-stim = stim*10^((grid.stimLevelOffsetDB + level)/20);
+%keyboard
+for chan = 1:length(grid.compensationFilters)
+	stim(chan, :) = conv(uncalib, grid.compensationFilters{chan});
+end
+
+% apply level offset
+for chan = 1:length(grid.compensationFilters)
+	stim(chan, :) = stim(chan, :) * 10^((level+grid.stimLevelOffsetDB(chan)) / 20);
+end

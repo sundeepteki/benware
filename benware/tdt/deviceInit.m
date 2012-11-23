@@ -22,6 +22,9 @@ elseif requestedSampleRateHz>40000 && requestedSampleRateHz<=50000
 elseif requestedSampleRateHz>90000 && requestedSampleRateHz<=100000
   sampleRate = 4;
   sampleRateHz = 48828.125*2;
+elseif requestedSampleRateHz>180000 && requestedSampleRateHz<=200000
+  sampleRate = 5;
+  sampleRateHz = 48828.125*4;
 else
   errorBeep('Unknown sample rate');
 end
