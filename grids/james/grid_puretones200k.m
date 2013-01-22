@@ -25,15 +25,15 @@ function grid = grid_puretones200k()
   n_steps = floor(log2(freq_max/freq_min)/freq_step_oct);
   freqs = logspace(log10(freq_min), log10(freq_max), n_steps+1)
  
-  levels = 40:10:100;
+  levels = 80:10:100;
   
   grid.stimGrid = createPermutationGrid(freqs, 50, levels);
 
   % sweep parameters
-  grid.sweepLength = 0.1;
-  grid.repeatsPerCondition = 10;
+  grid.sweepLength = 0.3;
+  grid.repeatsPerCondition = 30;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -80;
+  grid.stimLevelOffsetDB = -100;
   
   

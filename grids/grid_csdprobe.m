@@ -2,7 +2,7 @@ function grid = grid_csdprobe()
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'makeCSDprobe';
-  grid.sampleRate = 24414.0625*4;  % ~100kHz
+  grid.sampleRate = 24414.0625*2;  % ~100kHz
 
   % essentials
   grid.name = 'csdprobe';
@@ -16,5 +16,5 @@ function grid = grid_csdprobe()
   grid.repeatsPerCondition = Inf;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -92;
+  grid.stimLevelOffsetDB = -112;
   

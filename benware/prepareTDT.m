@@ -33,6 +33,7 @@ end
 if ~isfield(tdt,'dataDevice')
   tdt.dataDevice = [];
 end
+
 [tdt.dataDevice, tdt.dataSampleRate] = ...
   dataDeviceInit(tdt.dataDevice, expt.dataDeviceName, ...
   expt.dataDeviceSampleRate, expt.channelMapping, tdt.stimDevice);

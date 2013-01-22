@@ -1,20 +1,20 @@
-function grid = grid_drc200k()
+function grid = grid_ripples200k()
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStimAndCompensate';
-  grid.stimDir = 'e:\auditory-objects\sounds-uncalib\mouse.drc.2\';
+  grid.stimDir = 'e:\James\stimuli\';
   %grid.stimDir = '/Users/ben/scratch/texture/texture.v2/renamed/';
   grid.sampleRate = 24414.0625*8;  % ~200kHz
 
   % essentials
-  grid.name = 'drc200k';
+  grid.name = 'ripple200k';
   % drc1_contrast10.f32
-  grid.stimFilename = 'drc%1_contrast%2.f32';
+  grid.stimFilename = 'rippleseg%1.wav';
   
   % stimulus grid structure
-  grid.stimGridTitles = {'DRC ID', 'Contrast', 'Level'};  
+  grid.stimGridTitles = {'ID', 'Level'};  
   %grid.stimGrid = createPermutationGrid(1:5, 1:7, 80); 
-  grid.stimGrid = createPermutationGrid(1:2, [10 30], 80); 
+  grid.stimGrid = createPermutationGrid(1:15, 80); 
 
   % for calibration
   %grid.stimGrid = createPermutationGrid(9, 9, 80);

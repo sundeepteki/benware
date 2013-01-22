@@ -9,7 +9,7 @@ function grid = grid_monosearchnoise()
   
   % stimulus grid structure
   grid.stimGridTitles = {'Stimulus Length (ms)', 'Delay (ms)'; 'Noise Length (ms)', 'Level'};
-  grid.stimGrid = [200 50 50 80];
+  grid.stimGrid = [250 50 50 80];
 
   % sweep parameters
   grid.postStimSilence = 0;
