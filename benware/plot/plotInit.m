@@ -1,4 +1,4 @@
-function plotData = plotInit(fs_in, nChannels, nSamplesExpected)
+function plotData = plotInit(fs_in, nChannels, nSamplesExpected, grid)
 % plotData = scopeTraceFastInit(plotData, fs_in, nSamplesExpected)
 %
 % Initialise main figure window. This is run once per grid, at the start
@@ -189,6 +189,11 @@ for chan = 1:plotData.nChannels
     plotData.lfp(chan).dataHandles = [plotData.lfp(chan).line];
     plotData.lfpGain = 1;
 
+    % % tuning plot
+    % if isfield(grid, 'tuningPlotInitFunction')
+    %     plotData.tuning(chan) = feval(grid.tuningPlotInitFunction, grid, chan);
+    % end
+    
     % time axis for all plot types
     if chan==plotData.nChannels
         for ticknum = 1:length(xticks)

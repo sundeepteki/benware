@@ -37,7 +37,7 @@ elseif isfield(grid, 'maxSweepLength')
 else
   nSamplesExpected = floor((size(nextStim,2)/grid.sampleRate+grid.postStimSilence)*expt.dataDeviceSampleRate)+1;
 end
-plotData = plotInit(expt.dataDeviceSampleRate, expt.nChannels, nSamplesExpected);
+plotData = plotInit(expt.dataDeviceSampleRate, expt.nChannels, nSamplesExpected, grid);
 
 
 %% run sweeps
@@ -84,6 +84,13 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   end
   fprintf(['  * sweep length: ' num2str(sweepLen) ' s\n']);
   
+  % running PSTH
+  if ~isfield(state, 'psth')
+    state.psth.bins = 0:sweepLen/50:sweepLen;
+    state.psth.nReps = zeros(expt.nChannels, grid.nStimConditions);
+    state.psth.data = repmat({zeros(1,50)},expt.nChannels, grid.nStimConditions);
+  end
+
   % get filenames for saving data
   sweeps(sweepNum).dataFiles = constructDataPaths([expt.dataDir expt.dataFilename],grid,expt,sweepNum,expt.nChannels);
   dataDir = split_path(sweeps(sweepNum).dataFiles{1});
@@ -103,7 +110,33 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   
   % save sweep metadata
   saveSingleSweepInfo(sweeps(sweepNum), grid, expt, sweepNum);
-  
+
+  % update the appropriate running PSTHes
+  %keyboard
+  setIdx = grid.randomisedGridSetIdx(sweepNum);
+  for chan = 1:expt.nChannels
+    %keyboard
+    psth = histc(sweeps(sweepNum).spikeTimes{chan}, state.psth.bins);
+    psth = psth(1:end-1);
+    %size(psth)
+    %keyboard
+    if state.psth.nReps(chan, setIdx)==0
+      state.psth.data{chan, setIdx} = psth;
+      size(state.psth.data{chan, setIdx})
+    else 
+      state.psth.data{chan, setIdx} = (state.psth.data{chan, setIdx} * state.psth.nReps(chan, setIdx) + psth)/ ...
+        (state.psth.nReps(chan, setIdx)+1);
+      size(state.psth.data{chan, setIdx})
+      state.psth.nReps(chan, setIdx) = state.psth.nReps(chan, setIdx) + 1;
+    end
+  end
+  % keyboard
+  % try
+  %   psth = cell2mat(state.psth.data(1,:)')
+  % catch
+  %   keyboard;
+  % end
+
   fprintf(['  * Finished sweep after ' num2str(toc) ' sec.\n\n']);
   
   % recreate main figure

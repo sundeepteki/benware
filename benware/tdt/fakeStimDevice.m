@@ -10,6 +10,8 @@ classdef fakeStimDevice < handle
      timer = []
      WaveformL = zeros(1,2000000)
      WaveformR = zeros(1,2000000)
+     LeftActive = 1;
+     RightActive = 1;
      StimIndex = 0
    end
    

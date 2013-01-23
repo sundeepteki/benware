@@ -109,6 +109,9 @@ if ~gotGrid
   grid = prepareGrid(grid, expt);
   
   firstSweep = 1;
+  if isfield(state, 'psth')
+    state = rmfield(state, 'psth');
+  end
 end
 
 
