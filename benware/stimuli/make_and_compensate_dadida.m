@@ -6,10 +6,10 @@ params = num2cell(stimInfo.stimParameters);
 
 %  grid.stimGridTitles = {'BF (Hz)', 'Delta_f (oct)', ...
 %      'f0 condition (1-5)', 'B offset', 'B random', 'N test cycles (A)', 'N test cycles (B)', ...
-%      'Prestim', 'Level'};
+%      'Prestim', 'B rand2', 'B dist', 'B sigma','Level'};
 
 [bf, delta_f, f0_cond, Bstart, Brand, ntestcycles(1), ntestcycles(2), ...
-    prestim_type, level] = params{1:9};
+    prestim_type, Brand2, Bdist, Bsigma, level] = params{1:12};
 
 f0_multipliers = [0:0.25:1] * delta_f;
 
@@ -39,12 +39,16 @@ for chan = 1:length(grid.compensationFilters)
     elseif prestim_type==2
         prestim = [1 interrupt_freq interrupt_amp];
     end
+
+    jitter = [0 0 0 Brand2 Bdist Bsigma];
     
-    % stim(chan,:) = make_dadida(Afreq, Aamp, c.gapA, Bfreq, Bamp, c.gapB, b_offset, ...
-    %     b_random, c.tondur, c.interval, c.n_prestim_cycles, c.n_test_cycles, ...
-    %     prestim, fs, c.randomseed);
+% function stimoutput = dadidagen(Afreq,Alev,Agap,Bfreq,Blev,Bgap,Bstart,Brand,tondur, ...
+%    intdur,nprecycles,ntestcycles,prestim,sampleRate,randseed,jitter,n)
 
     stim(chan, :) = dadidagen(Afreq, Aamp, c.Agap, Bfreq, Bamp, c.Bgap, Bstart, ...
-        Brand, c.tondur, c.intdur, c.nprecycles, ntestcycles, prestim, grid.sampleRate, c.randomseed);
+        Brand, c.tondur, c.intdur, c.nprecycles, ntestcycles, prestim, grid.sampleRate, ...
+        c.randomseed, jitter, c.n);
 
 end
+
+keyboard
