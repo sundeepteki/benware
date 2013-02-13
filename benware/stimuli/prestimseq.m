@@ -6,13 +6,24 @@ function [Aseq Agapseq Bseq Bgapseq prestimvec] = prestimseq(Afreq,Bfreq,Alev,Bl
 
 intt = 0:1/sampleRate:intdur/1000;
 intseq = zeros(1,length(intt));
+if intdur == 0
+    intseq = [];
+end
 
 Aramp = ramps(sampleRate,tondur,Afreq).*Alev;
-Agapseq = ramps(sampleRate,Agap,0);
+if Agap == 0
+    Agapseq = [];
+else
+    Agapseq = ramps(sampleRate,Agap,0);
+end
 Aseq = [Aramp intseq];
 
 Bramp = ramps(sampleRate,tondur,Bfreq).*Blev;
-Bgapseq = ramps(sampleRate,Bgap,0);
+if Bgap == 0
+    Bgapseq = [];
+else
+    Bgapseq = ramps(sampleRate,Bgap,0);
+end
 Bseq = [Bramp intseq];
 
 if prestim(1) == 0
@@ -23,7 +34,11 @@ elseif prestim(1) == 1  % prestim = [1,f,lev] where f and lev for LAST TONE only
     prestimvec = repmat(prestimseq,1,nprecycles);
     deviantramp = ramps(sampleRate,tondur,prestim(2)).*prestim(3);
     deviantseq = [deviantramp intseq];
-    prestimvec(end-length(deviantseq)-length(Agapseq)+1:end-length(Agapseq)) = deviantseq;
+    try
+        prestimvec(end-length(deviantseq)-length(Agapseq)+1:end-length(Agapseq)) = deviantseq;
+    catch
+        keyboard
+    end
 else
     keyboard
 end

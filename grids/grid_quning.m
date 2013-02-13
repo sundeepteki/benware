@@ -7,7 +7,7 @@ function grid = grid_quning()
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'makeCalibTone';
   %grid.stimDir = 'E:\auditory-objects\sounds.calib.expt%E\%N\';
-  grid.sampleRate = 24414.0625*2;  % ~50kHz
+  grid.sampleRate = 24414.0625*4;  % ~100kHz
 
   
   % stimulus grid structure
@@ -33,5 +33,5 @@ function grid = grid_quning()
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\calib.expt42\compensationFilters.mat';
+    'e:\auditory-objects\calibration\calib.expt51\compensationFilters.mat';
   grid.compensationFilterVarNames = {'compensationFilters.L', 'compensationFilters.R'};

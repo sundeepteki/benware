@@ -3,7 +3,7 @@ function grid = mixmix
 % essentials
 grid.name = 'mixmix';
 grid.stimGenerationFunctionName = 'loadStereo';
-grid.stimDir = 'e:\auditory-objects\sounds.calib.expt42\%N\';
+grid.stimDir = 'e:\auditory-objects\sounds.calib.expt51\%N\';
 grid.stimFilename = 'source.%1.sound.%2.snr.%3.token.%4.fw.%5.frozen.%6.%L.f32';
 grid.sampleRate = 24414.0625*2;  % ~50kHz
 
