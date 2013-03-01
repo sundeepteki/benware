@@ -73,10 +73,12 @@ classdef fakeStimDevice < handle
 
       function out = zBusTrigA(obj)
         global player;
-        obj.sampleRate
         if obj.sampleRate<50000
           fs = obj.sampleRate;
           idx = 1:obj.nSamples;
+        elseif obj.sampleRate<100000
+          fs = obj.sampleRate;
+          idx = 1:2:obj.nSamples;    
         elseif obj.sampleRate>190000
           fs = obj.sampleRate/4;
           idx = 1:4:obj.nSamples;
