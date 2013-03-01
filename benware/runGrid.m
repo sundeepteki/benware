@@ -122,11 +122,11 @@ for sweepNum = firstSweep:grid.nSweepsDesired
     %keyboard
     if state.psth.nReps(chan, setIdx)==0
       state.psth.data{chan, setIdx} = psth;
-      size(state.psth.data{chan, setIdx})
+      %size(state.psth.data{chan, setIdx})
     else 
       state.psth.data{chan, setIdx} = (state.psth.data{chan, setIdx} * state.psth.nReps(chan, setIdx) + psth)/ ...
         (state.psth.nReps(chan, setIdx)+1);
-      size(state.psth.data{chan, setIdx})
+      %size(state.psth.data{chan, setIdx})
       state.psth.nReps(chan, setIdx) = state.psth.nReps(chan, setIdx) + 1;
     end
   end
@@ -180,7 +180,7 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   visualBellOff;
 end
 
-diary off
+cleanup(tdt);
 visualBellOff;
 
 if ~state.userQuit && isfield(state, 'bugle') && state.bugle

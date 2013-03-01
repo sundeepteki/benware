@@ -8,9 +8,9 @@ classdef fakeDataDevice < handle
      stimDevice = []
      buffer = [];
      MonChan = 1
-     ChanMap = zeros(1, 32)
+     ChanMap = zeros(1, 128)
      recdur = 0
-     ADidx = zeros(1,32)
+     ADidx = zeros(1, 128)
    end
    
    methods
@@ -62,7 +62,7 @@ classdef fakeDataDevice < handle
       end
       
       function out = SoftTrg(obj, n)
-        obj.ADidx = zeros(1,32);
+        obj.ADidx = zeros(1, 128);
         if isobject(obj.timer)
           stop(obj.timer);
           delete(obj.timer);
@@ -87,7 +87,7 @@ classdef fakeDataDevice < handle
         r = rand(1, maxSamples);
         obj.buffer = single((0.1*r - (r<responseProbability)) *.002);
 
-        obj.ADidx = zeros(1,32);
+        obj.ADidx = zeros(1,128);
         obj.triggerTime = now;
         if isobject(obj.timer)
           delete(obj.timer);

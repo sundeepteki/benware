@@ -37,5 +37,5 @@ paths = cell(1,maxChannelNum);
 
 f = findstr(path,'%C');
 for channelNum = 1:maxChannelNum
-  paths{channelNum} = [path(1:f-1) n2s(channelNum, 2) path(f+2:end)];
+  paths{channelNum} = fix_slashes([path(1:f-1) n2s(channelNum, 2) path(f+2:end)]);
 end

@@ -14,12 +14,18 @@ if isempty(newestDir)
 end
 
 % load the grid from this directory
-gridFilename = [exptDir newestDir.name filesep 'gridInfo.mat'];
+gridFilename = [exptDir newestDir.name filesep 'gridInfo.mat']
 if ~exist(gridFilename, 'file')
   return;
 end
 
 gridInfo = load(gridFilename);
+
+% check whether its from the current penetration (we won't offer to resume 
+% if the user has changed penetration)
+if (gridInfo.expt.penetrationNum~=expt.penetrationNum)
+  return;
+end
 
 if gridInfo.grid.repeatsPerCondition==Inf
   % then 'infinite' repeats were specified, i.e. it's a search grid

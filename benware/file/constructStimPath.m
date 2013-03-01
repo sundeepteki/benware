@@ -36,3 +36,5 @@ path = regexprep(path, '%N', grid.name);
 if exist('side', 'var')
   path = regexprep(path, '%L', side);
 end
+
+path = fix_slashes(path);

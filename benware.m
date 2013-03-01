@@ -2,7 +2,7 @@
 % =================
 
 % set path
-setPath;
+setpath;
 
 % welcome
 printGreetings;
@@ -48,11 +48,11 @@ end
 
 if ispc
   dataRoot = expt.dataRoot;
-  expt.exptDir = fixpath([dataRoot expt.exptSubDir]);
-  expt.dataDir = fixpath([dataRoot expt.exptSubDir expt.dataSubDir]);
+  expt.exptDir = [dataRoot expt.exptSubDir];
+  expt.dataDir = [dataRoot expt.exptSubDir expt.dataSubDir];
 else
-  expt.exptDir = fixpath(['./' expt.exptSubDir]);
-  expt.dataDir = fixpath(['./' expt.exptSubDir expt.dataSubDir]);
+  expt.exptDir = ['./' expt.exptSubDir];
+  expt.dataDir = ['./' expt.exptSubDir expt.dataSubDir];
   global fakeHardware %#ok<TLEV>
   fakeHardware = true;
 end
