@@ -21,6 +21,12 @@ end
 
 gridInfo = load(gridFilename);
 
+% check whether its from the current experiment (we won't offer to resume 
+% if the user has changed experiment)
+if (gridInfo.expt.exptNum~=expt.exptNum)
+  return;
+end
+
 % check whether its from the current penetration (we won't offer to resume 
 % if the user has changed penetration)
 if (gridInfo.expt.penetrationNum~=expt.penetrationNum)
