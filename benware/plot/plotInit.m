@@ -60,7 +60,7 @@ for ii=1:n.rows
         pos{ii, jj} = [xi.col(jj) yi.row(ii) w.plot h.plot];
     end
 end
-pos = pos';
+%pos = pos';
 
 % create figure
 f = figure(101);
