@@ -24,7 +24,6 @@ if fakeHardware
   end
 
 else
-
   if deviceIsFake(device)
     device = [];
   end
@@ -42,7 +41,6 @@ else
       channel.R = 18;
       
   elseif strcmp(deviceName, 'RX6')
-      fprintf('untested -- check left/right channel assignments\n'); 
       channel.L = 1;
       channel.R = 2;
       
