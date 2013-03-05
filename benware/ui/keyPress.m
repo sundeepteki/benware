@@ -52,6 +52,10 @@ switch eventInfo.Character
     state.plot.enabled = true;
     state.plot.type = eventInfo.Character;
     state.plot.typeShouldChange = true;
+  case cellstr(char(49:57)')' % numbers 1-9
+    state.plot.enabled = true;
+    state.plot.type = eventInfo.Character;
+    state.plot.typeShouldChange = true;
   case 'a'
     if ~state.plot.enabled
       state.plot.onlyActiveChannel = true;

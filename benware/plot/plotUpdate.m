@@ -54,6 +54,28 @@ if state.plot.typeShouldChange
       case 'p'
         plotData.activeHandles{chan} = plotData.psth(chan).handles;
         plotData.dataHandles{chan} = plotData.psth(chan).dataHandles;
+        active_psth = state.onlineData.psth.pooledData;
+        mx = max(active_psth(1:end-1, chan));
+        scaled = active_psth(1:end-1, chan)/mx*2-1;
+        psthY = reshape(repmat(scaled',2,1),1,2*length(scaled));
+        set(plotData.psth(chan).line,'ydata',psthY);
+        set(plotData.psth(chan).labelHandles(2), 'string', sprintf('%d', mx));
+
+      case cellstr(char(49:57)')' % numbers 1-9
+        plotData.activeHandles{chan} = plotData.psth(chan).handles;
+        plotData.dataHandles{chan} = plotData.psth(chan).dataHandles;
+        n = str2num(state.plot.type);
+        if n>state.onlineData.nSets;
+          active_psth = state.onlineData.psth.pooledData;
+        else
+          active_psth = state.onlineData.psth.data(:, :, str2num(state.plot.type));
+        end
+        mx = max(active_psth(1:end-1, chan));
+        scaled = active_psth(1:end-1, chan)/mx*2-1;
+        psthY = reshape(repmat(scaled',2,1),1,2*length(scaled));
+        set(plotData.psth(chan).line,'ydata',psthY);
+        set(plotData.psth(chan).labelHandles(2), 'string', sprintf('%d', mx));
+
       case 'l'
         plotData.activeHandles{chan} = plotData.lfp(chan).handles;
         plotData.dataHandles{chan} = plotData.lfp(chan).dataHandles;
@@ -112,6 +134,11 @@ for chan = plotChans
       set(plotData.raster(chan).oldSweeps, 'markeredgecolor', col);
       
     case 'p'
+      % nothing to do (plot is updated in plotReset)
+      % Just set color appropriately
+      set(plotData.psth(chan).line, 'color', col);
+
+    case cellstr(char(49:57)')' % numbers 1-9
       % nothing to do (plot is updated in plotReset)
       % Just set color appropriately
       set(plotData.psth(chan).line, 'color', col);

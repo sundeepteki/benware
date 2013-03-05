@@ -72,16 +72,9 @@ nSamplesExpected = plotData.nSamplesExpected;
 fs_in = plotData.fs_in;
 plotData.plotIndex = zeros(1,plotData.nChannels);
 
-possible_binsizes = [1 2.5 5 10 25 50 100 250 1000 2500 5000 10000]/1000; % sec
-psth_binsize = possible_binsizes( ...
-        find(plotData.nSamplesExpected/fs_in/50>possible_binsizes, 1, 'last'));
-if isempty(psth_binsize)
-    psth_binsize = min(possible_binsizes);
-end
-plotData.psthEdges = 0:psth_binsize:plotData.nSamplesExpected/fs_in;
-psthX = reshape(repmat(plotData.psthEdges,2,1),1,2*length(plotData.psthEdges));
+% PSTH x-data (repmat gives you square bars)
+psthX = reshape(repmat(state.onlineData.psth.edges,2,1),1,2*length(state.onlineData.psth.edges));
 plotData.psthX = psthX(2:end-1);
-plotData.psthCentres = (plotData.psthEdges(1:end-1)+plotData.psthEdges(2:end))/2;
 
 % on Mac, need to set the y axis slightly right of the minimum possible value
 % for it to actually be seen. Similarly for a axis
@@ -108,12 +101,10 @@ for ii = 1:length(xticknums)
 end
 
 for chan = 1:plotData.nChannels
-    ax =  axes('position', pos{chan}, 'xtick', [], 'ytick', [], ...
+    plotData.subplot(chan) = axes('position', pos{chan}, 'xtick', [], 'ytick', [], ...
         'xlim', [1 nSamplesExpected]/fs_in, 'ylim', [-1 1], ...
         'drawmode', 'fast', 'ticklength', [0 0], ...
         'xcolor', get(f,'color'), 'ycolor', get(f,'color'),  'ButtonDownFcn', {'clickOnSubplot',chan});
-    
-    plotData.subplot(chan) = ax;
     
     % grid lines for all plots
     for ticknum = 2:length(xticks)
@@ -125,9 +116,9 @@ for chan = 1:plotData.nChannels
     %plotData.plot{1}(chan) = waveformPlotInit(nSamplesExpected, plotData.subplot(chan));
 
     plotData.waveform(chan).axis.x = line([1 nSamplesExpected]/fs_in, [0 0], ...
-        'color', [0 0 0], 'parent', plotData.subplot(chan),'hittest','off');
+            'color', [0 0 0], 'parent', plotData.subplot(chan),'hittest','off');
     plotData.waveform(chan).axis.y = line([minX minX], [-1 1], ...
-        'color', [0 0 0],'parent',plotData.subplot(chan),'hittest','off');
+            'color', [0 0 0],'parent',plotData.subplot(chan),'hittest','off');
     plotData.waveform(chan).line = line(0, 0, 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
     plotData.waveform(chan).dots = line(0, 0, 'marker', '.', 'linestyle', 'none', 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
 
@@ -166,8 +157,7 @@ for chan = 1:plotData.nChannels
     plotData.raster(chan).dataHandles = [plotData.raster(chan).currentSweep plotData.raster(chan).oldSweeps];
 
     % psthes
-    plotData.psth(chan).data = zeros(size(plotData.psthCentres));
-    psthY = reshape(repmat(plotData.psth(chan).data,2,1),1,2*length(plotData.psth(chan).data));
+    psthY = zeros(size(plotData.psthX));
     plotData.psth(chan).axis.x = line([1 nSamplesExpected]/fs_in, [minY minY], ...
         'color', [0 0 0], 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
     plotData.psth(chan).axis.y = line([minX minX], [-1 1], ...
@@ -213,7 +203,7 @@ for chan = 1:plotData.nChannels
 
     plotData.activeHandles{chan} = plotData.waveform(chan).handles;
 end
-
+%keyboard;
 state.plot.typeShouldChange = true;
 state.plot.activeChannelShouldChange = true;
 state.plot.shouldDisable = false;

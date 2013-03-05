@@ -82,7 +82,7 @@ classdef fakeDataDevice < handle
         maxSamples = floor(obj.recdur/1000*obj.sampleRate)+1;
         newSamplePoints = (1:maxSamples)/obj.sampleRate;
         s = interp1(origSamplePoints,s,newSamplePoints);
-        responseProbability = s/max(s)/obj.sampleRate*20;
+        responseProbability = s/max(s)/obj.sampleRate*100; % originally * 20
         responseProbability(isnan(responseProbability)) = 0;
         r = rand(1, maxSamples);
         obj.buffer = single((0.1*r - (r<responseProbability)) *.002);

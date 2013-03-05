@@ -1,4 +1,4 @@
-function tickLocations = chooseTicks(ymax)
+function tickLocations = tickLocations(ymax)
 
 scale = 10^floor(log10(ymax));
 
