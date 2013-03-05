@@ -72,7 +72,13 @@ nSamplesExpected = plotData.nSamplesExpected;
 fs_in = plotData.fs_in;
 plotData.plotIndex = zeros(1,plotData.nChannels);
 
-plotData.psthEdges = linspace(0,plotData.nSamplesExpected/fs_in,50);
+possible_binsizes = [1 2.5 5 10 25 50 100 250 1000 2500 5000 10000]/1000; % sec
+psth_binsize = possible_binsizes( ...
+        find(plotData.nSamplesExpected/fs_in/50>possible_binsizes, 1, 'last'));
+if isempty(psth_binsize)
+    psth_binsize = min(possible_binsizes);
+end
+plotData.psthEdges = 0:psth_binsize:plotData.nSamplesExpected/fs_in;
 psthX = reshape(repmat(plotData.psthEdges,2,1),1,2*length(plotData.psthEdges));
 plotData.psthX = psthX(2:end-1);
 plotData.psthCentres = (plotData.psthEdges(1:end-1)+plotData.psthEdges(2:end))/2;
@@ -116,6 +122,8 @@ for chan = 1:plotData.nChannels
     end
 
     % waveform plots
+    %plotData.plot{1}(chan) = waveformPlotInit(nSamplesExpected, plotData.subplot(chan));
+
     plotData.waveform(chan).axis.x = line([1 nSamplesExpected]/fs_in, [0 0], ...
         'color', [0 0 0], 'parent', plotData.subplot(chan),'hittest','off');
     plotData.waveform(chan).axis.y = line([minX minX], [-1 1], ...
