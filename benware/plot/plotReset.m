@@ -41,26 +41,13 @@ for chan = 1:plotData.nChannels
     set(plotData.raster(chan).oldSweeps, 'XData', oldSpikeX, 'YData', oldSpikeY);
     
     % update PSTH
-    % if ~isempty(newSpikes)
-    %   h = histc(newSpikes, plotData.psthEdges);
-    %   plotData.psth(chan).data = plotData.psth(chan).data + h(1:end-1);
-    % end
-
-    % scaling / axis label should change even when newSpikes is empty
-    % oldPSTH = false;
-    % if oldPSTH
-    %   mx = max(plotData.psth(chan).data);
-    %   scaled = plotData.psth(chan).data/mx*2-1;
-    %   psthY = reshape(repmat(scaled,2,1),1,2*length(scaled));
-
-    %   set(plotData.psth(chan).line,'ydata',psthY, 'color', col);
-    %   set(plotData.psth(chan).labelHandles(2), 'string', sprintf('%d', mx));
-    % else
     active_psth = [];
     switch state.plot.type
       case 'p'
+        % pooled
         active_psth = state.onlineData.psth.pooledData;
       case cellstr(char(48:57)')' % numbers 0-9
+        % per-set
         n = str2num(state.plot.type);
         if n>state.onlineData.nSets;
           active_psth = state.onlineData.psth.pooledData;

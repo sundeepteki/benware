@@ -31,6 +31,9 @@ switch eventInfo.Key
     else
       state.shouldPause = true;
     end
+  case {'delete', 'backspace'}
+    state.onlineData = onlineDataInit('reset', [], [], []);
+    state.plot.typeShouldChange = true;
 end
 
 switch eventInfo.Character
