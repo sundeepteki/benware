@@ -41,17 +41,23 @@ else
   plotChans = 1:plotData.nChannels;
 end
 
+% switch the active handles to the currently selected plot type
 if state.plot.typeShouldChange
   for chan = 1:plotData.nChannels
     makeInvisible(plotData.activeHandles{chan});
     switch state.plot.type
       case 'w'
+        % waveform
         plotData.activeHandles{chan} = plotData.waveform(chan).handles;
         plotData.dataHandles{chan} = plotData.waveform(chan).dataHandles;
+
       case 'r'
+        % raster
         plotData.activeHandles{chan} = plotData.raster(chan).handles;
         plotData.dataHandles{chan} = plotData.raster(chan).dataHandles;
+
       case 'p'
+        % set data to the pooled PSTH; copied from plotReset
         plotData.activeHandles{chan} = plotData.psth(chan).handles;
         plotData.dataHandles{chan} = plotData.psth(chan).dataHandles;
         active_psth = state.onlineData.psth.pooledData;
@@ -62,6 +68,7 @@ if state.plot.typeShouldChange
         set(plotData.psth(chan).labelHandles(2), 'string', sprintf('%d', mx));
 
       case cellstr(char(49:57)')' % numbers 1-9
+        % set data to the appropriate per-set PSTH; copied from plotReset
         plotData.activeHandles{chan} = plotData.psth(chan).handles;
         plotData.dataHandles{chan} = plotData.psth(chan).dataHandles;
         n = str2num(state.plot.type);
@@ -77,10 +84,13 @@ if state.plot.typeShouldChange
         set(plotData.psth(chan).labelHandles(2), 'string', sprintf('%d', mx));
 
       case 'l'
+        % LFP
         plotData.activeHandles{chan} = plotData.lfp(chan).handles;
         plotData.dataHandles{chan} = plotData.lfp(chan).dataHandles;
+
     end
     makeVisible(plotData.activeHandles{chan});
+
   end
 end
 
@@ -97,6 +107,8 @@ if state.plot.activeChannelShouldChange
   end
 end
 
+% now, update the data for those plot types that change during a sweep
+% for other plots, just set the line colour to show the active channel
 for chan = plotChans
     
   if state.audioMonitor.channel==chan
@@ -125,6 +137,8 @@ for chan = plotChans
       end
 
     case 'r'
+      % get all spike times for this sweep, but plot only a subset if there are too many
+      % in plotReset, the current sweep will be made old
       t_s = spikeTimes{chan}'/1000;
       maxSpikes = 500*ii(chan)/plotData.nSamplesExpected; %max(100, 25*plotData.nSamplesExpected/plotData.fs_in);
       if length(t_s)>maxSpikes
