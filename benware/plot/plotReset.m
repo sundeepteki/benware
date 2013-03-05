@@ -64,7 +64,13 @@ for chan = 1:plotData.nChannels
       set(plotData.psth(chan).line,'ydata',psthY, 'color', col);
       set(plotData.psth(chan).labelHandles(2), 'string', sprintf('%d', mx));
     end
-    % end
+
+    % update LFP
+    mn = state.onlineData.lfp.sum/state.onlineData.lfp.nSweeps;
+    mn = mn - repmat(mean(mn, 2), 1, size(mn, 2));
+    plotData.lfpGain = 1/max(abs(mn(:)));
+    set(plotData.lfp(chan).line,'ydata',mn(chan, :)'*plotData.lfpGain);
+
   end
   
 end

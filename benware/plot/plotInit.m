@@ -182,7 +182,7 @@ for chan = 1:plotData.nChannels
     plotData.lfp(chan).axis.y = line([minX minX], [-1 1], ...
         'color', [0 0 0],'parent',plotData.subplot(chan),'hittest','off', 'visible', 'off');
     plotData.lfp(chan).line = line(0, 0, 'parent', plotData.subplot(chan),'hittest','off', 'visible', 'off');
-    set(plotData.lfp(chan).line, 'XData', plotData.sampleTimes);
+    set(plotData.lfp(chan).line, 'XData', state.onlineData.lfp.keptSampleTimes);
     plotData.lfp(chan).handles = [plotData.lfp(chan).axis.x plotData.lfp(chan).axis.y plotData.lfp(chan).line];
     plotData.lfp(chan).dataHandles = [plotData.lfp(chan).line];
     plotData.lfpGain = 1;

@@ -1,4 +1,4 @@
-function onlineDataUpdate(setIdx, spikeTimes, lfp);
+function onlineDataUpdate(setIdx, spikeTimes, lfpsignal);
 
 global state;
 
@@ -34,3 +34,14 @@ psth.nSweeps(setIdx) = psth.nSweeps(setIdx) + 1;
 psth.nPooledSweeps = psth.nPooledSweeps + 1;
 
 state.onlineData.psth = psth;
+
+lfp = state.onlineData.lfp;
+
+if lfp.nSweeps==0
+	lfp.sum = lfpsignal(:, lfp.samplesToKeep);
+else
+	lfp.sum = lfp.sum + lfpsignal(:, lfp.samplesToKeep);
+end
+lfp.nSweeps = lfp.nSweeps + 1;
+
+state.onlineData.lfp = lfp;

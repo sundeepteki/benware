@@ -2,7 +2,6 @@ function onlineData = onlineDataInit(sampleRate, nChannels, nSamplesExpected, gr
 
 if strcmp(sampleRate, 'reset')
 	global state;
-	onlineData.nSweeps = 0;
 	onlineData.nSets = state.onlineData.nSets;
 	onlineData.nChannels = state.onlineData.nChannels;
 	onlineData.sampleRate = state.onlineData.sampleRate;
@@ -10,14 +9,12 @@ if strcmp(sampleRate, 'reset')
 	onlineData.nSamplesExpected = state.onlineData.nSamplesExpected;
 
 else
-	onlineData.nSweeps = 0;
 	onlineData.nSets = size(grid.stimGrid, 1);
 	onlineData.nChannels = nChannels;
 	onlineData.sampleRate = sampleRate;
 	onlineData.nSamplesExpected = nSamplesExpected;
-end
 
-onlineData.nSamplesToPlot = 2000;
+end
 
 % cell array containing spike times from the last sweeps on each channel
 %onlineData.spikeTimes = cell(o1, onlineData.nChannels);
@@ -42,10 +39,16 @@ onlineData.psth.nPooledSweeps = 0;
 
 % LFP, downsampled to a maximum of nSamplesToPlot samples (or 1000Hz)
 onlineData.lfp.sampleRate = 1000; % Hz
-nLFPsamplesExpected = onlineData.nSamplesExpected/sampleRate * onlineData.lfp.sampleRate;
+onlineData.lfp.nSamplesToKeep = 2000;
+onlineData.lfp.nSweeps = 0;
 
-if nLFPsamplesExpected<onlineData.nSamplesToPlot
-    onlineData.samplesToPlot = 1:nLFPsamplesExpected;
+nLFPsamplesExpected = onlineData.nSamplesExpected/sampleRate * onlineData.lfp.sampleRate;
+onlineData.lfp.sampleTimes = (0:nLFPsamplesExpected-1)*1/onlineData.lfp.sampleRate;
+
+if nLFPsamplesExpected<onlineData.lfp.nSamplesToKeep
+    onlineData.lfp.samplesToKeep = 1:nLFPsamplesExpected;
 else
-    onlineData.samplesToPlot = round(linspace(1,nLFPSamplesExpected,onlineData.nSamplesToPlot));
+    onlineData.lfp.samplesToKeep = round(linspace(1,nLFPSamplesExpected,onlineData.lfp.nSamplesToKeep));
 end
+onlineData.lfp.keptSampleTimes = onlineData.lfp.sampleTimes(onlineData.lfp.samplesToKeep);
+onlineData.lfp.sum = nan(onlineData.nChannels, length(onlineData.lfp.samplesToKeep));

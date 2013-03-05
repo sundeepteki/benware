@@ -141,7 +141,7 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
       spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, tdt.dataSampleRate, spikeThreshold);
       filterIndex = filterIndex + size(filtData,2);
     end
-        
+
      %fprintf(['  * filtering done after ' num2str(toc) ' sec.\n']);tic;
  
     % check audio monitor is on the right channel
@@ -223,9 +223,9 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
     lfp(chan, :) = data(chan, LFPsamples);
   end
 
-  % soon to be removed LFP update code  
+  % soon to be removed LFP update code
   plotData.nSweeps = plotData.nSweeps + 1;
-  plotData = plotUpdateLFP(plotData, data);
+  %plotData = plotUpdateLFP(plotData, data);
   plotData = plotUpdate(plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
   plotData.lastSweepSpikes = spikeTimes;
 

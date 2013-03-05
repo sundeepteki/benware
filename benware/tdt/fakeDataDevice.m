@@ -85,8 +85,9 @@ classdef fakeDataDevice < handle
         responseProbability = s/max(s)/obj.sampleRate*100; % originally * 20
         responseProbability(isnan(responseProbability)) = 0;
         r = rand(1, maxSamples);
-        obj.buffer = single((0.1*r - (r<responseProbability)) *.002);
-
+        s(~isfinite(s)) = 0;
+        obj.buffer = single((0.1*s/max(s)+0.1*r - (r<responseProbability)) *.002);
+        %obj.buffer = single((0.1*r - (r<responseProbability)) *.002);
         obj.ADidx = zeros(1,128);
         obj.triggerTime = now;
         if isobject(obj.timer)

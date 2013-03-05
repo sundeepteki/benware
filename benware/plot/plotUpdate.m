@@ -121,7 +121,6 @@ for chan = plotChans
     case 'w'
       toPlot = plotData.samplesToPlot < ii(chan);
       set(plotData.waveform(chan).line, 'XData', plotData.sampleTimes(toPlot), 'YData', d(chan, plotData.samplesToPlot(toPlot)) * gain, 'color', col);
-      
       t_s = spikeTimes{chan}'/1000;
       maxSpikes = 500*ii(chan)/plotData.nSamplesExpected;
       %max(100, 25*plotData.nSamplesExpected/plotData.fs_in);
