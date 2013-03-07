@@ -14,7 +14,7 @@ if isempty(newestDir)
 end
 
 % load the grid from this directory
-gridFilename = [exptDir newestDir.name filesep 'gridInfo.mat']
+gridFilename = [exptDir newestDir.name filesep 'gridInfo.mat'];
 if ~exist(gridFilename, 'file')
   return;
 end

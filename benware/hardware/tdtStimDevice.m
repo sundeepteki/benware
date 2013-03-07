@@ -7,11 +7,11 @@ classdef tdtStimDevice < tdtDevice
     function obj = tdtStimDevice(deviceName, requestedSampleRateHz, nChannels)
 
       if nChannels==1
-          rcxFilename = '../tdt/monoplay.rcx';
+          rcxFilename = 'benware/tdt/monoplay.rcx';
           versionTagName = 'MonoPlayVer';
           versionTagValue = 3;
       elseif nChannels==2
-          rcxFilename = '../tdt/stereoplay.rcx';
+          rcxFilename = 'benware/tdt/stereoplay.rcx';
           versionTagName = 'StereoPlayVer';
           versionTagValue = 5;
       else
@@ -57,7 +57,7 @@ classdef tdtStimDevice < tdtDevice
         nSamples = obj.handle.GetTagVal('nSamples');
     end
     
-    function resetStimDevice(obj)
+    function reset(obj)
         obj.handle.SoftTrg(9);
     end
     

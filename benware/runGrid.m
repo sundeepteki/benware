@@ -15,7 +15,7 @@ diary(constructDataPath([expt.dataDir expt.logFilename], grid, expt));
 
 fprintf_title('Preparing to record');
 
-setAudioMonitorChannel(tdt, state.audioMonitor.channel);
+tdt.dataDevice.setAudioMonitorChannel(state.audioMonitor.channel);
 
 % close open files if there is an error or ctrl-c
 cleanupObject = onCleanup(@()cleanup(tdt));

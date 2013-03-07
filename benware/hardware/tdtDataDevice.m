@@ -7,7 +7,7 @@ classdef tdtDataDevice < tdtDevice
 
     function obj = tdtDataDevice(deviceName, requestedSampleRateHz, channelMap)
 
-      rcxFilename = ['../tdt/' deviceName '-nogain.rcx'];
+      rcxFilename = ['benware/tdt/' deviceName '-nogain.rcx'];
       versionTagName = [deviceName 'NoGainVer'];
       versionTagValue = 3;
       
@@ -57,6 +57,35 @@ classdef tdtDataDevice < tdtDevice
     function softTrigger(obj)
         obj.handle.SoftTrg(1);
     end
-        
+
+    function index = countAllData(obj, nChannels)
+        % index = countAllData(dataDevice, nChannels)
+        %
+        % Count the number of samples available on each channel of the data Device
+        % i.e. the index that the serial buffers have reached
+        % 
+        % dataDevice: A handle to the data device
+        % nChannels: The number of channels that you want information about
+        % index: 1xnChannels vector of buffer indexes
+
+        index = nan(1, nChannels);
+        for chan = 1:nChannels
+            index(chan) = obj.handle.GetTagVal(['ADidx' num2str(chan)]);
+        end
+    end
+    
+    function index = countData(obj, chan)
+        % index = countData(dataDevice, chan)
+        %
+        % Count number of samples available on a specified channel of the 
+        % data device
+        %
+        % dataDevice: handle of the data device
+        % chan: the number of the channel you want
+        % index: the index that the serial buffer has reached
+
+        index = obj.handle.GetTagVal(['ADidx' num2str(chan)]);
+    end
+    
   end
 end
