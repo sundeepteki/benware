@@ -4,50 +4,50 @@ classdef tdtStimDevice < tdtDevice
 
 	methods
 
-	function obj = tdtStimDevice(deviceName, requestedSampleRateHz, nChannels)
+		function obj = tdtStimDevice(deviceName, requestedSampleRateHz, nChannels)
 
-		if nChannels==1
-			rcxFilename = 'benware/tdt/monoplay.rcx';
-			versionTagName = 'MonoPlayVer';
-			versionTagValue = 3;
-		elseif nChannels==2
-			rcxFilename = 'benware/tdt/stereoplay.rcx';
-			versionTagName = 'StereoPlayVer';
-			versionTagValue = 5;
-		else
-			errorBeep('Can only do mono or stereo\n');
-		end
-		
-		obj = obj@tdtDevice(deviceName, rcxFilename, versionTagName, versionTagValue, ...
-			requestedSampleRateHz);
-
-		if strcmp(deviceName, 'RX8')
-			channel.L = 20;
-			channel.R = 18;
-
-		elseif strcmp(deviceName, 'RX6')
-			channel.L = 1;
-			channel.R = 2;
+			if nChannels==1
+				rcxFilename = 'benware/tdt/monoplay.rcx';
+				versionTagName = 'MonoPlayVer';
+				versionTagValue = 3;
+			elseif nChannels==2
+				rcxFilename = 'benware/tdt/stereoplay.rcx';
+				versionTagName = 'StereoPlayVer';
+				versionTagValue = 5;
+			else
+				errorBeep('Can only do mono or stereo\n');
+			end
 			
-		else
-			errorBeep('I don''t know the output channel numbers for this device\n');
+			obj = obj@tdtDevice(deviceName, rcxFilename, versionTagName, versionTagValue, ...
+				requestedSampleRateHz);
+
+			if strcmp(deviceName, 'RX8')
+				channel.L = 20;
+				channel.R = 18;
+
+			elseif strcmp(deviceName, 'RX6')
+				channel.L = 1;
+				channel.R = 2;
+				
+			else
+				errorBeep('I don''t know the output channel numbers for this device\n');
+			end
+
+			obj.handle.SetTagVal('LeftChannel', channel.L);
+			obj.handle.SetTagVal('RightChannel', channel.R);
+
 		end
 
-		obj.handle.SetTagVal('LeftChannel', channel.L);
-		obj.handle.SetTagVal('RightChannel', channel.R);
-
-	end
-
-	function stim = downloadStim(obj, offset, nSamples, nStimChans)
-    % why is nStimChans specified here? It should be obvious 
-    % from the stimDevice. i think that however channel numbers
-    % are specified should be rationalised
-    stim(1,:) = obj.handle.ReadTagV('WaveformL', offset, nSamples);
-        
-    if nStimChans==2
-    	stim(2,:) = obj.handle.ReadTagV('WaveformR', offset, nSamples);
-    end
-  end
+		function stim = downloadStim(obj, offset, nSamples, nStimChans)
+	    % why is nStimChans specified here? It should be obvious 
+	    % from the stimDevice. i think that however channel numbers
+	    % are specified should be rationalised
+	    stim(1,:) = obj.handle.ReadTagV('WaveformL', offset, nSamples);
+	        
+	    if nStimChans==2
+	    	stim(2,:) = obj.handle.ReadTagV('WaveformR', offset, nSamples);
+	    end
+	  end
 
 	  function index = getStimIndex(obj)
 	  	index = obj.handle.GetTagVal('StimIndex');
