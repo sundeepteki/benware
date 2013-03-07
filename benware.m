@@ -57,6 +57,12 @@ else
   fakeHardware = true;
 end
 
+if fakeHardware
+  expt.stimDeviceType = 'fakeStimDevice';
+  expt.dataDeviceType = 'fakeDataDevice';
+  expt.triggerDevice = 'stimAndDataDevices';
+end
+
 expt.logFilename = 'benWare.log';
 expt.spikeThreshold = -3.2; % -2.8
 expt.nChannels = length(expt.channelMapping);

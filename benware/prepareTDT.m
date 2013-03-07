@@ -43,12 +43,15 @@ else
     nStimChannels = 2;
 end
 tdt.stimDevice = feval(expt.stimDeviceType, expt.stimDeviceName, grid.sampleRate, nStimChannels);
-tdt.dataDevice = feval(expt.dataDeviceType, expt.dataDeviceName, expt.dataDeviceSampleRate, expt.channelMapping);
+tdt.dataDevice = feval(expt.dataDeviceType, expt.dataDeviceName, expt.dataDeviceSampleRate, ...
+						expt.channelMapping, tdt.stimDevice);
 
-if strcmp(expt.triggerDevice, 'stimDevice')
+if strcmpi(expt.triggerDevice, 'stimDevice')
     tdt.triggerDevice = tdt.stimDevice;
-elseif strcmpi(expt.triggerDevice, 'zbus')
+elseif strcmpi(expt.triggerDevice, 'zBus')
     tdt.triggerDevice = zBus();
+elseif strcmpi(expt.triggerDevice, 'stimAndDataDevices')
+	tdt.triggerDevice = stimAndDataTrigger(tdt.stimDevice, tdt.dataDevice);
 else
     errorBeep('Unknown trigger type');
 end
