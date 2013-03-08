@@ -47,7 +47,8 @@ plotData = plotInit(expt.dataDeviceSampleRate, expt.nChannels, nSamplesExpected,
 %% run sweeps
 % =============
 
-for sweepNum = firstSweep:grid.nSweepsDesired
+sweepNum = firstSweep;
+while sweepNum<=grid.nSweepsDesired
   tic;
   
   stim = nextStim;
@@ -96,10 +97,41 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   end
   
   % run the sweep
-  [nSamples, sweeps(sweepNum).spikeTimes, lfp, sweeps(sweepNum).timeStamp, ...
-    plotData] = runSweep(hardware, sweepLen, expt.nChannels, stim, nextStim, ...
-    spikeFilter, expt.spikeThreshold, grid.saveWaveforms, ...
-    sweeps(sweepNum).dataFiles, plotData);
+  [nSamples, spikeTimes, lfp, timeStamp, plotData] = ...
+      runSweep(hardware, sweepLen, expt.nChannels, stim, nextStim, ...
+              spikeFilter, expt.spikeThreshold, grid.saveWaveforms, sweeps(sweepNum).dataFiles, plotData);
+
+  % check whether sweep was successful; if not, offer to repeat it
+  if state.noData.warnUser
+    if isfield(state, 'justWarnOnDataEmpty') && state.justWarnOnDataEmpty
+      % then just warn, don't make a fuss
+      fprintf_title('Some incoming channels are empty -- perhaps your Medusa batteries ran out?');
+    else
+      % then pause, warn the user properly, and offer to do something
+      bbeep;
+      fprintf_title('Some incoming channels are empty -- perhaps your Medusa batteries ran out?');
+      in = lower(demandinput('Do you want to repeat the sweep (fix the problem first!), carry on anyway, or quit? [R/c/q] ','rcq','r',true));
+      if in=='c'
+        % carry on anyway; don't warn again
+        state.noData.alreadyWarned = true;
+        state.noData.warnUser = false;
+      elseif in=='q'
+        % quit.
+        % this will leave the last sweep of waveform data on disk. perhaps this shouldn't happen, though
+        % if the user has quit, she probably doesn't care much
+        state.userQuit = true;
+      else
+        % repeat the sweep -- reset the warning, and go on to th next iteration of the while loop without
+        % saving any more data (though waveforms will usually already have been saved by runGrid)
+        % don't update sweepNum, so that sweep is repeated;
+        state.noData.warnUser = false;
+        continue;
+      end
+    end
+  end
+
+  sweeps(sweepNum).spikeTimes = spikeTimes;
+  sweeps(sweepNum).timeStamp = timeStamp;
   
   % store sweep duration
   sweeps(sweepNum).sweepLen.samples = nSamples;
@@ -140,17 +172,6 @@ for sweepNum = firstSweep:grid.nSweepsDesired
     state.paused = false;
   end
   
-  if state.noData.warnUser
-    bbeep;
-    fprintf_title('Some incoming channels are empty -- perhaps your Medusa batteries ran out?');
-    if lower(demandinput('Do you want to carry on anyway? ','yn','n',true))=='y'
-       state.noData.alreadyWarned = true;
-       state.noData.warnUser = false;
-    else
-      state.userQuit = true;
-    end
-  end
-  
   if state.userQuit
     bbeep;
     fprintf_title('Do you really want to quit?');
@@ -162,6 +183,9 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   end
   
   visualBellOff;
+
+  % successfully on to the next sweep
+  sweepNum = sweepNum + 1;
 end
 
 cleanup(hardware);

@@ -28,6 +28,11 @@ if grid.monoStim
 else
     nStimChannels = 2;
 end
+
+% if isfield(hardware, 'stimDevice')
+%   if strcmp(class(hardware.stimDevice), expt.stimDeviceType)) && strcmp(hardware.stimDevice, exptstimDeviceName)
+%     % then we already have a device of the right kind, so just run initialise()
+%    hardware.stimDevice.initialise(expt.stimDeviceType, expt.stimDeviceName, grid.sampleRate, nStimChannels);
 hardware.stimDevice = feval(expt.stimDeviceType, expt.stimDeviceName, grid.sampleRate, nStimChannels);
 hardware.dataDevice = feval(expt.dataDeviceType, expt.dataDeviceName, expt.dataDeviceSampleRate, ...
             expt.channelMapping, hardware.stimDevice);

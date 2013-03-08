@@ -45,6 +45,16 @@ if TEST
     fakeHardware = true;
 end
 
+if ~exist('CALIB', 'var')
+  CALIB = false;
+end
+
+if CALIB
+  state.justWarnOnDataEmpty = true;
+else
+  state.justWarnOnDataEmpty = false;
+end
+
 if ispc
   dataRoot = expt.dataRoot;
   expt.exptDir = [dataRoot expt.exptSubDir];
@@ -53,6 +63,7 @@ else
   expt.exptDir = ['./' expt.exptSubDir];
   expt.dataDir = ['./' expt.exptSubDir expt.dataSubDir];
   fakeHardware = true;
+  %state.justWarnOnDataEmpty = true;
 end
 
 if fakeHardware
