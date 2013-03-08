@@ -1,5 +1,5 @@
-function runGrid(tdt, expt, grid, firstSweep)
-% runGrid(tdt, expt, grid)
+function runGrid(hardware, expt, grid, firstSweep)
+% runGrid(hardware, expt, grid)
 % 
 % Run a whole grid
 
@@ -15,10 +15,10 @@ diary(constructDataPath([expt.dataDir expt.logFilename], grid, expt));
 
 fprintf_title('Preparing to record');
 
-tdt.dataDevice.setAudioMonitorChannel(state.audioMonitor.channel);
+hardware.dataDevice.setAudioMonitorChannel(state.audioMonitor.channel);
 
 % close open files if there is an error or ctrl-c
-cleanupObject = onCleanup(@()cleanup(tdt));
+cleanupObject = onCleanup(@()cleanup(hardware));
 
 % make filter for spike detection
 spikeFilter = makeSpikeFilter(expt.dataDeviceSampleRate);
@@ -26,7 +26,7 @@ spikeFilter = makeSpikeFilter(expt.dataDeviceSampleRate);
 % upload first stimulus
 [nextStim sweeps(firstSweep).stimInfo] = grid.stimGenerationFunction(firstSweep, grid, expt);
 fprintf('  * Uploading first stimulus...');
-uploadWholeStim(tdt.stimDevice, nextStim);
+uploadWholeStim(hardware.stimDevice, nextStim);
 fprintf(['done after ' num2str(toc) ' sec.\n']);
 
 % set up plot
@@ -97,7 +97,7 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   
   % run the sweep
   [nSamples, sweeps(sweepNum).spikeTimes, lfp, sweeps(sweepNum).timeStamp, ...
-    plotData] = runSweep(tdt, sweepLen, expt.nChannels, stim, nextStim, ...
+    plotData] = runSweep(hardware, sweepLen, expt.nChannels, stim, nextStim, ...
     spikeFilter, expt.spikeThreshold, grid.saveWaveforms, ...
     sweeps(sweepNum).dataFiles, plotData);
   
@@ -164,7 +164,7 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   visualBellOff;
 end
 
-cleanup(tdt);
+cleanup(hardware);
 visualBellOff;
 
 if ~state.userQuit && isfield(state, 'bugle') && state.bugle

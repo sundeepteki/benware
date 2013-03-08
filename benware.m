@@ -120,13 +120,11 @@ if ~gotGrid
 end
 
 
-%% prepare TDT
-if ~exist('tdt','var')
-  tdt = [];
+%% prepare hardware
+if ~exist('hardware','var')
+  hardware = [];
 end
-tdt = prepareTDT(tdt, expt, grid);
+hardware = prepareHardware(hardware, expt, grid);
 
 %% run the grid
-runGrid(tdt, expt, grid, firstSweep);
-
-
+runGrid(hardware, expt, grid, firstSweep);
