@@ -28,8 +28,6 @@ expt.channelMapping = generateChannelMapping(expt.probes);
 
 printExpt(expt);
 
-printProbes(expt.probes);
-
 if exist('expt.mat', 'file')
   movefile expt.mat expt.mat.old
 end

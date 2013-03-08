@@ -1,4 +1,4 @@
-function mapping = generatechannelmapping
+function mapping = generatechannelmapping(probestruct)
 % generatechannelmapping
 
 info = neuronexusProbeInfo;
@@ -49,37 +49,18 @@ end
 fprintf('done\n');
 %% check code against known values
 
-%% gather input
-fprintf('\n= Which probe layout?\n');
-for ii = 1:length(probes)
-	fprintf(' %d. %s\n', ii, probes(ii).name);
+mapping = [];
+for ii = 1:length(probestruct)
+	probe = probes(find(strcmp({probes(:).name}, probestruct(ii).layout)));
+	headstage = headstages(find(strcmp({headstages(:).name}, probestruct(ii).headstage)));
+	inputconnector = connectors(find(strcmp({connectors(:).name}, headstage.inputconnector)));
+	outputconnector = connectors(find(strcmp({connectors(:).name}, headstage.outputconnector)));
+	mapping = [mapping getchannelmapping(probe, headstage, inputconnector, outputconnector, 1)+length(mapping)];
 end
-probenum = input(sprintf('Type 1-%d: ', length(probes)));
-probe = probes(probenum);
-
-fprintf('\n= Which headstage?\n');
-for ii = 1:length(headstages)
-	fprintf(' %d. %s\n', ii, headstages(ii).name);
-end
-headstagenum = input(sprintf('Type 1-%d: ', length(headstages)));
-headstage = headstages(headstagenum);
-
-fprintf('\n= How many probes?\n');
-num_probes = input(sprintf('Type the number: ', length(headstages)));
-if isempty(num_probes)
-	num_probes = 1;
-end
-
-inputconnector = connectors(find(strcmp({connectors(:).name}, headstage.inputconnector)));
-outputconnector = connectors(find(strcmp({connectors(:).name}, headstage.outputconnector)));
-
-mapping = getchannelmapping(probe, headstage, inputconnector, outputconnector, num_probes);
 
 fprintf('\n= The mapping is:\n');
 disp(mapping);
 
-
-function checkchannelmappings
 
 function mapping = getchannelmapping(probe, headstage, inputconnector, outputconnector, num_probes)
 

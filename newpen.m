@@ -16,6 +16,17 @@ end
 expt.penetrationNum = n;
 fprintf('Setting penetration number to %d\n', n);
 
+in = demandinput('Do you need to update probe info? [y/N]', 'yn', 'n');
+if lower(in)=='y'
+	if isfield(expt, 'probes')
+		expt.probes = chooseProbes(expt.probes);
+	else
+		expt.probes = chooseProbes;
+	end
+
+	expt.channelMapping = generateChannelMapping(expt.probes);
+end
+
 printExpt(expt);
 
 if exist('expt.mat', 'file')
