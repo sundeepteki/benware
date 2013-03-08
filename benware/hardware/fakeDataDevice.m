@@ -30,7 +30,7 @@ classdef fakeDataDevice < handle
     
     function data = downloadAllData(obj)
       maxIndex = min(ADidx);
-      data = repmat(obj.buffer(1:maxIndex), nChannels);
+      data = obj.buffer(1:obj.nChannels, 1:maxIndex);
     end
 
     function data = downloadData(obj, chan, offset)
@@ -40,9 +40,8 @@ classdef fakeDataDevice < handle
         data = [];
       elseif maxIndex<offset
         data = [];
-        errorBeep('Data requested beyond end of buffer!\n');
       else
-        data = obj.buffer(offset:maxIndex);
+        data = obj.buffer(chan, offset:maxIndex);
       end
     end
     
@@ -73,7 +72,7 @@ classdef fakeDataDevice < handle
       % dataDevice: A handle to the data device
       % nChannels: The number of channels that you want information about
       % index: 1xnChannels vector of buffer indexes
-      index = obj.ADidx;
+      index = obj.ADidx(1:nChannels);
     end
     
     function index = countData(obj, chan)
@@ -102,9 +101,11 @@ classdef fakeDataDevice < handle
       s = interp1(origSamplePoints,s,newSamplePoints);
       responseProbability = s/max(s)/obj.sampleRate*100; % originally * 20
       responseProbability(isnan(responseProbability)) = 0;
-      r = rand(1, maxSamples);
+      responseProbability = repmat(responseProbability, obj.nChannels, 1);
+      r = rand(obj.nChannels, maxSamples);
       s(~isfinite(s)) = 0;
-      obj.buffer = single((0.1*s/max(s)+0.1*r - (r<responseProbability)) *.002);
+      s = repmat(s, obj.nChannels, 1);
+      obj.buffer = single((0.1*s/max(s(:))+0.1*r - (r<responseProbability)) *.002);
       obj.ADidx = zeros(1,obj.nChannels);
       obj.triggerTime = now;
       if isobject(obj.timer)
