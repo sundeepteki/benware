@@ -188,7 +188,8 @@ while sweepNum<=grid.nSweepsDesired
   sweepNum = sweepNum + 1;
 end
 
-cleanup(hardware);
+% cleanup seems to happen on quit anyway, not sure why
+%cleanup(hardware);
 visualBellOff;
 
 if ~state.userQuit && isfield(state, 'bugle') && state.bugle
