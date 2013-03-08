@@ -42,7 +42,6 @@ load expt.mat;
 TEST = false;
 if TEST
     dataRoot = '\';
-    global fakeHardware
     fakeHardware = true;
 end
 
@@ -53,7 +52,6 @@ if ispc
 else
   expt.exptDir = ['./' expt.exptSubDir];
   expt.dataDir = ['./' expt.exptSubDir expt.dataSubDir];
-  global fakeHardware %#ok<TLEV>
   fakeHardware = true;
 end
 
