@@ -51,7 +51,7 @@ switch eventInfo.Character
       state.plot.typeShouldChange = true;
     end
     state.plot.enabled = ~state.plot.enabled;
-  case {'w', 'r', 'p', 'l'}
+  case {'w', 'r', 'p', 'l', 's'}
     state.plot.enabled = true;
     state.plot.type = eventInfo.Character;
     state.plot.typeShouldChange = true;

@@ -225,7 +225,6 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(hardware, .
 
   % soon to be removed LFP update code
   plotData.nSweeps = plotData.nSweeps + 1;
-  %plotData = plotUpdateLFP(plotData, data);
   plotData = plotUpdate(plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
   plotData.lastSweepSpikes = spikeTimes;
 
