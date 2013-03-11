@@ -1,4 +1,11 @@
-function stim = makeBilateralNoise(sampleRate, duration, leftDelay, rightDelay, bothDelay, level)
+function stim = makeBilateralNoise(sampleRate, nChannels, duration, leftDelay, rightDelay, bothDelay, level)
+% function stim = makeBilateralNoise(sampleRate, nChannels, duration, leftDelay, rightDelay, bothDelay, level)
+% generate L-R-both bilateral noise stimulus
+% used as a search stimulus by Ben
+
+if nChannels~=2
+	errorBeep('Bilateral noise requires expt.nStimChannels=2');
+end
 
 % convert lengths from ms to samples
 duration = ceil(duration/1000*sampleRate);
@@ -31,9 +38,4 @@ stim = stim.*[envL; envR];
 
 % apply level offset
 level_offset = level-80;
-if length(level_offset)==1
-	level_offset = repmat(level_offset, 1, size(stim, 1));
-end
-for chan = 1:size(stim, 1)
-  stim(chan, :) = stim(chan, :) * 10^(level_offset(1) / 20);
-end
+stim = stim * 10^(level_offset(1) / 20);

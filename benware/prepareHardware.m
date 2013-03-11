@@ -23,17 +23,14 @@ if isempty(hardware)
   hardware = struct();
 end
 
-if grid.monoStim
-    nStimChannels = 1;
-else
-    nStimChannels = 2;
-end
+% we want to be able to have mono or stereo stimulus device because the amount of buffer space on the 
+% TDT devices is limited. We don't want to share the buffer with a non-existant second channel.
 
 % if isfield(hardware, 'stimDevice')
 %   if strcmp(class(hardware.stimDevice), expt.stimDeviceType)) && strcmp(hardware.stimDevice, exptstimDeviceName)
 %     % then we already have a device of the right kind, so just run initialise()
 %    hardware.stimDevice.initialise(expt.stimDeviceType, expt.stimDeviceName, grid.sampleRate, nStimChannels);
-hardware.stimDevice = feval(expt.stimDeviceType, expt.stimDeviceName, grid.sampleRate, nStimChannels);
+hardware.stimDevice = feval(expt.stimDeviceType, expt.stimDeviceName, grid.sampleRate, expt.nStimChannels);
 hardware.dataDevice = feval(expt.dataDeviceType, expt.dataDeviceName, expt.dataDeviceSampleRate, ...
             expt.channelMapping, hardware.stimDevice);
 
