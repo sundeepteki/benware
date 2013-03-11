@@ -24,6 +24,10 @@ if ~isfield(grid, 'saveWaveforms')
   grid.saveWaveforms = true;
 end
 
+if ~isfield(grid, 'compensationFilters')
+  grid.compensationFilters = [];
+end
+
 if isfield(grid, 'sweepLen') && isfield(grid, 'postStimSilence')
   error('grid:error', 'Grid specifies both sweepLen and postStimSilence');
 end

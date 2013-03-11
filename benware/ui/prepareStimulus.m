@@ -10,18 +10,22 @@ stimInfo.stimParameters = grid.randomisedGrid(sweepNum, :);
 parameters = num2cell(stimInfo.stimParameters);
 
 % generate stimulus vector/matrix
-stim = feval(stimGenerationFunction, grid.sampleRate, expt.nStimChannels, expt.compensationFilters, grid, parameters{:});
+stim = feval(stimGenerationFunction, expt, grid, grid.sampleRate, expt.nStimChannels, ...
+				grid.compensationFilters, parameters{:});
+
+% check number of channels is correct
+if size(stim, 1)~=expt.nStimChannels
+	errorBeep('Stimulus function %s did not generate the correct number of channels (%d)', ...
+				func2str(stimGenerationFunction), expt.nStimChannels);
+end
 
 % apply level offset
 level_offset = grid.stimLevelOffsetDB;
 if length(level_offset)==1
 	level_offset = repmat(level_offset, 1, size(stim, 1));
 end
+
 for chan = 1:size(stim, 1)
-  stim(chan, :) = stim(chan, :) * 10^(level_offset(1) / 20);
+  stim(chan, :) = stim(chan, :) * 10^(level_offset(chan) / 20);
 end
 
-if size(stim, 1)~=expt.nStimChannels
-	errorBeep('Stimulus function %s did not generate the correct number of channels (%d)', ...
-				func2str(stimGenerationFunction), expt.nStimChannels);
-end

@@ -2,8 +2,8 @@ function grid = grid_texture_v2()
 
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'loadStimAndCompensate';
-  grid.stimDir = 'e:\auditory-objects\sounds-uncalib\texture.v2\';
-  %grid.stimDir = '/Users/ben/scratch/texture/texture.v2/renamed/';
+  %grid.stimDir = 'e:\auditory-objects\sounds-uncalib\texture.v2\';
+  grid.stimDir = '/Users/ben/scratch/texture/texture.v2/renamed/';
   grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   % essentials
@@ -22,8 +22,8 @@ function grid = grid_texture_v2()
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
     'e:\auditory-objects\calibration\calib.expt42\compensationFilters.mat';
-  %grid.compensationFilterFile = ...
-  %  '/Users/ben/scratch/expt.42/calib.expt42/compensationFilters.mat';
+  grid.compensationFilterFile = ...
+    '/Users/ben/scratch/expt.42/calib.expt42/compensationFilters.mat';
 
   grid.compensationFilterVarNames = {'compensationFilters.L', 'compensationFilters.R'};
 

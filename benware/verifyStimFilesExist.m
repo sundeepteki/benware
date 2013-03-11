@@ -26,15 +26,15 @@ filesExist = cellfun(@(x) exist(x, 'file'), filenames);
 
 % are we done
 if all(filesExist(:))
-return
+  return
 end
 
 % raise error
 missingFilesStr = 'missing files:';
 for ii=1:L(filenames(:))
-if ~filesExist(ii)
-  missingFilesStr = [missingFilesStr '\n  - ' regexprep(filenames{ii},'\','\\\')];
-end
+	if ~filesExist(ii)
+	  missingFilesStr = [missingFilesStr '\n  - ' regexprep(filenames{ii},'\','\\\')];
+	end
 end
 
 errorBeep('stimulus:files', missingFilesStr);

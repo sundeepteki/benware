@@ -1,5 +1,5 @@
-function stim = loadStimFileAndCompensate(stimFile, compensationFilters, stimLevelOffsetDB)
-% stim = loadStimFileAndCompensate(stimFile, compensationFilters, stimLevelOffsetDB)
+function stim = loadStimFileAndCompensate(stimFile, compensationFilters, level)
+% stim = loadStimFileAndCompensate(stimFile, compensationFilters, level)
 %
 % Load a mono f32 or wav file and compensate using however many compensation
 % filters are available. The correct stimulus files are found by
@@ -12,7 +12,7 @@ function stim = loadStimFileAndCompensate(stimFile, compensationFilters, stimLev
 % 
 % stimFile -- stimulus file name
 % compensationFilters -- struct
-% stimLevelOffsetDB -- standard benware variable
+% level -- nominal level in dB
 
 % get hashes of stimulus and compensation filters
 hashoptions.Input = 'file';
@@ -54,9 +54,8 @@ else
 end
 
 % apply level offset
-for chan = 1:length(compensationFilters)
-	stim(chan, :) = stim(chan, :) * 10^(stimLevelOffsetDB(chan) / 20);
-end
+level_offset = level - 80;
+stim = stim * 10^(level_offset / 20);
 
 fprintf(['done after ' num2str(toc) ' sec.\n']);
 

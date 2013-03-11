@@ -1,4 +1,4 @@
-function stim = makeCSDprobe(sampleRate, nChannels, compensationFilters, grid, duration, delay, len, level)
+function stim = makeCSDprobe(expt, grid, sampleRate, nChannels, compensationFilters, duration, delay, len, level)
 
 % convert to samples
 duration = ceil(duration/1000*sampleRate);
