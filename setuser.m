@@ -8,6 +8,14 @@ if ~exist(newPath, 'dir')
   error(['No user info found in ' newPath]);
 end
 
+if ~exist(fix_slashes([newPath '/expt.mat']))
+  error(['No expt.mat found in ' newPath]);
+end
+
+if ~exist(fix_slashes([newPath '/grids']))
+  error(['No grids directory found in ' newPath]);
+end
+
 if exist(exptFilename, 'file')
   % then move existing stash to backup and move existing expt/grids to stash
   
@@ -33,10 +41,7 @@ if exist(exptFilename, 'file')
   mkdir_nowarning(stashPath);
   movefile(exptFilename, stashPath);
   gridsPath = [fix_slashes('./') 'grids'];
-
-  if exist(gridsPath, 'dir')
-    movefile(gridsPath, stashPath);
-  end
+  movefile(gridsPath, stashPath);
 
 end
 
