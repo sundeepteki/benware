@@ -7,7 +7,6 @@ function grid = grid_variable_speed_drc()
   grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   % essentials
-  grid.name = 'variable_speed_drc';
   grid.stimFilename = 'drc.%1.contrast.%2.variable.%3.f32';
   
   % stimulus grid structure

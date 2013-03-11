@@ -1,8 +1,5 @@
 function grid = grid_bilateral_noise
 
-  % essentials
-  grid.name = 'bilateral.noise';
-
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'makeBilateralNoise';
   grid.sampleRate = 24414.0625*2;  % ~50kHz
@@ -19,4 +16,4 @@ function grid = grid_bilateral_noise
   grid.saveWaveforms = false;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [-124 -129];
+  grid.stimLevelOffsetDB = [-124 -129]+80;

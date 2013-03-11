@@ -7,7 +7,6 @@ function grid = grid_density_v1()
   grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   % essentials
-  grid.name = 'density_v1';
   grid.stimFilename = 'drc.token.%1.density.%2.contrast.%3.f32';
   
   % stimulus grid structure

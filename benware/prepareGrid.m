@@ -20,7 +20,6 @@ if ~isfield(grid, 'monoStim')
   grid.monoStim = false;
 end
 
-
 if ~isfield(grid, 'saveWaveforms')
   grid.saveWaveforms = true;
 end

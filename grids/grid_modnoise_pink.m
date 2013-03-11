@@ -7,7 +7,6 @@ function grid = grid_modnoise_pink()
   grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   % essentials
-  grid.name = 'modnoise_pink';
   grid.stimFilename = 'McD_STRF_stim_PINK_%1.wav';
   
   % stimulus grid structure

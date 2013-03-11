@@ -17,20 +17,19 @@ classdef fakeStimDevice < handle
 
 	methods
 
-		function obj = fakeStimDevice(deviceName, requestedSampleRateHz, nChannels)
-			obj.deviceName = deviceName;
-			obj.sampleRate = requestedSampleRateHz;
-			obj.nChannels = nChannels;
+	  function obj = fakeStimDevice(deviceName, requestedSampleRateHz, nChannels)
+		obj.deviceName = deviceName;
+		obj.sampleRate = requestedSampleRateHz;
+		obj.nChannels = nChannels;
+	  end
+
+	  function stim = downloadStim(obj, offset, nSamples, nStimChans)
+		offset = offset + 1;
+		stim = obj.waveformL(offset:offset+nSamples-1);
+
+		if nStimChans==2
+			 stim(2,:) = obj.waveformR(offset:offset+nSamples-1);
 		end
-
-		function stim = downloadStim(obj, offset, nSamples, nStimChans)
-			offset = offset + 1;
-			stim = obj.waveformL(offset:offset+nSamples-1);
-
-			if nStimChans==2
-				 stim(2,:) = WaveformR(offset:offset+nSamples-1);
-			end
-
 	  end
 
 	  function index = getStimIndex(obj)
@@ -71,7 +70,7 @@ classdef fakeStimDevice < handle
 	  	obj.waveformL(offset:offset+nSamples-1) = stim(1,:);
 
 	  	if nChannels==2
-		  	obj.waveformL(offset:offset+nSamples-1) = stim(2,:);
+		  	obj.waveformR(offset:offset+nSamples-1) = stim(2,:);
 	    end
 	  end
 
@@ -81,7 +80,7 @@ classdef fakeStimDevice < handle
 	  	obj.waveformL(1:nSamples) = stim(1,:);
 
 	  	if nChannels==2
-		  	obj.waveformL(1:nSamples) = stim(2,:);
+		  	obj.waveformR(1:nSamples) = stim(2,:);
 	    end
 	    obj.nSamples = nSamples;
 	  end

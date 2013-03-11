@@ -1,7 +1,6 @@
 function grid = grid_sh_en_c
 
 % essentials
-grid.name = 'SH.En.C';
 grid.stimGenerationFunctionName = 'loadStereo';
 grid.stimDir = 'e:\auditory-objects\sounds.calib.expt42\%N\';
 grid.stimFilename = 'source.%1.sound.%2.snr.%3.token.%4.fw.%5.frozen.%6.%L.f32';

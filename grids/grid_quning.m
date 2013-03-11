@@ -1,7 +1,6 @@
 function grid = grid_quning()
 
   % essentials
-  grid.name = 'quning';
   grid.stimFilename = 'quning.cf.%1.%L.f32';
 
   % controlling the sound presentation

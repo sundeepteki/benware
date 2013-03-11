@@ -2,7 +2,9 @@
 % =================
 
 % set path
-%setpath;
+if ~exist('runSweep','file')
+  setpath;
+end
 
 % welcome
 printGreetings;

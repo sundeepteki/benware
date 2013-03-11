@@ -1,7 +1,6 @@
 function grid = grid_josh_natural
 
 % essentials
-grid.name = 'josh_natural';
 grid.stimGenerationFunctionName = 'loadStereo';
 grid.stimDir = 'e:\auditory-objects\sounds.calib.expt42\josh.natural\';
 grid.stimFilename = 'NatSoundsJosh_chunk%1_ex%2.%L.f32';

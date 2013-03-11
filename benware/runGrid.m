@@ -24,7 +24,9 @@ cleanupObject = onCleanup(@()cleanup(hardware));
 spikeFilter = makeSpikeFilter(expt.dataDeviceSampleRate);
 
 % upload first stimulus
-[nextStim sweeps(firstSweep).stimInfo] = grid.stimGenerationFunction(firstSweep, grid, expt);
+[nextStim sweeps(firstSweep).stimInfo] = prepareStimulus(...
+  grid.stimGenerationFunction, firstSweep, grid, expt);
+
 fprintf('  * Uploading first stimulus...');
 uploadWholeStim(hardware.stimDevice, nextStim);
 fprintf(['done after ' num2str(toc) ' sec.\n']);
@@ -58,7 +60,8 @@ while sweepNum<=grid.nSweepsDesired
   % retrieve the stimulus for the NEXT sweep
   isLastSweep = (sweepNum == grid.nSweepsDesired);
   if ~isLastSweep
-    [nextStim, sweeps(sweepNum+1).stimInfo] = grid.stimGenerationFunction(sweepNum+1, grid, expt);
+    [nextStim, sweeps(sweepNum+1).stimInfo] = prepareStimulus(grid.stimGenerationFunction, ...
+                                                              sweepNum+1, grid, expt);
   else
     nextStim = [];
   end
