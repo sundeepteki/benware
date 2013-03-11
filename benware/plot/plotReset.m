@@ -41,18 +41,35 @@ for chan = 1:plotData.nChannels
     set(plotData.raster(chan).oldSweeps, 'XData', oldSpikeX, 'YData', oldSpikeY);
     
     % update PSTH
-    if ~isempty(newSpikes)
-      h = histc(newSpikes, plotData.psthEdges);
-      plotData.psth(chan).data = plotData.psth(chan).data + h(1:end-1);
+    active_psth = [];
+    switch state.plot.type
+      case 'p'
+        % pooled
+        active_psth = state.onlineData.psth.pooledData;
+      case cellstr(char(48:57)')' % numbers 0-9
+        % per-set
+        n = str2num(state.plot.type);
+        if n>state.onlineData.nSets;
+          active_psth = state.onlineData.psth.pooledData;
+        else
+          active_psth = state.onlineData.psth.data(:, :, str2num(state.plot.type));
+        end
     end
 
-    % scaling / axis label should change even when newSpikes is empty
-    mx = max(plotData.psth(chan).data);
-    scaled = plotData.psth(chan).data/mx*2-1;
-    psthY = reshape(repmat(scaled,2,1),1,2*length(scaled));
+    if ~isempty(active_psth)
+      mx = max(active_psth(1:end-1, chan));
+      scaled = active_psth(1:end-1, chan)/mx*2-1;
+      psthY = reshape(repmat(scaled',2,1),1,2*length(scaled));
 
-    set(plotData.psth(chan).line,'ydata',psthY, 'color', col);
-    set(plotData.psth(chan).labelHandles(2), 'string', sprintf('%d', mx));
+      set(plotData.psth(chan).line,'ydata',psthY, 'color', col);
+      set(plotData.psth(chan).labelHandles(2), 'string', sprintf('%d', mx));
+    end
+
+    % update LFP
+    mn = state.onlineData.lfp.sum/state.onlineData.lfp.nSweeps;
+    mn = mn - repmat(mean(mn, 2), 1, size(mn, 2));
+    plotData.lfpGain = 1/max(abs(mn(:)));
+    set(plotData.lfp(chan).line,'ydata',mn(chan, :)'*plotData.lfpGain);
 
   end
   

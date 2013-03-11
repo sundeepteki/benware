@@ -37,8 +37,12 @@ elseif isfield(grid, 'maxSweepLength')
 else
   nSamplesExpected = floor((size(nextStim,2)/grid.sampleRate+grid.postStimSilence)*expt.dataDeviceSampleRate)+1;
 end
-plotData = plotInit(expt.dataDeviceSampleRate, expt.nChannels, nSamplesExpected, grid);
 
+if ~isfield(state, 'onlineData')
+  state.onlineData = onlineDataInit(expt.dataDeviceSampleRate, expt.nChannels, nSamplesExpected, grid);
+end
+
+plotData = plotInit(expt.dataDeviceSampleRate, expt.nChannels, nSamplesExpected, grid);
 
 %% run sweeps
 % =============
@@ -84,13 +88,6 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   end
   fprintf(['  * sweep length: ' num2str(sweepLen) ' s\n']);
   
-  % running PSTH
-  if ~isfield(state, 'psth')
-    state.psth.bins = 0:sweepLen/50:sweepLen;
-    state.psth.nReps = zeros(expt.nChannels, grid.nStimConditions);
-    state.psth.data = repmat({zeros(1,50)},expt.nChannels, grid.nStimConditions);
-  end
-
   % get filenames for saving data
   sweeps(sweepNum).dataFiles = constructDataPaths([expt.dataDir expt.dataFilename],grid,expt,sweepNum,expt.nChannels);
   dataDir = split_path(sweeps(sweepNum).dataFiles{1});
@@ -99,7 +96,7 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   end
   
   % run the sweep
-  [nSamples, sweeps(sweepNum).spikeTimes, sweeps(sweepNum).timeStamp, ...
+  [nSamples, sweeps(sweepNum).spikeTimes, lfp, sweeps(sweepNum).timeStamp, ...
     plotData] = runSweep(tdt, sweepLen, expt.nChannels, stim, nextStim, ...
     spikeFilter, expt.spikeThreshold, grid.saveWaveforms, ...
     sweeps(sweepNum).dataFiles, plotData);
@@ -111,31 +108,18 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   % save sweep metadata
   saveSingleSweepInfo(sweeps(sweepNum), grid, expt, sweepNum);
 
-  % update the appropriate running PSTHes
-  %keyboard
+  % update online data -- LFP
+  %updateOnlineLFP(lfp);
+  %updateOnlinePSTHes(
+  %state.data.nSweeps = sweepNum;
+  % state.data.lfp = updateLFP
+  %plotData.nSweeps = plotData.nSweeps + 1;
+  %plotData = plotUpdateLFP(plotData, lfp);
+  
+  %plotData.lastSweepSpikes = sweeps(sweepNum).spikeTimes;
+
   setIdx = grid.randomisedGridSetIdx(sweepNum);
-  for chan = 1:expt.nChannels
-    %keyboard
-    psth = histc(sweeps(sweepNum).spikeTimes{chan}, state.psth.bins);
-    psth = psth(1:end-1);
-    %size(psth)
-    %keyboard
-    if state.psth.nReps(chan, setIdx)==0
-      state.psth.data{chan, setIdx} = psth;
-      size(state.psth.data{chan, setIdx})
-    else 
-      state.psth.data{chan, setIdx} = (state.psth.data{chan, setIdx} * state.psth.nReps(chan, setIdx) + psth)/ ...
-        (state.psth.nReps(chan, setIdx)+1);
-      size(state.psth.data{chan, setIdx})
-      state.psth.nReps(chan, setIdx) = state.psth.nReps(chan, setIdx) + 1;
-    end
-  end
-  % keyboard
-  % try
-  %   psth = cell2mat(state.psth.data(1,:)')
-  % catch
-  %   keyboard;
-  % end
+  onlineDataUpdate(setIdx, sweeps(sweepNum).spikeTimes, lfp);
 
   fprintf(['  * Finished sweep after ' num2str(toc) ' sec.\n\n']);
   
@@ -180,7 +164,7 @@ for sweepNum = firstSweep:grid.nSweepsDesired
   visualBellOff;
 end
 
-diary off
+cleanup(tdt);
 visualBellOff;
 
 if ~state.userQuit && isfield(state, 'bugle') && state.bugle

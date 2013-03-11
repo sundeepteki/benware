@@ -31,6 +31,9 @@ switch eventInfo.Key
     else
       state.shouldPause = true;
     end
+  case {'delete', 'backspace'}
+    state.onlineData = onlineDataInit('reset', [], [], []);
+    state.plot.typeShouldChange = true;
 end
 
 switch eventInfo.Character
@@ -49,6 +52,10 @@ switch eventInfo.Character
     end
     state.plot.enabled = ~state.plot.enabled;
   case {'w', 'r', 'p', 'l'}
+    state.plot.enabled = true;
+    state.plot.type = eventInfo.Character;
+    state.plot.typeShouldChange = true;
+  case cellstr(char(49:57)')' % numbers 1-9
     state.plot.enabled = true;
     state.plot.type = eventInfo.Character;
     state.plot.typeShouldChange = true;

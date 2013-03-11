@@ -24,7 +24,6 @@ if fakeHardware
   end
 
 else
-
   if deviceIsFake(device)
     device = [];
   end

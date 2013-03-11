@@ -34,3 +34,5 @@ end
 if exist('channelNum', 'var')
     path = regexprep(path, '%C', n2s(channelNum, 2));
 end
+
+path = fix_slashes(path);

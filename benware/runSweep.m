@@ -1,4 +1,4 @@
-function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
+function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
   sweepLen, nChannels, stim, nextStim, spikeFilter, spikeThreshold, ...
   saveWaveforms, dataFiles, plotData)
   %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
@@ -141,7 +141,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
       spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, tdt.dataSampleRate, spikeThreshold);
       filterIndex = filterIndex + size(filtData,2);
     end
-        
+
      %fprintf(['  * filtering done after ' num2str(toc) ' sec.\n']);tic;
  
     % check audio monitor is on the right channel
@@ -181,10 +181,7 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
   fprintf(['  * ' num2str(sum(cellfun(@(i) length(i),spikeTimes))) ' spikes detected after ' num2str(toc) ' sec.\n']);
 
   % final plot
-  plotData.nSweeps = plotData.nSweeps + 1;
-  plotData = plotUpdateLFP(plotData, data);
   plotData = plotUpdate(plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
-  plotData.lastSweepSpikes = spikeTimes;
 
   % close data files
   if saveWaveforms
@@ -210,11 +207,27 @@ function [nSamples, spikeTimes, timeStamp, plotData] = runSweep(tdt, ...
   % 2. check that we got the expected number of samples
   if (nSamples<nSamplesExpected)
     errorBeep('Wrong number of samples');
-  else
+  elseif (nSamples>nSamplesExpected)
     fprintf('  * Got %d extra samples; truncating\n', nSamples-nSamplesExpected);
     nSamples = nSamplesExpected;
     data = data(:, 1:nSamples);
+  else
+    fprintf('  * Got expected number of samples\n');
   end
+
+  % get LFP (currently no filtering)
+  LFPsamples = round(1:tdt.dataSampleRate/1000:nSamples);
+  nLFPsamples = length(LFPsamples);
+  lfp = zeros(nChannels, nLFPsamples);
+  for chan = 1:nChannels
+    lfp(chan, :) = data(chan, LFPsamples);
+  end
+
+  % soon to be removed LFP update code
+  plotData.nSweeps = plotData.nSweeps + 1;
+  %plotData = plotUpdateLFP(plotData, data);
+  plotData = plotUpdate(plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
+  plotData.lastSweepSpikes = spikeTimes;
 
   % optional: check data thoroughly (too slow to be used normally)
   global checkdata

@@ -8,10 +8,10 @@ fprintf_title('BenWare parameters');
 % experiment
 printExpt(expt);
 
-r = demandinput('\nIs this ok? [Y/n]: ', {'y', 'n'}, 'y', true);
-if r=='n'
-errorBeep('parameter:error', 'Error in verifyExpt');
-end
+% r = demandinput('\nIs this ok? [Y/n]: ', {'y', 'n'}, 'y', true);
+% if r=='n'
+% errorBeep('parameter:error', 'Error in verifyExpt');
+% end
 
 % stimulus
 fprintf_subtitle('Stimulus');
@@ -26,10 +26,10 @@ fprintf('  - stimulus dir: %s\n', split_path(constructStimPath(grid, expt, 1)));
 end
 
 
-r = demandinput('\nIs this ok? [Y/n]: ', {'y', 'n'}, 'y', true);
-if r=='n'
-errorBeep('parameter:error', 'Error in verifyExpt');
-end
+% r = demandinput('\nIs this ok? [Y/n]: ', {'y', 'n'}, 'y', true);
+% if r=='n'
+% errorBeep('parameter:error', 'Error in verifyExpt');
+% end
 
 % recording
 %fprintf('  - data dir: %s\n', ...
