@@ -2,6 +2,7 @@ function onlineDataUpdate(setIdx, spikeTimes, lfpsignal);
 
 global state;
 
+%% update psthes
 psth = state.onlineData.psth;
 
 for chan = 1:state.onlineData.nChannels
@@ -35,6 +36,7 @@ psth.nPooledSweeps = psth.nPooledSweeps + 1;
 
 state.onlineData.psth = psth;
 
+%% update LFP
 lfp = state.onlineData.lfp;
 
 if lfp.nSweeps==0

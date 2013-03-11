@@ -1,10 +1,10 @@
-function cleanup(tdt)
+function cleanup(hardware)
 
 fprintf('Cleaning up...');
 fclose('all');
 diary off;
 fprintf('done\n')
-%if ~isempty(tdt)
-%  resetDevices(tdt);
+%if ~isempty(hardware)
+%  resetDevices(hardware);
 %end
 %closeOpenFiles;

@@ -88,6 +88,11 @@ if state.plot.typeShouldChange
         plotData.activeHandles{chan} = plotData.lfp(chan).handles;
         plotData.dataHandles{chan} = plotData.lfp(chan).dataHandles;
 
+      case 's'
+        % spike shapes
+        plotData.activeHandles{chan} = plotData.spikes(chan).handles;
+        plotData.dataHandles{chan} = plotData.spikes(chan).dataHandles;
+
     end
     makeVisible(plotData.activeHandles{chan});
 
@@ -157,6 +162,11 @@ for chan = plotChans
       set(plotData.psth(chan).line, 'color', col);
 
     case 'l'
+      % nothing to do (plot is updated in plotReset)
+      % Just set color appropriately
+      set(plotData.lfp(chan).line, 'color', col);
+
+    case 's'
       % nothing to do (plot is updated in plotReset)
       % Just set color appropriately
       set(plotData.lfp(chan).line, 'color', col);

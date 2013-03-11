@@ -20,9 +20,12 @@ if ~isfield(grid, 'monoStim')
   grid.monoStim = false;
 end
 
-
 if ~isfield(grid, 'saveWaveforms')
   grid.saveWaveforms = true;
+end
+
+if ~isfield(grid, 'compensationFilters')
+  grid.compensationFilters = [];
 end
 
 if isfield(grid, 'sweepLen') && isfield(grid, 'postStimSilence')

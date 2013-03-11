@@ -19,4 +19,9 @@ idx = demandnumberinput('      >>> ', 1:L(gridFunctions));
 %idx = demandnumberinput(['Enter 1-' num2str(length(d)) ': '],1:length(d));
 
 % return the grid
-grid = feval(str2func(gridFunctions(idx).name(1:end-2)));
+funcname = gridFunctions(idx).name(1:end-2);
+
+grid = feval(str2func(funcname));
+
+% add the name to the grid
+grid.name = funcname(6:end);

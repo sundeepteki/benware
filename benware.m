@@ -2,7 +2,9 @@
 % =================
 
 % set path
-setpath;
+if ~exist('runSweep','file')
+  setpath;
+end
 
 % welcome
 printGreetings;
@@ -42,8 +44,17 @@ load expt.mat;
 TEST = false;
 if TEST
     dataRoot = '\';
-    global fakeHardware
     fakeHardware = true;
+end
+
+if ~exist('CALIB', 'var')
+  CALIB = false;
+end
+
+if CALIB
+  state.justWarnOnDataEmpty = true;
+else
+  state.justWarnOnDataEmpty = false;
 end
 
 if ispc
@@ -53,8 +64,14 @@ if ispc
 else
   expt.exptDir = ['./' expt.exptSubDir];
   expt.dataDir = ['./' expt.exptSubDir expt.dataSubDir];
-  global fakeHardware %#ok<TLEV>
   fakeHardware = true;
+  %state.justWarnOnDataEmpty = true;
+end
+
+if fakeHardware
+  expt.stimDeviceType = 'fakeStimDevice';
+  expt.dataDeviceType = 'fakeDataDevice';
+  expt.triggerDevice = 'stimAndDataDevices';
 end
 
 expt.logFilename = 'benWare.log';
@@ -116,13 +133,11 @@ if ~gotGrid
 end
 
 
-%% prepare TDT
-if ~exist('tdt','var')
-  tdt = [];
+%% prepare hardware
+if ~exist('hardware','var')
+  hardware = [];
 end
-tdt = prepareTDT(tdt, expt, grid);
+hardware = prepareHardware(hardware, expt, grid);
 
 %% run the grid
-runGrid(tdt, expt, grid, firstSweep);
-
-
+runGrid(hardware, expt, grid, firstSweep);

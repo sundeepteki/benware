@@ -1,5 +1,5 @@
-function [stim, stimInfo] = loadStimAndCompensate(sweepNum, grid, expt)
-% [stim, stimInfo] = loadWavAndCompensate(sweepNum, grid, expt)
+function stim = loadStimAndCompensate(sampleRate, nChannels, compensationFilters, expt, grid, varargin)
+% function stim = loadStimAndCompensate(sampleRate, nChannels, compensationFilters, filename)
 %
 % Load a mono f32 or wav file and compensate using however many compensation
 % filters are available. The correct stimulus files are found by
@@ -15,11 +15,18 @@ function [stim, stimInfo] = loadStimAndCompensate(sweepNum, grid, expt)
 % This is now powered by loadStimFileAndCompensate
 
 % generate stimInfo structure
-stimInfo.sweepNum = sweepNum;
-stimInfo.stimGridTitles = grid.stimGridTitles;
-stimInfo.stimParameters = grid.randomisedGrid(sweepNum, :);
-stimInfo.stimFile = constructStimPath(grid, expt, sweepNum);
+% stimInfo.sweepNum = sweepNum;
+% stimInfo.stimGridTitles = grid.stimGridTitles;
+% stimInfo.stimParameters = grid.randomisedGrid(sweepNum, :);
+% stimInfo.stimFile = constructStimPath(grid, expt, sweepNum);
 
-fprintf(['  * Getting stimulus ' num2str(sweepNum) ' from ' escapepath(stimInfo.stimFile) '...']);
+% (path, exptNum, penNum, gridName, side, stimParameters)
+stimParameters = cell2mat(varargin);
+level = varargin{end};
 
-stim = loadStimFileAndCompensate(stimInfo.stimFile, grid.compensationFilters, grid.stimLevelOffsetDB+stimInfo.stimParameters(end));
+filename = constructStimPath([grid.stimDir grid.stimFilename], ...
+				expt.exptNum, expt.penetrationNum, grid.name, '', stimParameters);
+
+fprintf(['  * Getting stimulus from ' escapepath(filename) '...']);
+
+stim = loadStimFileAndCompensate(filename, compensationFilters, level);

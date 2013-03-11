@@ -71,6 +71,8 @@ for chan = 1:plotData.nChannels
     plotData.lfpGain = 1/max(abs(mn(:)));
     set(plotData.lfp(chan).line,'ydata',mn(chan, :)'*plotData.lfpGain);
 
+    % update spike waveforms
+
   end
   
 end

@@ -4,8 +4,7 @@ function verifyGridFields(grid)
 % checks that a grid has all the necessary fields for BenWare.
 
 required_fields = {'name', 'sampleRate', 'stimGenerationFunctionName', ...
-'stimGridTitles', ...
-'stimGrid', 'stimLevelOffsetDB'};
+'stimGridTitles', 'stimGrid', 'stimLevelOffsetDB'};
 
 if isequal(grid.stimGenerationFunctionName,'loadStereo')
   required_fields(end+1:end+2) = {'stimDir', 'stimFilename'};

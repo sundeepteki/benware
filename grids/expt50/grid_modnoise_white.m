@@ -7,7 +7,6 @@ function grid = grid_modnoise_white()
   grid.sampleRate = 24414.0625*2;  % ~50kHz
 
   % essentials
-  grid.name = 'modnoise_white';
   grid.stimFilename = 'McD_STRF_stim_WHITE_%1.wav';
   
   % stimulus grid structure

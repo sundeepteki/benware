@@ -1,21 +1,16 @@
-function [stim, stimInfo] = makeCSDprobeWithLight(sweepNum, grid, expt)
+function stim = makeCSDprobeWithLight(expt, grid, sampleRate, nChannels, compensationFilters, ...
+									duration, delay, len, lightvoltage, lightdelay, lightduration, level)
 
-stimInfo.stimGridTitles = grid.stimGridTitles;
-stimInfo.stimParameters = grid.randomisedGrid(sweepNum, :);
+if nChannels~=2
+	errorBeep('CSDprobeWithLight requires expt.nStimChannels=2');
+end
 
-% grid.stimGridTitles = {'Stimulus Length (ms)', 'Noise Delay (ms)', 'Noise Length (ms)', 'Light voltage (V)', 'Light delay (ms)', 'Light Duration (ms)', 'Level'};
-% grid.stimGrid = [200 50 50 0 50 150 80; 200 50 50 0 50 150 80];
-
-parameters = grid.randomisedGrid(sweepNum,1:end);
-
-duration = ceil(parameters(1)/1000*grid.sampleRate);
-delay = round(parameters(2)/1000*grid.sampleRate);
-len = round(parameters(3)/1000*grid.sampleRate);
-level = parameters(7);
-
-lightvoltage = parameters(4);
-lightdelay = ceil(parameters(5)/1000*grid.sampleRate);
-lightduration = ceil(parameters(6)/1000*grid.sampleRate);
+% convert times to samples
+duration = ceil(duration/1000*grid.sampleRate);
+delay = round(delay/1000*grid.sampleRate);
+len = round(len/1000*grid.sampleRate);
+lightdelay = ceil(lightdelay/1000*grid.sampleRate);
+lightduration = ceil(lightduration/1000*grid.sampleRate);
 
 stimLen_samples = duration;
 
@@ -31,3 +26,7 @@ lightstim = zeros(1, stimLen_samples);
 lightstim(1, lightdelay:min(stimLen_samples, lightdelay+lightduration-1)) = lightvoltage;
 
 stim(2,:) = lightstim;
+
+% apply level to sound channel only
+level_offset = level-80;
+stim(1,:) = stim(1,:)*10^(level_offset)/20;

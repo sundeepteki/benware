@@ -1,8 +1,8 @@
-function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
+function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(hardware, ...
   sweepLen, nChannels, stim, nextStim, spikeFilter, spikeThreshold, ...
   saveWaveforms, dataFiles, plotData)
   %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
-  %% Will fail if next stimulus is not on the TDT
+  %% Will fail if next stimulus is not on the stimulus device
   %% Upload the next stimulus at the same time, then reset the stimDevice
   %% and inform the stimDevice of the stimulus length
 
@@ -10,13 +10,13 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
 
   % reset data device and tell it how long the sweep will be
   try
-    resetDataDevice(tdt.dataDevice, sweepLen*1000);
+    hardware.dataDevice.reset(sweepLen*1000);
   catch
     keyboard
   end
   
   % check for stale data in data device buffer
-  if any(countAllData(tdt.dataDevice, nChannels) ~= 0)
+  if any(countAllData(hardware.dataDevice, nChannels) ~= 0)
     errorBeep('Stale data in data buffer');
   end
 
@@ -25,9 +25,9 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
   stimLen = size(stim, 2);
   rnd = floor(100+rand*(stimLen-300));
   
-  checkData = [downloadStim(tdt.stimDevice, 0, 100, nStimChans) ...
-      downloadStim(tdt.stimDevice, rnd, 100, nStimChans) ...
-      downloadStim(tdt.stimDevice, stimLen-100, 100, nStimChans)];
+  checkData = [hardware.stimDevice.downloadStim(0, 100, nStimChans) ...
+      hardware.stimDevice.downloadStim(rnd, 100, nStimChans) ...
+      hardware.stimDevice.downloadStim(stimLen-100, 100, nStimChans)];
   
   d = max(max(abs(checkData - [stim(:, 1:100) stim(:, rnd+1:rnd+100) stim(:, end-99:end)])));
 
@@ -38,12 +38,12 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
   end
 
   % check stimulus length is correct
-  if getStimLength(tdt.stimDevice) ~= stimLen
+  if hardware.stimDevice.getStimLength ~= stimLen
     errorBeep('Stimulus length on stimDevice is not correct');
   end
   
   % check that correct number of stimulus channels are active
-  setActiveStimChannels(tdt.stimDevice, nStimChans);
+  hardware.stimDevice.setActiveStimChannels(nStimChans);
 
   % record length of next stimulus for uploading
   nextStimLen = size(nextStim, 2);
@@ -52,13 +52,13 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
   % when triggered
   % probably not necessary (since circuit resets itself)
   % replace with a check that it is in correct state?
-  resetStimDevice(tdt.stimDevice);
-  if getStimIndex(tdt.stimDevice)~=0
+  hardware.stimDevice.reset;
+  if hardware.stimDevice.getStimIndex~=0
     errorBeep('Stimulus index not equal to zero at start of sweep');
   end
 
   % make matlab buffer for data
-  nSamplesExpected = floor(sweepLen*tdt.dataSampleRate)+1;
+  nSamplesExpected = floor(sweepLen*hardware.dataDevice.sampleRate)+1;
   data = zeros(nChannels, nSamplesExpected);
   nSamplesReceived = zeros(1, nChannels);
 
@@ -80,12 +80,12 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
   samplesUploaded = 0;
 
   % prepare data display
-  %plotData = feval(plotFunctions.init, [], tdt.dataSampleRate, nSamplesExpected);
+  %plotData = feval(plotFunctions.init, [], hardware.datadevice.sampleRate, nSamplesExpected);
   %plotData = feval(plotFunctions.reset, plotData);
 
   % trigger stimulus presentation and data collection
   timeStamp = clock;
-  triggerZBus(tdt.zBus);
+  hardware.triggerDevice.trigger();
 
   fprintf(['  * Sweep triggered after ' num2str(toc) ' sec.\n']);
 
@@ -104,10 +104,10 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
     if ~isempty(nextStim)
       % stimulus upload is limited by length of stimulus, or where the
       % stimDevice has got to in reading out the stimulus, whichever is lower
-      maxStimIndex = min(getStimIndex(tdt.stimDevice),nextStimLen);
+      maxStimIndex = min(hardware.stimDevice.getStimIndex,nextStimLen);
       n = samplesUploaded + 1;
       if maxStimIndex>samplesUploaded
-        uploadStim(tdt.stimDevice, nextStim(:, samplesUploaded+1:maxStimIndex), samplesUploaded);
+        hardware.stimDevice.uploadStim(nextStim(:, samplesUploaded+1:maxStimIndex), samplesUploaded);
         samplesUploaded = maxStimIndex;
         if samplesUploaded==nextStimLen
           fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
@@ -115,12 +115,12 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
       end
     
     end
-    %fprintf(['  * Stim: ' num2str((maxStimIndex-n)/tdt.stimSampleRate) ' sec of stim done in ' num2str(toc) ' sec.\n']);tic;
+    %fprintf(['  * Stim: ' num2str((maxStimIndex-n)/hardware.stimSampleRate) ' sec of stim done in ' num2str(toc) ' sec.\n']);tic;
     
     % download data
     for chan = 1:nChannels
 
-      newdata = downloadData(tdt.dataDevice, chan, nSamplesReceived(chan));
+      newdata = hardware.dataDevice.downloadData(chan, nSamplesReceived(chan));
       data(chan, nSamplesReceived(chan)+1:nSamplesReceived(chan)+length(newdata)) = newdata;
       
       nSamplesReceived(chan) = nSamplesReceived(chan)+length(newdata);
@@ -130,15 +130,15 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
       
     end
     
-    %fprintf(['  * Data: ' num2str(length(newdata)/tdt.dataSampleRate) ' sec of data done in ' num2str(toc) ' sec.\n']);tic;
+    %fprintf(['  * Data: ' num2str(length(newdata)/hardware.dataDevice.sampleRate) ' sec of data done in ' num2str(toc) ' sec.\n']);tic;
 
     % bandpass filter data and detect spikes
 
     minSamplesReceived = min(nSamplesReceived);
-    if (minSamplesReceived-filterIndex) > (tdt.dataSampleRate/10)
+    if (minSamplesReceived-filterIndex) > (hardware.dataDevice.sampleRate/10)
       [filtData, offset] = filterData(data(:, filterIndex+1:minSamplesReceived), spikeFilter);
       filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
-      spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, tdt.dataSampleRate, spikeThreshold);
+      spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, hardware.dataDevice.sampleRate, spikeThreshold);
       filterIndex = filterIndex + size(filtData,2);
     end
 
@@ -146,7 +146,7 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
  
     % check audio monitor is on the right channel
     if state.audioMonitor.changed
-      setAudioMonitorChannel(tdt, state.audioMonitor.channel);
+      hardware.dataDevice.setAudioMonitorChannel(state.audioMonitor.channel);
       state.audioMonitor.changed = false;
     end
 
@@ -162,20 +162,20 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
   if ~isempty(nextStim)
     % finish uploading stimulus if necessary
     if samplesUploaded~=nextStimLen
-      uploadStim(tdt.stimDevice, nextStim(:, samplesUploaded+1:end), samplesUploaded);
+      hardware.stimDevice.uploadStim(nextStim(:, samplesUploaded+1:end), samplesUploaded);
       samplesUploaded = nextStimLen;
       fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
     end
 
     % inform stimDevice about length of the stimulus that has been uploaded
     % (i.e. the stimulus for the next sweep)
-    setStimLength(tdt.stimDevice, nextStimLen);
+    hardware.stimDevice.setStimLength(nextStimLen);
   end
 
   % finish detecting spikes  
   [filtData, offset] = filterData(data(:, filterIndex+1:minSamplesReceived), spikeFilter);
   filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
-  spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, tdt.dataSampleRate, spikeThreshold);
+  spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, hardware.dataDevice.sampleRate, spikeThreshold);
   filterIndex = filterIndex + size(filtData,2);
   
   fprintf(['  * ' num2str(sum(cellfun(@(i) length(i),spikeTimes))) ' spikes detected after ' num2str(toc) ' sec.\n']);
@@ -202,7 +202,7 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
     errorBeep('Different amounts of data from different channels');
   end
 
-  fprintf(['  * Got ' num2str(nSamples) ' samples (expecting ' num2str(nSamplesExpected) ') from ' num2str(nChannels) ' channels (' num2str(nSamples/tdt.dataSampleRate) ' sec).\n']);
+  fprintf(['  * Got ' num2str(nSamples) ' samples (expecting ' num2str(nSamplesExpected) ') from ' num2str(nChannels) ' channels (' num2str(nSamples/hardware.dataDevice.sampleRate) ' sec).\n']);
 
   % 2. check that we got the expected number of samples
   if (nSamples<nSamplesExpected)
@@ -216,16 +216,15 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
   end
 
   % get LFP (currently no filtering)
-  LFPsamples = round(1:tdt.dataSampleRate/1000:nSamples);
+  LFPsamples = round(1:hardware.dataDevice.sampleRate/1000:nSamples);
   nLFPsamples = length(LFPsamples);
   lfp = zeros(nChannels, nLFPsamples);
   for chan = 1:nChannels
     lfp(chan, :) = data(chan, LFPsamples);
   end
 
-  % soon to be removed LFP update code
+  % update plots
   plotData.nSweeps = plotData.nSweeps + 1;
-  %plotData = plotUpdateLFP(plotData, data);
   plotData = plotUpdate(plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
   plotData.lastSweepSpikes = spikeTimes;
 
@@ -235,7 +234,7 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
   if checkdata
     
     fprintf('  * Checking stim...');
-    teststim = downloadStim(tdt.stimDevice, 0, samplesUploaded, nStimChans);
+    teststim = hardware.stimDevice.downloadStim(0, samplesUploaded, nStimChans);
     d = max(max(abs(nextStim-teststim)));
     if d>10e-7
       errorBeep('Stimulus mismatch!');
@@ -247,11 +246,11 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
     
     else
       fprintf('  * Checking data...');
-      testData = downloadAllData(tdt.dataDevice, nChannels);
+      testData = hardware.dataDevice.downloadAllData(nChannels);
       for chan = 1:nChannels
         diffInMem = max(abs(data(chan,:) - testData{chan}));
         if diffInMem > 0
-          errorBeep('Data in memory doesn''t match TDT buffer!');
+          errorBeep('Data in memory doesn''t match data device buffer!');
         end
 
         h = fopen(dataFiles{chan}, 'r');
@@ -260,7 +259,7 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
         diffOnDisk = max(abs(savedData - testData{chan}));
         if diffOnDisk > 0
           keyboard;
-          errorBeep('Data on disk doesn''t match TDT buffer!');
+          errorBeep('Data on disk doesn''t match data device buffer!');
         end
 
       end
@@ -269,3 +268,4 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(tdt, ...
     
     fprintf(['  * Check complete after ' num2str(toc) ' sec.\n']);
   end
+  

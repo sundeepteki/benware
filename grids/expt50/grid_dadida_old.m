@@ -3,9 +3,6 @@ function grid = grid_dadida()
   % controlling the sound presentation
   grid.stimGenerationFunctionName = 'make_and_compensate_dadida';
   grid.sampleRate = 24414.0625*2;  % ~100kHz
-
-  % essentials
-  grid.name = 'dadida';
   
   % best frequency of current neurons
   bf = 5000; % Hz

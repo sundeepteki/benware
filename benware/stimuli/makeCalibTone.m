@@ -1,13 +1,5 @@
-function [stim, stimInfo] = makeCalibTone(sweepNum, grid, expt)
-
-stimInfo.stimGridTitles = grid.stimGridTitles;
-stimInfo.stimParameters = grid.randomisedGrid(sweepNum, :);
-
-parameters = grid.randomisedGrid(sweepNum,1:end);
-
-freq = parameters(1);
-duration = parameters(2);
-level = parameters(3);
+function stim = makeCalibTone(expt, grid, sampleRate, nChannels, compensationFilters, ...
+								freq, duration, level)
 
 % time
 t = 0:1/grid.sampleRate:duration/1000;
@@ -34,7 +26,11 @@ for chan = 1:length(grid.compensationFilters)
     stim(chan, :) = uncalib * amp;
 end
 
-% apply level offset
-for chan = 1:length(grid.compensationFilters)
-	stim(chan, :) = stim(chan, :) * 10^((level+grid.stimLevelOffsetDB(chan)) / 20);
+for chan = length(compensationFilters)+1:nChannels
+  stim(chan, :) = 0;
 end
+
+
+% apply level offset
+level_offset = level-80;
+stim = stim * (10^(level_offset) / 20);
