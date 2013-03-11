@@ -1,14 +1,10 @@
 function grid = grid_ripples200k()
 
   % controlling the sound presentation
+  grid.sampleRate = 24414.0625*8;  % ~200kHz
   grid.stimGenerationFunctionName = 'loadStimAndCompensate';
   grid.stimDir = 'e:\James\stimuli\';
   %grid.stimDir = '/Users/ben/scratch/texture/texture.v2/renamed/';
-  grid.sampleRate = 24414.0625*8;  % ~200kHz
-
-  % essentials
-  grid.name = 'ripple200k';
-  % drc1_contrast10.f32
   grid.stimFilename = 'rippleseg%1.wav';
   
   % stimulus grid structure

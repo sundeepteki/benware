@@ -1,14 +1,10 @@
 function grid = grid_drc200k()
 
   % controlling the sound presentation
+  grid.sampleRate = 24414.0625*8;  % ~200kHz
   grid.stimGenerationFunctionName = 'loadStimAndCompensate';
   grid.stimDir = 'e:\auditory-objects\sounds-uncalib\mouse.drc.5\';
   %grid.stimDir = '/Users/ben/scratch/texture/texture.v2/renamed/';
-  grid.sampleRate = 24414.0625*8;  % ~200kHz
-
-  % essentials
-  grid.name = 'drc200k';
-  % drc1_contrast10.f32
   grid.stimFilename = 'drc%1_contrast%2.f32';
   
   % stimulus grid structure

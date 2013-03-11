@@ -1,13 +1,8 @@
 function grid = grid_puretones200k()
 
-  % essentials
-  grid.name = 'puretones200k';
-  %grid.stimFilename = 'quning.cf.%1.%L.f32';
-
   % controlling the sound presentation
-  grid.stimGenerationFunctionName = 'makeCalibTone';
-  %grid.stimDir = 'E:\auditory-objects\sounds.calib.expt%E\%N\';
   grid.sampleRate = 24414.0625*8;  % ~200kHz
+  grid.stimGenerationFunctionName = 'makeCalibTone';
 
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';

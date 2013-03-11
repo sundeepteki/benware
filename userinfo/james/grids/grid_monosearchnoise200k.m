@@ -1,11 +1,8 @@
 function grid = grid_monosearchnoise()
 
   % controlling the sound presentation
-  grid.stimGenerationFunctionName = 'makeCSDprobe';
   grid.sampleRate = 24414.0625*8;  % ~100kHz
-
-  % essentials
-  grid.name = 'monosearchnoise';
+  grid.stimGenerationFunctionName = 'makeCSDprobe';
   
   % stimulus grid structure
   grid.stimGridTitles = {'Stimulus Length (ms)', 'Delay (ms)'; 'Noise Length (ms)', 'Level'};
