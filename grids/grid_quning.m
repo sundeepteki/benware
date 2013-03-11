@@ -1,14 +1,10 @@
-
 function grid = grid_quning()
 
-  % essentials
-  grid.stimFilename = 'quning.cf.%1.%L.f32';
-
   % controlling the sound presentation
+  grid.sampleRate = 24414.0625*4;  % ~100kHz
   grid.stimGenerationFunctionName = 'makeCalibTone';
   %grid.stimDir = 'E:\auditory-objects\sounds.calib.expt%E\%N\';
-  grid.sampleRate = 24414.0625*4;  % ~100kHz
-
+  %grid.stimFilename = 'quning.cf.%1.%L.f32';
   
   % stimulus grid structure
   grid.stimGridTitles = {'Frequency', 'Duration', 'Level'};

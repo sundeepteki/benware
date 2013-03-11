@@ -1,12 +1,10 @@
 function grid = grid_density_v1()
 
   % controlling the sound presentation
+  grid.sampleRate = 24414.0625*2;  % ~50kHz
   grid.stimGenerationFunctionName = 'loadStimAndCompensate';
   grid.stimDir = 'e:\auditory-objects\sounds-uncalib\density.v1\';
   %grid.stimDir = '/Users/ben/scratch/texture/texture.v2/renamed/';
-  grid.sampleRate = 24414.0625*2;  % ~50kHz
-
-  % essentials
   grid.stimFilename = 'drc.token.%1.density.%2.contrast.%3.f32';
   
   % stimulus grid structure

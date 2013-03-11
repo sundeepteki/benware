@@ -1,13 +1,10 @@
 function grid = grid_mixmix_v2()
 
   % controlling the sound presentation
+  grid.sampleRate = 24414.0625*2;  % ~50kHz
   grid.stimGenerationFunctionName = 'loadStimAndCompensate';
   grid.stimDir = 'e:\auditory-objects\sounds-uncalib\mixmix\';
   %grid.stimDir = '/Users/ben/scratch/texture/texture.v2/renamed/';
-  grid.sampleRate = 24414.0625*2;  % ~50kHz
-
-  % essentials
-  grid.name = 'mixmix_v2';
   grid.stimFilename = 'mixmix.mix.%1.%2.wav';
   
   % stimulus grid structure

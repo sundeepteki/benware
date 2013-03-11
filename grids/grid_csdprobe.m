@@ -1,11 +1,8 @@
 function grid = grid_csdprobe()
 
   % controlling the sound presentation
-  grid.stimGenerationFunctionName = 'makeCSDprobe';
   grid.sampleRate = 24414.0625*4;  % ~100kHz
-
-  % essentials
-  grid.name = 'csdprobe';
+  grid.stimGenerationFunctionName = 'makeCSDprobe';
   
   % stimulus grid structure
   grid.stimGridTitles = {'Stimulus Length (ms)', 'Delay (ms)'; 'Noise Length (ms)', 'Level'};

@@ -1,11 +1,8 @@
 function grid = grid_bilateral_noise
 
-  % essentials
-  grid.name = 'bilateral.noise';
-
   % controlling the sound presentation
-  grid.stimGenerationFunctionName = 'makeBilateralNoise';
   grid.sampleRate = 24414.0625*4;  % ~50kHz
+  grid.stimGenerationFunctionName = 'makeBilateralNoise';
 
   % stimulus grid structure
   grid.stimGridTitles = {'Duration', 'LeftDelay', 'RightDelay', 'BothDelay', 'Level'};

@@ -1,12 +1,9 @@
 function grid = nonpi()
 
   % controlling the sound presentation
+  grid.sampleRate = 24414.0625*2;  % ~50kHz
   grid.stimGenerationFunctionName = 'loadStereoStimAndCompensate';
   grid.stimDir = 'e:\auditory-objects\sounds-uncalib\no-npi\';
-  grid.sampleRate = 24414.0625*2;  % ~50kHz
-
-  % essentials
-  grid.name = 'nonpi';
   grid.stimFilename = 'no_npi.gap.%1.token.%2.wav';
   
   % stimulus grid structure
