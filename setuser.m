@@ -31,7 +31,7 @@ if exist(exptFilename, 'file')
 
   if exist([stashPath 'expt.mat'], 'file') | exist([stashPath 'grids'], 'dir')
     if exist(backupPath, 'dir')
-      delete(backupPath);
+      rmdir(backupPath, 's');
     end
     fprintf(['Moving ' escapepath(stashPath) ' to ' escapepath(backupPath) '\n']);
     movefile(stashPath, backupPath);
