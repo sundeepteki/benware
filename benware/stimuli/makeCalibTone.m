@@ -22,9 +22,16 @@ env = [ramp ones(1,length(uncalib)-2*length(ramp)) fliplr(ramp)];
 uncalib = uncalib.*env;
 
 % convolve with compensation filter
-%keyboard
+% now just multiplying by appropriate value instead
 for chan = 1:length(grid.compensationFilters)
-	stim(chan, :) = conv(uncalib, grid.compensationFilters{chan});
+    cf = grid.compensationFilters{chan};
+ 
+    ft = abs(fft(cf));
+    ft = ft(1:length(ft)/2);
+    f = linspace(0, grid.sampleRate/2, length(ft));
+
+    amp = interp1(f, ft, freq);
+    stim(chan, :) = uncalib * amp;
 end
 
 % apply level offset

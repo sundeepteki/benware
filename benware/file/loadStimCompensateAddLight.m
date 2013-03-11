@@ -22,7 +22,7 @@ stimInfo.stimFile = constructStimPath(grid, expt, sweepNum);
 
 fprintf(['  * Getting stimulus ' num2str(sweepNum) ' from ' escapepath(stimInfo.stimFile) '...']);
 
-stim = loadStimFileAndCompensate(stimInfo.stimFile, grid.compensationFilters, grid.stimLevelOffsetDB);
+stim = loadStimFileAndCompensate(stimInfo.stimFile, grid.compensationFilters, grid.stimLevelOffsetDB+stimInfo.stimParameters(end));
 
 voltage = stimInfo.stimParameters(3);
 stim(2,:) = [ones(1,length(stim)-100)*voltage zeros(1,100)];

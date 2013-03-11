@@ -24,6 +24,7 @@ c = grid.stimulusConstants;
 
 for chan = 1:length(grid.compensationFilters)
     cf = grid.compensationFilters{chan};
+ 
     ft = abs(fft(cf));
     ft = ft(1:length(ft)/2);
     f = linspace(0, grid.sampleRate/2, length(ft));
@@ -31,6 +32,7 @@ for chan = 1:length(grid.compensationFilters)
     Aamp = interp1(f, ft, Afreq);
     Bamp = interp1(f, ft, Bfreq);
     interrupt_amp = interp1(f, ft, interrupt_freq);
+    % have tested this against convolution and it works OK
 
     if prestim_type==0
         prestim = 0;
@@ -48,7 +50,5 @@ for chan = 1:length(grid.compensationFilters)
     stim(chan, :) = dadidagen(Afreq, Aamp, c.Agap, Bfreq, Bamp, c.Bgap, Bstart, ...
         Brand, c.tondur, c.intdur, c.nprecycles, ntestcycles, prestim, grid.sampleRate, ...
         c.randomseed, jitter, c.n);
-
+    stim(chan, :) = stim(chan, :) * 10^((grid.stimLevelOffsetDB(chan) + level)/20);
 end
-
-keyboard

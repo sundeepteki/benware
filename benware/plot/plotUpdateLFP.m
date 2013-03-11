@@ -8,10 +8,10 @@ try
     
     for chan = 1:plotData.nChannels
         if nSweeps==1
-            newLFP(chan,:) = data(chan, plotData.samplesToPlot);
+            newLFP(chan,:) = data(chan, plotData.samplesToPlot) - mean(data(chan, plotData.samplesToPlot));
         else
             oldLFPSum = get(plotData.lfp(chan).line,'ydata')/plotData.lfpGain*(nSweeps-1);
-            newLFP(chan,:) = (oldLFPSum+data(chan, plotData.samplesToPlot))/nSweeps;
+            newLFP(chan,:) = (oldLFPSum+(data(chan, plotData.samplesToPlot) - mean(data(chan, plotData.samplesToPlot))))/nSweeps;
         end
     end
     

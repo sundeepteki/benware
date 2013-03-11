@@ -22,4 +22,4 @@ stimInfo.stimFile = constructStimPath(grid, expt, sweepNum);
 
 fprintf(['  * Getting stimulus ' num2str(sweepNum) ' from ' escapepath(stimInfo.stimFile) '...']);
 
-stim = loadStimFileAndCompensate(stimInfo.stimFile, grid.compensationFilters, grid.stimLevelOffsetDB);
+stim = loadStimFileAndCompensate(stimInfo.stimFile, grid.compensationFilters, grid.stimLevelOffsetDB+stimInfo.stimParameters(end));
