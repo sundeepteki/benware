@@ -13,23 +13,23 @@ ramp = (1-cos(pi*(1:ramplen_samples)/ramplen_samples))/2;
 env = [ramp ones(1,length(uncalib)-2*length(ramp)) fliplr(ramp)];
 uncalib = uncalib.*env;
 
-% % convolve with compensation filters
-% for chan = 1:length(grid.compensationFilters)
-%   stim(chan, :) = conv(uncalib, grid.compensationFilters{chan});
-% end
-% for chan = length(compensationFilters)+1:nChannels
-%   stim(chan, :) = 0;
-% end
+% convolve with compensation filter
+% now just multiplying by appropriate value instead
+for chan = 1:length(grid.compensationFilters)
+    cf = grid.compensationFilters{chan};
+ 
+    ft = abs(fft(cf));
+    ft = ft(1:length(ft)/2);
+    f = linspace(0, grid.sampleRate/2, length(ft));
 
-
-for chan = 1:length(compensationFilters)
-  cf = compensationFilters{chan};
-  ft = abs(fft(cf));
-  ft = ft(1:length(ft)/2);
-  f = linspace(0, sampleRate/2, length(ft));
-  amp(chan) = interp1(f, ft, freq);
+    amp = interp1(f, ft, freq);
+    stim(chan, :) = uncalib * amp;
 end
-fprintf('Untested compensation code in makeCalibTone!\n');
+
+for chan = length(compensationFilters)+1:nChannels
+  stim(chan, :) = 0;
+end
+
 
 % apply level offset
 level_offset = level-80;
