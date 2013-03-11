@@ -1,11 +1,10 @@
 function grid = grid_sh_en_c
 
 % essentials
-grid.name = 'SH.En.C';
+grid.sampleRate = 24414.0625*2;  % ~50kHz
 grid.stimGenerationFunctionName = 'loadStimAndCompensate';
 grid.stimDir = 'e:\auditory-objects\sounds-uncalib\%N\';
 grid.stimFilename = 'source.%1.sound.%2.snr.%3.token.%4.fw.%5.frozen.%6.f32';
-grid.sampleRate = 24414.0625*2;  % ~50kHz
 
 % stimulus grid structure
 grid.stimGridTitles = {'Source', 'Mode', 'BF', 'Token', 'Set', 'StimID', 'NominalLevel', 'Level'};
