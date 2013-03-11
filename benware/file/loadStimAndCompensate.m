@@ -1,5 +1,5 @@
-function [stim, stimInfo] = loadStimAndCompensate(sweepNum, grid, expt)
-% [stim, stimInfo] = loadWavAndCompensate(sweepNum, grid, expt)
+function stim = loadStimAndCompensate(sampleRate, nChannels, compensationFilters, grid, varargin)
+% function stim = loadStimAndCompensate(sampleRate, nChannels, compensationFilters, filename)
 %
 % Load a mono f32 or wav file and compensate using however many compensation
 % filters are available. The correct stimulus files are found by
@@ -22,4 +22,4 @@ stimInfo.stimFile = constructStimPath(grid, expt, sweepNum);
 
 fprintf(['  * Getting stimulus ' num2str(sweepNum) ' from ' escapepath(stimInfo.stimFile) '...']);
 
-stim = loadStimFileAndCompensate(stimInfo.stimFile, grid.compensationFilters, grid.stimLevelOffsetDB);
+stim = loadStimFileAndCompensate(stimInfo.stimFile, compensationFilters, grid.stimLevelOffsetDB);

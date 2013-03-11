@@ -1,4 +1,5 @@
-function stim = makeBilateralNoise(sampleRate, nChannels, duration, leftDelay, rightDelay, bothDelay, level)
+function stim = makeBilateralNoise(sampleRate, nChannels, compensationFilters, grid, ...
+									duration, leftDelay, rightDelay, bothDelay, level)
 % function stim = makeBilateralNoise(sampleRate, nChannels, duration, leftDelay, rightDelay, bothDelay, level)
 % generate L-R-both bilateral noise stimulus
 % used as a search stimulus by Ben

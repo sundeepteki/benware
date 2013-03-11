@@ -21,8 +21,9 @@ fprintf('  - # sets: %d\n', size(grid.stimGrid, 1));
 fprintf('  - # repeats: %d\n', grid.repeatsPerCondition);
 fprintf('  - # sweeps: %d\n', size(grid.stimGrid, 1) * grid.repeatsPerCondition);
 
+stimDir = constructStimPath(grid.stimDir, expt.exptNum, -1, grid.Name, '', grid.randomisedGrid(1, :));
 if isequal(grid.stimGenerationFunctionName, 'loadStereo')
-fprintf('  - stimulus dir: %s\n', split_path(constructStimPath(grid, expt, 1)));
+  fprintf('  - stimulus dir: %s\n', stimDir);
 end
 
 

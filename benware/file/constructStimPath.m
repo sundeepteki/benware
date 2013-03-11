@@ -1,5 +1,5 @@
-function path = constructStimPath(grid, expt, sweepNum, side)
-% path = constructStimPath(grid, expt, sweepNum, side)
+function path = constructStimPath(path, exptNum, penNum, gridName, side, stimParameters)
+% function path = constructStimPath(path, exptNum, penNum, gridName, side, stimParameters)
 %
 % Works out stimulus filenames, replacing % tokens where necessary.
 %
@@ -19,21 +19,21 @@ function path = constructStimPath(grid, expt, sweepNum, side)
 % Note, this doesn't quite match constructDataPath -- it doesn't allow 
 % you to operate on an arbitrary path. This might need fixing.
 
-stimParameters = grid.randomisedGrid(sweepNum, :);
+%stimParameters = grid.randomisedGrid(sweepNum, :);
 
 % construct template
-path = [grid.stimDir grid.stimFilename];
+%path = [grid.stimDir grid.stimFilename];
 
 % replace main parts of path
 for ii = 1:length(stimParameters)-1
   path = regexprep(path, ['%' num2str(ii)], num2str(stimParameters(ii)));
 end
-path = regexprep(path, '%E', num2str(expt.exptNum));
-path = regexprep(path, '%P', ['P' num2str(expt.penetrationNum, '%02d')]);
-path = regexprep(path, '%N', grid.name);
+path = regexprep(path, '%E', num2str(exptNum));
+path = regexprep(path, '%P', ['P' num2str(penNum, '%02d')]);
+path = regexprep(path, '%N', gridName);
 
 % optional side
-if exist('side', 'var')
+if ~isempty(side)
   path = regexprep(path, '%L', side);
 end
 

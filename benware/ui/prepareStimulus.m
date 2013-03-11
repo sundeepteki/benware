@@ -10,7 +10,7 @@ stimInfo.stimParameters = grid.randomisedGrid(sweepNum, :);
 parameters = num2cell(stimInfo.stimParameters);
 
 % generate stimulus vector/matrix
-stim = feval(stimGenerationFunction, grid.sampleRate, expt.nStimChannels, parameters{:});
+stim = feval(stimGenerationFunction, grid.sampleRate, expt.nStimChannels, expt.compensationFilters, grid, parameters{:});
 
 % apply level offset
 level_offset = grid.stimLevelOffsetDB;
