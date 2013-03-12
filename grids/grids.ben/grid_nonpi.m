@@ -1,4 +1,4 @@
-function grid = nonpi()
+function grid = grid_nonpi()
 
   % controlling the sound presentation
   grid.sampleRate = 24414.0625*2;  % ~50kHz
