@@ -2,6 +2,7 @@ classdef tdtStimDevice < tdtDevice
 	properties
 		nChannels = nan;
 		rcxSetups = [];
+		channelSetups = [];
 		% rcxFilenames = {'benware/tdt.monoplay.rcx'; 'benware/tdt.stereoplay.rcx'};
 		% versionTags = {{'MonoPlayVer'; 3}; {'StereoPlayVer', 5}};
 
@@ -11,47 +12,59 @@ classdef tdtStimDevice < tdtDevice
 
 		function obj = tdtStimDevice(deviceName, sampleRate, nChannels)
 			% initialise the class itself
-			obj.rcxSetup(1).rcxFilename = 'benware/tdt/monoplay.rcx';
-			obj.rcxSetup(1).versionTagName = 'MonoPlayVer';
-			obj.rcxSetup(1).versionTagValue = 3;
-			obj.rcxSetup(2).rcxFilename = 'benware/tdt/stereoplay.rcx';
-			obj.rcxSetup(2).versionTagName = 'StereoPlayVer';
-			obj.rcxSetup(2).versionTagValue = 5;
+			obj.rcxSetups(1).rcxFilename = 'benware/tdt/monoplay.rcx';
+			obj.rcxSetups(1).versionTagName = 'MonoPlayVer';
+			obj.rcxSetups(1).versionTagValue = 3;
+			obj.rcxSetups(2).rcxFilename = 'benware/tdt/stereoplay.rcx';
+			obj.rcxSetups(2).versionTagName = 'StereoPlayVer';
+			obj.rcxSetups(2).versionTagValue = 5;
 
-			obj.channelSetup(1).deviceName = 'RX8';
-			obj.channelSetup(1).channelNums = [20 18];
-			obj.channelSetup(1).deviceName = 'RX6';
-			obj.channelSetup(1).channelNums = [1 2];
+			obj.channelSetups(1).deviceName = 'RX8';
+			obj.channelSetups(1).channelNums = [20 18];
+			obj.channelSetups(1).deviceName = 'RX6';
+			obj.channelSetups(1).channelNums = [1 2];
 
 			% initialise the device
-			obj = obj.initialise(deviceName, sampleRate, nChannels);
+			obj.initialise(deviceName, sampleRate, nChannels);
 		end
 
-		function obj = initialise(deviceName, sampleRate, nChannels)
-			rcxSetup = obj.rcxSetup(nChannels);
-			obj = obj@tdtDevice(deviceName, rcxSetup.rcxFilename, rcxSetup.versionTagName, ...
+		function initialise(obj, deviceName, sampleRate, nChannels)
+			% call this to reinitialise the class -- will create a new
+			% TDT handle and upload the rcx file
+			rcxSetup = obj.rcxSetups(nChannels);
+			obj@tdtDevice.initialise(deviceName, rcxSetup.rcxFilename, rcxSetup.versionTagName, ...
 								rcxSetup.versionTagValue, sampleRate);
 
 			obj.setChannelNumbers(deviceName);
 		end
 
-		function ensureCorrectSettings(deviceName, sampleRate, nChannels)
-			rcxSetup = obj.rcxSetup(nChannels);
-			obj@tdtDevice.ensureCorrectSettings(deviceName, rcxFilename, versionTagName, versionTagValue, ...
-											sampleRate);
-			obj.setChannelNumbers(deviceName);
+		function ok = checkDevice(obj, deviceName, sampleRate, nChannels)
+			% call this to make sure the TDT is in the desired state
+			rcxSetup = obj.rcxSetups(nChannels);
+			ok = obj@tdtDevice.checkDevice(deviceName, sampleRate, versionTagName, versionTagValue);
+			obj.setChannelNumbersForDevice(deviceName);
 		end
 
-		function setChannelNumbers(deviceName)
-			f = find(strcmp({obj.channelSetup(:).name}, deviceName));
+		function setChannelNumbersForDevice(obj, deviceName)
+			% set the channel numbers used for stimulus generation
+			f = find(strcmp({obj.channelSetups(:).name}, deviceName));
 			if isempty(f)
 				errorBeep('I don''t know the output channel numbers for stim device\n');
 			elseif length(f)>1
 				errorBeep('Ambiguous stim device name\n');
 			end
+			obj.setChannelNumbers = setChannelNumbers(channelNums);
+		end
 
+		function setChannelNumbers(obj, channelNums)
 			obj.handle.SetTagVal('LeftChannel', channelNums(1));
 			obj.handle.SetTagVal('RightChannel', channelNums(2));
+		end
+
+		function numbers = getChannelNumbers(obj, deviceName)
+			% get the channel numbers used for stimulus generation
+			numbers = [obj.handle.GetTagVal('LeftChannel', channelNums(1)) ...
+						obj.handle.GetTagVal('RightChannel', channelNums(2))];
 		end
 
 		function stim = downloadStim(obj, offset, nSamples, nStimChans)

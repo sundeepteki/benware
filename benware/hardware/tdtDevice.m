@@ -4,7 +4,6 @@ classdef tdtDevice < handle
     handle = [];
     deviceName = '';
     rcxFilename = '';
-    versionTagName = '';
   end
 
   methods
@@ -32,18 +31,6 @@ classdef tdtDevice < handle
         errorBeep('Unknown sample rate');
       end
 
-      if ~isempty(obj.handle)
-        [ok, message] = obj.checkDevice(requestedSampleRateHz, versionTagName, versionTagValue);
-        
-        if ok
-          fprintf(['  * ' deviceName ' is already correctly initialised, doing nothing\n']);
-          return;
-        else
-          fprintf(['  * ' deviceName ' needs reinitialisation (' message ')\n']);
-        end
-        
-      end
-
       fprintf(['  * Initialising ' deviceName '\n']);
       obj.handle = actxcontrol('RPco.x', [5 5 26 26]);
 
@@ -62,7 +49,6 @@ classdef tdtDevice < handle
       end
     
       [ok, message] = obj.checkDevice(requestedSampleRateHz, versionTagName, versionTagValue);
-      obj.versionTagName = versionTagName;
       
       if ok
         fprintf(['  * ' deviceName ' ready, sample rate = ' num2str(obj.handle.GetSFreq) ' Hz\n']);
@@ -75,9 +61,7 @@ classdef tdtDevice < handle
         val = obj.handle.GetTagVal(obj.versionTagName);
     end
         
-    function [ok, message] = checkDevice(obj, sampleRateHz, ...
-                             versionTagName, versionTagValue)
-      % [ok, message] = checkDevice(device, sampleRateHz, versionTagName, version)
+    function [ok, message] = checkDevice(obj, deviceName, sampleRateHz, versionTagName, versionTagValue)
       % 
       % Check whether a TDT device is in the desired state. If not, return ok=false
       % and provide an explanatory message that a calling function can print to
@@ -92,7 +76,10 @@ classdef tdtDevice < handle
       ok = true;
       message = '';
       
-      if obj.handle.GetTagVal(versionTagName)~=versionTagValue
+      if ~strcmp(obj.deviceName, deviceName)
+        ok = false;
+        message = 'wrong stimulus device';
+      elseif obj.handle.GetTagVal(versionTagName)~=versionTagValue
         ok = false;
         message = 'wrong circuit loaded';
       elseif obj.sampleRate~=sampleRateHz
@@ -111,7 +98,6 @@ classdef tdtDevice < handle
     function status = deviceStatus(obj)
         status = bitand(obj.handle.GetStatus,7);
     end
-    
     
   end
 
