@@ -1,22 +1,14 @@
 classdef tdtDevice < handle
 
   properties
-    handle = [];
     deviceName = '';
     rcxFilename = '';
+    handle = [];
   end
 
   methods
-
-    function obj = tdtDevice(deviceName, rcxFilename, versionTagName, versionTagValue, ...
-                   requestedSampleRateHz)
-
-       obj.initialise(deviceName, rcxFilename, versionTagName, versionTagValue, ...
-                         requestedSampleRateHz);
-    end
     
-    function initialise(obj, deviceName, rcxFilename, versionTagName, versionTagValue, ...
-                    requestedSampleRateHz)
+    function initialise(obj, deviceName, rcxFilename, requestedSampleRateHz)
                 
       tdt50k = 48828.125;
       sampleRates =   [0.125 0.25 0.5 1 2 4 8]*tdt50k;
@@ -25,7 +17,7 @@ classdef tdtDevice < handle
       f = find(floor(requestedSampleRateHz)==floor(sampleRates));
 
       if length(f)==1
-        sampleRate = sampleRates(f);
+        %sampleRate = sampleRates(f);
         sampleRateID = sampleRateIDs(f);
       else
         errorBeep('Unknown sample rate');
@@ -48,13 +40,13 @@ classdef tdtDevice < handle
         errorBeep('Stimulus RCX Circuit failed to run.');
       end
     
-      [ok, message] = obj.checkDevice(requestedSampleRateHz, versionTagName, versionTagValue);
-      
-      if ok
-        fprintf(['  * ' deviceName ' ready, sample rate = ' num2str(obj.handle.GetSFreq) ' Hz\n']);
-      else
-        errorBeep(['Couldn''t initialise ' deviceName ': ' message]);
-      end
+      %[ok, message] = obj.checkDevice(requestedSampleRateHz, versionTagName, versionTagValue);
+      %
+      %if ok
+      %  fprintf(['  * ' deviceName ' ready, sample rate = ' num2str(obj.handle.GetSFreq) ' Hz\n']);
+      %else
+      %  errorBeep(['Couldn''t initialise ' deviceName ': ' message]);
+      %end
     end
     
     function val = versionTagValue(obj)

@@ -1,11 +1,7 @@
 classdef tdtStimDevice < tdtDevice
 	properties
-		nChannels = nan;
 		rcxSetups = [];
 		channelSetups = [];
-		% rcxFilenames = {'benware/tdt.monoplay.rcx'; 'benware/tdt.stereoplay.rcx'};
-		% versionTags = {{'MonoPlayVer'; 3}; {'StereoPlayVer', 5}};
-
 	end
 
 	methods
@@ -23,37 +19,37 @@ classdef tdtStimDevice < tdtDevice
 			obj.channelSetups(1).channelNums = [20 18];
 			obj.channelSetups(1).deviceName = 'RX6';
 			obj.channelSetups(1).channelNums = [1 2];
-
+            
 			% initialise the device
 			obj.initialise(deviceName, sampleRate, nChannels);
-		end
+        end
 
 		function initialise(obj, deviceName, sampleRate, nChannels)
 			% call this to reinitialise the class -- will create a new
 			% TDT handle and upload the rcx file
 			rcxSetup = obj.rcxSetups(nChannels);
-			obj@tdtDevice.initialise(deviceName, rcxSetup.rcxFilename, rcxSetup.versionTagName, ...
-								rcxSetup.versionTagValue, sampleRate);
+			initialise@tdtDevice(obj, deviceName, rcxSetup.rcxFilename, sampleRate);
 
-			obj.setChannelNumbers(deviceName);
+			obj.setChannelNumbersForDevice(deviceName);
 		end
 
-		function ok = checkDevice(obj, deviceName, sampleRate, nChannels)
+		function [ok, message] = checkDevice(obj, deviceName, sampleRate, nChannels)
 			% call this to make sure the TDT is in the desired state
 			rcxSetup = obj.rcxSetups(nChannels);
-			ok = obj@tdtDevice.checkDevice(deviceName, sampleRate, versionTagName, versionTagValue);
+			[ok, message] = obj.checkDevice@tdtDevice(deviceName, sampleRate, rcxSetup.versionTagName, rcxSetup.versionTagValue);
 			obj.setChannelNumbersForDevice(deviceName);
 		end
 
 		function setChannelNumbersForDevice(obj, deviceName)
 			% set the channel numbers used for stimulus generation
-			f = find(strcmp({obj.channelSetups(:).name}, deviceName));
+			f = find(strcmp({obj.channelSetups(:).deviceName}, deviceName));
 			if isempty(f)
 				errorBeep('I don''t know the output channel numbers for stim device\n');
 			elseif length(f)>1
 				errorBeep('Ambiguous stim device name\n');
-			end
-			obj.setChannelNumbers = setChannelNumbers(channelNums);
+            end
+            channelNums = obj.channelSetups(f).channelNums;
+			setChannelNumbers(obj, channelNums);
 		end
 
 		function setChannelNumbers(obj, channelNums)
@@ -61,7 +57,7 @@ classdef tdtStimDevice < tdtDevice
 			obj.handle.SetTagVal('RightChannel', channelNums(2));
 		end
 
-		function numbers = getChannelNumbers(obj, deviceName)
+		function numbers = getChannelNumbers(obj)
 			% get the channel numbers used for stimulus generation
 			numbers = [obj.handle.GetTagVal('LeftChannel', channelNums(1)) ...
 						obj.handle.GetTagVal('RightChannel', channelNums(2))];

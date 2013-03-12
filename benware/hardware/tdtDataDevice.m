@@ -1,26 +1,39 @@
 classdef tdtDataDevice < tdtDevice
   properties
     nChannels = nan;
+    rcxSetup = [];
   end
 
   methods
 
-    function obj = tdtDataDevice(deviceName, requestedSampleRateHz, channelMap, stimDevice)
+    function obj = tdtDataDevice(deviceName, requestedSampleRateHz, channelMap, ~)
+      % initialise the class itself
+      obj.rcxSetup.rcxFilename = ['benware/tdt/' deviceName '-nogain.rcx'];
+      obj.rcxSetup.versionTagName = [deviceName 'NoGainVer'];
+      obj.rcxSetup.versionTagValue = 3;
 
-      rcxFilename = ['benware/tdt/' deviceName '-nogain.rcx'];
-      versionTagName = [deviceName 'NoGainVer'];
-      versionTagValue = 3;
-      
-      obj = obj@tdtDevice(deviceName, rcxFilename, versionTagName, versionTagValue, ...
-                   requestedSampleRateHz);
-
-      obj.handle.WriteTagVEX('ChanMap',0,'I32',channelMap);
-      obj.nChannels = length(channelMap);
-      
+      % initialise the device
+      obj.initialise(deviceName, requestedSampleRateHz, channelMap);
     end
     
+    function initialise(obj, deviceName, requestedSampleRateHz, channelMap)
+      obj.initialise@tdtDevice(deviceName, obj.rcxSetup.rcxFilename, requestedSampleRateHz);
+      obj.nChannels = length(channelMap);
+    end
+
+    function [ok, message] = checkDevice(obj, deviceName, sampleRate, channelMap)
+        % call this to make sure the TDT is in the desired state
+        [ok, message] = obj.checkDevice@tdtDevice(deviceName, sampleRate, ...
+            obj.rcxSetup.versionTagName, obj.rcxSetup.versionTagValue);
+        obj.setChannelMap(channelMap);
+    end
+
     function map = channelMap(obj)
       map = obj.handle.ReadTagVEX('ChanMap', 0, obj.nChannels ,'I32', 'F64', 1);
+    end
+
+    function setChannelMap(obj, channelMap)
+       obj.handle.WriteTagVEX('ChanMap',0,'I32',channelMap);
     end
     
     function data = downloadAllData(obj)
