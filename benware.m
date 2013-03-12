@@ -37,8 +37,8 @@ initGlobalVariables;
 % experiment details
 clear expt grid;
 
-% load the structure
-load expt.mat;
+% load the expt structure
+loadexpt;
 
 % set defaults
 TEST = false;

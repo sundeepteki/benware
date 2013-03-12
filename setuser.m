@@ -1,50 +1,17 @@
-function setUser(name)
+function setuser(name)
 
 name = lower(name);
 
-exptFilename = [fix_slashes('./') 'expt.mat'];
-newPath = fix_slashes(['./userinfo/' name '/']);
-if ~exist(newPath, 'dir')
-  error(['No user info found in ' newPath]);
+user.name = name;
+
+gridDir = fix_slashes(['grids/grids.' user.name]);
+if ~exist(gridDir, 'dir')
+  mkdir(gridDir);
 end
 
-if ~exist(fix_slashes([newPath '/expt.mat']))
-  error(['No expt.mat found in ' newPath]);
+exptFile = fix_slashes(['users/expt.' user.name '.mat']);
+if ~exist(exptFile, 'file')
+  copyfile(fix_slashes('users/expt.ben.mat'), exptFile);
 end
 
-if ~exist(fix_slashes([newPath '/grids']))
-  error(['No grids directory found in ' newPath]);
-end
-
-if exist(exptFilename, 'file')
-  % then move existing stash to backup and move existing expt/grids to stash
-  
-  l = load(exptFilename);
-  oldName = l.expt.userName;
-  
-  if strcmp(oldName, name)
-    error(['expt.userName is already ' name]);
-  end
-  
-  stashPath = fix_slashes(['./userinfo/' oldName '/']);
-  backupPath = fix_slashes(['./userinfo/' oldName '.old/']);
-
-  if exist([stashPath 'expt.mat'], 'file') | exist([stashPath 'grids'], 'dir')
-    if exist(backupPath, 'dir')
-      rmdir(backupPath, 's');
-    end
-    fprintf(['Moving ' escapepath(stashPath) ' to ' escapepath(backupPath) '\n']);
-    movefile(stashPath, backupPath);
-  end
-  
-  fprintf(['Moving expt.mat and grids to ' escapepath(stashPath) '\n']);
-  mkdir_nowarning(stashPath);
-  movefile(exptFilename, stashPath);
-  gridsPath = [fix_slashes('./') 'grids'];
-  movefile(gridsPath, stashPath);
-
-end
-
-fprintf(['Fetching expt.mat and grids from ' escapepath(newPath) '\n']);
-movefile([newPath 'expt.mat'], '.');
-movefile([newPath 'grids'], '.');
+save user user;

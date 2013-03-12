@@ -4,7 +4,10 @@ function grid = chooseGrid
 % Allows user to choose a grid from the subdirectory grids/
 
 % what is in the directory
-gridFunctions = dir('grids/grid_*.m');
+l = load('user.mat');
+user = l.user;
+
+gridFunctions = dir(fix_slashes(['grids/grids.' user.name '/grid_*.m']));
 
 % print options for the user
 fprintf_subtitle('Choose a grid:');
