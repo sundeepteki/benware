@@ -41,6 +41,7 @@ clear expt grid;
 loadexpt;
 
 % set defaults
+fakeHardware = false;
 TEST = false;
 if TEST
     dataRoot = '\';
