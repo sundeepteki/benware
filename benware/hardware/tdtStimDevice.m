@@ -1,41 +1,57 @@
 classdef tdtStimDevice < tdtDevice
 	properties
+		nChannels = nan;
+		rcxSetups = [];
+		% rcxFilenames = {'benware/tdt.monoplay.rcx'; 'benware/tdt.stereoplay.rcx'};
+		% versionTags = {{'MonoPlayVer'; 3}; {'StereoPlayVer', 5}};
+
 	end
 
 	methods
 
-		function obj = tdtStimDevice(deviceName, requestedSampleRateHz, nChannels)
+		function obj = tdtStimDevice(deviceName, sampleRate, nChannels)
+			% initialise the class itself
+			obj.rcxSetup(1).rcxFilename = 'benware/tdt/monoplay.rcx';
+			obj.rcxSetup(1).versionTagName = 'MonoPlayVer';
+			obj.rcxSetup(1).versionTagValue = 3;
+			obj.rcxSetup(2).rcxFilename = 'benware/tdt/stereoplay.rcx';
+			obj.rcxSetup(2).versionTagName = 'StereoPlayVer';
+			obj.rcxSetup(2).versionTagValue = 5;
 
-			if nChannels==1
-				rcxFilename = 'benware/tdt/monoplay.rcx';
-				versionTagName = 'MonoPlayVer';
-				versionTagValue = 3;
-			elseif nChannels==2
-				rcxFilename = 'benware/tdt/stereoplay.rcx';
-				versionTagName = 'StereoPlayVer';
-				versionTagValue = 5;
-			else
-				errorBeep('Can only do mono or stereo\n');
+			obj.channelSetup(1).deviceName = 'RX8';
+			obj.channelSetup(1).channelNums = [20 18];
+			obj.channelSetup(1).deviceName = 'RX6';
+			obj.channelSetup(1).channelNums = [1 2];
+
+			% initialise the device
+			obj = obj.initialise(deviceName, sampleRate, nChannels);
+		end
+
+		function obj = initialise(deviceName, sampleRate, nChannels)
+			rcxSetup = obj.rcxSetup(nChannels);
+			obj = obj@tdtDevice(deviceName, rcxSetup.rcxFilename, rcxSetup.versionTagName, ...
+								rcxSetup.versionTagValue, sampleRate);
+
+			obj.setChannelNumbers(deviceName);
+		end
+
+		function ensureCorrectSettings(deviceName, sampleRate, nChannels)
+			rcxSetup = obj.rcxSetup(nChannels);
+			obj@tdtDevice.ensureCorrectSettings(deviceName, rcxFilename, versionTagName, versionTagValue, ...
+											sampleRate);
+			obj.setChannelNumbers(deviceName);
+		end
+
+		function setChannelNumbers(deviceName)
+			f = find(strcmp({obj.channelSetup(:).name}, deviceName));
+			if isempty(f)
+				errorBeep('I don''t know the output channel numbers for stim device\n');
+			elseif length(f)>1
+				errorBeep('Ambiguous stim device name\n');
 			end
-			
-			obj = obj@tdtDevice(deviceName, rcxFilename, versionTagName, versionTagValue, ...
-				requestedSampleRateHz);
 
-			if strcmp(deviceName, 'RX8')
-				channel.L = 20;
-				channel.R = 18;
-
-			elseif strcmp(deviceName, 'RX6')
-				channel.L = 1;
-				channel.R = 2;
-				
-			else
-				errorBeep('I don''t know the output channel numbers for this device\n');
-			end
-
-			obj.handle.SetTagVal('LeftChannel', channel.L);
-			obj.handle.SetTagVal('RightChannel', channel.R);
-
+			obj.handle.SetTagVal('LeftChannel', channelNums(1));
+			obj.handle.SetTagVal('RightChannel', channelNums(2));
 		end
 
 		function stim = downloadStim(obj, offset, nSamples, nStimChans)

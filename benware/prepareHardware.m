@@ -23,16 +23,54 @@ if isempty(hardware)
   hardware = struct();
 end
 
+% Set up stim device
 % we want to be able to have mono or stereo stimulus device because the amount of buffer space on the 
 % TDT devices is limited. We don't want to share the buffer with a non-existant second channel.
 
-% if isfield(hardware, 'stimDevice')
-%   if strcmp(class(hardware.stimDevice), expt.stimDeviceType)) && strcmp(hardware.stimDevice, exptstimDeviceName)
-%     % then we already have a device of the right kind, so just run initialise()
-%    hardware.stimDevice.initialise(expt.stimDeviceType, expt.stimDeviceName, grid.sampleRate, nStimChannels);
-hardware.stimDevice = feval(expt.stimDeviceType, expt.stimDeviceName, grid.sampleRate, expt.nStimChannels);
-hardware.dataDevice = feval(expt.dataDeviceType, expt.dataDeviceName, expt.dataDeviceSampleRate, ...
-            expt.channelMapping, hardware.stimDevice);
+if isfield(hardware, 'stimDevice')
+  % we already have a stimDevice. Check that it's correctly set up.
+
+  if strcmp(class(hardware.stimDevice), expt.stimDeviceType)) 
+    % if it's the right type, then reinitialise it if necessary
+	hardware.stimDevice.ensureCorrectSettings(expt.stimDeviceName, grid.sampleRate, expt.nStimChannels);
+  else
+	% otherwise, discard it
+	hardware.stimDevice.close;
+	clear hardware.stimDevice;
+	hardware = rmfield(hardware, 'stimDevice');
+  end
+end
+
+% at this point, we either have a correctly set up stimDevice, or no field hardware.stimDevice
+if ~isfield(hardware, 'stimDevice')
+	% so set up a new one if necessary
+	hardware.stimDevice = feval(expt.stimDeviceType, ...
+								expt.stimDeviceName, grid.sampleRate, expt.nStimChannels);
+end
+
+% Set up data device
+if isfield(hardware, 'dataDevice')
+  % we already have a dataDevice. Check that it's correctly set up.
+
+  if strcmp(class(hardware.dataDevice), expt.dataDeviceType)) 
+    % if it's the right type, then reinitialise it if necessary
+	hardware.dataDevice.ensureCorrectSettings(expt.dataDeviceName, expt.dataDeviceSampleRate, ...
+							            expt.channelMapping, hardware.dataDevice);
+  else
+	% otherwise, discard it
+	hardware.dataDevice.close;
+	clear hardware.dataDevice;
+	hardware = rmfield(hardware, 'dataDevice');
+  end
+end
+
+% at this point, we either have a correctly set up dataDevice, or no field hardware.dataDevice
+if ~isfield(hardware, 'dataDevice')
+	% so set up a new one if necessary
+	hardware.dataDevice = feval(expt.dataDeviceType, expt.dataDeviceName, expt.dataDeviceSampleRate, ...
+					            expt.channelMapping, hardware.dataDevice);
+end
+
 
 if strcmpi(expt.triggerDevice, 'stimDevice')
     hardware.triggerDevice = hardware.stimDevice;
