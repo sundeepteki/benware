@@ -1,12 +1,10 @@
-function visualBell(s)
-% expt = makeExpt
+function visualbell(s)
+% function visualbell(s)
 %
-% Update the values in the expt structure and save it
-%
-% Run this when you start a new experiment
+% Turn on and off the visual bell
+% Not sure this currently works
 
-l = load('expt.mat');
-expt = l.expt;
+loadexpt;
 
 if exist('s', 'var')
   if strcmp(s, 'on')
@@ -26,8 +24,4 @@ end
 
 fprintf(['Visual bell is now ' onString '\n']);
 
-if exist('expt.mat', 'file')
-  movefile expt.mat expt.mat.old
-end
-
-save expt.mat expt
+saveexpt;

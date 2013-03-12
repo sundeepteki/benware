@@ -1,12 +1,11 @@
-function newExpt(n)
+function newexpt(n)
 % expt = makeExpt
 %
 % Update the values in the expt structure and save it
 %
 % Run this when you start a new experiment
 
-l = load('expt.mat');
-expt = l.expt;
+loadexpt;
 
 if ~exist('n', 'var')
   n = expt.exptNum + 1;
@@ -28,8 +27,5 @@ expt.channelMapping = generateChannelMapping(expt.probes);
 
 printExpt(expt);
 
-if exist('expt.mat', 'file')
-  movefile expt.mat expt.mat.old
-end
+saveexpt;
 
-save expt.mat expt

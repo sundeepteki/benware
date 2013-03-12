@@ -5,8 +5,7 @@ function bugle(s)
 %
 % Run this when you start a new experiment
 
-l = load('expt.mat');
-expt = l.expt;
+loadexpt;
 
 if exist('s', 'var')
   if strcmp(s, 'on')
@@ -26,8 +25,4 @@ end
 
 fprintf(['Bugle is now ' onString '\n']);
 
-if exist('expt.mat', 'file')
-  movefile expt.mat expt.mat.old
-end
-
-save expt.mat expt
+saveexpt;
