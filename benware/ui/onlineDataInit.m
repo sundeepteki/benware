@@ -43,12 +43,13 @@ onlineData.lfp.nSamplesToKeep = 2000;
 onlineData.lfp.nSweeps = 0;
 
 nLFPsamplesExpected = onlineData.nSamplesExpected/sampleRate * onlineData.lfp.sampleRate;
-onlineData.lfp.sampleTimes = (0:nLFPsamplesExpected-1)*1/onlineData.lfp.sampleRate;
+onlineData.lfp.sampleTimes = (0:ceil(nLFPsamplesExpected)-1)*1/onlineData.lfp.sampleRate;
 
 if nLFPsamplesExpected<onlineData.lfp.nSamplesToKeep
     onlineData.lfp.samplesToKeep = 1:nLFPsamplesExpected;
 else
-    onlineData.lfp.samplesToKeep = round(linspace(1,nLFPSamplesExpected,onlineData.lfp.nSamplesToKeep));
+    onlineData.lfp.samplesToKeep = round(linspace(1,nLFPsamplesExpected,onlineData.lfp.nSamplesToKeep));
 end
+keyboard
 onlineData.lfp.keptSampleTimes = onlineData.lfp.sampleTimes(onlineData.lfp.samplesToKeep);
 onlineData.lfp.sum = nan(onlineData.nChannels, length(onlineData.lfp.samplesToKeep));

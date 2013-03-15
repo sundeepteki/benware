@@ -6,7 +6,7 @@ classdef tdtDataDevice < tdtDevice
 
   methods
 
-    function obj = tdtDataDevice(deviceName, requestedSampleRateHz, channelMap, ~)
+    function obj = tdtDataDevice(deviceName, requestedSampleRateHz, channelMap, dummy)
       % initialise the class itself
       obj.rcxSetup.rcxFilename = ['benware/tdt/' deviceName '-nogain.rcx'];
       obj.rcxSetup.versionTagName = [deviceName 'NoGainVer'];

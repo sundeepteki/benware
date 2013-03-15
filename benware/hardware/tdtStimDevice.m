@@ -19,6 +19,8 @@ classdef tdtStimDevice < tdtDevice
 			obj.channelSetups(1).channelNums = [20 18];
 			obj.channelSetups(1).deviceName = 'RX6';
 			obj.channelSetups(1).channelNums = [1 2];
+			obj.channelSetups(1).deviceName = 'RP2';
+			obj.channelSetups(1).channelNums = [1 2];
             
 			% initialise the device
 			obj.initialise(deviceName, sampleRate, nChannels);

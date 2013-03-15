@@ -1,4 +1,4 @@
-function stim = loadStimAndCompensate(sampleRate, nChannels, compensationFilters, expt, grid, varargin)
+function stim = loadStimAndCompensate(expt, grid, sampleRate, nChannels, compensationFilters, varargin)
 % function stim = loadStimAndCompensate(sampleRate, nChannels, compensationFilters, filename)
 %
 % Load a mono f32 or wav file and compensate using however many compensation
