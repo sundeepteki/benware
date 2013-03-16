@@ -6,7 +6,7 @@ classdef tdtStimDevice < tdtDevice
 
 	methods
 
-		function obj = tdtStimDevice(deviceName, sampleRate, nChannels)
+		function obj = tdtStimDevice(deviceInfo, sampleRate, nChannels)
 			% initialise the class itself
 			obj.rcxSetups(1).rcxFilename = 'benware/tdt/%D-monoplay.rcx';
 			obj.rcxSetups(1).versionTagName = 'MonoPlayVer';
@@ -23,24 +23,24 @@ classdef tdtStimDevice < tdtDevice
 			obj.channelSetups(1).channelNums = [1 2];
             
 			% initialise the device
-			obj.initialise(deviceName, sampleRate, nChannels);
+			obj.initialise(deviceInfo.name, sampleRate, nChannels);
         end
 
-		function initialise(obj, deviceName, sampleRate, nChannels)
+		function initialise(obj, deviceInfo, sampleRate, nChannels)
 			% call this to reinitialise the class -- will create a new
 			% TDT handle and upload the rcx file
 			rcxSetup = obj.rcxSetups(nChannels);
-			rcxFilename = sprintf(rcxSetup.rcxFilename, deviceName);
-			initialise@tdtDevice(obj, deviceName, rcxSetup.rcxFilename, sampleRate);
+			rcxFilename = sprintf(rcxSetup.rcxFilename, deviceInfo.name);
+			initialise@tdtDevice(obj, deviceInfo, rcxSetup.rcxFilename, sampleRate);
 
-			obj.setChannelNumbersForDevice(deviceName);
+			obj.setChannelNumbersForDevice(deviceInfo.name);
 		end
 
-		function [ok, message] = checkDevice(obj, deviceName, sampleRate, nChannels)
+		function [ok, message] = checkDevice(obj, deviceInfo, sampleRate, nChannels)
 			% call this to make sure the TDT is in the desired state
 			rcxSetup = obj.rcxSetups(nChannels);
-			[ok, message] = obj.checkDevice@tdtDevice(deviceName, sampleRate, rcxSetup.versionTagName, rcxSetup.versionTagValue);
-			obj.setChannelNumbersForDevice(deviceName);
+			[ok, message] = obj.checkDevice@tdtDevice(deviceInfo, sampleRate, rcxSetup.versionTagName, rcxSetup.versionTagValue);
+			obj.setChannelNumbersForDevice(deviceInfo.name);
 		end
 
 		function setChannelNumbersForDevice(obj, deviceName)

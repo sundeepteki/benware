@@ -6,24 +6,24 @@ classdef tdtDataDevice < tdtDevice
 
   methods
 
-    function obj = tdtDataDevice(deviceName, requestedSampleRateHz, channelMap, dummy)
+    function obj = tdtDataDevice(deviceInfo, requestedSampleRateHz, channelMap, dummy)
       % initialise the class itself
-      obj.rcxSetup.rcxFilename = ['benware/tdt/' deviceName '-nogain.rcx'];
-      obj.rcxSetup.versionTagName = [deviceName 'NoGainVer'];
+      obj.rcxSetup.rcxFilename = ['benware/tdt/' deviceInfo.name '-nogain.rcx'];
+      obj.rcxSetup.versionTagName = [deviceInfo.name 'NoGainVer'];
       obj.rcxSetup.versionTagValue = 3;
 
       % initialise the device
-      obj.initialise(deviceName, requestedSampleRateHz, channelMap);
+      obj.initialise(deviceInfo, requestedSampleRateHz, channelMap);
     end
     
-    function initialise(obj, deviceName, requestedSampleRateHz, channelMap)
-      obj.initialise@tdtDevice(deviceName, obj.rcxSetup.rcxFilename, requestedSampleRateHz);
+    function initialise(obj, deviceInfo, requestedSampleRateHz, channelMap)
+      obj.initialise@tdtDevice(deviceInfo, obj.rcxSetup.rcxFilename, requestedSampleRateHz);
       obj.nChannels = length(channelMap);
     end
 
-    function [ok, message] = checkDevice(obj, deviceName, sampleRate, channelMap)
+    function [ok, message] = checkDevice(obj, deviceInfo, sampleRate, channelMap)
         % call this to make sure the TDT is in the desired state
-        [ok, message] = obj.checkDevice@tdtDevice(deviceName, sampleRate, ...
+        [ok, message] = obj.checkDevice@tdtDevice(deviceInfo, sampleRate, ...
             obj.rcxSetup.versionTagName, obj.rcxSetup.versionTagValue);
         obj.setChannelMap(channelMap);
     end

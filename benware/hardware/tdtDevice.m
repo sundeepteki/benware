@@ -2,13 +2,15 @@ classdef tdtDevice < handle
 
   properties
     deviceName = '';
+    busName = '';
+    deviceNumber = nan;
     rcxFilename = '';
     handle = [];
   end
 
   methods
     
-    function initialise(obj, deviceName, rcxFilename, requestedSampleRateHz)
+    function initialise(obj, deviceInfo, rcxFilename, requestedSampleRateHz)
                 
       tdt50k = 48828.125;
       sampleRates =   [0.125 0.25 0.5 1 2 4 8]*tdt50k;
@@ -23,13 +25,17 @@ classdef tdtDevice < handle
         errorBeep('Unknown sample rate');
       end
 
-      fprintf(['  * Initialising ' deviceName '\n']);
+      fprintf(['  * Initialising ' deviceInfo.name '\n']);
       obj.handle = actxcontrol('RPco.x', [5 5 26 26]);
 
-      if invoke(obj.handle, ['Connect' deviceName], 'GB', 1) == 0
-        errorBeep(['Cannot connect to ' deviceName ' on GB 1']);
+      if invoke(obj.handle, ['Connect' deviceInfo.name], ...
+                  deviceInfo.busName, deviceInfo.deviceNumber) == 0
+        errorBeep(sprintf('Cannot connect to %s #%d on %s bus'], ...
+                  deviceInfo.name, deviceInfo.deviceNumber, deviceInfo.busName));
       end
-      obj.deviceName = deviceName;
+      obj.deviceName = deviceInfo.name;
+      obj.busName = deviceInfo.busName;
+      obj.deviceNumber = deviceInfo.deviceNumber;
 
       if invoke(obj.handle, 'LoadCOFsf', rcxFilename, sampleRateID) == 0
         errorBeep(['Cannot upload ' rcxFilename ]);
@@ -53,7 +59,8 @@ classdef tdtDevice < handle
         val = obj.handle.GetTagVal(obj.versionTagName);
     end
         
-    function [ok, message] = checkDevice(obj, deviceName, sampleRateHz, versionTagName, versionTagValue)
+    function [ok, message] = checkDevice(obj, ...
+                    deviceInfo, sampleRateHz, versionTagName, versionTagValue)
       % 
       % Check whether a TDT device is in the desired state. If not, return ok=false
       % and provide an explanatory message that a calling function can print to
@@ -68,9 +75,15 @@ classdef tdtDevice < handle
       ok = true;
       message = '';
       
-      if ~strcmp(obj.deviceName, deviceName)
+      if ~strcmp(obj.deviceName, deviceInfo.name)
         ok = false;
         message = 'wrong stimulus device';
+      elseif ~strcmp(obj.busName, deviceInfo.busName)
+        ok = false;
+        message = 'wrong bus';
+      elseif ~strcmp(obj.deviceNumber, deviceInfo.deviceNumber)
+        ok = false;
+        message = 'wrong device number';
       elseif obj.handle.GetTagVal(versionTagName)~=versionTagValue
         ok = false;
         message = 'wrong circuit loaded';
