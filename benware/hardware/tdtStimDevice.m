@@ -1,7 +1,6 @@
 classdef tdtStimDevice < tdtDevice
 	properties
 		rcxSetups = [];
-		channelSetups = [];
 	end
 
 	methods
@@ -13,14 +12,7 @@ classdef tdtStimDevice < tdtDevice
 			obj.rcxSetups(1).versionTagValue = 3;
 			obj.rcxSetups(2).rcxFilename = 'benware/tdt/%D-stereoplay.rcx';
 			obj.rcxSetups(2).versionTagName = 'StereoPlayVer';
-			obj.rcxSetups(2).versionTagValue = 5;
-
-			obj.channelSetups(1).deviceName = 'RX8';
-			obj.channelSetups(1).channelNums = [20 18];
-			obj.channelSetups(1).deviceName = 'RX6';
-			obj.channelSetups(1).channelNums = [1 2];
-			obj.channelSetups(1).deviceName = 'RP2';
-			obj.channelSetups(1).channelNums = [1 2];
+			obj.rcxSetups(2).versionTagValue = 6;
             
 			% initialise the device
 			obj.initialise(deviceInfo.name, sampleRate, nChannels);
@@ -32,38 +24,12 @@ classdef tdtStimDevice < tdtDevice
 			rcxSetup = obj.rcxSetups(nChannels);
 			rcxFilename = sprintf(rcxSetup.rcxFilename, deviceInfo.name);
 			initialise@tdtDevice(obj, deviceInfo, rcxSetup.rcxFilename, sampleRate);
-
-			obj.setChannelNumbersForDevice(deviceInfo.name);
 		end
 
 		function [ok, message] = checkDevice(obj, deviceInfo, sampleRate, nChannels)
 			% call this to make sure the TDT is in the desired state
 			rcxSetup = obj.rcxSetups(nChannels);
 			[ok, message] = obj.checkDevice@tdtDevice(deviceInfo, sampleRate, rcxSetup.versionTagName, rcxSetup.versionTagValue);
-			obj.setChannelNumbersForDevice(deviceInfo.name);
-		end
-
-		function setChannelNumbersForDevice(obj, deviceName)
-			% set the channel numbers used for stimulus generation
-			f = find(strcmp({obj.channelSetups(:).deviceName}, deviceName));
-			if isempty(f)
-				errorBeep('I don''t know the output channel numbers for stim device\n');
-			elseif length(f)>1
-				errorBeep('Ambiguous stim device name\n');
-            end
-            channelNums = obj.channelSetups(f).channelNums;
-			setChannelNumbers(obj, channelNums);
-		end
-
-		function setChannelNumbers(obj, channelNums)
-			obj.handle.SetTagVal('LeftChannel', channelNums(1));
-			obj.handle.SetTagVal('RightChannel', channelNums(2));
-		end
-
-		function numbers = getChannelNumbers(obj)
-			% get the channel numbers used for stimulus generation
-			numbers = [obj.handle.GetTagVal('LeftChannel', channelNums(1)) ...
-						obj.handle.GetTagVal('RightChannel', channelNums(2))];
 		end
 
 		function stim = downloadStim(obj, offset, nSamples, nStimChans)
