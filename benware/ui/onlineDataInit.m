@@ -43,7 +43,7 @@ onlineData.lfp.nSamplesToKeep = 2000;
 onlineData.lfp.nSweeps = 0;
 
 nLFPsamplesExpected = onlineData.nSamplesExpected/sampleRate * onlineData.lfp.sampleRate;
-onlineData.lfp.sampleTimes = (0:ceil(nLFPsamplesExpected)-1)*1/onlineData.lfp.sampleRate;
+onlineData.lfp.sampleTimes = (0:round(nLFPsamplesExpected)-1)*1/onlineData.lfp.sampleRate;
 
 if nLFPsamplesExpected<onlineData.lfp.nSamplesToKeep
     onlineData.lfp.samplesToKeep = 1:nLFPsamplesExpected;

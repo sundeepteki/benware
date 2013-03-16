@@ -1,16 +1,10 @@
 == TODO MARCH 16 2013
 
-* need to be able to address NUMBERED devices on zBUs
-
-* need to have different versions of stereoPlay per device (like datadevice)
-    * should be done, needs testing
+* test stereoplay version 6
 
 * TDT devices are reinitialising when they shouldn't be
 
 * fetch RX5-nogain.rcx from wedge room computer
-
-* stimDevice channel numbers could be integrated into rcx file now that 
-  there's one rcx per device
 
 * MOTU stim device
 
@@ -61,6 +55,14 @@
 
 
 == DONE
+
+* need to be able to address NUMBERED devices on zBUs
+
+* need to have different versions of stereoPlay per device (like datadevice)
+    * should be done, needs testing
+
+* stimDevice channel numbers could be integrated into rcx file now that 
+  there's one rcx per device
 
 * Also consider plotData and state structures -- should they be combined?
   -- both global?
