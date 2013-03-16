@@ -3,14 +3,7 @@ function setPath
 %
 % set path for benWare
 
-if ispc
-  if exist('..\NeilLib', 'dir')
-    addpath(genpath('..\NeilLib'));
-  elseif exist('.\NeilLib', 'dir')
-    addpath(genpath('.\NeilLib'));
-  end
-  addpath(genpath(pwd));
-else
-  addpath([pwd '/../NeilLib/']);
-  addpath(genpath(pwd));
-end
+addpath(genpath(fix_slashes('./benware/')));
+
+load user.mat;
+addpath(fix_slashes(['./grids/grids.' user.name]));

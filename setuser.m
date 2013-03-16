@@ -1,5 +1,10 @@
 function setuser(name)
 
+% remove old user's grids from path
+load user;
+rmpath(fix_slashes(['./grids/grids.' user.name]));
+
+% save new users's name in user.mat
 name = lower(name);
 
 user.name = name;
@@ -15,3 +20,6 @@ if ~exist(exptFile, 'file')
 end
 
 save user user;
+
+% add new user's grids to path
+addpath(fix_slashes(['./grids/grids.' user.name]));
