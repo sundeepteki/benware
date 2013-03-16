@@ -1,3 +1,9 @@
+== TODO MARCH 16 2013
+
+-- need to be able to address NUMBERED devices on zBUs
+-- need to have different versions of stereoPlay per device (like datadevice)
+
+
 == TODO before next expt 
 
 * Save spike times in separate files again, with sweep metadata separately

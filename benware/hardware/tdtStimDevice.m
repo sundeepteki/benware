@@ -8,10 +8,10 @@ classdef tdtStimDevice < tdtDevice
 
 		function obj = tdtStimDevice(deviceName, sampleRate, nChannels)
 			% initialise the class itself
-			obj.rcxSetups(1).rcxFilename = 'benware/tdt/monoplay.rcx';
+			obj.rcxSetups(1).rcxFilename = 'benware/tdt/%D-monoplay.rcx';
 			obj.rcxSetups(1).versionTagName = 'MonoPlayVer';
 			obj.rcxSetups(1).versionTagValue = 3;
-			obj.rcxSetups(2).rcxFilename = 'benware/tdt/stereoplay.rcx';
+			obj.rcxSetups(2).rcxFilename = 'benware/tdt/%D-stereoplay.rcx';
 			obj.rcxSetups(2).versionTagName = 'StereoPlayVer';
 			obj.rcxSetups(2).versionTagValue = 5;
 
@@ -30,6 +30,7 @@ classdef tdtStimDevice < tdtDevice
 			% call this to reinitialise the class -- will create a new
 			% TDT handle and upload the rcx file
 			rcxSetup = obj.rcxSetups(nChannels);
+			rcxFilename = sprintf(rcxSetup.rcxFilename, deviceName);
 			initialise@tdtDevice(obj, deviceName, rcxSetup.rcxFilename, sampleRate);
 
 			obj.setChannelNumbersForDevice(deviceName);
