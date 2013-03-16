@@ -1,6 +1,6 @@
 classdef fakeStimDevice < handle
 	properties
-	  deviceName = '';
+	  deviceInfo = '';
 	  sampleRate = nan;
 	  nChannels = nan;
 		nSamples = -1
@@ -17,8 +17,8 @@ classdef fakeStimDevice < handle
 
 	methods
 
-	  function obj = fakeStimDevice(deviceName, requestedSampleRateHz, nChannels)
-		obj.deviceName = deviceName;
+	  function obj = fakeStimDevice(deviceInfo, requestedSampleRateHz, nChannels)
+		obj.deviceInfo = deviceInfo;
 		obj.sampleRate = requestedSampleRateHz;
 		obj.nChannels = nChannels;
 	  end
