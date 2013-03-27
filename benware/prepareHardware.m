@@ -23,43 +23,52 @@ end
 % TDT devices is limited. We don't want to share the buffer with a non-existant second channel.
 
 if ~isfield(hardware, 'stimDevice')
-	ok = false;
-	message = '';
-elseif ~strcmp(class(hardware.stimDevice), expt.stimDeviceType)
-	ok = false;
-	message = fprintf('wrong stimulus device type (%s rather than %s)', ...
-		class(hardware.stimDevice), expt.stimDeviceType);
-else
-	[ok, message] = hardware.stimDevice.checkDevice(...
-			expt.stimDeviceInfo, grid.sampleRate, expt.nStimChannels);
-end
-
-if ~ok
-	fprintf('Reinitialising stimulus device (%s)...\n', message);
+	fprintf('Initialising stimulus device...\n');
 	hardware.stimDevice = feval(expt.stimDeviceType, ...
 								expt.stimDeviceInfo, grid.sampleRate, expt.nStimChannels);
+else
+    if ~strcmp(class(hardware.stimDevice), expt.stimDeviceType)
+        ok = false;
+        message = fprintf('wrong stimulus device type (%s rather than %s)', ...
+                    class(hardware.stimDevice), expt.stimDeviceType);
+    else
+        [ok, message] = hardware.stimDevice.checkDevice(...
+                    	expt.stimDeviceInfo, grid.sampleRate, expt.nStimChannels);
+    end
+
+    if ok
+        fprintf('Stimulus device already initialised at %0.0f Hz\n', grid.sampleRate);
+    else
+        fprintf('Reinitialising stimulus device (%s)...\n', message);
+        hardware.stimDevice = feval(expt.stimDeviceType, ...
+								expt.stimDeviceInfo, grid.sampleRate, expt.nStimChannels);
+    end
 end
 
 % set up data device
 if ~isfield(hardware, 'dataDevice')
-	ok = false;
-	message = '';
-elseif ~strcmp(class(hardware.dataDevice), expt.dataDeviceType)
-	ok = false;
-	message = fprintf('wrong data device type (%s rather than %s)', ...
-		class(hardware.dataDevice), expt.dataDeviceType);
-else
-	[ok, message] = hardware.dataDevice.checkDevice(...
-			expt.dataDeviceInfo, expt.dataDeviceSampleRate, expt.channelMapping);
-end
-
-if ~ok
-    if ~isempty(message)
-    	fprintf('Reinitialising data device (%s)...\n', message);
-    end
-	hardware.dataDevice = feval(expt.dataDeviceType, ...
+    fprintf('Initialising data device...\n');
+    hardware.dataDevice = feval(expt.dataDeviceType, ...
 								expt.dataDeviceInfo, expt.dataDeviceSampleRate, ...
 					            expt.channelMapping, hardware.stimDevice);
+else
+    if ~strcmp(class(hardware.dataDevice), expt.dataDeviceType)
+        ok = false;
+        message = fprintf('wrong data device type (%s rather than %s)', ...
+            class(hardware.dataDevice), expt.dataDeviceType);
+    else
+        [ok, message] = hardware.dataDevice.checkDevice(...
+                expt.dataDeviceInfo, expt.dataDeviceSampleRate, expt.channelMapping);
+    end
+
+    if ok
+        fprintf('Data device already initialised at %0.0f Hz\n', expt.dataDeviceSampleRate);
+    else
+    	fprintf('Reinitialising data device (%s)...\n', message);
+    	hardware.dataDevice = feval(expt.dataDeviceType, ...
+								expt.dataDeviceInfo, expt.dataDeviceSampleRate, ...
+					            expt.channelMapping, hardware.stimDevice);
+    end
 end
 
 % set up trigger

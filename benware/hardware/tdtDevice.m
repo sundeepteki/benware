@@ -81,7 +81,7 @@ classdef tdtDevice < handle
       elseif ~strcmp(obj.busName, deviceInfo.busName)
         ok = false;
         message = 'wrong bus';
-      elseif ~strcmp(obj.deviceNumber, deviceInfo.deviceNumber)
+      elseif obj.deviceNumber~=deviceInfo.deviceNumber
         ok = false;
         message = 'wrong device number';
       elseif obj.handle.GetTagVal(versionTagName)~=versionTagValue
