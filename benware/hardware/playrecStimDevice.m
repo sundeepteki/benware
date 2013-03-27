@@ -8,7 +8,7 @@ classdef playrecStimDevice < handle
 
   methods
 
-    function obj = playrecStimDevice(deviceName, requestedSampleRateHz, nChannels)
+    function obj = playrecStimDevice(deviceIn, requestedSampleRateHz, nChannels)
        obj.initialise(deviceName, requestedSampleRateHz, nChannels);
     end
     
