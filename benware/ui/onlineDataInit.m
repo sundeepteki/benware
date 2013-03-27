@@ -50,6 +50,5 @@ if nLFPsamplesExpected<onlineData.lfp.nSamplesToKeep
 else
     onlineData.lfp.samplesToKeep = round(linspace(1,nLFPsamplesExpected,onlineData.lfp.nSamplesToKeep));
 end
-keyboard
 onlineData.lfp.keptSampleTimes = onlineData.lfp.sampleTimes(onlineData.lfp.samplesToKeep);
 onlineData.lfp.sum = nan(onlineData.nChannels, length(onlineData.lfp.samplesToKeep));

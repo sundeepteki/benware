@@ -3,4 +3,4 @@ l = load('user.mat');
 user = l.user;
 
 l = load(fix_slashes(['users/expt.' user.name '.mat']));
-expt = l.expt
+expt = l.expt;

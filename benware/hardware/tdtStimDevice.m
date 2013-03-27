@@ -7,15 +7,15 @@ classdef tdtStimDevice < tdtDevice
 
 		function obj = tdtStimDevice(deviceInfo, sampleRate, nChannels)
 			% initialise the class itself
-			obj.rcxSetups(1).rcxFilename = 'benware/tdt/%D-monoplay.rcx';
+			obj.rcxSetups(1).rcxFilename = 'benware/tdt/%s-monoplay.rcx';
 			obj.rcxSetups(1).versionTagName = 'MonoPlayVer';
 			obj.rcxSetups(1).versionTagValue = 3;
-			obj.rcxSetups(2).rcxFilename = 'benware/tdt/%D-stereoplay.rcx';
+			obj.rcxSetups(2).rcxFilename = 'benware/tdt/%s-stereoplay.rcx';
 			obj.rcxSetups(2).versionTagName = 'StereoPlayVer';
 			obj.rcxSetups(2).versionTagValue = 6;
             
 			% initialise the device
-			obj.initialise(deviceInfo.name, sampleRate, nChannels);
+			obj.initialise(deviceInfo, sampleRate, nChannels);
         end
 
 		function initialise(obj, deviceInfo, sampleRate, nChannels)
@@ -23,7 +23,7 @@ classdef tdtStimDevice < tdtDevice
 			% TDT handle and upload the rcx file
 			rcxSetup = obj.rcxSetups(nChannels);
 			rcxFilename = sprintf(rcxSetup.rcxFilename, deviceInfo.name);
-			initialise@tdtDevice(obj, deviceInfo, rcxSetup.rcxFilename, sampleRate);
+			initialise@tdtDevice(obj, deviceInfo, rcxFilename, sampleRate);
 		end
 
 		function [ok, message] = checkDevice(obj, deviceInfo, sampleRate, nChannels)
