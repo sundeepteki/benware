@@ -19,42 +19,43 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(hardware, .
   if any(countAllData(hardware.dataDevice, nChannels) ~= 0)
     errorBeep('Stale data in data buffer');
   end
-
-  % check that the correct stimulus is in the stimDevice buffer
-  nStimChans = size(stim, 1);
-  stimLen = size(stim, 2);
-  rnd = floor(100+rand*(stimLen-300));
   
-  checkData = [hardware.stimDevice.downloadStim(0, 100, nStimChans) ...
-      hardware.stimDevice.downloadStim(rnd, 100, nStimChans) ...
-      hardware.stimDevice.downloadStim(stimLen-100, 100, nStimChans)];
-  
-  d = max(max(abs(checkData - [stim(:, 1:100) stim(:, rnd+1:rnd+100) stim(:, end-99:end)])));
-  if d>10e-7
-    fprintf('Stimulus on stimDevice is not correct!\n');
-    keyboard;
-    errorBeep('Stimulus on stimDevice is not correct!');
-  end
-
-  % check stimulus length is correct
-  if hardware.stimDevice.getStimLength ~= stimLen
-    errorBeep('Stimulus length on stimDevice is not correct');
-  end
-  
-  % check that correct number of stimulus channels are active
-  hardware.stimDevice.setActiveStimChannels(nStimChans);
-
-  % record length of next stimulus for uploading
-  nextStimLen = size(nextStim, 2);
-
-  % reset stimulus device so it reads out from the beginning of the buffer
-  % when triggered
-  % probably not necessary (since circuit resets itself)
-  % replace with a check that it is in correct state?
-  hardware.stimDevice.reset;
-  if hardware.stimDevice.getStimIndex~=0
-    errorBeep('Stimulus index not equal to zero at start of sweep');
-  end
+% This section moved to stimDevice
+%   % check that the correct stimulus is in the stimDevice buffer
+%   nStimChans = size(stim, 1);
+%   stimLen = size(stim, 2);
+%   rnd = floor(100+rand*(stimLen-300));
+%   
+%   checkData = [hardware.stimDevice.downloadStim(0, 100, nStimChans) ...
+%       hardware.stimDevice.downloadStim(rnd, 100, nStimChans) ...
+%       hardware.stimDevice.downloadStim(stimLen-100, 100, nStimChans)];
+%   
+%   d = max(max(abs(checkData - [stim(:, 1:100) stim(:, rnd+1:rnd+100) stim(:, end-99:end)])));
+%   if d>10e-7
+%     fprintf('Stimulus on stimDevice is not correct!\n');
+%     keyboard;
+%     errorBeep('Stimulus on stimDevice is not correct!');
+%   end
+% 
+%   % check stimulus length is correct
+%   if hardware.stimDevice.getStimLength ~= stimLen
+%     errorBeep('Stimulus length on stimDevice is not correct');
+%   end
+%   
+%   % check that correct number of stimulus channels are active
+%   hardware.stimDevice.setActiveStimChannels(nStimChans);
+% 
+%   % record length of next stimulus for uploading
+%   nextStimLen = size(nextStim, 2);
+% 
+%   % reset stimulus device so it reads out from the beginning of the buffer
+%   % when triggered
+%   % probably not necessary (since circuit resets itself)
+%   % replace with a check that it is in correct state?
+%   hardware.stimDevice.reset;
+%   if hardware.stimDevice.getStimIndex~=0
+%     errorBeep('Stimulus index not equal to zero at start of sweep');
+%   end
 
   % make matlab buffer for data
   nSamplesExpected = floor(sweepLen*hardware.dataDevice.sampleRate)+1;
@@ -99,21 +100,9 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(hardware, .
   % loop until we've received all data
   while any(nSamplesReceived<nSamplesExpected)
     
-    % upload stimulus
-    if ~isempty(nextStim)
-      % stimulus upload is limited by length of stimulus, or where the
-      % stimDevice has got to in reading out the stimulus, whichever is lower
-      maxStimIndex = min(hardware.stimDevice.getStimIndex,nextStimLen);
-      n = samplesUploaded + 1;
-      if maxStimIndex>samplesUploaded
-        hardware.stimDevice.uploadStim(nextStim(:, samplesUploaded+1:maxStimIndex), samplesUploaded);
-        samplesUploaded = maxStimIndex;
-        if samplesUploaded==nextStimLen
-          fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
-        end
-      end
-    
-    end
+    % allow stimDevice to do something during sweep (i.e. upload stimulus)
+    hardware.stimDevice.workDuringSweep;
+
     %fprintf(['  * Stim: ' num2str((maxStimIndex-n)/hardware.stimSampleRate) ' sec of stim done in ' num2str(toc) ' sec.\n']);tic;
     
     % download data
@@ -158,18 +147,20 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(hardware, .
 
   fprintf(['  * Waveforms received and saved after ' num2str(toc) ' sec.\n']);
 
-  if ~isempty(nextStim)
-    % finish uploading stimulus if necessary
-    if samplesUploaded~=nextStimLen
-      hardware.stimDevice.uploadStim(nextStim(:, samplesUploaded+1:end), samplesUploaded);
-      samplesUploaded = nextStimLen;
-      fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
-    end
+%   if ~isempty(nextStim)
+%     % finish uploading stimulus if necessary
+%     if samplesUploaded~=nextStimLen
+%       hardware.stimDevice.uploadStim(nextStim(:, samplesUploaded+1:end), samplesUploaded);
+%       samplesUploaded = nextStimLen;
+%       fprintf(['  * Next stimulus uploaded after ' num2str(toc) ' sec.\n']);
+%     end
+% 
+%     % inform stimDevice about length of the stimulus that has been uploaded
+%     % (i.e. the stimulus for the next sweep)
+%     hardware.stimDevice.setStimLength(nextStimLen);
+%   end
 
-    % inform stimDevice about length of the stimulus that has been uploaded
-    % (i.e. the stimulus for the next sweep)
-    hardware.stimDevice.setStimLength(nextStimLen);
-  end
+  hardware.stimDevice.workAfterSweep;
 
   % finish detecting spikes  
   [filtData, offset] = filterData(data(:, filterIndex+1:minSamplesReceived), spikeFilter);

@@ -27,9 +27,9 @@ spikeFilter = makeSpikeFilter(expt.dataDeviceSampleRate);
 [nextStim sweeps(firstSweep).stimInfo] = prepareStimulus(...
   grid.stimGenerationFunction, firstSweep, grid, expt);
 
-fprintf('  * Uploading first stimulus...');
-uploadWholeStim(hardware.stimDevice, nextStim);
-fprintf(['done after ' num2str(toc) ' sec.\n']);
+% fprintf('  * Uploading first stimulus...');
+% hardware.stimDevice.prepareForSweep(stim);
+% fprintf(['done after ' num2str(toc) ' sec.\n']);
 
 % set up plot
 if isfield(grid, 'sweepLength')
@@ -65,6 +65,8 @@ while sweepNum<=grid.nSweepsDesired
   else
     nextStim = [];
   end
+  
+  hardware.stimDevice.prepareForSweep(stim, nextStim);
   
   sweeps(sweepNum).sweepNum = sweepNum;
   

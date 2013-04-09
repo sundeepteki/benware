@@ -25,5 +25,5 @@ function grid = grid_density_v1()
   grid.repeatsPerCondition = 7;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [-84 -84];
+  grid.stimLevelOffsetDB = [-84 -84]+100;
   
