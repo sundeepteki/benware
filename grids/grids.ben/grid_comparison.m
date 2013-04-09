@@ -29,5 +29,5 @@ function grid = grid_comparison()
   grid.repeatsPerCondition = 10;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [13 11]-105;
+  grid.stimLevelOffsetDB = [13 11];
   

@@ -47,7 +47,7 @@ else
         lfp.sum = lfp.sum + lfpsignal(:, lfp.samplesToKeep);
     else
         downsampled = lfpsignal(:, lfp.samplesToKeep(lfp.samplesToKeep<=maxSample));
-        downsampled = [downsampled zeros(nChannels, length(lfp.samplestoKeep)-size(downsampled, 2))];
+        downsampled = [downsampled zeros(nChannels, length(lfp.samplesToKeep)-size(downsampled, 2))];
         lfp.sum = lfp.sum + downsampled;
     end
 end

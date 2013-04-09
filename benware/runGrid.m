@@ -23,8 +23,8 @@ cleanupObject = onCleanup(@()cleanup(hardware));
 % make filter for spike detection
 spikeFilter = makeSpikeFilter(expt.dataDeviceSampleRate);
 
-% upload first stimulus
-[nextStim sweeps(firstSweep).stimInfo] = prepareStimulus(...
+% get first stimulus
+[stim sweeps(firstSweep).stimInfo] = prepareStimulus(...
   grid.stimGenerationFunction, firstSweep, grid, expt);
 
 % fprintf('  * Uploading first stimulus...');
@@ -37,7 +37,7 @@ if isfield(grid, 'sweepLength')
 elseif isfield(grid, 'maxSweepLength')
   nSamplesExpected = floor(grid.maxSweepLength*expt.dataDeviceSampleRate)+1;
 else
-  nSamplesExpected = floor((size(nextStim,2)/grid.sampleRate+grid.postStimSilence)*expt.dataDeviceSampleRate)+1;
+  nSamplesExpected = floor((size(stim,2)/grid.sampleRate+grid.postStimSilence)*expt.dataDeviceSampleRate)+1;
 end
 
 if ~isfield(state, 'onlineData')
@@ -53,7 +53,6 @@ sweepNum = firstSweep;
 while sweepNum<=grid.nSweepsDesired
   tic;
   
-  stim = nextStim;
   displayStimInfo(sweeps, grid, sweepNum);
   fprintf('Progress:\n');
   
@@ -134,7 +133,10 @@ while sweepNum<=grid.nSweepsDesired
       end
     end
   end
-
+  
+  % if the sweep was successful, move on to the next stimulus
+  stim = nextStim;
+  
   sweeps(sweepNum).spikeTimes = spikeTimes;
   sweeps(sweepNum).timeStamp = timeStamp;
   
