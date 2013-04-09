@@ -2,7 +2,7 @@ function grid = grid_drc200k_plus_light()
 
   % controlling the sound presentation
   grid.sampleRate = 24414.0625*8;  % ~200kHz
-  grid.stimGenerationFunctionName = 'loadStimCompensateAddLight';
+  grid.stimGenerationFunctionName = 'loadStimAndCompensateWithLight';
   grid.stimDir = 'e:\auditory-objects\sounds-uncalib\mouse.drc.5\';
   %grid.stimDir = '/Users/ben/scratch/texture/texture.v2/renamed/';
   grid.stimFilename = 'drc%1_contrast%2.f32';

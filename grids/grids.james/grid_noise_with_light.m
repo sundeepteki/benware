@@ -7,15 +7,15 @@ function grid = grid_noise_with_light()
   % stimulus grid structure
  grid.stimGridTitles = {'Stimulus Length (ms)', 'Noise Delay (ms)', ...
       'Noise Length (ms)', 'Light voltage (V)', 'Light delay (ms)', 'Light Duration (ms)', 'Level'};
- %grid.stimGrid = [1000 300 50 5 0.01 700 80; 1000 300 50 0 0.01 700 80;];
+ grid.stimGrid = [1000 250 50 5 0.01 750 80; 1000 250 50 0 0.01 750 80;];
  % grid.stimGrid = [2000 500 50 0 0.01 700 80];
 
   % for jonathan
-  fprintf('**jonathans mouse!!**');
-  grid.stimGrid = [1000 25 5 0 25 5 80; ...
-                  1000 25 5 5 25 5 -80; ...
-                  1000 25 5 5 25 5 80; ...
-                 ];
+  %fprintf('**jonathans mouse!!**');
+  %grid.stimGrid = [1000 25 5 0 25 5 80; ...
+  %                1000 25 5 5 25 5 -80; ...
+   %               1000 25 5 5 25 5 80; ...
+   %              ];
   
   % sweep parameters
   grid.postStimSilence = 0;
@@ -23,5 +23,5 @@ function grid = grid_noise_with_light()
   %grid.saveWaveforms = false;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -92;
+  grid.stimLevelOffsetDB = -92+100;
   

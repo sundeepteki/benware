@@ -71,14 +71,15 @@ classdef tdtNewStimDevice < tdtDevice
                 % otherwise upload whole stimulus from scratch
                 obj.uploadCurrentStim;
             end
-    
-            % check that the stimulus on the device matches currentStim
-            obj.checkStimOnDevice;
-            
+                
             % set other essential variables on device
             obj.setActiveStimChannels(size(obj.currentStim, 1));
             obj.setStimLength(size(obj.currentStim, 2));
-        
+    
+            % check that the stimulus on the device matches currentStim
+            obj.checkStimOnDevice;
+
+            
             % register the next stimulus so it can be uploaded
             % during the sweep
             obj.nextStim = nextStim;
@@ -89,7 +90,7 @@ classdef tdtNewStimDevice < tdtDevice
         function workDuringSweep(obj)
             % check the current stimulus index
             % fill up the buffer to index-1
-
+            
             if ~isempty(obj.nextStim)
                 % stimulus upload is limited by length of stimulus, or where the
                 % stimDevice has got to in reading out the stimulus, whichever is lower
@@ -148,6 +149,7 @@ classdef tdtNewStimDevice < tdtDevice
             
             d = max(max(abs(checkData - [obj.currentStim(:, 1:100) obj.currentStim(:, rnd+1:rnd+100) obj.currentStim(:, end-99:end)])));
             if d>10e-7
+                %fprintf('warning, skipping check');
                 fprintf('Stimulus on stimDevice is not correct!\n');
                 keyboard
                 %errorBeep('Stimulus on stimDevice is not correct!');
@@ -240,7 +242,7 @@ classdef tdtNewStimDevice < tdtDevice
             %
             % Upload a stereo stimulus to stimDevice, and inform the device
             % about the stimulus length
-
+            
             if ~obj.handle.SetTagVal('nSamples',size(stim,2))
                 errorBeep('WriteTag nSamples failed');
             end

@@ -24,7 +24,7 @@ if ~success
     fprintf('no device\n');
 end
 
-success = invoke(handle, 'LoadCOFsf', '.\benware\tdt\RX6-stereoplay16bit.rcx', 3);
+success = invoke(handle, 'LoadCOFsf', '.\benware\tdt\RX6-stereoplay16bit.rcx', 5);
 if ~success
     fprintf('upload failed\n');
 end
@@ -32,6 +32,20 @@ end
 invoke(handle,'Run');
 
 z = actxcontrol('ZBUS.x',[1 1 1 1]);
+
+%
+s = [1 2 3 4 5 6 7 8]*10000;
+s = int16(s);
+s = typecast(s, 'double');
+
+tic
+success = handle.WriteTagV('WaveformL', 0, 1:1953125)
+toc
+tic
+success = handle.WriteTagVEX('WaveformL', 0, 'i16', int16(1:1953125))
+toc
+data = handle.ReadTagVEX('WaveformL', 0, 16, 'i16', 'f64', 1)
+data = handle.ReadTagVEX('WaveformL', 1953100, 16, 'i16', 'f64', 1)
 
 %% convert to interleaved 16 bit format
 mx = max(abs(s));
@@ -45,3 +59,12 @@ success = handle.SetTagVal('nSamples', length(s)*2)
 
 success = handle.SoftTrg(9)
 z.zBusTrigA(0,0,5)
+
+%%
+
+stim = s;
+scaleFactor = max(abs(stim(:)));
+stim_16bit = int16(s/scaleFactor*(2^15-1));
+encodedStim = int32(stim_16bit(1:2:end))*2^16 + int32(stim_16bit(2:2:end));
+            scaleFactor = 1/scaleFactor;
+  

@@ -42,7 +42,14 @@ lfp = state.onlineData.lfp;
 if lfp.nSweeps==0
 	lfp.sum = lfpsignal(:, lfp.samplesToKeep);
 else
-	lfp.sum = lfp.sum + lfpsignal(:, lfp.samplesToKeep);
+    [nChannels, maxSample] = size(lfpsignal);
+    if maxSample>=max(lfp.samplesToKeep)
+        lfp.sum = lfp.sum + lfpsignal(:, lfp.samplesToKeep);
+    else
+        downsampled = lfpsignal(:, lfp.samplesToKeep(lfp.samplesToKeep<=maxSample));
+        downsampled = [downsampled zeros(nChannels, length(lfp.samplestoKeep)-size(downsampled, 2))];
+        lfp.sum = lfp.sum + downsampled;
+    end
 end
 lfp.nSweeps = lfp.nSweeps + 1;
 
