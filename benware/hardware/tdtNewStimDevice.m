@@ -146,10 +146,11 @@ classdef tdtNewStimDevice < tdtDevice
             checkData = [obj.downloadStim(0, 100, nStimChans) ...
                 obj.downloadStim(rnd, 100, nStimChans) ...
                 obj.downloadStim(stimLen-100, 100, nStimChans)];
-            
+
+            %fprintf('warning, skipping check');
+
             d = max(max(abs(checkData - [obj.currentStim(:, 1:100) obj.currentStim(:, rnd+1:rnd+100) obj.currentStim(:, end-99:end)])));
             if d>10e-7
-                %fprintf('warning, skipping check');
                 fprintf('Stimulus on stimDevice is not correct!\n');
                 keyboard
                 %errorBeep('Stimulus on stimDevice is not correct!');
@@ -255,7 +256,7 @@ classdef tdtNewStimDevice < tdtDevice
                 return
             end
 
-            if ~obj.handle.WriteTagV('WaveformR',0,stim(2,:))
+            if obj.handle.WriteTagV('WaveformR',0,stim(2,:))
                 errorBeep('WriteTagV WaveformR failed');
             end
         end
