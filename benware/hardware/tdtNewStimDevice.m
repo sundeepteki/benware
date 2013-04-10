@@ -33,6 +33,7 @@ classdef tdtNewStimDevice < tdtDevice
 			% call this to make sure the TDT is in the desired state
 			rcxSetup = obj.rcxSetups(nChannels);
 			[ok, message] = obj.checkDevice@tdtDevice(deviceInfo, sampleRate, rcxSetup.versionTagName, rcxSetup.versionTagValue);
+            obj.reset;
 		end
 
 		function stim = downloadStim(obj, offset, nSamples, nStimChans)
@@ -79,6 +80,8 @@ classdef tdtNewStimDevice < tdtDevice
             % check that the stimulus on the device matches currentStim
             obj.checkStimOnDevice;
 
+            % reset circuit
+            obj.reset;
             
             % register the next stimulus so it can be uploaded
             % during the sweep
