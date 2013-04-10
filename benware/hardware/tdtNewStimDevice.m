@@ -256,7 +256,7 @@ classdef tdtNewStimDevice < tdtDevice
                 return
             end
 
-            if obj.handle.WriteTagV('WaveformR',0,stim(2,:))
+            if ~obj.handle.WriteTagV('WaveformR',0,stim(2,:))
                 errorBeep('WriteTagV WaveformR failed');
             end
         end
