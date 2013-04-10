@@ -58,7 +58,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData] = runSweep(har
 %   end
 
   % make matlab buffer for data
-  nSamplesExpected = floor(sweepLen*hardware.dataDevice.sampleRate)+1
+  nSamplesExpected = floor(sweepLen*hardware.dataDevice.sampleRate)+1;
   data = zeros(nChannels, nSamplesExpected);
   nSamplesReceived = 0;
 
