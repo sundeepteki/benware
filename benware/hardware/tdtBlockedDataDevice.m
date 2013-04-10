@@ -1,4 +1,4 @@
-classdef tdtDataDevice < tdtDevice
+classdef tdtBlockedDataDevice < tdtDevice
   properties
     nChannels = nan;
     rcxSetup = [];
@@ -8,8 +8,8 @@ classdef tdtDataDevice < tdtDevice
 
     function obj = tdtDataDevice(deviceInfo, requestedSampleRateHz, channelMap, ~)
       % initialise the class itself
-      obj.rcxSetup.rcxFilename = ['benware/tdt/' deviceInfo.name '-nogain.rcx'];
-      obj.rcxSetup.versionTagName = [deviceInfo.name 'NoGainVer'];
+      obj.rcxSetup.rcxFilename = ['benware/tdt/' deviceInfo.name '-blocked.rcx'];
+      obj.rcxSetup.versionTagName = [deviceInfo.name 'BlockedVer'];
       obj.rcxSetup.versionTagValue = 3;
 
       % initialise the device
@@ -26,7 +26,6 @@ classdef tdtDataDevice < tdtDevice
         [ok, message] = obj.checkDevice@tdtDevice(deviceInfo, sampleRate, ...
             obj.rcxSetup.versionTagName, obj.rcxSetup.versionTagValue);
         obj.setChannelMap(channelMap);
-        obj.reset;
     end
 
     function map = channelMap(obj)
@@ -38,39 +37,33 @@ classdef tdtDataDevice < tdtDevice
     end
     
     function data = downloadAvailableData(obj, offset)
-        maxIndex = zeros(1,obj.nChannels);
-        for chan = 1:obj.nChannels
-            maxIndex(chan) = obj.handle.GetTagVal(['ADidx' num2str(chan)]);
+        channelsPerBlock = 16;
+        offset = offset * channelsPerBlock;
+
+        nBlocks = ceil(obj.nChannels/channelsPerBlock);
+        maxIndex = zeros(1,nBlocks);
+        for block = 1:nBlocks
+            maxIndex(block) = obj.handle.GetTagVal(['ADidx' num2str(block)]);
         end
         maxIndex = min(maxIndex);
 
-        nSamples = maxIndex-offset;
-        data = nan(obj.nChannels, nSamples);
 
-        for chan = 1:obj.nChannels
-            data(chan, :) = obj.handle.ReadTagV(['ADwb' num2str(chan)], offset, nSamples);
+        nSamples = (maxIndex-offset)/channelsPerBlock;
+        data = nan(nBlocks*channelsPerBlock, nSamples);
+
+        for block = 1:nBlocks
+            maxChan = block*channelsPerBlock;            
+            d = obj.handle.ReadTagVEX(['ADwb' num2str(block)], offset, nSamples, 'i32', 'f64', channelsPerBlock);
+            data(maxChan-channelsPerBlock+1:maxChan,:) = d;
         end
+        data = data(1:obj.nChannels, :);
+
     end
-        
+    
     function data = downloadAllData(obj)
       % this no longer needs to output a cell array
-      data = cell(1, obj.nChannels);
-      for chan = 1:obj.nChannels
-          maxIndex = obj.handle.GetTagVal(['ADidx' num2str(chan)]);
-          data{chan} = obj.handle.ReadTagV(['ADwb' num2str(chan)],0,maxIndex);
-      end
-    end
-
-    function data = downloadData(obj, chan, offset)
-      maxIndex = obj.handle.GetTagVal(['ADidx' num2str(chan)]);
-      if maxIndex-offset==0
-        data = [];
-      elseif maxIndex<offset
-        data = [];
-        errorBeep('Data requested beyond end of buffer!\n');
-      else
-        data = obj.handle.ReadTagV(['ADwb' num2str(chan)],offset,maxIndex-offset);
-      end
+      data = downloadAvailableData(obj.nChannels, 0);
+      data = mat2cell(data, ones(obj.nChannels, 1), size(data, 2));
     end
     
     function reset(obj, trialLen)

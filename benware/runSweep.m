@@ -1,4 +1,4 @@
-function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(hardware, ...
+function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData] = runSweep(hardware, ...
   sweepLen, nChannels, stim, nextStim, spikeFilter, spikeThreshold, ...
   saveWaveforms, dataFiles, plotData)
   %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
@@ -58,9 +58,9 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(hardware, .
 %   end
 
   % make matlab buffer for data
-  nSamplesExpected = floor(sweepLen*hardware.dataDevice.sampleRate)+1;
+  nSamplesExpected = floor(sweepLen*hardware.dataDevice.sampleRate)+1
   data = zeros(nChannels, nSamplesExpected);
-  nSamplesReceived = zeros(1, nChannels);
+  nSamplesReceived = 0;
 
   filteredData = zeros(nChannels, nSamplesExpected);
   filterIndex = 0;
@@ -98,20 +98,27 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(hardware, .
   % * plot incoming data
 
   % loop until we've received all data
-  while any(nSamplesReceived<nSamplesExpected)
-    
+  while nSamplesReceived<nSamplesExpected
+      
     % allow stimDevice to do something during sweep (i.e. upload stimulus)
     hardware.stimDevice.workDuringSweep;
 
     %fprintf(['  * Stim: ' num2str((maxStimIndex-n)/hardware.stimSampleRate) ' sec of stim done in ' num2str(toc) ' sec.\n']);tic;
     
     % download data
+    newdata = hardware.dataDevice.downloadAvailableData(nSamplesReceived);
+    if ~isempty(newdata)
+        sz = size(newdata, 2);
+        data(:, nSamplesReceived+1:nSamplesReceived+sz) = newdata;
+        nSamplesReceived = nSamplesReceived + sz;
+    end
+    
+    %nSamplesReceived
     for chan = 1:nChannels
 
-      newdata = hardware.dataDevice.downloadData(chan, nSamplesReceived(chan));
-      data(chan, nSamplesReceived(chan)+1:nSamplesReceived(chan)+length(newdata)) = newdata;
-      
-      nSamplesReceived(chan) = nSamplesReceived(chan)+length(newdata);
+%       newdata = hardware.dataDevice.downloadData(chan, nSamplesReceived(chan));
+%       data(chan, nSamplesReceived(chan)+1:nSamplesReceived(chan)+length(newdata)) = newdata;     
+%       nSamplesReceived(chan) = nSamplesReceived(chan)+length(newdata);
       if saveWaveforms
         fwrite(dataFileHandles(chan), newdata, 'float32');
       end
@@ -122,9 +129,9 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(hardware, .
 
     % bandpass filter data and detect spikes
 
-    minSamplesReceived = min(nSamplesReceived);
-    if (minSamplesReceived-filterIndex) > (hardware.dataDevice.sampleRate/10)
-      [filtData, offset] = filterData(data(:, filterIndex+1:minSamplesReceived), spikeFilter);
+    %minSamplesReceived = min(nSamplesReceived);
+    if (nSamplesReceived-filterIndex) > (hardware.dataDevice.sampleRate/10)
+      [filtData, offset] = filterData(data(:, filterIndex+1:nSamplesReceived), spikeFilter);
       filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
       spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, hardware.dataDevice.sampleRate, spikeThreshold);
       filterIndex = filterIndex + size(filtData,2);
@@ -144,7 +151,7 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(hardware, .
     %fprintf(['  * draw done after ' num2str(toc) ' sec.\n']);tic;
 
   end
-
+  
   fprintf(['  * Waveforms received and saved after ' num2str(toc) ' sec.\n']);
 
 %   if ~isempty(nextStim)
@@ -163,7 +170,7 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(hardware, .
   hardware.stimDevice.workAfterSweep;
 
   % finish detecting spikes  
-  [filtData, offset] = filterData(data(:, filterIndex+1:minSamplesReceived), spikeFilter);
+  [filtData, offset] = filterData(data(:, filterIndex+1:nSamplesReceived), spikeFilter);
   filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
   spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, hardware.dataDevice.sampleRate, spikeThreshold);
   filterIndex = filterIndex + size(filtData,2);
@@ -187,26 +194,26 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(hardware, .
 
   % data integrity check:
   % 1. check all channels have the same amount of data
-  nSamples = unique(nSamplesReceived);
-  if length(nSamples)>1
-    errorBeep('Different amounts of data from different channels');
-  end
+%   nSamples = unique(nSamplesReceived);
+%   if length(nSamples)>1
+%     errorBeep('Different amounts of data from different channels');
+%   end
 
-  fprintf(['  * Got ' num2str(nSamples) ' samples (expecting ' num2str(nSamplesExpected) ') from ' num2str(nChannels) ' channels (' num2str(nSamples/hardware.dataDevice.sampleRate) ' sec).\n']);
+  fprintf(['  * Got ' num2str(nSamplesReceived) ' samples (expecting ' num2str(nSamplesExpected) ') from ' num2str(nChannels) ' channels (' num2str(nSamplesReceived/hardware.dataDevice.sampleRate) ' sec).\n']);
 
   % 2. check that we got the expected number of samples
-  if (nSamples<nSamplesExpected)
+  if (nSamplesReceived<nSamplesExpected)
     errorBeep('Wrong number of samples');
-  elseif (nSamples>nSamplesExpected)
-    fprintf('  * Got %d extra samples; truncating\n', nSamples-nSamplesExpected);
-    nSamples = nSamplesExpected;
-    data = data(:, 1:nSamples);
+  elseif (nSamplesReceived>nSamplesExpected)
+    fprintf('  * Got %d extra samples; truncating\n', nSamplesReceived-nSamplesExpected);
+    nSamplesReceived = nSamplesExpected;
+    data = data(:, 1:nSamplesReceived);
   else
     fprintf('  * Got expected number of samples\n');
   end
 
   % get LFP (currently no filtering)
-  LFPsamples = round(1:hardware.dataDevice.sampleRate/1000:nSamples);
+  LFPsamples = round(1:hardware.dataDevice.sampleRate/1000:nSamplesReceived);
   nLFPsamples = length(LFPsamples);
   lfp = zeros(nChannels, nLFPsamples);
   for chan = 1:nChannels
@@ -253,7 +260,7 @@ function [nSamples, spikeTimes, lfp, timeStamp, plotData] = runSweep(hardware, .
         end
 
       end
-      fprintf([' ' num2str(nSamples) ' samples verified.\n']);
+      fprintf([' ' num2str(nSamplesReceived) ' samples verified.\n']);
     end
     
     fprintf(['  * Check complete after ' num2str(toc) ' sec.\n']);
