@@ -107,6 +107,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData] = runSweep(har
     
     % download data
     newdata = hardware.dataDevice.downloadAvailableData(nSamplesReceived);
+    
     if ~isempty(newdata)
         sz = size(newdata, 2);
         data(:, nSamplesReceived+1:nSamplesReceived+sz) = newdata;

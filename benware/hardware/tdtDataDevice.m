@@ -19,6 +19,9 @@ classdef tdtDataDevice < tdtDevice
     function initialise(obj, deviceInfo, requestedSampleRateHz, channelMap)
       obj.initialise@tdtDevice(deviceInfo, obj.rcxSetup.rcxFilename, requestedSampleRateHz);
       obj.nChannels = length(channelMap);
+      if ~obj.checkDevice(deviceInfo, requestedSampleRateHz, channelMap);
+        errorBeep('DataDevice is not in requested state after initialisation');
+      end
     end
 
     function [ok, message] = checkDevice(obj, deviceInfo, sampleRate, channelMap)
@@ -35,6 +38,7 @@ classdef tdtDataDevice < tdtDevice
 
     function setChannelMap(obj, channelMap)
        obj.handle.WriteTagVEX('ChanMap',0,'I32',channelMap);
+       obj.nChannels = length(channelMap);
     end
     
     function data = downloadAvailableData(obj, offset)

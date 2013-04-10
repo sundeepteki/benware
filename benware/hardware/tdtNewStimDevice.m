@@ -11,11 +11,11 @@ classdef tdtNewStimDevice < tdtDevice
 		function obj = tdtNewStimDevice(deviceInfo, sampleRate, nChannels)
 			% initialise the class itself
 			obj.rcxSetups(1).rcxFilename = 'benware/tdt/%s-monoplay.rcx';
-			obj.rcxSetups(1).versionTagName = 'MonoPlayVer';
+			obj.rcxSetups(1).versionTagName = [deviceInfo.name 'MonoPlayVer'];
 			obj.rcxSetups(1).versionTagValue = 3;
 			obj.rcxSetups(2).rcxFilename = 'benware/tdt/%s-stereoplay.rcx';
-			obj.rcxSetups(2).versionTagName = 'StereoPlayVer';
-			obj.rcxSetups(2).versionTagValue = 6;
+			obj.rcxSetups(2).versionTagName = [deviceInfo.name 'StereoPlayVer'];
+			obj.rcxSetups(2).versionTagValue = 7;
             
 			% initialise the device
 			obj.initialise(deviceInfo, sampleRate, nChannels);
@@ -27,7 +27,10 @@ classdef tdtNewStimDevice < tdtDevice
 			rcxSetup = obj.rcxSetups(nChannels);
 			rcxFilename = sprintf(rcxSetup.rcxFilename, deviceInfo.name);
 			initialise@tdtDevice(obj, deviceInfo, rcxFilename, sampleRate);
-		end
+            if ~obj.checkDevice(deviceInfo, sampleRate, nChannels);
+                errorBeep('StimDevice is not in requested state after initialisation');
+            end
+        end
 
 		function [ok, message] = checkDevice(obj, deviceInfo, sampleRate, nChannels)
 			% call this to make sure the TDT is in the desired state
