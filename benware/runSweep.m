@@ -120,7 +120,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData] = runSweep(har
 %       data(chan, nSamplesReceived(chan)+1:nSamplesReceived(chan)+length(newdata)) = newdata;     
 %       nSamplesReceived(chan) = nSamplesReceived(chan)+length(newdata);
       if saveWaveforms
-        fwrite(dataFileHandles(chan), newdata, 'float32');
+        fwrite(dataFileHandles(chan), newdata(chan, :), 'float32');
       end
       
     end
