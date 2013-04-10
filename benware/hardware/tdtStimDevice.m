@@ -12,7 +12,7 @@ classdef tdtStimDevice < tdtDevice
 			obj.rcxSetups(1).versionTagValue = 3;
 			obj.rcxSetups(2).rcxFilename = 'benware/tdt/%s-stereoplay.rcx';
 			obj.rcxSetups(2).versionTagName = 'StereoPlayVer';
-			obj.rcxSetups(2).versionTagValue = 6;
+			obj.rcxSetups(2).versionTagValue = 7;
             
 			% initialise the device
 			obj.initialise(deviceInfo, sampleRate, nChannels);
