@@ -27,7 +27,7 @@ fs_in = plotData.fs_in;
 
 if state.plot.filtered
   d = filteredData;
-  ii = repmat(fDataIndex,1,plotData.nChannels);
+  ii = fDataIndex;
   gain = state.dataGainFiltered;
 else
   d = data;
@@ -124,10 +124,10 @@ for chan = plotChans
   
   switch state.plot.type
     case 'w'
-      toPlot = plotData.samplesToPlot < ii(chan);
+      toPlot = plotData.samplesToPlot < ii;
       set(plotData.waveform(chan).line, 'XData', plotData.sampleTimes(toPlot), 'YData', d(chan, plotData.samplesToPlot(toPlot)) * gain, 'color', col);
       t_s = spikeTimes{chan}'/1000;
-      maxSpikes = 500*ii(chan)/plotData.nSamplesExpected;
+      maxSpikes = 500*ii/plotData.nSamplesExpected;
       %max(100, 25*plotData.nSamplesExpected/plotData.fs_in);
       if length(t_s)>maxSpikes
         t_s = t_s(round(linspace(1,length(t_s),maxSpikes)));
@@ -144,7 +144,7 @@ for chan = plotChans
       % get all spike times for this sweep, but plot only a subset if there are too many
       % in plotReset, the current sweep will be made old
       t_s = spikeTimes{chan}'/1000;
-      maxSpikes = 500*ii(chan)/plotData.nSamplesExpected; %max(100, 25*plotData.nSamplesExpected/plotData.fs_in);
+      maxSpikes = 500*ii/plotData.nSamplesExpected; %max(100, 25*plotData.nSamplesExpected/plotData.fs_in);
       if length(t_s)>maxSpikes
         t_s = t_s(round(linspace(1,length(t_s),maxSpikes)));
       end
@@ -173,7 +173,7 @@ for chan = plotChans
 
   end
   
-  plotData.plotIndex(chan) = ii(chan);
+  plotData.plotIndex(chan) = ii;
   
 end
 
