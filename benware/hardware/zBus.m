@@ -6,7 +6,7 @@ classdef zBus < handle
     
     methods
         function obj = zBus()
-            obj.handle = actxcontrol('ZBUS.x',[1 1 1 1]);
+            obj.handle = actxserver('ZBUS.x',[1 1 1 1]);
             if obj.handle.ConnectZBUS('GB') == 0
                 errorBeep(['Cannot connect to zBUS on GB']);
             end

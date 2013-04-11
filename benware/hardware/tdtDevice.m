@@ -26,7 +26,7 @@ classdef tdtDevice < handle
       end
 
       fprintf(['  * Initialising ' deviceInfo.name '\n']);
-      obj.handle = actxcontrol('RPco.x', [5 5 26 26]);
+      obj.handle = actxserver('RPco.x', [5 5 26 26]);
 
       if invoke(obj.handle, ['Connect' deviceInfo.name], ...
                   deviceInfo.busName, deviceInfo.deviceNumber) == 0
