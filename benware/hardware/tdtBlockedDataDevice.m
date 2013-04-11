@@ -6,7 +6,7 @@ classdef tdtBlockedDataDevice < tdtDevice
 
   methods
 
-    function obj = tdtDataDevice(deviceInfo, requestedSampleRateHz, channelMap, ~)
+    function obj = tdtBlockedDataDevice(deviceInfo, requestedSampleRateHz, channelMap, ~)
       % initialise the class itself
       obj.rcxSetup.rcxFilename = ['benware/tdt/' deviceInfo.name '-blocked.rcx'];
       obj.rcxSetup.versionTagName = [deviceInfo.name 'BlockedVer'];
@@ -18,7 +18,11 @@ classdef tdtBlockedDataDevice < tdtDevice
     
     function initialise(obj, deviceInfo, requestedSampleRateHz, channelMap)
       obj.initialise@tdtDevice(deviceInfo, obj.rcxSetup.rcxFilename, requestedSampleRateHz);
+      obj.setChannelMap(channelMap);
       obj.nChannels = length(channelMap);
+      if ~obj.checkDevice(deviceInfo, requestedSampleRateHz, channelMap);
+        errorBeep('DataDevice is not in requested state after initialisation');
+      end
     end
 
     function [ok, message] = checkDevice(obj, deviceInfo, sampleRate, channelMap)
@@ -53,7 +57,9 @@ classdef tdtBlockedDataDevice < tdtDevice
 
         for block = 1:nBlocks
             maxChan = block*channelsPerBlock;            
-            d = obj.handle.ReadTagVEX(['ADwb' num2str(block)], offset, nSamples, 'i32', 'f64', channelsPerBlock);
+            d = obj.handle.ReadTagVEX(['ADwb' num2str(block)], offset, nSamples, 'f32', 'f64', channelsPerBlock);
+            %d = obj.handle.ReadTagV(['ADwb' num2str(block)], offset, nSamples * channelsPerBlock);
+            %[block max(d(:))]
             data(maxChan-channelsPerBlock+1:maxChan,:) = d;
         end
         data = data(1:obj.nChannels, :);

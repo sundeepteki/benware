@@ -18,6 +18,7 @@ classdef tdtDataDevice < tdtDevice
     
     function initialise(obj, deviceInfo, requestedSampleRateHz, channelMap)
       obj.initialise@tdtDevice(deviceInfo, obj.rcxSetup.rcxFilename, requestedSampleRateHz);
+      obj.setChannelMap(channelMap);
       obj.nChannels = length(channelMap);
       if ~obj.checkDevice(deviceInfo, requestedSampleRateHz, channelMap);
         errorBeep('DataDevice is not in requested state after initialisation');
