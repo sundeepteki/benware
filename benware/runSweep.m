@@ -56,7 +56,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData] = runSweep(har
   % * download data as fast as possible while trial is running
   % * plot incoming data
 
-  % loop until we've received all data
+  % loop until we've received (and saved) all data
   while nSamplesReceived<nSamplesExpected
       
     % allow stimDevice to do something during sweep (i.e. upload stimulus)
@@ -71,7 +71,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData] = runSweep(har
         nSamplesReceived = nSamplesReceived + sz;
     end
     
-    %nSamplesReceived
+    % save waveforms
     if saveWaveforms
       for chan = 1:nChannels
         fwrite(dataFileHandles(chan), newdata(chan, :), 'float32');
@@ -99,6 +99,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData] = runSweep(har
   
   fprintf(['  * Waveforms received and saved after ' num2str(toc) ' sec.\n']);
 
+  % allow stimDevice to do some work
   hardware.stimDevice.workAfterSweep;
 
   % finish detecting spikes  
@@ -124,18 +125,15 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData] = runSweep(har
     state.noData.warnUser = true;
   end
 
-  % data integrity check:
-  fprintf(['  * Got ' num2str(nSamplesReceived) ' samples (expecting ' num2str(nSamplesExpected) ') from ' num2str(nChannels) ' channels (' num2str(nSamplesReceived/hardware.dataDevice.sampleRate) ' sec).\n']);
-
-  % 2. check that we got the expected number of samples
+  % Check that we got the expected number of samples
   if (nSamplesReceived<nSamplesExpected)
-    errorBeep('Wrong number of samples');
+    errorBeep('Got fewer samples than expected!');
   elseif (nSamplesReceived>nSamplesExpected)
-    fprintf('  * Got %d extra samples; truncating\n', nSamplesReceived-nSamplesExpected);
+    fprintf('  * Got %d extra samples (expected %d) after %s sec; truncating\n', nSamplesReceived-nSamplesExpected, nSamplesExpected, num2str(toc));
     nSamplesReceived = nSamplesExpected;
     data = data(:, 1:nSamplesReceived);
   else
-    fprintf('  * Got expected number of samples\n');
+    fprintf('  * Got expected number of samples (%d) after %s sec\n', nSamplesExpected, num2str(toc));
   end
 
   % get LFP (currently no filtering)
