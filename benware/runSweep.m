@@ -153,9 +153,10 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData] = runSweep(har
   global checkdata
 
   if checkdata
-    
-    fprintf('  * Checking stim...');
-    teststim = hardware.stimDevice.downloadStim(0, samplesUploaded, nStimChans);
+    fprintf('  * DATA INTEGRITY CHECK...\n');    
+    fprintf('  * Checking stimulus in buffer...');
+    [nStimChans, nStimSamples] = size(stim);
+    teststim = hardware.stimDevice.downloadStim(0, nStimSamples, nStimChans);
     d = max(max(abs(nextStim-teststim)));
     if d>10e-7
       errorBeep('Stimulus mismatch!');
@@ -163,11 +164,11 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData] = runSweep(har
     fprintf([' ' num2str(size(teststim, 2)) ' samples verified.\n']);
 
     if ~saveWaveforms
-      fprintf('No waveforms saved -- can''t check waveform data\n');
+      fprintf('  * No waveforms saved -- can''t check waveform data\n');
     
     else
-      fprintf('  * Checking data...');
-      testData = hardware.dataDevice.downloadAllData(nChannels);
+      fprintf('  * Checking data on disk...');
+      testData = hardware.dataDevice.downloadAllData;
       for chan = 1:nChannels
         diffInMem = max(abs(data(chan,:) - testData{chan}));
         if diffInMem > 0
@@ -182,11 +183,11 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData] = runSweep(har
           keyboard;
           errorBeep('Data on disk doesn''t match data device buffer!');
         end
-
+        fprintf('.');
       end
-      fprintf([' ' num2str(nSamplesReceived) ' samples verified.\n']);
+      fprintf([' ' num2str(nChannels) ' channels verified.\n']);
     end
     
-    fprintf(['  * Check complete after ' num2str(toc) ' sec.\n']);
+    fprintf(['  * DATA OK. Check complete after ' num2str(toc) ' sec.\n']);
   end
   
