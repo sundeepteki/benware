@@ -1,4 +1,8 @@
 classdef tdtBlockedDataDevice < tdtDevice
+  % this attempts to be faster than the standard tdtStimDevice by 
+  % using MCSerStore. however, it's acutally slower for long stimuli
+  % d'oh
+  
   properties
     nChannels = nan;
     rcxSetup = [];
@@ -42,7 +46,6 @@ classdef tdtBlockedDataDevice < tdtDevice
     
     function data = downloadAvailableData(obj, offset)
         channelsPerBlock = 16;
-        offset = offset * channelsPerBlock;
 
         nBlocks = ceil(obj.nChannels/channelsPerBlock);
         maxIndex = zeros(1,nBlocks);
@@ -50,25 +53,42 @@ classdef tdtBlockedDataDevice < tdtDevice
             maxIndex(block) = obj.handle.GetTagVal(['ADidx' num2str(block)]);
         end
         maxIndex = min(maxIndex);
-
-
-        nSamples = (maxIndex-offset)/channelsPerBlock;
+        maxSample = floor(maxIndex/channelsPerBlock);
+        nSamples = maxSample-offset;
+        
         data = nan(nBlocks*channelsPerBlock, nSamples);
 
         for block = 1:nBlocks
-            maxChan = block*channelsPerBlock;            
+            maxChan = block*channelsPerBlock;
             d = obj.handle.ReadTagVEX(['ADwb' num2str(block)], offset, nSamples, 'f32', 'f64', channelsPerBlock);
-            %d = obj.handle.ReadTagV(['ADwb' num2str(block)], offset, nSamples * channelsPerBlock);
-            %[block max(d(:))]
             data(maxChan-channelsPerBlock+1:maxChan,:) = d;
         end
         data = data(1:obj.nChannels, :);
-
+ 
     end
-    
+
     function data = downloadAllData(obj)
       % this no longer needs to output a cell array
-      data = downloadAvailableData(obj.nChannels, 0);
+      channelsPerBlock = 16;
+        
+      nBlocks = ceil(obj.nChannels/channelsPerBlock);
+      maxIndex = zeros(1,nBlocks);
+      for block = 1:nBlocks
+          maxIndex(block) = obj.handle.GetTagVal(['ADidx' num2str(block)]);
+      end
+      maxIndex = min(maxIndex);
+      maxSample = floor(maxIndex/channelsPerBlock);
+      nSamples = maxSample;
+      
+      data = nan(nBlocks*channelsPerBlock, nSamples);
+      
+      for block = 1:nBlocks
+          maxChan = block*channelsPerBlock;
+          d = obj.handle.ReadTagVEX(['ADwb' num2str(block)], 0, nSamples, 'f32', 'f64', channelsPerBlock);
+          data(maxChan-channelsPerBlock+1:maxChan,:) = d;
+      end
+      data = data(1:obj.nChannels, :);
+      
       data = mat2cell(data, ones(obj.nChannels, 1), size(data, 2));
     end
     

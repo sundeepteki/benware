@@ -162,19 +162,25 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData] = runSweep(har
       errorBeep('Stimulus mismatch!');
     end
     fprintf([' ' num2str(size(teststim, 2)) ' samples verified.\n']);
-
-    if ~saveWaveforms
-      fprintf('  * No waveforms saved -- can''t check waveform data\n');
     
-    else
-      fprintf('  * Checking data on disk...');
-      testData = hardware.dataDevice.downloadAllData;
-      for chan = 1:nChannels
+    fprintf('  * Checking data in memory');
+    testData = hardware.dataDevice.downloadAllData;
+
+    for chan = 1:nChannels
+        fprintf('.');
         diffInMem = max(abs(data(chan,:) - testData{chan}));
         if diffInMem > 0
-          errorBeep('Data in memory doesn''t match data device buffer!');
+            errorBeep('Data in memory doesn''t match data device buffer!');
         end
+    end
+    fprintf([' ' num2str(nChannels) ' channels verified.\n']);
 
+    if ~saveWaveforms
+      fprintf('  * No waveforms saved -- can''t check saved waveform data\n');
+    else
+      fprintf('  * Checking data on disk');
+      for chan = 1:nChannels
+        fprintf('.');
         h = fopen(dataFiles{chan}, 'r');
         savedData = fread(h, inf, 'float32')';
         fclose(h);
@@ -183,7 +189,6 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData] = runSweep(har
           keyboard;
           errorBeep('Data on disk doesn''t match data device buffer!');
         end
-        fprintf('.');
       end
       fprintf([' ' num2str(nChannels) ' channels verified.\n']);
     end
