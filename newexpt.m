@@ -5,6 +5,7 @@ function newexpt(n)
 %
 % Run this when you start a new experiment
 
+setpath;
 loadexpt;
 
 if ~exist('n', 'var')

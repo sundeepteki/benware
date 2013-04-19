@@ -1,4 +1,6 @@
 % load expt variable from appropriate user file
+setpath;
+
 l = load('user.mat');
 user = l.user;
 

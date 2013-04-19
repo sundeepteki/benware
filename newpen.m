@@ -5,6 +5,7 @@ function newpen(n)
 % Adds 1 if you don't specify a number
 %
 % Run this when you start a new penetration
+setpath;
 
 loadexpt;
 

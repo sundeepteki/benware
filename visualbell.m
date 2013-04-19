@@ -4,6 +4,8 @@ function visualbell(s)
 % Turn on and off the visual bell
 % Not sure this currently works
 
+setpath;
+
 loadexpt;
 
 if exist('s', 'var')

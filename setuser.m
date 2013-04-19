@@ -1,5 +1,7 @@
 function setuser(name)
 
+setpath;
+
 % remove old user's grids from path
 load user;
 rmpath(fix_slashes(['./grids/grids.' user.name]));

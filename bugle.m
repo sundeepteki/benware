@@ -5,6 +5,7 @@ function bugle(s)
 %
 % Run this when you start a new experiment
 
+setpath;
 loadexpt;
 
 if exist('s', 'var')
