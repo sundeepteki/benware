@@ -1,4 +1,4 @@
-classdef tdtNewStimDevice < tdtDevice
+classdef tdtStimDevice < tdtDevice
 	properties
 		rcxSetups = [];
         currentStim = [];
@@ -8,7 +8,7 @@ classdef tdtNewStimDevice < tdtDevice
 
 	methods
 
-		function obj = tdtNewStimDevice(deviceInfo, sampleRate, nChannels)
+		function obj = tdtStimDevice(deviceInfo, sampleRate, nChannels)
 			% initialise the class itself
 			obj.rcxSetups(1).rcxFilename = 'benware/tdt/%s-monoplay.rcx';
 			obj.rcxSetups(1).versionTagName = [deviceInfo.name 'MonoPlayVer'];
