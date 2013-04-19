@@ -1,13 +1,13 @@
 classdef tdt16bitStimDevice < tdtDevice
 	properties
 		rcxSetups = [];
-        currentStimRaw = [];
         currentStim = [];
+        currentStimEnc = [];
         currentStimScaleFactor = nan;
-        nextStimRaw = [];
         nextStim = [];
-        nextStimIndex = nan;
+        nextStimEnc = [];
         nextStimScaleFactor = nan;
+        nextStimIndex = nan;
 	end
 
 	methods
@@ -15,11 +15,11 @@ classdef tdt16bitStimDevice < tdtDevice
 		function obj = tdt16bitStimDevice(deviceInfo, sampleRate, nChannels)
 			% initialise the class itself
 			obj.rcxSetups(1).rcxFilename = 'benware/tdt/%s-monoplay16bit.rcx';
-			obj.rcxSetups(1).versionTagName = 'MonoPlay16bitVer';
+			obj.rcxSetups(1).versionTagName = [deviceInfo.name 'MonoPlay16bitVer'];
 			obj.rcxSetups(1).versionTagValue = 3;
 			obj.rcxSetups(2).rcxFilename = 'benware/tdt/%s-stereoplay16bit.rcx';
-			obj.rcxSetups(2).versionTagName = 'StereoPlay16bitVer';
-			obj.rcxSetups(2).versionTagValue = 6;
+			obj.rcxSetups(2).versionTagName = [deviceInfo.name 'StereoPlay16bitVer'];
+			obj.rcxSetups(2).versionTagValue = 7;
             
 			% initialise the device
 			obj.initialise(deviceInfo, sampleRate, nChannels);
@@ -31,59 +31,58 @@ classdef tdt16bitStimDevice < tdtDevice
 			rcxSetup = obj.rcxSetups(nChannels);
 			rcxFilename = sprintf(rcxSetup.rcxFilename, deviceInfo.name);
 			initialise@tdtDevice(obj, deviceInfo, rcxFilename, sampleRate);
-		end
+            if ~obj.checkDevice(deviceInfo, sampleRate, nChannels);
+                errorBeep('StimDevice is not in requested state after initialisation');
+            end
+        end
 
 		function [ok, message] = checkDevice(obj, deviceInfo, sampleRate, nChannels)
 			% call this to make sure the TDT is in the desired state
 			rcxSetup = obj.rcxSetups(nChannels);
 			[ok, message] = obj.checkDevice@tdtDevice(deviceInfo, sampleRate, rcxSetup.versionTagName, rcxSetup.versionTagValue);
-		end
+            obj.reset;
+        end
+        
+        function setScaleFactor(obj, scaleFactor)
+           obj.handle.SetTagVal('ScaleFactor', scaleFactor); 
+        end
 
+        function scaleFactor = getScaleFactor(obj)
+           scaleFactor = obj.handle.GetTagVal('ScaleFactor'); 
+        end
+        
+        function [stimEnc, scaleFactor] = encode(obj, stim)
+            scaleFactor = max(abs(stim(:)))/(2^15-1);
+            stimEnc = stim/scaleFactor;
+     
+        end
+        
+        function stim = decode(obj, stim, scaleFactor)
+            stim = stim * scaleFactor;
+        end
+
+        
 		function stim = downloadStim(obj, offset, nSamples, nStimChans)
             % why is nStimChans specified here? It should be obvious 
             % from the stimDevice. i think that however channel numbers
             % are specified should be rationalised
-            stim(1:2,:) = obj.handle.ReadTagVEX('WaveformL', offset, nSamples, 'I16', 'I16', 2);
+            stim(1,:) = obj.handle.ReadTagVEX('WaveformL', offset, nSamples, 'I16', 'F64', 1);
 
-            if nStimChans==4
-                stim(3:4,:) = obj.handle.ReadTagVEX('WaveformR', offset, nSamples, 'I16', 'I16', 2);
-            end            
-        end
-        
-        function [encodedStim, scaleFactor] = encodeStim(obj, stim)
-            [nChannels, nSamples] = size(stim);
-            divisor = max(abs(stim(:)));
-            if mod(nSamples, 2)==1
-                stim(:, end+1) = 0;
-                nSamples = nSamples + 1;
+            if nStimChans==2
+                stim(2,:) = obj.handle.ReadTagVEX('WaveformR', offset, nSamples, 'I16', 'F64', 1);
             end
-            newNSamples = nSamples/2;
-            encodedStim = int16(zeros(nChannels*2, newNSamples));
-            for chan = 1:nChannels
-                encodedStim(chan*2-1:chan*2, :) = ...
-                    reshape(int16(stim(chan,:)/divisor*(2^15-1)), 2, newNSamples);
-            end
-            scaleFactor = 1/divisor;
-        end
-        
-        function stim = decodeStim(obj, encodedStim, scaleFactor)
-            nChannels = size(encodedStim, 1)/2;
-            nSamples = size(encodedStim, 2)*2;
-            stim = nan(nChannels, nSamples);
-            for chan = 1:nChannels
-                stim(chan, :) = double(encodedStim(chan*2-1:chan*2,:)) * scaleFactor;
-            end
-        end
             
+            stim = obj.decode(stim, obj.getScaleFactor);
+        end
+      
         function prepareForSweep(obj, currentStim, nextStim)
             % at the end of this function, the stimDevice must be
             % be ready to receive a zBus trigger. It will then start
             % playing out stim.
             
             % register the new stimulus
-            obj.currentStimRaw = currentStim;
-            [obj.currentStim, obj.currentStimScaleFactor] = ...
-                obj.encodeStim(obj.currentStimRaw);
+            obj.currentStim = currentStim;
+            [obj.currentStimEnc, obj.currentStimScaleFactor] = obj.encode(obj.currentStim);
             
             % if we already have a nextStim, check whether it matches currentStim
             match = false;
@@ -102,35 +101,37 @@ classdef tdt16bitStimDevice < tdtDevice
                 % otherwise upload whole stimulus from scratch
                 obj.uploadCurrentStim;
             end
+                
+            % set other essential variables on device
+            obj.setActiveStimChannels(size(obj.currentStim, 1));
+            obj.setStimLength(size(obj.currentStim, 2));
+            obj.setScaleFactor(obj.currentStimScaleFactor);
     
             % check that the stimulus on the device matches currentStim
             obj.checkStimOnDevice;
+
+            % reset circuit
+            obj.reset;
             
-            % set other essential variables on device
-            obj.setActiveStimChannels(size(obj.currentStim, 1)/2);
-            obj.setStimLength(size(obj.currentStim, 2));
-            obj.handle.SetTagVal('ScaleFactor', obj.currentStimScaleFactor);
-        
             % register the next stimulus so it can be uploaded
             % during the sweep
-            obj.nextStimRaw = nextStim;
+            obj.nextStim = nextStim;
+            [obj.nextStimEnc, obj.nextStimScaleFactor] = obj.encode(obj.nextStim);
             obj.nextStimIndex = 0;
-            [obj.nextStim, obj.nextStimScaleFactor] = ...
-                obj.encodeStim(obj.nextStimRaw);
 
         end
         
         function workDuringSweep(obj)
             % check the current stimulus index
             % fill up the buffer to index-1
-
-            if ~isempty(obj.nextStim)
+            
+            if ~isempty(obj.nextStimEnc)
                 % stimulus upload is limited by length of stimulus, or where the
                 % stimDevice has got to in reading out the stimulus, whichever is lower
-                maxStimIndex = min(obj.getStimIndex, size(obj.nextStim, 2));
+                maxStimIndex = floor((min(obj.getStimIndex, size(obj.nextStimEnc, 2)))/2)*2;
 
                 if maxStimIndex>obj.nextStimIndex
-                    obj.uploadStim(obj.nextStim(:, obj.nextStimIndex+1:maxStimIndex), obj.nextStimIndex);
+                    obj.uploadStim(obj.nextStimEnc(:, obj.nextStimIndex+1:maxStimIndex), obj.nextStimIndex);
                     obj.nextStimIndex = maxStimIndex;
                     
                     if obj.nextStimIndex==size(obj.nextStim, 2)
@@ -147,17 +148,17 @@ classdef tdt16bitStimDevice < tdtDevice
         end
         
         function uploadCurrentStim(obj)
-            obj.uploadWholeStim(obj.currentStim);
+            obj.uploadWholeStim(obj.currentStimEnc);
         end
         
         function finishUploadingNextStim(obj)
-            maxStimIndex = size(obj.nextStim, 2);
+            maxStimIndex = size(obj.nextStimEnc, 2);
 
             if maxStimIndex>obj.nextStimIndex
-                obj.uploadStim(obj.nextStim(:, obj.nextStimIndex+1:maxStimIndex), obj.nextStimIndex);
+                obj.uploadStim(obj.nextStimEnc(:, obj.nextStimIndex+1:maxStimIndex), obj.nextStimIndex);
                 obj.nextStimIndex = maxStimIndex;
                 
-                if obj.nextStimIndex==size(obj.nextStim, 2)
+                if obj.nextStimIndex==size(obj.nextStimEnc, 2)
                     fprintf(['  * Next stimulus uploaded after sweep, after ' num2str(toc) ' sec.\n']);
                 end
             end
@@ -174,15 +175,31 @@ classdef tdt16bitStimDevice < tdtDevice
             end
             
             % check some of the data itself is correct
-            rnd = floor(100+rand*(stimLen-300));
-            
+            rnd = floor((100+rand*(stimLen-300))/2)*2;
+
+            mxIdx = floor(size(obj.currentStim, 2)/2)*2;
+
             checkData = [obj.downloadStim(0, 100, nStimChans) ...
                 obj.downloadStim(rnd, 100, nStimChans) ...
-                obj.downloadStim(stimLen-100, 100, nStimChans)];
-            
-            d = max(max(abs(checkData - [obj.currentStim(:, 1:100) obj.currentStim(:, rnd+1:rnd+100) obj.currentStim(:, end-99:end)])));
-            if d>10e-7
+                obj.downloadStim(mxIdx-100, 100, nStimChans)];
+
+            %fprintf('warning, skipping check');
+            d = max(max(abs(checkData - [obj.currentStim(:, 1:100) obj.currentStim(:, rnd+1:rnd+100) obj.currentStim(:, mxIdx-99:mxIdx)])));
+            if d>10e-4
                 fprintf('Stimulus on stimDevice is not correct!\n');
+                figure(9);
+                subplot(2,1,1);
+                plot(checkData(1,:)');
+                hold all;
+                plot([obj.currentStim(1, 1:100) obj.currentStim(1, rnd+1:rnd+100) obj.currentStim(1, mxIdx-99:mxIdx)]');
+                plot(checkData(1,:)' - [obj.currentStim(1, 1:100) obj.currentStim(1, rnd+1:rnd+100) obj.currentStim(1, mxIdx-99:mxIdx)]');
+                hold off;
+                subplot(2,1,2);
+                plot(checkData(2,:)');
+                hold all;
+                plot([obj.currentStim(2, 1:100) obj.currentStim(2, rnd+1:rnd+100) obj.currentStim(2, mxIdx-99:mxIdx)]');
+                plot(checkData(2,:)' - [obj.currentStim(2, 1:100) obj.currentStim(2, rnd+1:rnd+100) obj.currentStim(2, mxIdx-99:mxIdx)]');
+                hold off;                
                 keyboard
                 %errorBeep('Stimulus on stimDevice is not correct!');
             end
@@ -231,14 +248,14 @@ classdef tdt16bitStimDevice < tdtDevice
             %if ~stimDevice.WriteTagV('WaveformR',offset,stim(2,:))
             %    errorBeep('WriteTagV WaveformR failed');
             %end;
-            
+
             maxRetries = 2;
 
             nRetries = 0;
             success = false;
 
             while ~success && nRetries<maxRetries
-                success = obj.handle.WriteTagVEX('WaveformL',offset,'I16',stim(1:2,:));
+                success = obj.handle.WriteTagVEX('WaveformL',offset,'I16',stim(1,:));
                 if ~success
                     fprintf('== WriteTagV WaveformL failed\n');
                     nRetries = nRetries + 1;
@@ -257,7 +274,7 @@ classdef tdt16bitStimDevice < tdtDevice
             success = false;
 
             while ~success && nRetries<maxRetries
-                success = obj.handle.WriteTagVEX('WaveformR',offset,'I16',stim(3:4,:));
+                success = obj.handle.WriteTagVEX('WaveformR',offset,'I16',stim(2,:));
                 if ~success
                     fprintf('== WriteTagV WaveformR failed\n');
                     nRetries = nRetries + 1;
@@ -274,12 +291,12 @@ classdef tdt16bitStimDevice < tdtDevice
             %
             % Upload a stereo stimulus to stimDevice, and inform the device
             % about the stimulus length
-            %keyboard
+            
             if ~obj.handle.SetTagVal('nSamples',size(stim,2))
                 errorBeep('WriteTag nSamples failed');
             end
 
-            if ~obj.handle.WriteTagVEX('WaveformL',0,'I16',stim(1:2,:))
+            if ~obj.handle.WriteTagVEX('WaveformL',0,'I16',stim(1,:))
                 errorBeep('WriteTagV WaveformL failed');
             end
 
@@ -287,7 +304,7 @@ classdef tdt16bitStimDevice < tdtDevice
                 return
             end
 
-            if ~obj.handle.WriteTagVEX('WaveformR',0,'I16',stim(3:4,:))
+            if ~obj.handle.WriteTagVEX('WaveformR',0,'I16',stim(2,:))
                 errorBeep('WriteTagV WaveformR failed');
             end
         end
