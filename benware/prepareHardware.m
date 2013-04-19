@@ -23,7 +23,7 @@ end
 % TDT devices is limited. We don't want to share the buffer with a non-existant second channel.
 
 if ~isfield(hardware, 'stimDevice')
-	fprintf('Initialising stimulus device...\n');
+	fprintf('  * Initialising stimulus device...\n');
 	hardware.stimDevice = feval(expt.stimDeviceType, ...
 								expt.stimDeviceInfo, grid.sampleRate, expt.nStimChannels);
 else
@@ -37,9 +37,9 @@ else
     end
 
     if ok
-        fprintf('Stimulus device already initialised at %0.0f Hz\n', grid.sampleRate);
+        fprintf('  * Stimulus device already initialised at %0.0f Hz\n', grid.sampleRate);
     else
-        fprintf('Reinitialising stimulus device (%s)...\n', message);
+        fprintf('  * Reinitialising stimulus device (%s)...\n', message);
         hardware.stimDevice = feval(expt.stimDeviceType, ...
 								expt.stimDeviceInfo, grid.sampleRate, expt.nStimChannels);
     end
@@ -47,7 +47,7 @@ end
 
 % set up data device
 if ~isfield(hardware, 'dataDevice')
-    fprintf('Initialising data device...\n');
+    fprintf('  * Initialising data device...\n');
     hardware.dataDevice = feval(expt.dataDeviceType, ...
 								expt.dataDeviceInfo, expt.dataDeviceSampleRate, ...
 					            expt.channelMapping, hardware.stimDevice);
@@ -62,9 +62,9 @@ else
     end
 
     if ok
-        fprintf('Data device already initialised at %0.0f Hz\n', expt.dataDeviceSampleRate);
+        fprintf('  * Data device already initialised at %0.0f Hz\n', expt.dataDeviceSampleRate);
     else
-    	fprintf('Reinitialising data device (%s)...\n', message);
+    	fprintf('  * Reinitialising data device (%s)...\n', message);
     	hardware.dataDevice = feval(expt.dataDeviceType, ...
 								expt.dataDeviceInfo, expt.dataDeviceSampleRate, ...
 					            expt.channelMapping, hardware.stimDevice);

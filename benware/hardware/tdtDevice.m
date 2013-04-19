@@ -74,26 +74,48 @@ classdef tdtDevice < handle
 
       ok = true;
       message = '';
-      
+            
       if ~strcmp(obj.deviceName, deviceInfo.name)
         ok = false;
         message = 'wrong stimulus device';
-      elseif ~strcmp(obj.busName, deviceInfo.busName)
+        return;
+      end
+      
+      if ~strcmp(obj.busName, deviceInfo.busName)
         ok = false;
         message = 'wrong bus';
-      elseif obj.deviceNumber~=deviceInfo.deviceNumber
+        return;
+      end
+      
+      if obj.deviceNumber~=deviceInfo.deviceNumber
         ok = false;
         message = 'wrong device number';
-      elseif obj.handle.GetTagVal(versionTagName)~=versionTagValue
+        return;
+      end
+      
+      currentVersionTagValue = obj.handle.GetTagVal(versionTagName);
+      if currentVersionTagValue~=versionTagValue
         ok = false;
         message = 'wrong circuit loaded';
-      elseif obj.sampleRate~=sampleRateHz
+        return;
+      end
+      
+      currentSampleRateHz = obj.sampleRate;
+      if currentSampleRateHz~=sampleRateHz
         ok = false;
         message = ['wrong sample rate -- requested ' num2str(sampleRateHz) ', got ' num2str(obj.sampleRate)];
-      elseif obj.deviceStatus~=7
+        return;
+      end
+      
+      status = obj.deviceStatus;
+      if status~=7
         ok = false;
         message = ['reports wrong status -- code ' obj.deviceStatus];
       end
+      
+      fprintf('  * Device %s (%s%d) OK: %s v.%d @ %0.0fHz\n', deviceInfo.name, ...
+          deviceInfo.busName, deviceInfo.deviceNumber, versionTagName(4:end-3), ...
+          versionTagValue, currentSampleRateHz);
     end
 
     function rate = sampleRate(obj)
