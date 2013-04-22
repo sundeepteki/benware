@@ -37,6 +37,18 @@ onlineData.psth.nSweeps = zeros(1, onlineData.nSets);
 onlineData.psth.pooledData = zeros(onlineData.psth.nBins, onlineData.nChannels);
 onlineData.psth.nPooledSweeps = 0;
 
+% PSTH for Sahani noise power
+onlineData.sahani.binsize = 5/1000; % 5 ms bins
+maxbin = min(onlineData.nSamplesExpected/onlineData.sampleRate, 1); % up to 1 second of data
+edges = 0:onlineData.sahani.binsize:maxbin;
+onlineData.sahani.edges = edges(1:end-1);
+onlineData.sahani.nBins = length(onlineData.sahani.edges);
+onlineData.sahani.centres = (onlineData.sahani.edges(1:end-1)+onlineData.sahani.edges(2:end))/2;
+onlineData.sahani.data = cell(onlineData.nChannels, onlineData.nSets);
+onlineData.sahani.nSweeps = zeros(1, onlineData.nSets);
+onlineData.sahani.noiseRatio = nan(onlineData.nChannels, onlineData.nSets);
+onlineData.sahani.meanNoiseRatio = nan(1, onlineData.nChannels);
+
 % LFP, downsampled to a maximum of nSamplesToPlot samples (or 1000Hz)
 onlineData.lfp.sampleRate = 1000; % Hz
 onlineData.lfp.nSamplesToKeep = 2000;

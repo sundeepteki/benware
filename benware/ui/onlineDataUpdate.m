@@ -36,6 +36,26 @@ psth.nPooledSweeps = psth.nPooledSweeps + 1;
 
 state.onlineData.psth = psth;
 
+%% update Sahani PSTHes and noise ratio
+sahani = state.onlineData.sahani;
+
+for chan = 1:state.onlineData.nChannels
+	newPSTH = histc(spikeTimes{chan}(:)'/1000, sahani.edges);
+    if isempty(sahani.data{chan, setIdx})
+        sahani.data{chan, setIdx} = newPSTH;
+    else
+        sahani.data{chan, setIdx}(end+1, :) = newPSTH;
+        [sp, np] = sahani_quick(sahani.data{chan, setIdx})
+        sahani.noiseRatio(chan, setIdx) = np/sp;
+        sahani.meanNoiseRatio(chan) = mean(sahani.noiseRatio(chan, :));
+    end
+end
+
+% sahani.noiseRatio
+% sahani.meanNoiseRatio
+% keyboard
+state.onlineData.sahani = sahani;
+
 %% update LFP
 lfp = state.onlineData.lfp;
 

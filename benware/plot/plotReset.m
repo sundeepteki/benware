@@ -63,6 +63,14 @@ for chan = 1:plotData.nChannels
 
       set(plotData.psth(chan).line,'ydata',psthY, 'color', col);
       set(plotData.psth(chan).labelHandles(2), 'string', sprintf('%d', mx));
+
+      if chan==length(state.onlineData.sahani.meanNoiseRatio)
+          nrstr = 'NR=%0.2f';
+      else
+          nrstr = '%0.2f';
+      end
+      set(plotData.psth(chan).sahaniHandle, ...
+            'string', sprintf(nrstr, state.onlineData.sahani.meanNoiseRatio(chan)));
     end
 
     % update LFP

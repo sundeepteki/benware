@@ -177,9 +177,10 @@ for chan = 1:plotData.nChannels
     % axis labels for psthes
     plotData.psth(chan).labelHandles(1) = text(0, -1, '0', invisibleTextProps{:});
     plotData.psth(chan).labelHandles(2) = text(0, 1, '0', invisibleTextProps{:});
-
+    plotData.psth(chan).sahaniHandle = text(nSamplesExpected/fs_in, 1, '1', invisibleTextProps{:});
+    
     plotData.psth(chan).handles = [plotData.psth(chan).axis.x plotData.psth(chan).axis.y ...
-                                    plotData.psth(chan).line plotData.psth(chan).labelHandles];
+                                    plotData.psth(chan).line plotData.psth(chan).labelHandles plotData.psth(chan).sahaniHandle];
     plotData.psth(chan).dataHandles = [plotData.psth(chan).line];
 
     % lfp running average plot
