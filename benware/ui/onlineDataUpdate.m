@@ -1,4 +1,4 @@
-function onlineDataUpdate(setIdx, spikeTimes, lfpsignal);
+function onlineDataUpdate(setIdx, spikeTimes, lfpsignal, sampleWaveforms)
 
 global state;
 
@@ -45,7 +45,7 @@ for chan = 1:state.onlineData.nChannels
         sahani.data{chan, setIdx} = newPSTH;
     else
         sahani.data{chan, setIdx}(end+1, :) = newPSTH;
-        [sp, np] = sahani_quick(sahani.data{chan, setIdx})
+        [sp, np] = sahani_quick(sahani.data{chan, setIdx});
         sahani.noiseRatio(chan, setIdx) = np/sp;
         sahani.meanNoiseRatio(chan) = mean(sahani.noiseRatio(chan, :));
     end
@@ -74,3 +74,20 @@ end
 lfp.nSweeps = lfp.nSweeps + 1;
 
 state.onlineData.lfp = lfp;
+
+%% update sample spike shapes
+spikeshapes = state.onlineData.spikeshapes;
+%keyboard
+
+for chan = 1:state.onlineData.nChannels
+    if size(sampleWaveforms{chan}, 2)==20
+        spikeshapes.shapes{chan} = sampleWaveforms{chan};
+    else
+        idx = randperm(20);
+        idx = idx(1:size(sampleWaveforms{chan}, 2));
+        spikeshapes.shapes{chan}(:, idx) = sampleWaveforms{chan};
+    end
+end
+    
+state.onlineData.spikeshapes = spikeshapes;
+

@@ -1,4 +1,4 @@
-function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData] = runSweep(hardware, ...
+function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveforms] = runSweep(hardware, ...
   sweepLen, nChannels, stim, nextStim, spikeFilter, spikeThreshold, ...
   saveWaveforms, dataFiles, plotData)
   %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
@@ -113,6 +113,19 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData] = runSweep(har
   % final plot
   plotData = plotUpdate(plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
 
+  % chop out sample waveforms
+  sampleWaveformLength = floor(hardware.dataDevice.sampleRate/1000);
+  sampleWaveforms = cell(1, nChannels);
+  for chan = 1:nChannels
+     r = randperm(length(spikeTimes{chan}));
+     times = spikeTimes{chan}(r(1:min(length(r), 20)))/1000;
+     samples = round(times*hardware.dataDevice.sampleRate)-7;
+     sampleWaveforms{chan} = zeros(sampleWaveformLength, 20);
+     for tmIdx = 1:length(times)
+        sampleWaveforms{chan}(:, tmIdx) = data(chan, samples(tmIdx):samples(tmIdx)+sampleWaveformLength-1);
+     end
+  end
+  
   % close data files
   if saveWaveforms
     for chan = 1:nChannels

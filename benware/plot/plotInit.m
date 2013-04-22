@@ -195,10 +195,17 @@ for chan = 1:plotData.nChannels
     % spike shape plot
     plotData.spikes(chan).axis.x = xmid;
     plotData.spikes(chan).axis.y = y0;
-    plotData.spikes(chan).handles = [plotData.spikes(chan).axis.x plotData.spikes(chan).axis.y ...
-                                        plotData.xgrid(chan).line];
-    plotData.spikes(chan).dataHandles = [];
+    plotData.spikes(chan).dataHandles = zeros(1,20);
+    x = linspace(0,1,floor(fs_in/1000))*nSamplesExpected/fs_in;
+    y = zeros(size(x));
+    for shapeIdx = 1:20
+        plotData.spikes(chan).dataHandles(shapeIdx) = ...
+            line(x, y, defaultDataProps{:});
+    end
 
+    plotData.spikes(chan).handles = [plotData.spikes(chan).axis.x plotData.spikes(chan).axis.y ...
+                                        plotData.xgrid(chan).line plotData.spikes(chan).dataHandles];
+    
     % % tuning plot
     % if isfield(grid, 'tuningPlotInitFunction')
     %     plotData.tuning(chan) = feval(grid.tuningPlotInitFunction, grid, chan);

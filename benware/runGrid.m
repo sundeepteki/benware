@@ -101,7 +101,7 @@ while sweepNum<=grid.nSweepsDesired
   end
   
   % run the sweep
-  [nSamples, spikeTimes, lfp, timeStamp, plotData] = ...
+  [nSamples, spikeTimes, lfp, timeStamp, plotData, sampleWaveforms] = ...
       runSweep(hardware, sweepLen, expt.nChannels, stim, nextStim, ...
               spikeFilter, expt.spikeThreshold, grid.saveWaveforms, sweeps(sweepNum).dataFiles, plotData);
 
@@ -158,7 +158,7 @@ while sweepNum<=grid.nSweepsDesired
   %plotData.lastSweepSpikes = sweeps(sweepNum).spikeTimes;
 
   setIdx = grid.randomisedGridSetIdx(sweepNum);
-  onlineDataUpdate(setIdx, sweeps(sweepNum).spikeTimes, lfp);
+  onlineDataUpdate(setIdx, sweeps(sweepNum).spikeTimes, lfp, sampleWaveforms);
 
   fprintf(['  * Finished sweep after ' num2str(toc) ' sec.\n\n']);
   
