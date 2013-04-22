@@ -127,11 +127,12 @@ classdef tdtStimDevice < tdtDevice
             maxStimIndex = size(obj.nextStim, 2);
 
             if maxStimIndex>obj.nextStimIndex
+                fprintf('  * Uploading remaining %d stimulus samples...', maxStimIndex-obj.nextStimIndex);
                 obj.uploadStim(obj.nextStim(:, obj.nextStimIndex+1:maxStimIndex), obj.nextStimIndex);
                 obj.nextStimIndex = maxStimIndex;
                 
                 if obj.nextStimIndex==size(obj.nextStim, 2)
-                    fprintf(['  * Next stimulus uploaded after sweep, after ' num2str(toc) ' sec.\n']);
+                    fprintf(['done after ' num2str(toc) ' sec.\n']);
                 end
             end
         end
@@ -249,6 +250,8 @@ classdef tdtStimDevice < tdtDevice
             %
             % Upload a stereo stimulus to stimDevice, and inform the device
             % about the stimulus length
+            t = toc;
+            fprintf('  * Uploading whole stimulus...');
             
             if ~obj.handle.SetTagVal('nSamples',size(stim,2))
                 errorBeep('WriteTag nSamples failed');
@@ -265,6 +268,7 @@ classdef tdtStimDevice < tdtDevice
             if ~obj.handle.WriteTagV('WaveformR',0,stim(2,:))
                 errorBeep('WriteTagV WaveformR failed');
             end
+            fprintf('done after %0.2f sec\n', toc-t);
         end
       
    end

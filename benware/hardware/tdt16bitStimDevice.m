@@ -44,21 +44,30 @@ classdef tdt16bitStimDevice < tdtDevice
         end
         
         function setScaleFactor(obj, scaleFactor)
-           obj.handle.SetTagVal('ScaleFactor', scaleFactor); 
+           if ~obj.handle.SetTagVal('ScaleFactorL', scaleFactor.L);
+              errorBeep('Failed to set ScaleFactorL');
+           end
+               
+           if ~obj.handle.SetTagVal('ScaleFactorR', scaleFactor.R);
+              errorBeep('Failed to set ScaleFactorR');
+           end
         end
 
         function scaleFactor = getScaleFactor(obj)
-           scaleFactor = obj.handle.GetTagVal('ScaleFactor'); 
+           scaleFactor.L = obj.handle.GetTagVal('ScaleFactorL');
+           scaleFactor.R = obj.handle.GetTagVal('ScaleFactorR');
         end
         
         function [stimEnc, scaleFactor] = encode(obj, stim)
-            scaleFactor = max(abs(stim(:)))/(2^15-1);
-            stimEnc = stim/scaleFactor;
-     
+           scaleFactor.L = max(abs(stim(1,:)))/(2^15-1);
+           scaleFactor.R = max(abs(stim(2,:)))/(2^15-1);
+           stimEnc(1,:) = stim(1,:)/scaleFactor.L;
+           stimEnc(2,:) = stim(2,:)/scaleFactor.R;
         end
         
-        function stim = decode(obj, stim, scaleFactor)
-            stim = stim * scaleFactor;
+        function stimDec = decode(obj, stim, scaleFactor)
+            stimDec(1,:) = stim(1,:) * scaleFactor.L;
+            stimDec(2,:) = stim(2,:) * scaleFactor.R;
         end
 
         
@@ -155,11 +164,12 @@ classdef tdt16bitStimDevice < tdtDevice
             maxStimIndex = size(obj.nextStimEnc, 2);
 
             if maxStimIndex>obj.nextStimIndex
+
                 obj.uploadStim(obj.nextStimEnc(:, obj.nextStimIndex+1:maxStimIndex), obj.nextStimIndex);
                 obj.nextStimIndex = maxStimIndex;
                 
                 if obj.nextStimIndex==size(obj.nextStimEnc, 2)
-                    fprintf(['  * Next stimulus uploaded after sweep, after ' num2str(toc) ' sec.\n']);
+                    fprintf(['done after ' num2str(toc) ' sec.\n']);
                 end
             end
         end
@@ -207,7 +217,7 @@ classdef tdt16bitStimDevice < tdtDevice
         end
 
         function index = getStimIndex(obj)
-            index = obj.handle.GetTagVal('StimIndex');
+            index = obj.handle.GetTagVal('StimIndex')*2;
         end
 
         function nSamples = getStimLength(obj)
@@ -291,22 +301,25 @@ classdef tdt16bitStimDevice < tdtDevice
             %
             % Upload a stereo stimulus to stimDevice, and inform the device
             % about the stimulus length
+            t = toc;
+            fprintf('  * Uploading whole stimulus...');
             
             if ~obj.handle.SetTagVal('nSamples',size(stim,2))
                 errorBeep('WriteTag nSamples failed');
             end
-
+            
             if ~obj.handle.WriteTagVEX('WaveformL',0,'I16',stim(1,:))
                 errorBeep('WriteTagV WaveformL failed');
             end
-
+            
             if size(stim, 1)==1
                 return
             end
-
+            
             if ~obj.handle.WriteTagVEX('WaveformR',0,'I16',stim(2,:))
                 errorBeep('WriteTagV WaveformR failed');
             end
+            fprintf('done after %0.2f sec\n', toc-t);
         end
       
    end

@@ -44,8 +44,13 @@ classdef tdt16bit8bitStimDevice < tdtDevice
         end
         
         function setScaleFactor(obj, scaleFactor)
-           obj.handle.SetTagVal('ScaleFactorL', scaleFactor.L); 
-           obj.handle.SetTagVal('ScaleFactorR', scaleFactor.R); 
+           if ~obj.handle.SetTagVal('ScaleFactorL', scaleFactor.L);
+              errorBeep('Failed to set ScaleFactorL');
+           end
+               
+           if ~obj.handle.SetTagVal('ScaleFactorR', scaleFactor.R);
+              errorBeep('Failed to set ScaleFactorR');
+           end
         end
 
         function scaleFactor = getScaleFactor(obj)
@@ -159,11 +164,12 @@ classdef tdt16bit8bitStimDevice < tdtDevice
             maxStimIndex = size(obj.nextStimEnc, 2);
 
             if maxStimIndex>obj.nextStimIndex
+                fprintf('  * Uploading remaining %d stimulus samples...', maxStimIndex-obj.nextStimIndex);
                 obj.uploadStim(obj.nextStimEnc(:, obj.nextStimIndex+1:maxStimIndex), obj.nextStimIndex);
                 obj.nextStimIndex = maxStimIndex;
                 
                 if obj.nextStimIndex==size(obj.nextStimEnc, 2)
-                    fprintf(['  * Next stimulus uploaded after sweep, after ' num2str(toc) ' sec.\n']);
+                    fprintf(['done after ' num2str(toc) ' sec.\n']);
                 end
             end
         end
@@ -211,7 +217,7 @@ classdef tdt16bit8bitStimDevice < tdtDevice
         end
 
         function index = getStimIndex(obj)
-            index = obj.handle.GetTagVal('StimIndex');
+            index = obj.handle.GetTagVal('StimIndex')*2;
         end
 
         function nSamples = getStimLength(obj)
@@ -295,6 +301,8 @@ classdef tdt16bit8bitStimDevice < tdtDevice
             %
             % Upload a stereo stimulus to stimDevice, and inform the device
             % about the stimulus length
+            t = toc;
+            fprintf('  * Uploading whole stimulus...');
             
             if ~obj.handle.SetTagVal('nSamples',size(stim,2))
                 errorBeep('WriteTag nSamples failed');
@@ -311,6 +319,7 @@ classdef tdt16bit8bitStimDevice < tdtDevice
             if ~obj.handle.WriteTagVEX('WaveformR',0,'I8',stim(2,:))
                 errorBeep('WriteTagV WaveformR failed');
             end
+            fprintf('done after %0.2f sec\n', toc-t);
         end
       
    end
