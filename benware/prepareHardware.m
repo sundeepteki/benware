@@ -37,7 +37,7 @@ else
     end
 
     if ok
-        fprintf('  * Stimulus device already initialised at %0.0f Hz\n', grid.sampleRate);
+        fprintf('  * Stimulus device already initialised\n');
     else
         fprintf('  * Reinitialising stimulus device (%s)...\n', message);
         hardware.stimDevice = feval(expt.stimDeviceType, ...
@@ -62,7 +62,7 @@ else
     end
 
     if ok
-        fprintf('  * Data device already initialised at %0.0f Hz\n', expt.dataDeviceSampleRate);
+        fprintf('  * Data device already initialised\n');
     else
     	fprintf('  * Reinitialising data device (%s)...\n', message);
     	hardware.dataDevice = feval(expt.dataDeviceType, ...
