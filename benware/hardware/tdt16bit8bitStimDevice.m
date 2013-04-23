@@ -91,6 +91,11 @@ classdef tdt16bit8bitStimDevice < tdtDevice
             
             % register the new stimulus
             obj.currentStim = currentStim;
+
+            if max(abs(obj.currentStim(:)))>10
+                fprintf('== Warning -- maximum stimulus value is > 10V ==');
+            end
+            
             [obj.currentStimEnc, obj.currentStimScaleFactor] = obj.encode(obj.currentStim);
             
             % if we already have a nextStim, check whether it matches currentStim
