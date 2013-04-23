@@ -40,8 +40,16 @@ else
 end
 
 idx = [];
-for ii = 1:repeatsPerCondition
-  idx = [idx randperm(size(grid.stimGrid, 1))];
+
+if isfield(grid, 'randomiseGrid') && ~grid.randomiseGrid
+  fprintf('  * Not randomising grid!\n');
+  for ii = 1:repeatsPerCondition
+    idx = [idx 1:size(grid.stimGrid, 1)];
+  end
+else
+  for ii = 1:repeatsPerCondition
+    idx = [idx randperm(size(grid.stimGrid, 1))];
+  end
 end
 grid.randomisedGrid = grid.stimGrid(idx, :);
 grid.nSweepsDesired = size(grid.randomisedGrid, 1);
