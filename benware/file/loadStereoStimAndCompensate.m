@@ -1,4 +1,4 @@
-function [stim, stimInfo] = loadStereoStimAndCompensate(sweepNum, grid, expt)
+function stim = loadStereoStimAndCompensate(expt, grid, sampleRate, nChannels, compensationFilters, varargin)
 % [stim, stimInfo] = loadWavAndCompensate(sweepNum, grid, expt)
 %
 % Load a stereo f32 or wav file and compensate using however many compensation
@@ -15,11 +15,13 @@ function [stim, stimInfo] = loadStereoStimAndCompensate(sweepNum, grid, expt)
 % This is now powered by loadStimFileAndCompensate
 
 % generate stimInfo structure
-stimInfo.sweepNum = sweepNum;
-stimInfo.stimGridTitles = grid.stimGridTitles;
-stimInfo.stimParameters = grid.randomisedGrid(sweepNum, :);
-stimInfo.stimFile = constructStimPath(grid, expt, sweepNum);
+% (path, exptNum, penNum, gridName, side, stimParameters)
+stimParameters = cell2mat(varargin);
+level = varargin{end};
 
-fprintf(['  * Getting stimulus ' num2str(sweepNum) ' from ' escapepath(stimInfo.stimFile) '...']);
+filename = constructStimPath([grid.stimDir grid.stimFilename], ...
+				expt.exptNum, expt.penetrationNum, grid.name, '', stimParameters);
 
-stim = loadStereoStimFileAndCompensate(stimInfo.stimFile, grid.compensationFilters, grid.stimLevelOffsetDB+stimInfo.stimParameters(end));
+fprintf(['  * Getting stimulus from ' escapepath(filename) '...']);
+
+stim = loadStereoStimFileAndCompensate(filename, compensationFilters, [level level]);
