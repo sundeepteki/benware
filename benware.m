@@ -52,6 +52,10 @@ if ~exist('CALIB', 'var')
   CALIB = false;
 end
 
+if isfield(expt, 'calibrationMode') && expt.calibrationMode
+  CALIB = true;
+end
+
 if CALIB
   state.justWarnOnDataEmpty = true;
 else
