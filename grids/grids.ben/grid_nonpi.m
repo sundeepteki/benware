@@ -13,7 +13,7 @@ function grid = grid_nonpi()
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\calib.expt51\compensationFilters.mat';
+    'e:\auditory-objects\calibration\calib.ben.2013.04.27\compensationFilters.mat';
   %grid.compensationFilterFile = ...
   %  '/Users/ben/scratch/expt.42/calib.expt42/compensationFilters.mat';
 
@@ -24,5 +24,5 @@ function grid = grid_nonpi()
   grid.repeatsPerCondition = 2;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [13 14]-105;
+  grid.stimLevelOffsetDB = [13 13]-108;
   

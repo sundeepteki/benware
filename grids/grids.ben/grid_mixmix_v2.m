@@ -12,14 +12,11 @@ function grid = grid_mixmix_v2()
   grid.stimGrid = createPermutationGrid([0 1], 1:16, 80); 
   %grid.stimGrid = createPermutationGrid(1:2, 1, 80); 
   %fprintf('== Testing only == ')
-  
-  % for calibration
-  %grid.stimGrid = createPermutationGrid(9, 9, 80);
-  
+    
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\calib.expt51\compensationFilters.mat';
+    'e:\auditory-objects\calibration\calib.ben.2013.04.27\compensationFilters.mat';
   %grid.compensationFilterFile = ...
   %  '/Users/ben/scratch/expt.42/calib.expt42/compensationFilters.mat';
 
@@ -30,5 +27,5 @@ function grid = grid_mixmix_v2()
   grid.repeatsPerCondition = 20;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [13 11]-85;
+  grid.stimLevelOffsetDB = [13 11]-10;
   

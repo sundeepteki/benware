@@ -15,7 +15,7 @@ function grid = grid_noise_learning()
   
   % set this using absolute calibration
   % (same as quning)
-  grid.stimLevelOffsetDB = [-104 -106]+100;
+  grid.stimLevelOffsetDB = [-2 2];
   
   % compensation filter
   grid.initFunction = 'chooseSpecialToken';

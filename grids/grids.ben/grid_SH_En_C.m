@@ -3,7 +3,7 @@ function grid = grid_sh_en_c
 % essentials
 grid.sampleRate = 24414.0625*2;  % ~50kHz
 grid.stimGenerationFunctionName = 'loadStimAndCompensate';
-grid.stimDir = 'e:\auditory-objects\sounds-uncalib\%N\';
+grid.stimDir = 'e:\auditory-objects\sounds-uncalib\SH.En.C\';
 grid.stimFilename = 'source.%1.sound.%2.snr.%3.token.%4.fw.%5.frozen.%6.f32';
 
 % stimulus grid structure
@@ -55,10 +55,10 @@ grid.repeatsPerCondition = 5;
 grid.postStimSilence = 0.2;
 
 % set this using absolute calibration
-grid.stimLevelOffsetDB = [16 16];
+grid.stimLevelOffsetDB = [16 16]+77;
 
 % compensation filter
 grid.initFunction = 'loadCompensationFilters';
 grid.compensationFilterFile = ...
-'e:\auditory-objects\calibration\calib.expt51\compensationFilters.mat';
+'e:\auditory-objects\calibration\calib.ben.2013.04.27\compensationFilters.mat';
 grid.compensationFilterVarNames = {'compensationFilters.L', 'compensationFilters.R'};

@@ -14,7 +14,7 @@ function grid = grid_density_v1()
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\calib.expt51\compensationFilters.mat';
+    'e:\auditory-objects\calibration\calib.ben.2013.04.27\compensationFilters.mat';
   %grid.compensationFilterFile = ...
   %  '/Users/ben/scratch/expt.42/calib.expt42/compensationFilters.mat';
 
@@ -25,5 +25,5 @@ function grid = grid_density_v1()
   grid.repeatsPerCondition = 7;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [-84 -84]+100;
+  grid.stimLevelOffsetDB = [-84 -84]+77;
   
