@@ -59,15 +59,25 @@ classdef tdt16bitStimDevice < tdtDevice
         end
         
         function [stimEnc, scaleFactor] = encode(obj, stim)
-           scaleFactor.L = max(abs(stim(1,:)))/(2^15-1);
-           scaleFactor.R = max(abs(stim(2,:)))/(2^15-1);
-           stimEnc(1,:) = stim(1,:)/scaleFactor.L;
-           stimEnc(2,:) = stim(2,:)/scaleFactor.R;
+           if isempty(stim)
+               scaleFactor.L = 0;
+               scaleFactor.R = 0;
+               stimEnc = [];
+           else
+               scaleFactor.L = max(abs(stim(1,:)))/(2^15-1);
+               scaleFactor.R = max(abs(stim(2,:)))/(2^15-1);
+               stimEnc(1,:) = stim(1,:)/scaleFactor.L;
+               stimEnc(2,:) = stim(2,:)/scaleFactor.R;
+           end
         end
         
         function stimDec = decode(obj, stim, scaleFactor)
-            stimDec(1,:) = stim(1,:) * scaleFactor.L;
-            stimDec(2,:) = stim(2,:) * scaleFactor.R;
+            if isempty(stim)
+                stimDec = [];
+            else
+                stimDec(1,:) = stim(1,:) * scaleFactor.L;
+                stimDec(2,:) = stim(2,:) * scaleFactor.R;
+            end
         end
 
         
