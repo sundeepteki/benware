@@ -48,8 +48,8 @@ grid.stimGrid = [...
     2   0   0   0   1   8  80 -50;
     createPermutationGrid(9, 0, 0, 0:2, [10, 20, 30, 40], 0, 75, -13);]; % DRCs
 
-% fprintf('Calibration only!!\n');
-% grid.stimGrid = [createPermutationGrid(9, 0, 0, 0, 10, 0, 75, -13);];
+%  fprintf('Calibration only!!\n');
+%  grid.stimGrid = [createPermutationGrid(9, 0, 0, 0, 10, 0, 75, -13);];
 
 grid.repeatsPerCondition = 5;
 grid.postStimSilence = 0.2;

@@ -14,9 +14,9 @@ function grid = grid_comparison()
                     createPermutationGrid(3, 1:2, 80); ... % modnoise                   
                     createPermutationGrid(4, 1:2, 80); ... % nat sounds
                     ];
-
-  fprintf('Calibration only!!\n');
-  grid.stimGrid = [0 1 80];
+% 
+%   fprintf('Calibration only!!\n');
+%   grid.stimGrid = [0 1 80];
   
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';

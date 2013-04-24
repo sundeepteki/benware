@@ -6,7 +6,7 @@ function grid = grid_bilateral_noise
 
   % stimulus grid structure
   grid.stimGridTitles = {'Duration', 'LeftDelay', 'RightDelay', 'BothDelay', 'Level'};
-  grid.stimGrid = [45 0 100 200 110];
+  grid.stimGrid = [45 0 100 200 80];
   
 %    fprintf('Calibration only!\n');
 %    grid.stimGrid = [500 0 1000 2000 80];  
