@@ -18,4 +18,4 @@ function grid = grid_noise_learning()
   grid.stimLevelOffsetDB = [-2 2];
   
   % compensation filter
-  grid.initFunction = 'chooseSpecialToken';
+  grid.initFunction = 'initNoiseLearning';
