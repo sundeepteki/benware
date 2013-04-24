@@ -64,6 +64,9 @@ classdef tdt16bitStimDevice < tdtDevice
                scaleFactor.R = 0;
                stimEnc = [];
            else
+               if mod(size(stim,2),2)==1
+                   stim(:, end+1) = 0;
+               end
                scaleFactor.L = max(abs(stim(1,:)))/(2^15-1);
                scaleFactor.R = max(abs(stim(2,:)))/(2^15-1);
                stimEnc(1,:) = stim(1,:)/scaleFactor.L;
@@ -280,7 +283,11 @@ classdef tdt16bitStimDevice < tdtDevice
             success = false;
 
             while ~success && nRetries<maxRetries
+                try
                 success = obj.handle.WriteTagVEX('WaveformL',offset,'I16',stim(1,:));
+                catch
+                    keyboard
+                end
                 if ~success
                     fprintf('== WriteTagV WaveformL failed\n');
                     nRetries = nRetries + 1;
