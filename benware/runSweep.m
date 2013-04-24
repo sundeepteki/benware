@@ -122,7 +122,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
      samples = round(times*hardware.dataDevice.sampleRate)-7;
      sampleWaveforms{chan} = zeros(sampleWaveformLength, 20);
      for tmIdx = 1:length(times)
-        sampleWaveforms{chan}(:, tmIdx) = data(chan, samples(tmIdx):samples(tmIdx)+sampleWaveformLength-1);
+        sampleWaveforms{chan}(:, tmIdx) = filteredData(chan, samples(tmIdx):samples(tmIdx)+sampleWaveformLength-1);
      end
   end
   

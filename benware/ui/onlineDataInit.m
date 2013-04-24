@@ -38,7 +38,7 @@ onlineData.psth.pooledData = zeros(onlineData.psth.nBins, onlineData.nChannels);
 onlineData.psth.nPooledSweeps = 0;
 
 % PSTH for Sahani noise power
-onlineData.sahani.binsize = 5/1000; % 5 ms bins
+onlineData.sahani.binsize = 25/1000; % 5 ms bins
 maxbin = min(onlineData.nSamplesExpected/onlineData.sampleRate, 1); % up to 1 second of data
 edges = 0:onlineData.sahani.binsize:maxbin;
 onlineData.sahani.edges = edges(1:end-1);

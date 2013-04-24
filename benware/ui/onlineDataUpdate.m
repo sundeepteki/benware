@@ -51,8 +51,8 @@ for chan = 1:state.onlineData.nChannels
     end
 end
 
-% sahani.noiseRatio
-% sahani.meanNoiseRatio
+sahani.noiseRatio
+sahani.meanNoiseRatio
 % keyboard
 state.onlineData.sahani = sahani;
 
