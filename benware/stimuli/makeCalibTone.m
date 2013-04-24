@@ -33,4 +33,4 @@ end
 
 % apply level offset
 level_offset = level-80;
-stim = stim * (10^(level_offset) / 20);
+stim = stim * 10^(level_offset/20);
