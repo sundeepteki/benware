@@ -47,12 +47,12 @@ for chan = 1:state.onlineData.nChannels
         sahani.data{chan, setIdx}(end+1, :) = newPSTH;
         [sp, np] = sahani_quick(sahani.data{chan, setIdx});
         sahani.noiseRatio(chan, setIdx) = np/sp;
-        sahani.meanNoiseRatio(chan) = mean(sahani.noiseRatio(chan, :));
+        sahani.meanNoiseRatio(chan) = min(sahani.noiseRatio(chan, :));
     end
 end
-
-sahani.noiseRatio
-sahani.meanNoiseRatio
+% 
+% sahani.noiseRatio
+% sahani.meanNoiseRatio
 % keyboard
 state.onlineData.sahani = sahani;
 
