@@ -77,13 +77,12 @@ state.onlineData.lfp = lfp;
 
 %% update sample spike shapes
 spikeshapes = state.onlineData.spikeshapes;
-%keyboard
 
 for chan = 1:state.onlineData.nChannels
-    if size(sampleWaveforms{chan}, 2)==20
+    if size(sampleWaveforms{chan}, 2)==spikeshapes.nSpikeShapes
         spikeshapes.shapes{chan} = sampleWaveforms{chan};
     else
-        idx = randperm(20);
+        idx = randperm(spikeshapes.nSpikeShapes);
         idx = idx(1:size(sampleWaveforms{chan}, 2));
         spikeshapes.shapes{chan}(:, idx) = sampleWaveforms{chan};
     end

@@ -66,9 +66,11 @@ onlineData.lfp.keptSampleTimes = onlineData.lfp.sampleTimes(onlineData.lfp.sampl
 onlineData.lfp.sum = nan(onlineData.nChannels, length(onlineData.lfp.samplesToKeep));
 
 % spike shapes
+onlineData.spikeshapes.nSpikeShapes = 100;
 onlineData.spikeshapes.nSamples = floor(sampleRate/1000);
 onlineData.spikeshapes.shapes = cell(1, onlineData.nChannels);
 for chan = 1:onlineData.nChannels
-   onlineData.spikeshapes.shapes{chan} = zeros(onlineData.spikeshapes.nSamples, 20); 
+   onlineData.spikeshapes.shapes{chan} = ...
+       zeros(onlineData.spikeshapes.nSamples, onlineData.spikeshapes.nSpikeShapes); 
 end
 

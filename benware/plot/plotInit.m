@@ -193,12 +193,13 @@ for chan = 1:plotData.nChannels
     plotData.lfpGain = 1;
 
     % spike shape plot
+    nSpikeShapes = 100;
     plotData.spikes(chan).axis.x = xmid;
     plotData.spikes(chan).axis.y = y0;
-    plotData.spikes(chan).dataHandles = zeros(1,20);
+    plotData.spikes(chan).dataHandles = zeros(1,nSpikeShapes);
     x = linspace(0,1,floor(fs_in/1000))*nSamplesExpected/fs_in;
     y = zeros(size(x));
-    for shapeIdx = 1:20
+    for shapeIdx = 1:nSpikeShapes
         plotData.spikes(chan).dataHandles(shapeIdx) = ...
             line(x, y, defaultDataProps{:});
     end

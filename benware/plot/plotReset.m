@@ -80,9 +80,10 @@ for chan = 1:plotData.nChannels
     set(plotData.lfp(chan).line,'ydata',mn(chan, :)'*plotData.lfpGain);
 
     % update spike waveforms
+    nSpikeShapes = 100;
     gain = state.dataGainFiltered;
     mx = max(abs(state.onlineData.spikeshapes.shapes{chan}(:)));
-    for idx = 1:20
+    for idx = 1:nSpikeShapes
        set(plotData.spikes(chan).dataHandles(idx), 'ydata', state.onlineData.spikeshapes.shapes{chan}(:, idx)/mx);
     end
   end
