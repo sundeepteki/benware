@@ -19,7 +19,7 @@ uncalib = zeros(1, stimLen_samples);
 uncalib(1, delay:delay+len-1) = randn(1, len); 
 
 stim = nan(2, length(uncalib));
-stim(1,:) = uncalib*10^((grid.stimLevelOffsetDB(1) + level)/20);
+stim(1,:) = uncalib;
 
 % light in channel 2
 lightstim = zeros(1, stimLen_samples);
@@ -29,4 +29,4 @@ stim(2,:) = lightstim;
 
 % apply level to sound channel only
 level_offset = level-80;
-stim(1,:) = stim(1,:)*10^(level_offset)/20;
+stim(1,:) = stim(1,:)*10^(level_offset/20);

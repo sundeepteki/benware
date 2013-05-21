@@ -1,13 +1,13 @@
 function grid = grid_puretones200k()
 
   % controlling the sound presentation
-  grid.sampleRate = 24414.0625*8;  % ~200kHz
+  grid.sampleRate = 24414.0625*16/3;  % ~200kHz
   grid.stimGenerationFunctionName = 'makeCalibTone';
 
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\james.16.04.2013\calibL_200k.mat';
+    'e:\auditory-objects\calibration\james.expt.8\calibL_200k.mat';
   grid.compensationFilterVarNames = {'calibL_200k.filter'};  
   
   % stimulus grid structure
@@ -22,13 +22,15 @@ function grid = grid_puretones200k()
  
   levels = 80:10:100;
   grid.stimGrid = createPermutationGrid(freqs, 50, levels);
-  grid.stimGrid = [10000 500 90];
+  
+  %fprintf('For calibration only!\n');
+  %grid.stimGrid = [10000 500 90];
   
   % sweep parameters
   grid.sweepLength = 1;
   grid.repeatsPerCondition = 30;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -180+1;
+  grid.stimLevelOffsetDB = [-28+0 0]; % previous -179
   
   

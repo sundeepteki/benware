@@ -7,7 +7,7 @@ function grid = grid_noise_with_light()
   % stimulus grid structure
  grid.stimGridTitles = {'Stimulus Length (ms)', 'Noise Delay (ms)', ...
       'Noise Length (ms)', 'Light voltage (V)', 'Light delay (ms)', 'Light Duration (ms)', 'Level'};
- grid.stimGrid = [1000 250 50 5 0.01 750 80; 1000 250 50 0 0.01 750 80;];
+ grid.stimGrid = [1000 250 50 8 0.01 750 80; 1000 250 50 0 0.01 750 80;];
  % grid.stimGrid = [2000 500 50 0 0.01 700 80];
 
   % for jonathan
@@ -23,5 +23,5 @@ function grid = grid_noise_with_light()
   %grid.saveWaveforms = false;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = -92+100-30-17;
+  grid.stimLevelOffsetDB = [-21+0 0];
   

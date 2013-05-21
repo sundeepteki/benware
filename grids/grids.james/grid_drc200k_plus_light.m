@@ -18,7 +18,7 @@ function grid = grid_drc200k_plus_light()
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\james.16.04.2013\calibL_200k.mat';
+    'e:\auditory-objects\calibration\james.expt.8\calibL_200k.mat';
 
   grid.compensationFilterVarNames = {'calibL_200k.filter'};
 
@@ -27,5 +27,5 @@ function grid = grid_drc200k_plus_light()
   grid.repeatsPerCondition = 5;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [3 3]+10;
+  grid.stimLevelOffsetDB = [0+0 0];
   
