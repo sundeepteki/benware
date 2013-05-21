@@ -90,7 +90,7 @@ pause(2);
 fprintf('done.\n');
 
 % check sample rates are identical to those requested
-if hardware.stimDevice.sampleRate ~= grid.sampleRate
+if floor(hardware.stimDevice.sampleRate) ~= floor(grid.sampleRate)
   errorBeep('stimDevice sample rate is wrong');
 end
 

@@ -120,11 +120,12 @@ classdef tdtDevice < handle
       end
       
       currentSampleRateHz = obj.sampleRate;
-      if currentSampleRateHz~=sampleRateHz
+      if floor(currentSampleRateHz)~=floor(sampleRateHz)
         ok = false;
         message = ['wrong sample rate -- requested ' num2str(sampleRateHz) ', got ' num2str(obj.sampleRate)];
         return;
       end
+ 
       
       status = obj.deviceStatus;
       if status~=7
