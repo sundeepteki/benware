@@ -13,10 +13,29 @@ classdef tdtDevice < handle
     function initialise(obj, deviceInfo, rcxFilename, requestedSampleRateHz)
                 
       tdt50k = 48828.125;
+
       sampleRates =   [0.125 0.25 0.5 1 2 4 8]*tdt50k;
       sampleRateIDs = [    0    1   2 3 4 5 6];
 
-      f = find(floor(requestedSampleRateHz)==floor(sampleRates));
+      % for RX6, available sample rates are
+      % tdt50k * [1/8 1/4 1/2 1 2 4]
+      % tdt50k * 8/7 * [1/8 1/4 1/2 1 2 4]
+      % tdt50k * 4/3 * [1/8 1/4 1/2 1 2 4]
+      % tdt50k * 8/5 * [1/8 1/4 1/2 1 2]
+      % We'll keep the standard set and IDs, and use them if possible.
+      % Out of a sense of conservatism. Note that the find below
+      % chooses the first matching rate which will match the standard
+      % 0-6 ID if its available.
+      if strcmp(deviceInfo.name, 'RX6')
+	extras = [tdt50k * [1/8 1/4 1/2 1 2 4] ...
+		  tdt50k * 8/7 * [1/8 1/4 1/2 1 2 4] ...
+		  tdt50k * 4/3 * [1/8 1/4 1/2 1 2 4] ...
+		  tdt50k * 8/5 * [1/8 1/4 1/2 1 2]];
+	sampleRates = [sampleRates extras];
+	sampleRateIDs = [sampleRateIDs extras];
+     end
+
+      f = find(floor(requestedSampleRateHz)==floor(sampleRates), 1);
 
       if length(f)==1
         %sampleRate = sampleRates(f);
