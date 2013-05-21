@@ -6,55 +6,61 @@ function [gridFile, lastSweep] = checkForInterruptedGrid(exptDir, expt)
 gridFile = [];
 lastSweep = 0;
 
-% find the most recently created directory in the expt dir
-newestDir = findNewestSubdir(exptDir);
+try
 
-if isempty(newestDir)
-  return;
-end
+    % find the most recently created directory in the expt dir
+    newestDir = findNewestSubdir(exptDir);
 
-% load the grid from this directory
-gridFilename = [exptDir newestDir.name filesep 'gridInfo.mat'];
-if ~exist(gridFilename, 'file')
-  return;
-end
+    if isempty(newestDir)
+      return;
+    end
 
-gridInfo = load(gridFilename);
+    % load the grid from this directory
+    gridFilename = [exptDir newestDir.name filesep 'gridInfo.mat'];
+    if ~exist(gridFilename, 'file')
+      return;
+    end
 
-% check whether its from the current experiment (we won't offer to resume 
-% if the user has changed experiment)
-if (gridInfo.expt.exptNum~=expt.exptNum)
-  return;
-end
+    gridInfo = load(gridFilename);
 
-% check whether its from the current penetration (we won't offer to resume 
-% if the user has changed penetration)
-if (gridInfo.expt.penetrationNum~=expt.penetrationNum)
-  return;
-end
+    % check whether its from the current experiment (we won't offer to resume 
+    % if the user has changed experiment)
+    if (gridInfo.expt.exptNum~=expt.exptNum)
+      return;
+    end
 
-if gridInfo.grid.repeatsPerCondition==Inf
-  % then 'infinite' repeats were specified, i.e. it's a search grid
-  return;
-end
+    % check whether its from the current penetration (we won't offer to resume 
+    % if the user has changed penetration)
+    if (gridInfo.expt.penetrationNum~=expt.penetrationNum)
+      return;
+    end
 
-filename = constructDataPath(...
-  [gridInfo.expt.dataDir gridInfo.expt.sweepFilename], ...
-   gridInfo.grid, gridInfo.expt, gridInfo.grid.nSweepsDesired);
+    if gridInfo.grid.repeatsPerCondition==Inf
+      % then 'infinite' repeats were specified, i.e. it's a search grid
+      return;
+    end
 
-if exist(filename, 'file')
-  % then the last grid is complete
-  return;
-
-else
-  for ii = 1:gridInfo.grid.nSweepsDesired
     filename = constructDataPath(...
       [gridInfo.expt.dataDir gridInfo.expt.sweepFilename], ...
-       gridInfo.grid, gridInfo.expt, ii);
-    if ~exist(filename, 'file')
-      break
+       gridInfo.grid, gridInfo.expt, gridInfo.grid.nSweepsDesired);
+
+    if exist(filename, 'file')
+      % then the last grid is complete
+      return;
+
+    else
+      for ii = 1:gridInfo.grid.nSweepsDesired
+        filename = constructDataPath(...
+          [gridInfo.expt.dataDir gridInfo.expt.sweepFilename], ...
+           gridInfo.grid, gridInfo.expt, ii);
+        if ~exist(filename, 'file')
+          break
+        end
+      end
+      gridFile = [exptDir newestDir.name filesep 'gridInfo.mat'];
+      lastSweep = ii-1;
     end
-  end
-  gridFile = [exptDir newestDir.name filesep 'gridInfo.mat'];
-  lastSweep = ii-1;
+
+catch
+    return;
 end
