@@ -36,6 +36,13 @@ fourBySixteen = [9 8 10 7 11 6 12 5 13 4 14 3 15 2 16 1; ...
 order = transpose(fourBySixteen);
 probes(end).order = order(:)';
 
+probes(end+1).name = 'A8x8';
+eightByEight = [5 4 6 3 7 2 8 1; 13 12 14 11 15 10 16 9; ...
+    21 20 22 19 23 18 24 17; 29 28 30 27 31 26 32 25; ...
+    37 36 38 35 39 34 40 33; 45 44 46 43 47 42 48 41; ...
+    53 52 54 51 55 50 56 49; 61 60 62 59 63 58 64 57];
+probes(end).order = order(:)';
+
 % NeuroNexus connector pin maps from:
 % http://www.neuronexustech.com/support/probe-site-maps
 connectors = struct;
