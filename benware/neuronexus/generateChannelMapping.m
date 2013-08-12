@@ -58,7 +58,7 @@ for ii = 1:length(probestruct)
 	mapping = [mapping getchannelmapping(probe, headstage, inputconnector, outputconnector, 1)+length(mapping)];
 end
 
-fprintf('\n= The mapping is:\n');
+fprintf('\n= The mapping is (going down the first shank from shallow to deep, then the second etc.:\n');
 disp(mapping);
 
 
