@@ -9,9 +9,12 @@ function grid = grid_mixmix_v2()
   
   % stimulus grid structure
   grid.stimGridTitles = {'Mixture', 'Sound ID', 'Level'};  
-  grid.stimGrid = createPermutationGrid([0 1], 1:16, 80); 
-  %grid.stimGrid = createPermutationGrid(1:2, 1, 80); 
-  %fprintf('== Testing only == ')
+  grid.stimGrid = createPermutationGrid([0 1], 1:16, 80);
+  
+  
+  grid.stimGrid = createPermutationGrid(1, 1, 80); 
+  fprintf('== Testing only == ')
+  pause;
     
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
@@ -27,5 +30,5 @@ function grid = grid_mixmix_v2()
   grid.repeatsPerCondition = 20;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [13 11]-10;
+  grid.stimLevelOffsetDB = [13 11]-8;
   

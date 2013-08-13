@@ -1,23 +1,22 @@
-function grid = grid_comparison()
+function grid = grid_decorr()
 
   % controlling the sound presentation
   grid.sampleRate = 24414.0625*4;  % ~100kHz
   grid.stimGenerationFunctionName = 'loadStimAndCompensate';
-  grid.stimDir = 'e:\auditory-objects\sounds-uncalib\comparison\';
-  grid.stimFilename = 'comparison.stimtype.%1.token.%2.wav';
+  grid.stimDir = 'e:\auditory-objects\sounds-uncalib\decorr.v1\';
+  grid.stimFilename = 'drc.cond.%1.token.%2.f32';
   
   % stimulus grid structure
-  grid.stimGridTitles = {'Stim type', 'Token', 'Level'};  
-  grid.stimGrid = [createPermutationGrid(0, 1:2, 80); ... % fixed DRC
-                    createPermutationGrid(1, 1:2, 80); ... % var DRC
-                    createPermutationGrid(2, 1:3, 80); ... % TORC
-                    createPermutationGrid(3, 1:2, 80); ... % modnoise                   
-                    createPermutationGrid(4, 1:2, 80); ... % nat sounds
+  grid.stimGridTitles = {'Condition', 'Token', 'Level'};  
+  grid.stimGrid = [createPermutationGrid(1:4, 1:3, 85); ... % 4 conditions, three tokens for basic characterisation. repeat twice
+                    createPermutationGrid(5:12, 1, 85); ... % conditions 5-12 have only 1 token. repeat 6 times
+                    createPermutationGrid(5:12, 1, 85); ... % conditions 5-12 have only 1 token. repeat 6 times
+                    createPermutationGrid(5:12, 1, 85); ... % conditions 5-12 have only 1 token. repeat 6 times
                     ];
 
   fprintf('Calibration only!!\n');
   pause;
-  grid.stimGrid = [0 1 80];
+  grid.stimGrid = [4 1 80]; % switching contrast, loud
   
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
@@ -33,5 +32,5 @@ function grid = grid_comparison()
   grid.repeatsPerCondition = 10;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [13 13]-18;
+  grid.stimLevelOffsetDB = [13 13]-27;
   

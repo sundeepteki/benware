@@ -12,10 +12,11 @@ function grid = grid_quning()
   levels = 50:20:90;
   tonedur = 50;
 
-%   fprintf('Calibration only!\n');
-%   freqs = [500 1000 10000];
-%   levels = 80;
-%   tonedur = 1000;
+  fprintf('Calibration only!\n');
+  pause;
+  freqs = [1000];
+  levels = 80;
+  tonedur = 1000;
 
   grid.stimGrid = createPermutationGrid(freqs, tonedur, levels);
 
@@ -24,7 +25,7 @@ function grid = grid_quning()
   grid.repeatsPerCondition = 30;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [0 0]-25;
+  grid.stimLevelOffsetDB = [0 0]-16;
   
   % compensation filters
   grid.initFunction = 'loadCompensationFilters';
