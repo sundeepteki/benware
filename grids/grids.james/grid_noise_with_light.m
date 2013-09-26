@@ -5,10 +5,10 @@ function grid = grid_noise_with_light()
   grid.stimGenerationFunctionName = 'makeCSDprobeWithLight';
   
   % stimulus grid structure
- grid.stimGridTitles = {'Stimulus Length (ms)', 'Noise Delay (ms)', ...
-      'Noise Length (ms)', 'Light voltage (V)', 'Light delay (ms)', 'Light Duration (ms)', 'Level'};
- grid.stimGrid = [1000 250 50 8 0.01 750 80; 1000 250 50 0 0.01 750 80;];
- % grid.stimGrid = [2000 500 50 0 0.01 700 80];
+  grid.stimGridTitles = {'Stimulus Length (ms)', 'Noise Delay (ms)', ...
+           'Noise Length (ms)', 'Light voltage (V)', 'Light delay (ms)', 'Light Duration (ms)', 'Level'};
+  %grid.stimGrid = [1000 250 50 8 0.01 750 80; 1000 250 50 0 0.01 750 80;];
+  grid.stimGrid = [1000 250 50 0 0.01 750 80;];
 
   % for jonathan
   %fprintf('**jonathans mouse!!**');
@@ -20,8 +20,7 @@ function grid = grid_noise_with_light()
   % sweep parameters
   grid.postStimSilence = 0;
   grid.repeatsPerCondition = 200;
-  %grid.saveWaveforms = false;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [-21+0 0];
+  grid.stimLevelOffsetDB = [+4 0];
   

@@ -15,7 +15,7 @@ grid.sampleRate                 = 24414.0625*4;  % ~100kHz, a sampling frequency
 grid.stimGenerationFunctionName = 'loadStimAndCompensate';
 
 % update the number after 'Mistuning' in the next line every penetration
-grid.stimFilename               = 'Astrid_Mistuning_1_Set_%1.f32';
+grid.stimFilename               = 'Astrid_Mistuning_3_Set_%1.f32';
 
 switch strtrim(hostname)
     case {'ATWSN647','schleppi'}

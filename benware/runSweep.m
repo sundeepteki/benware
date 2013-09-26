@@ -7,7 +7,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   %% and inform the stimDevice of the stimulus length
 
   global state;
-
+  
   % reset data device and tell it how long the sweep will be
   try
     hardware.dataDevice.reset(sweepLen*1000);

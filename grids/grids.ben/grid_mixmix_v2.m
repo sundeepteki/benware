@@ -11,10 +11,10 @@ function grid = grid_mixmix_v2()
   grid.stimGridTitles = {'Mixture', 'Sound ID', 'Level'};  
   grid.stimGrid = createPermutationGrid([0 1], 1:16, 80);
   
-  
-  grid.stimGrid = createPermutationGrid(1, 1, 80); 
-  fprintf('== Testing only == ')
-  pause;
+%   
+%   grid.stimGrid = createPermutationGrid(1, 1, 80); 
+%   fprintf('== Testing only == ')
+%   pause;
     
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';

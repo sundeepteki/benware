@@ -11,9 +11,9 @@ function grid = grid_joshpitch()
   grid.stimGrid = [createPermutationGrid(1:15, 80); ... % 4 conditions, three tokens for basic characterisation. repeat twice
                     ];
 
-  fprintf('Calibration only!!\n');
-  pause;
-  grid.stimGrid = [1 80];
+%   fprintf('Calibration only!!\n');
+%   pause;
+%   grid.stimGrid = [1 80];
   
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';

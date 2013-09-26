@@ -8,9 +8,9 @@ function grid = grid_csdprobe()
   grid.stimGridTitles = {'Stimulus Length (ms)', 'Delay (ms)'; 'Noise Length (ms)', 'Level'};
   grid.stimGrid = [490 50 50 80];
 
-  fprintf('For calibration only!\n');
-  pause;
-  grid.stimGrid = [490 50 480 80];
+%   fprintf('For calibration only!\n');
+%   pause;
+%   grid.stimGrid = [490 50 480 80];
 
   % sweep parameters
   grid.postStimSilence = 0;

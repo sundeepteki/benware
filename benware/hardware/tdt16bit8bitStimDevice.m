@@ -14,6 +14,7 @@ classdef tdt16bit8bitStimDevice < tdtDevice
 
 		function obj = tdt16bit8bitStimDevice(deviceInfo, sampleRate, nChannels)
 			% initialise the class itself
+            error('tdt16bit8bitStimDevice is buggy -- produces random pops');
 			obj.rcxSetups(1).rcxFilename = 'benware/tdt/%s-monoplay16bit.rcx';
 			obj.rcxSetups(1).versionTagName = [deviceInfo.name 'MonoPlay16bitVer'];
 			obj.rcxSetups(1).versionTagValue = 3;

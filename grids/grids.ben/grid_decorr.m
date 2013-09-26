@@ -14,9 +14,9 @@ function grid = grid_decorr()
                     createPermutationGrid(5:12, 1, 85); ... % conditions 5-12 have only 1 token. repeat 6 times
                     ];
 
-  fprintf('Calibration only!!\n');
-  pause;
-  grid.stimGrid = [4 1 80]; % switching contrast, loud
+%   fprintf('Calibration only!!\n');
+%   pause;
+%   grid.stimGrid = [4 1 80]; % switching contrast, loud
   
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
