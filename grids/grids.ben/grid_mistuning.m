@@ -23,7 +23,13 @@ end
 grid.sampleRate                 = 24414.0625*4;  % ~100kHz, a sampling frequency the TDT System 3 Sigma Delta D/A converter can do
 grid.stimGenerationFunctionName = 'getStimFromStruct';
 
-grid.stimuli = astrids_function_for_generating_stimuli(grid.sampleRate, compensationFilterFile);
+calibration = false;
+if calibration
+  fprintf('For calibration only!');
+  pause;
+end
+
+grid.stimuli = astrids_function_for_generating_stimuli(grid.sampleRate, compensationFilterFile, calibration);
 
 % stimulus grid structure
 % TODO: get automatically how many stim wav files,at the moment it needs to be edited manually
@@ -32,13 +38,7 @@ grid.stimuli = astrids_function_for_generating_stimuli(grid.sampleRate, compensa
 % TODO: ask Ben if this is the program logic that achieves level calibration by assuming "20*log10(sqrt(var(wav))./20e-6) == 80 (dB SPL)"
 grid.stimGridTitles = {'Stim set', 'Level'};
 
-if false
-    fprintf('Calibration only!!!! Press a key to continue');
-    pause;
-    grid.stimGrid       = createPermutationGrid(1, 80);
-else
-    grid.stimGrid       = createPermutationGrid(1:grid.n_mistuning_stimuli, 80);
-end    
+grid.stimGrid       = createPermutationGrid(1:grid.n_mistuning_stimuli, 80);
 
 
 % set this using absolute calibration
