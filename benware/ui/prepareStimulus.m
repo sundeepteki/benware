@@ -28,4 +28,3 @@ end
 for chan = 1:size(stim, 1)
   stim(chan, :) = stim(chan, :) * 10^(level_offset(chan) / 20);
 end
-
