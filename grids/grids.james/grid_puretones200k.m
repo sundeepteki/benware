@@ -32,6 +32,6 @@ function grid = grid_puretones200k()
   grid.repeatsPerCondition = 30;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [-18 0]; % previous -179
+  grid.stimLevelOffsetDB = [-2 0]; % previous -179
   
   

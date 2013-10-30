@@ -21,13 +21,13 @@ function grid = grid_rumpel()
 % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\vifa.10.09.13\calibL_200k.mat';
+    'e:\auditory-objects\calibration\expt26-21/10/13\calibL_200k.mat';
   grid.compensationFilterVarNames = {'calibL_200k.filter'};
 
   % sweep parameters
-  grid.postStimSilence = 0;
+  grid.postStimSilence = 0.25;
   grid.repeatsPerCondition = 50;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [6-18 0];
+  grid.stimLevelOffsetDB = [6-16 0];
   

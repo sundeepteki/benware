@@ -20,5 +20,5 @@ function grid = grid_monosearchnoise200k()
   grid.saveWaveforms = false;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [+4 0];
+  grid.stimLevelOffsetDB = [-11 0];
   

@@ -18,7 +18,7 @@ function grid = grid_ripples200k()
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\james.expt.8\calibL_200k.mat';
+    'e:\auditory-objects\calibration\expt26-21/10/13\calibL_200k.mat';
 
   grid.compensationFilterVarNames = {'calibL_200k.filter'};
 
@@ -27,5 +27,5 @@ function grid = grid_ripples200k()
   grid.repeatsPerCondition = 10;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [-3+0 0];
+  grid.stimLevelOffsetDB = [-3+ 0];
   
