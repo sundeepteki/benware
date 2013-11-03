@@ -1,12 +1,12 @@
-function grid = grid_mistuning()
-% grid_mistunings() -- defines Astrid's mistuning stimuli
+function grid = grid_DRCvowel()
+% grid_DRCvowel() -- defines Astrid's vowel + DRC stimuli
 %   Usage: 
-%      grid  = grid_mistunings()
+%      grid  = grid_DRCvowel()
 %   Outputs:
-%      grid    return a benware(TM) grid with Astrid's mistuning stimuli permuted over the desired iterations
+%      grid    return a benware(TM) grid with Astrid's vowel + DRC 
 %
 % Author: stef@nstrahl.de
-% Version: $Id: grid_mistuning.m 125 2013-11-03 13:37:28Z stefan $
+% Version: $Id:$
 
 [status,hostname] = system('hostname');          % get name of host benware is currently running on
 
@@ -28,9 +28,9 @@ calibration = false;
 if calibration
   fprintf('For calibration only!');
   pause;
-  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsCalibMistuned2013_11_04.m';
+  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsCalibDRCvowel2013_11_04.m';
 else
-  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsMistuned2013_11_04.m';    
+  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsDRCvowel2013_11_04.m';    
 end
 
 fprintf('Generating stimuli...\n');
