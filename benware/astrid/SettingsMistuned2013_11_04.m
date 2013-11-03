@@ -4,8 +4,8 @@
 % 10 Aug 2013 - first version (astrid)
 
 settings_parser = 'Mistuning';                   % use specialized parsers to allow short setting files
-idname          = ['Astrid_' settings_parser];   % unique identifier for stimulus sets generated with this setting file
-logfile_directory = 'E:\auditory-objects\astrid\Stimuli\';
+% logfile_directory = 'E:\auditory-objects\astrid\Stimuli\';
+logfile_directory = '';
 
 repetitions     = 15;                            % how often a unique stimulus set shall be repeated while being permutated
 stim_length     = 0.4;                           % stimulus length (sec)
@@ -14,6 +14,7 @@ ISI             = 1-stim_length;                 % inter stimulus interval (sec)
 %                  #1   #2   #3
 F0s             = [800; 400; 200];      % fundamental frequencies of each stimulus (Hz)
 nharmonics      = [ 12;  16;  48];      % number of harmonics of each F0
+level           = 60;                   % level in dB SPL
 
 mistuned{1}     = [2 8];                % which components of F0 #1 to mistune
 mistuned{2}     = 4;                    % which components of F0 #2 to mistune
@@ -23,7 +24,3 @@ freqshift       = [0 1 10 50];          % all components get the same mistunings
 
 dopermute       = true;                 % shall I permute stimuli within a set?
 fs              = 24414.0625*4;         % ~100kHz, the maximal sampling frequency of TDT Sigma Delta D/A converter
-bits            = 16;                   % we use 16 bit wavs for inspection
-
-%% EDIT HERE %%
-% bestfrequency   = [6000 7000 8000 10000];   % the average BFs of each shank and recording site

@@ -3,7 +3,7 @@ function waveform = gen_complex(f0,basefreq,numcomponents,amps,shifts,phases,sti
 %   Usage: 
 %      waveform = gen_complex(fs,stim_length,f0,harmonics,shifts,phases,amps)
 %   Parameters:
-%      f0              basic frequency
+%      f0              fundamental frequency
 %      basefreq        base frequency
 %      numcomponents   number of components in complex sound
 %      amps            vector with amplitudes of each component 
@@ -16,7 +16,7 @@ function waveform = gen_complex(f0,basefreq,numcomponents,amps,shifts,phases,sti
 %      waveform        vector containing complex waveform
 %
 % Author: stef@nstrahl.de
-% Version: $Id: gen_complex.m 113 2013-08-12 23:22:39Z stefan $
+% Version: $Id: gen_complex.m 126 2013-11-03 13:38:55Z stefan $
 
 if ~exist('windowlen','var'), windowlen=25e-3; end         % if undefined the window len is 25 ms
 
@@ -32,7 +32,5 @@ for h=1:numcomponents                                      % for all harmonics
 end
 % s = repmat(amps',[1 nsamples]) .* sin( (basefreq+f0*repmat((0:numcomponents-1)',[1 nsamples])+repmat(shifts',[1 nsamples])).*repmat(t,[numcomponents 1])*2*pi + repmat(phases',[1 nsamples])); % compute time signal
 
-
 waveform = sum(s,1);                                       % add sinus to waveform
 waveform = waveform.* window';                             % apply window
-waveform = waveform./10;                                   % Quickfix TODO: normalize to 0.1 RMS?
