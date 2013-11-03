@@ -11,8 +11,9 @@ function grid = grid_comparison()
   grid.stimGrid = [createPermutationGrid(0, 1:2, 80); ... % fixed DRC
                     createPermutationGrid(1, 1:2, 80); ... % var DRC
                     createPermutationGrid(2, 1:3, 80); ... % TORC
-                    createPermutationGrid(3, 1:2, 80); ... % modnoise                   
+                    createPermutationGrid(3, 1:2, 80); ... % modnoise                  
                     createPermutationGrid(4, 1:2, 80); ... % nat sounds
+                    createPermutationGrid(5, 1:3, 80); ... % pure tones
                     ];
 
 %   fprintf('Calibration only!!\n');
