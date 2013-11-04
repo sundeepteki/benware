@@ -1,7 +1,7 @@
-function stim = CreateExperimentStimuli(settingsfile,compensationfilterfile)
-% CreateExperimentStimuli() -- generates experiment stimuli as defined by settings
+function stim = CreateAstridStimuli(settingsfile,compensationfilterfile)
+% CreateAstridStimuli() -- generates experiment stimuli as defined by settings
 %   Usage:
-%      err = CreateExperimentStimuli(settingsfile,compensationfilterfile)
+%      err = CreateAstridStimuli(settingsfile,compensationfilterfile)
 %   Parameters:
 %      settingsfile                     this file contains the Settings defining the experiment
 %      compensationfilterfile           this file contains the two compensation filters (compensationfilter(1,:) is left, compensationfilter(2,:) is right) [optional]
@@ -9,7 +9,7 @@ function stim = CreateExperimentStimuli(settingsfile,compensationfilterfile)
 %      stim        struct containing sound stimuli (stim(1).L,stim(1).R,stim(2).L,stim(2).R,...)
 %
 % Author: stef@nstrahl.de, astrid.klinge-strahl@dpag.ox.ac.uk
-% Version: $Id: CreateExperimentStimuli.m 130 2013-11-03 14:07:07Z stefan $
+% Version: $Id: CreateAstridStimuli.m 137 2013-11-04 01:23:56Z astrid $
 
 stim = [];
 t    = clock;                                    % get current time as vector [year month day hour minute seconds]
@@ -30,8 +30,8 @@ freqs = []; % Matlab WTF 2nd
 
 run(settingsfile);                               % load settings
 
-fid = fopen([logfile_directory 'CreateExperimentStimuli.log'],'a');    % open logfile in assigned directory
-fprintf(fid,'%d-%02.0f-%02.0f %02.0f:%02.0f:%02.0f - CreateExperimentStimuli started using %s\n',t(1),t(2),t(3),t(4),t(5),t(6),settingsfile);
+fid = fopen([logfile_directory 'CreateAstridStimuli.log'],'a');    % open logfile in assigned directory
+fprintf(fid,'%d-%02.0f-%02.0f %02.0f:%02.0f:%02.0f - CreateAstridStimuli started using %s\n',t(1),t(2),t(3),t(4),t(5),t(6),settingsfile);
 fprintf(fid,'  random_seed = %1.0f;\n',seed);      % store which random seed was used
 
 switch settings_parser
@@ -156,6 +156,7 @@ switch settings_parser
             end % for f (each F0)
         end % for r (each repetiton)
     case 'CalibrationDRCVowel'
+        % TODO: add hannramp as parameter
         fprintf(fid,'random_seed = %1.0f;\n',seed);             % store which random seed was used
         fprintf(fid,'complex = [%s];',num2str(complex'));
         fprintf(fid,'n_chord = %d',n_chord);
@@ -164,20 +165,26 @@ switch settings_parser
         fprintf(fid,'chord_duration = %1.0f',chord_duration);
         fprintf(fid,'ramp_duration = %1.0f\n',ramp_duration);
         
+        freqmat  = repmat(complex',1,n_chord);
+        randmat  = ones(size(freqmat)) + (2*rand(size(freqmat))-1)*jitter;
+        freqs    = freqmat.*randmat;
+        levels   = rand(length(complex),n_chord*size(jitter,2))*levels_range+levels_offset; % mean 50 dB with range [45,55] (=0..10+40) dB
         wave_drc = gen_drc(fs,freqs,levels,chord_duration,ramp_duration);
         if exist('compensationfilterfile','var')                % have we been called with a compensation filter
             fprintf('Applying compensation Filters...');
             load(compensationfilterfile);                       % get inverse filter as impulse response
-            stim(1).L = filter(compensationFilters.L,1,wave_drc);
-            stim(1).R = filter(compensationFilters.R,1,wave_drc);
-            fprintf('done.\n');
+            tic
+            stim(1).L = fconv(compensationFilters.L,wave_drc);
+            stim(1).R = fconv(compensationFilters.R,wave_drc);
+            fprintf('done in %f secs.\n',toc);
         else
             stim(1).L = wave_drc;
             stim(1).R = wave_drc;
         end            
    case 'DRCvowel'
+        % TODO: add hannramp as parameter
         fprintf(fid,'  random_seed = %1.0f;\n',seed);           % store which random seed was used
-        fprintf(fid,'  %%% vowel settings %%%\n');
+        fprintf(fid,'  ### vowel settings ###\n');
         fprintf(fid,'  stimlen = %1.0f;',stimlen);
         fprintf(fid,'  f0 = %1.0f;',f0);                        % store F0
         fprintf(fid,'  startvowel = [%s];',num2str(startvowel'));
@@ -190,8 +197,8 @@ switch settings_parser
         vowel_amp = 20e-6*10.^(vowel_level/20);                 % convert dB SPL to amplitude (Pascal)
         fprintf(fid,'  vowel_amplitude = %f;\n',vowel_amp);     % store amplitude of calibration pure tone                
         fprintf(fid,'  vowel_position = [%s];\n',num2str(vowel_position'));
-        fprintf(fid,'  %%% DRC settings %%%\n');
-        fprintf(fid,'  complex = [%s];',num2str(complex'));
+        fprintf(fid,'  ### DRC settings ###\n');
+        fprintf(fid,'  complex = [%s];',num2str(complex));
         fprintf(fid,'  n_chord = %d',n_chord);
         fprintf(fid,'  jitter = [%s]',num2str(jitter'));
         fprintf(fid,'  freqs = [%s]',num2str(freqs));
@@ -202,50 +209,78 @@ switch settings_parser
             load(compensationfilterfile);                       % get inverse filter as impulse response
         end            
         
-        stim = [];
+        stim   = [];
+        window = hann(ceil(fs*2*5e-3),'periodic');              % generate 5 ms Hann window
+        window = window(round(end/2):end)';                     % we only need ramp down part (TODO: use better variable name)
         for j = 1:size(jitter,1)     % for all jitter combinations
-        fprintf('Jitter %d/%d: [%s]\n',j,size(jitter,1),num2str(jitter(j,:)));
-        % generate random jittered frequencies and levels
+            fprintf('Jitter %d/%d: [%s]\n',j,size(jitter,1),num2str(jitter(j,:)));
+            % generate random jittered frequencies and levels
+            fprintf('Create DRC');
             for b = 1:size(jitter,2)
                 freqmat = repmat(complex',1,n_chord);
                 randmat = ones(size(freqmat)) + (2*rand(size(freqmat))-1)*jitter(j,b);
                 freqs_block{b} = freqmat.*randmat;
             end
-            drc_freqs    = horzcat(freqs_block{:});
-            drc_levels   = rand(length(complex),n_chord*size(jitter,2))*levels_range+levels_offset; % mean 50 dB with range [45,55] (=0..10+40) dB
-            fprintf('Create DRC');
+            drc_freqs  = horzcat(freqs_block{:});
+            drc_levels = rand(length(complex),n_chord*size(jitter,2))*levels_range+levels_offset; % mean 50 dB with range [45,55] (=0..10+40) dB
             wave_drc = gen_drc(fs,drc_freqs,drc_levels,chord_duration,ramp_duration);
+            fprintf('done\n');
 
             % generate Vowel
             wav = [];
-            for f = 1:size(formants,2)
-                for p = 1:length(vowel_position)
-                    pos = round( (ramp_duration/2 + chord_duration*(n_chord + vowel_position(p))) * fs);
-
-                    wave_vowel = gen_vowel(stimlen,vowel_amp,fs,f0,formants(:,f)',bandwidths,carriertype);
-                    wav{end+1} = wave_drc;
+            for f = 1:size(formants,2)                % for all vowel morphing steps
+                wave_vowel = gen_vowel(stimlen,vowel_amp,fs,f0,formants(:,f)',bandwidths,carriertype);
+                for p = 1:length(vowel_position)      % for all positions within DRC
+                    pos        = round( (ramp_duration/2 + chord_duration*(n_chord + vowel_position(p))) * fs);
+                    wav{end+1} = wave_drc;            % copy DRC wave
                     wav{end}(pos:pos+length(wave_vowel)-1) = wav{end}(pos:pos+length(wave_vowel)-1) + wave_vowel;
+                    wav{end}   = wav{end}(1:pos+length(wave_vowel)+round(fs));   % stop DRC 1s after vowel stopped
+                    wav{end}(end-length(window)+1:end) = wav{end}(end-length(window)+1:end) .* window; % end with nice Han ramp down
+                    wav{end}(end+round(fs)) = 0;                                 % add one second pause at end
                 end % for p = 1:size(vowel_position)
             end % for f = 1:size(formants,2)
-            temp = [wav{:}];
-            if exist('compensationFilters','var')               % do we have compensation filter available?
-                fprintf('Applying compensation Filters...');
-                stim(end+1).L = filter(compensationFilters.L,1,temp);
-                stim(end).R   = filter(compensationFilters.R,1,temp);
-                fprintf('done.\n');
-            else
-                stim(end+1).L = temp;
-                stim(end).R   = temp;
-            end            
+            
+            % permute over all vowel morphing steps and positions within DRC
+            permidx = randperm(length(wav));                                   % get random permutation
+            fprintf(fid,'permutation_sequence = [%s];\n',num2str(permidx));    % log which permutation was used
+            wav = wav(permidx);                                                % permute stimuli
+            % return in separate waveforms that are <= 40 sec
+            wav_lens = cellfun(@length,wav);
+            i1 = 1;
+            for i2=1:length(wav)
+                if i2<length(wav)
+%                     if sum(wav_lens(i1:i2))<40*fs
+                    if sum(wav_lens(i1:i2))<32*fs % quickfix to avoid bug from line 258
+                        continue
+                    end
+                    temp = [wav{i1:(i2-1)}];
+                else
+                    temp = [wav{i1:i2}];  % TODO - bug that allows to be >40 sec if last stimulus is too long
+                end
+                if exist('compensationFilters','var')               % do we have compensation filter available?
+                    fprintf('Applying compensation Filters...');
+                    tic
+                    stim(end+1).L = fconv(compensationFilters.L,temp);
+                    stim(end).R   = fconv(compensationFilters.R,temp);
+                    fprintf('done in %f secs.\n',toc);
+                    fprintf('done.\n');
+                else
+                    stim(end+1).L = temp;
+                    stim(end).R   = temp;
+                end            
             clear temp;
+            i1 = i2;
+            end % for i=1:length(wav)
         end % for j = 1:size(jitter,1)
+%         stim = repmat(stim,[1 repetitions]);     % repeat derived wavefiles, benware will do permuation
+%         ^^^--- will be done in benware (grid_DRCvowel.m, last line, grid.repeatsPerCondition)
     otherwise
         error('Unknown settings parser "%s"',settings_parser);
 end % switch settings_parser
 
 fclose(fid);
 
-end % function CreateExperimentFiles
+end % function CreateAstridStimuli
 
 function [norm_left, norm_right,freq_bins_left,freq_bins_right] = get_normalized_compensations(compensationfilterfile)
 

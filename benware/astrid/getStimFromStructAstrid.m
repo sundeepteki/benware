@@ -1,4 +1,4 @@
-function [stim, stimInfo] = getStimFromStruct(expt, grid, sampleRate, nChannels, compensationFilters, varargin)
+function [stim, stimInfo] = getStimFromStructAstrid(expt, grid, sampleRate, nChannels, compensationFilters, varargin)
 
   stimInfo.stimGridTitles = grid.stimGridTitles;
   stimInfo.stimParameters = cell2mat(varargin);

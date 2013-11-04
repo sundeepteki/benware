@@ -3,9 +3,14 @@
 %
 % 10 Aug 2013 - first version (astrid)
 
-settings_parser = 'Mistuning';                   % use specialized parsers to allow short setting files
-% logfile_directory = 'E:\auditory-objects\astrid\Stimuli\';
-logfile_directory = '';
+settings_parser   = 'Mistuning';                 % use specialized parsers to allow short setting files
+[status,hostname] = system('hostname');          % get name of host benware is currently running on
+switch strtrim(hostname)
+    case {'ATWSN647','schleppi'}
+        logfile_directory = '';
+    otherwise
+        logfile_directory = 'E:\auditory-objects\astrid\Stimuli\';
+end
 
 repetitions     = 15;                            % how often a unique stimulus set shall be repeated while being permutated
 stim_length     = 0.4;                           % stimulus length (sec)
@@ -14,11 +19,11 @@ ISI             = 1-stim_length;                 % inter stimulus interval (sec)
 %                  #1   #2   #3
 F0s             = [800; 400; 200];      % fundamental frequencies of each stimulus (Hz)
 nharmonics      = [ 12;  16;  48];      % number of harmonics of each F0
-level           = 60;                   % level in dB SPL
+level           = 60;                   % level in dB SPL for each component
 
 mistuned{1}     = [2 8];                % which components of F0 #1 to mistune
 mistuned{2}     = 4;                    % which components of F0 #2 to mistune
-mistuned{3}     = [8 32];               % which components of F0 #3 to mistune
+mistuned{3}     = [2 4 8 32];           % which components of F0 #3 to mistune
 
 freqshift       = [0 1 10 50];          % all components get the same mistunings (Hz)
 

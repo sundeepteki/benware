@@ -21,7 +21,7 @@ function waveform = gen_vowel(stimlen,amplitude,fs,f0,formants,bandwidths,carrie
 % Author: astrid.klinge@googlemail.com & stef@nstrahl.de
 % Version: $Id:$
 
-if ~exist('hannramp','var'), hannramp=25e-3; end           % if undefined the Hann ramp is 50 ms
+if ~exist('hannramp','var'), hannramp=5e-3; end            % if undefined the Hann ramp is 5 ms
 if ~exist('carriertype','var'), carriertype='clicktrain'; end   % if undefined the default is +1/-1 click train
 
 t = 0:1/(fs-1):stimlen;                                    % time vector in sampling frequency resolution
