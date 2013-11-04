@@ -25,10 +25,10 @@ function grid = grid_quning()
   grid.repeatsPerCondition = 30;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [0 0]-16;
+  grid.stimLevelOffsetDB = [0 0]-16-35;
   
   % compensation filters
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\calib.ben.2013.04.27\compensationFilters.mat';
+    'e:\auditory-objects\calibration\calib.ben.03.11.13\compensationFilters.mat';
   grid.compensationFilterVarNames = {'compensationFilters.L', 'compensationFilters.R'};

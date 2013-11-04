@@ -16,7 +16,8 @@ switch strtrim(hostname)
     case 'ben'
         compensationFilterFile = '/Users/ben/scratch/expt.42/calib.expt42/compensationFilters100k.mat';
     otherwise
-        compensationFilterFile = 'e:\auditory-objects\calibration\calib.ben.2013.04.27\compensationFilters.100k.mat';
+        compensationFilterFile = ...
+              'e:\auditory-objects\calibration\calib.ben.03.11.13\compensationFilters.mat';
 end
 
 % controlling the sound presentation
@@ -45,7 +46,7 @@ end
 
 % set this using absolute calibration
 %grid.stimLevelOffsetDB = [0 0]-25; % can the two identical values be replaced by
-grid.stimLevelOffsetDB = -16;      % just one scalar value?
+grid.stimLevelOffsetDB = -16-7;      % just one scalar value?
 
 % sweep parameters
 grid.postStimSilence = 0;         % no need of silence between stimulus sets, WAV files have trailing inter stimulus interval
