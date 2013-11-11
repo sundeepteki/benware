@@ -7,7 +7,7 @@ function grid = grid_puretones200k()
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\vifa.10.09.13\calibL_200k.mat';
+    'e:\auditory-objects\calibration\arch-11/11/13\calibL_200k.mat';
   grid.compensationFilterVarNames = {'calibL_200k.filter'};  
   
   % stimulus grid structure

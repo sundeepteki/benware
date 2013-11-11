@@ -8,7 +8,9 @@ function grid = grid_noise_with_light()
   grid.stimGridTitles = {'Stimulus Length (ms)', 'Noise Delay (ms)', ...
            'Noise Length (ms)', 'Light voltage (V)', 'Light delay (ms)', 'Light Duration (ms)', 'Level'};
   %grid.stimGrid = [1000 250 50 8 0.01 750 80; 1000 250 50 0 0.01 750 80;];
-  grid.stimGrid = [1000 250 50 0 0.01 750 80;];
+
+  voltages = [0:5];
+  grid.stimGrid = createPermutationGrid(1000, 250, 50, voltages, 0.01, 750, 80);
 
   % for jonathan
   %fprintf('**jonathans mouse!!**');
