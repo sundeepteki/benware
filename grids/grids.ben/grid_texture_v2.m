@@ -9,7 +9,9 @@ function grid = grid_texture_v2()
   
   % stimulus grid structure
   grid.stimGridTitles = {'Sound ID', 'Condition', 'Level'};  
-  grid.stimGrid = createPermutationGrid(1:5, 1:7, 80); 
+  grid.stimGrid = [createPermutationGrid(1:5, 1:9, 80); % sounds
+                   createPermutationGrid(6,9,80)]; % silence
+
   %grid.stimGrid = createPermutationGrid(1:2, 1, 80); 
 
 %   

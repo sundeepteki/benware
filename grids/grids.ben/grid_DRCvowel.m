@@ -50,4 +50,4 @@ grid.stimLevelOffsetDB = -16-7;      % just one scalar value?
 
 % sweep parameters
 grid.postStimSilence = 0;         % no need of silence between stimulus sets, WAV files have trailing inter stimulus interval
-grid.repeatsPerCondition = 1;     % we need permutation between stimuli so it is done within the WAV files
+grid.repeatsPerCondition = 3;     % we need permutation between stimuli so it is done within the WAV files

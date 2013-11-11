@@ -7,7 +7,7 @@ function grid = grid_joshpitch()
   grid.stimFilename = 'KerryPitchSounds2013_%1.wav';
   
   % stimulus grid structure
-  grid.stimGridTitles = {'ID'};  
+  grid.stimGridTitles = {'ID','dB'};  
   grid.stimGrid = [createPermutationGrid(1:15, 80); ... % 4 conditions, three tokens for basic characterisation. repeat twice
                     ];
 
