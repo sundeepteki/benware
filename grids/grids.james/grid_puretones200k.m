@@ -7,7 +7,7 @@ function grid = grid_puretones200k()
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\arch-11/11/13\calibL_200k.mat';
+    'e:\auditory-objects\calibration\expt32-11.11.13\calibL_200k.mat';
   grid.compensationFilterVarNames = {'calibL_200k.filter'};  
   
   % stimulus grid structure
@@ -23,15 +23,15 @@ function grid = grid_puretones200k()
   levels = 80:10:100;
   grid.stimGrid = createPermutationGrid(freqs, 50, levels);
   
-%   fprintf('For calibration only!\n');
-%   pause;
-%   grid.stimGrid = [1000 500 90];
+  fprintf('For calibration only!\n');
+  pause;
+  grid.stimGrid = [1000 500 90];
   
   % sweep parameters
   grid.sweepLength = 1;
   grid.repeatsPerCondition = 30;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [-2 0]; % previous -179
+  grid.stimLevelOffsetDB = [-8 0]; % previous -179
   
   

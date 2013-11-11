@@ -14,15 +14,15 @@ function grid = grid_drc200k_screening()
   grid.stimGrid = createPermutationGrid(1:4, 40, [25 50], [0 voltage], 80);
 
   % for calibration
-    % grid.stimGrid = createPermutationGrid(9, 9, 80);
-    % fprintf('For calibration only!\n');
-    % pause;
-    % grid.stimGrid = createPermutationGrid(1, [10], 25, 0, 80); 
+%     grid.stimGrid = createPermutationGrid(9, 9, 80);
+%     fprintf('For calibration only!\n');
+%     pause;
+%     grid.stimGrid = createPermutationGrid(1, [10], 25, 0, 80); 
 
 % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\arch-11/11/13\calibL_200k.mat';
+    'e:\auditory-objects\calibration\expt32-11.11.13\calibL_200k.mat';
   grid.compensationFilterVarNames = {'calibL_200k.filter'};
 
   % sweep parameters
@@ -30,5 +30,5 @@ function grid = grid_drc200k_screening()
   grid.repeatsPerCondition = 3;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [6 0];
+  grid.stimLevelOffsetDB = [15 0];
   

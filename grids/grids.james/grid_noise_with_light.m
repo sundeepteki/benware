@@ -24,5 +24,5 @@ function grid = grid_noise_with_light()
   grid.repeatsPerCondition = 200;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [+4 0];
+  grid.stimLevelOffsetDB = [-11 0];
   
