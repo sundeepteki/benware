@@ -29,9 +29,9 @@ calibration = false;
 if calibration
   fprintf('For calibration only!');
   pause;
-  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsCalibDRCvowel2013_11_04.m';
+  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsCalibDRCvowel2013_11_18.m';
 else
-  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsDRCvowel2013_11_04.m';    
+  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsDRCvowel2013_11_18.m';    
 end
 
 fprintf('Generating stimuli...\n');
