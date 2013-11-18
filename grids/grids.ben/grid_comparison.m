@@ -16,14 +16,17 @@ function grid = grid_comparison()
                     createPermutationGrid(6, 1:3, 80); ... % pure tones
                     ];
 
-%   fprintf('Calibration only!!\n');
-%   pause;
-%   grid.stimGrid = [0 1 80];
+  global CALIBRATE;
+  if CALIBRATE
+   fprintf('Calibration only!!\n');
+   pause;
+   grid.stimGrid = [0 1 80];
+  end
 %   
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\calib.ben.03.11.13\compensationFilters.mat';
+    'e:\auditory-objects\calibration\calib.ben.18.11.2013\compensationFilters.100k.mat'; % 100kHz
   %grid.compensationFilterFile = ...
   %  '/Users/ben/scratch/expt.42/calib.expt42/compensationFilters100k.mat';
 
@@ -34,5 +37,5 @@ function grid = grid_comparison()
   grid.repeatsPerCondition = 10;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [13 13]-18-25;
+  grid.stimLevelOffsetDB = [13 13]-18-25+24;
   

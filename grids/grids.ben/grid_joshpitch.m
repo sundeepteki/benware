@@ -18,7 +18,7 @@ function grid = grid_joshpitch()
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\calib.ben.03.11.13\compensationFilters.mat';
+    'e:\auditory-objects\calibration\calib.ben.18.11.13\compensationFilters.100k.mat'; % 100kHz
   %grid.compensationFilterFile = ...
   %  '/Users/ben/scratch/expt.42/calib.expt42/compensationFilters100k.mat';
 

@@ -14,16 +14,17 @@ function grid = grid_texture_v2()
 
   %grid.stimGrid = createPermutationGrid(1:2, 1, 80); 
 
-%   
-%   % for calibration
-%   fprintf('== calibration only == ')
-%   pause;
-%   grid.stimGrid = createPermutationGrid(9, 9, 80);
-  
+    global CALIBRATE;
+    if CALIBRATE
+        fprintf('== Calibration mode. Press a key to continue == ')
+        pause;
+        grid.stimGrid = createPermutationGrid(9, 9, 80);
+    end
+
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\calib.ben.03.11.13\compensationFilters.mat';
+    'e:\auditory-objects\calibration\calib.ben.18.11.2013\compensationFilters.mat'; % 50kHz
   %grid.compensationFilterFile = ...
   %  '/Users/ben/scratch/expt.42/calib.expt42/compensationFilters.mat';
 
@@ -34,5 +35,5 @@ function grid = grid_texture_v2()
   grid.repeatsPerCondition = 7;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [12 12]-25;
+  grid.stimLevelOffsetDB = [12 12]-1;
   

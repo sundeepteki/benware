@@ -1,20 +1,22 @@
-function grid = grid_decorr_v2()
+function grid = grid_vrpink()
 
   % controlling the sound presentation
-  grid.sampleRate = 24414.0625*4;  % ~100kHz
+  grid.sampleRate = 24414.0625*2;  % ~100kHz
   grid.stimGenerationFunctionName = 'loadStimAndCompensate';
-  grid.stimDir = 'e:\auditory-objects\sounds-uncalib\decorr.v2\';
-  grid.stimFilename = 'drc.cond.%1.token.%2.f32';
+  grid.stimDir = 'e:\auditory-objects\sounds-uncalib\vrpink\';
+  grid.stimFilename = 'vr_pink_p%1_%2ms.mat.wav';
   
   % stimulus grid structure
-  grid.stimGridTitles = {'Condition', 'Token', 'Level'};  
-  grid.stimGrid = [createPermutationGrid(1:12, 1:2, 80)];
+  grid.stimGridTitles = {'p', 'ms', 'Level'};  
+  grid.stimGrid = [createPermutationGrid(1, [50 100 200], 80); ...
+      createPermutationGrid(2, [66 100 200], 80); ...
+      createPermutationGrid(3, 200, 80)];
 
   global CALIBRATE;
   if CALIBRATE
    fprintf('Calibration only!!\n');
    pause;
-   grid.stimGrid = [4 1 80]; % switching contrast, loud
+   grid.stimGrid = [999 999 80]; % switching contrast, loud
   end
   
   % compensation filter
@@ -28,8 +30,8 @@ function grid = grid_decorr_v2()
 
   % sweep parameters
   grid.postStimSilence = 0;
-  grid.repeatsPerCondition = 4;
+  grid.repeatsPerCondition = 5;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [13 13]-27-25-10+19;
+  grid.stimLevelOffsetDB = [13 13]-27-25-10+19+14;
   

@@ -17,7 +17,7 @@ switch strtrim(hostname)
         compensationFilterFile = '/Users/ben/scratch/expt.42/calib.expt42/compensationFilters100k.mat';
     otherwise
         compensationFilterFile = ...
-              'e:\auditory-objects\calibration\calib.ben.03.11.13\compensationFilters.mat';
+              'e:\auditory-objects\calibration\calib.ben.18.11.2013\compensationFilters.100k.mat'; % 100kHz
 end
 
 % controlling the sound presentation
@@ -25,8 +25,8 @@ grid.sampleRate                 = 24414.0625*4;  % ~100kHz, a sampling frequency
 % NB stimulus generation program must match this sample rate value
 grid.stimGenerationFunctionName = 'getStimFromStructAstrid';
 
-calibration = false;
-if calibration
+global CALIBRATE;
+if CALIBRATE
   fprintf('For calibration only!');
   pause;
   settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsCalibDRCvowel2013_11_18.m';
@@ -38,7 +38,7 @@ fprintf('Generating stimuli...\n');
 grid.stimuli = CreateAstridStimuli(settingsFile, compensationFilterFile);
 grid.stimGridTitles = {'Stim set', 'Level'};
 
-if calibration
+if CALIBRATE
     grid.stimGrid = createPermutationGrid(1, 80); % calibration will be done at 80dB SPL
 else
     grid.stimGrid = createPermutationGrid(1:length(grid.stimuli), 80); % correct level will be handled within CreateAstridStimuli()
@@ -46,8 +46,8 @@ end
 
 % set this using absolute calibration
 %grid.stimLevelOffsetDB = [0 0]-25; % can the two identical values be replaced by
-grid.stimLevelOffsetDB = -16-7;      % just one scalar value?
+grid.stimLevelOffsetDB = -16-7+5+17;      % just one scalar value?
 
 % sweep parameters
 grid.postStimSilence = 0;         % no need of silence between stimulus sets, WAV files have trailing inter stimulus interval
-grid.repeatsPerCondition = 3;     % we need permutation between stimuli so it is done within the WAV files
+grid.repeatsPerCondition = 5;     % we need permutation between stimuli so it is done within the WAV files
