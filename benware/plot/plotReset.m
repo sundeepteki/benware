@@ -57,7 +57,7 @@ for chan = 1:plotData.nChannels
     end
 
     if ~isempty(active_psth)
-      mx = max(active_psth(1:end-1, chan));
+      mx = max(active_psth(1:end-1, chan))*1.05;
       scaled = active_psth(1:end-1, chan)/mx*2-1;
       psthY = reshape(repmat(scaled',2,1),1,2*length(scaled));
 
