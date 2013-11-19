@@ -21,9 +21,14 @@ classdef fakeStimDevice < handle
 		obj.deviceInfo = deviceInfo;
 		obj.sampleRate = requestedSampleRateHz;
 		obj.nChannels = nChannels;
-	  end
-
-	  function stim = downloadStim(obj, offset, nSamples, nStimChans)
+      end
+      
+      function [ok, message] = checkDevice(obj, deviceInfo, sampleRate, nChannels)
+          ok = 1;
+          message = '';
+      end
+      
+      function stim = downloadStim(obj, offset, nSamples, nStimChans)
 		offset = offset + 1;
 		stim = obj.waveformL(offset:offset+nSamples-1);
 
@@ -40,14 +45,26 @@ classdef fakeStimDevice < handle
 	  	nSamples = obj.nSamples;
 	  end
 
-	  function reset(obj)
+
+      function prepareForSweep(obj, currentStim, nextStim)
+        % at the end of this function, the stimDevice must be
+        % be ready to receive a zBus trigger. It will then start
+        % playing out stim.
 	    obj.stimIndex = 0;
 	    if isobject(obj.timer)
 	      stop(obj.timer);
 	      delete(obj.timer);
 	      obj.timer = [];
-	    end
-	  end
+        end
+        
+        obj.uploadWholeStim(currentStim);
+      end
+      
+      function workDuringSweep(obj)
+      end
+
+      function workAfterSweep(obj)
+      end
 
 	  function setActiveStimChannels(obj, nChannels)
 	  	obj.leftActive = 1;

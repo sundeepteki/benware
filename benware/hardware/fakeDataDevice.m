@@ -24,13 +24,19 @@ classdef fakeDataDevice < handle
       
     end
     
+    function [ok, message] = checkDevice(obj, deviceInfo, sampleRate, nChannels)
+          ok = 1;
+          message = '';
+    end
+    
     function map = channelMap(obj)
       map = 1:obj.nChannels;
     end
     
-    function data = downloadAllData(obj)
-      maxIndex = min(ADidx);
-      data = obj.buffer(1:obj.nChannels, 1:maxIndex);
+    function data = downloadAvailableData(obj, offset)
+      offset = offset+1;
+      maxIndex = min(obj.ADidx);
+      data = obj.buffer(1:obj.nChannels, offset:maxIndex);
     end
 
     function data = downloadData(obj, chan, offset)
