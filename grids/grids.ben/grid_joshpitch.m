@@ -18,7 +18,7 @@ function grid = grid_joshpitch()
   % compensation filter
   grid.initFunction = 'loadCompensationFilters';
   grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\calib.ben.18.11.13\compensationFilters.100k.mat'; % 100kHz
+    'e:\auditory-objects\calibration\calib.ben.18.11.2013\compensationFilters.100k.mat'; % 100kHz
   %grid.compensationFilterFile = ...
   %  '/Users/ben/scratch/expt.42/calib.expt42/compensationFilters100k.mat';
 
@@ -26,7 +26,7 @@ function grid = grid_joshpitch()
 
   % sweep parameters
   grid.postStimSilence = 0;
-  grid.repeatsPerCondition = 10;
+  grid.repeatsPerCondition = 1;
   
   % set this using absolute calibration
   grid.stimLevelOffsetDB = [13 13]-44;

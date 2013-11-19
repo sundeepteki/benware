@@ -46,8 +46,8 @@ end
 
 % set this using absolute calibration
 %grid.stimLevelOffsetDB = [0 0]-25; % can the two identical values be replaced by
-grid.stimLevelOffsetDB = -16-7+5+17;      % just one scalar value?
+grid.stimLevelOffsetDB = -16-7+5;      % just one scalar value?
 
 % sweep parameters
 grid.postStimSilence = 0;         % no need of silence between stimulus sets, WAV files have trailing inter stimulus interval
-grid.repeatsPerCondition = 5;     % we need permutation between stimuli so it is done within the WAV files
+grid.repeatsPerCondition = 6;     % we need permutation between stimuli so it is done within the WAV files

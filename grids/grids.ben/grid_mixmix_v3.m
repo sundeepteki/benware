@@ -29,7 +29,7 @@ function grid = grid_mixmix_v2()
 
   % sweep parameters
   grid.postStimSilence = 0;
-  grid.repeatsPerCondition = 20;
+  grid.repeatsPerCondition = 15;
   
   % set this using absolute calibration
   grid.stimLevelOffsetDB = [13 11]+1;

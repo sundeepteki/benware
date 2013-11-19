@@ -30,7 +30,7 @@ formants        = [linspace(startvowel(1),endvowel(1),nsteps);...
                    linspace(startvowel(4),endvowel(4),nsteps)];      % 
 bandwidths      = [80 70 160 300];      % bandwidths of each formant (Hz) (from newMakeVowel.m)
 carriertype     = 'clicktrain';         % what carrier, choose between 'harmonic complex' and 'clicktrain'
-vowel_level     = 60;                   % vowel level in dB (relates to mean level of DRCs, e.g. )(masking in noise see Bizley et al. 2013 JASA)
+vowel_level     = 65;                   % vowel level in dB (relates to mean level of DRCs, e.g. )(masking in noise see Bizley et al. 2013 JASA)
 vowel_position  = [3 7 16];             % position of the vowel after first switch in background DRC (chord number after switch)
 
 % DRC settings
@@ -39,5 +39,5 @@ ramp_duration  = 0.010;
 complex        = 200:200:20000;
 n_chord        = 100;
 jitter         = [0.001 0.001; 0.001 0.03; 0.03 0.001; 0.03 0.03];       % in percent of frequency
-levels_offset  = 40;                   % mean 50 dB with range [45,55] (=0..10+40) dB
-levels_range   = 10;                   % mean 50 dB with range [45,55] (=0..10+40) dB
+levels_offset  = 45;                   % mean 50 dB with range [45,55] (=0..10+45) dB
+levels_range   = 10;                   % mean 50 dB with range [45,55] (=0..10+45) dB
