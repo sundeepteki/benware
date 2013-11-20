@@ -1,5 +1,7 @@
 == TODO Nov 2013
 
+* james's calibration needs to produce a file called compensationFilters.200k.mat,
+  containing a variable called compensationFilter
 
 * more sensible absolute calibration (RMS of x Volts means level of y dB) 
 -- TODO
@@ -9,6 +11,8 @@
 
 * better handling of compensation filter selection (so you don’t have to 
 specify in in every grid) 
+-- done
+
 
 * too many small files when sweeps are short
 

@@ -6,7 +6,7 @@ compensationFilterFilename = sprintf(expt.compensationFilterFilename, sampleRate
 
 global fakeHardware;
 if fakeHardware
-  fprintf('== Using fake compensation filters from ./benware/fakeCompensationFilters\n');
+  fprintf('== Using FAKE compensation filters from ./benware/fakeCompensationFilters\n');
   compensationFilterFile = fix_slashes(['./benware/fakeCompensationFilters/' compensationFilterFilename]);
 else
   compensationFilterFile = fix_slashes([expt.compensationFilterDir '/' compensationFilterFilename]);
@@ -23,6 +23,9 @@ else
 end
 
 for ii = 1:length(varnames)
-  grid.compensationFilters{ii} = eval(['l.' varnames{ii}]);
+  rawCompensationFilter = eval(['l.' varnames{ii}]);
+
+  % set vector length to one so that filters have no overall effect on amplitude
+  grid.compensationFilters{ii} = rawCompensationFilter/norm(rawCompensationFilter);
   fprintf(['== Loaded compensation filter for channel ' num2str(ii) ' from ' escapepath(compensationFilterFile) '\n']);
 end
