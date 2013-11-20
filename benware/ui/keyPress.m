@@ -14,16 +14,34 @@ end
 
 switch eventInfo.Key
   case 'uparrow'
-    if state.plot.filtered
-        state.dataGainFiltered = state.dataGainFiltered*1.25;
-    else
-        state.dataGainRaw = state.dataGainRaw*1.25;
+    gainDelta = 0.1;
+    if ~isempty(eventInfo.Modifier)
+      gainDelta = gainDelta * (length(eventInfo.Modifier)+1);
+    end
+    gainDelta
+    if state.plot.type=='w'
+      if state.plot.filtered
+        state.dataGainFiltered = state.dataGainFiltered*(gainDelta+1);
+      elseif state.plot.unfiltered
+        state.dataGainRaw = state.dataGainRaw*(gainDelta+1);
+      end
+    elseif state.plot.type=='l'
+      state.dataGainLFP = state.dataGainLFP*(gainDelta+1);
     end
   case 'downarrow'
-    if state.plot.filtered
-        state.dataGainFiltered = state.dataGainFiltered/1.25;
-    else
-        state.dataGainRaw = state.dataGainRaw/1.25;
+    gainDelta = 0.1;
+    if ~isempty(eventInfo.Modifier)
+      gainDelta = gainDelta * (length(eventInfo.Modifier)+1);
+    end
+    gainDelta
+    if state.plot.type=='w'
+      if state.plot.filtered
+        state.dataGainFiltered = state.dataGainFiltered/(gainDelta+1);
+      elseif state.plot.unfiltered
+        state.dataGainRaw = state.dataGainRaw/(gainDelta+1);
+      end
+    elseif state.plot.type=='l'
+      state.dataGainLFP = state.dataGainLFP/(gainDelta+1);
     end
   case 'space'
     if state.paused

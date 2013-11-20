@@ -57,7 +57,7 @@ for chan = 1:plotData.nChannels
     end
 
     if ~isempty(active_psth)
-      mx = max(active_psth(1:end-1, chan))*1.05;
+      mx = max(active_psth(1:end-1, chan));
       scaled = active_psth(1:end-1, chan)/mx*2-1;
       psthY = reshape(repmat(scaled',2,1),1,2*length(scaled));
 
@@ -76,7 +76,7 @@ for chan = 1:plotData.nChannels
     % update LFP
     mn = state.onlineData.lfp.sum/state.onlineData.lfp.nSweeps;
     mn = mn - repmat(mean(mn, 2), 1, size(mn, 2));
-    plotData.lfpGain = 1/max(abs(mn(:)));
+    plotData.lfpGain = state.dataGainLFP/max(abs(mn(:)));
     set(plotData.lfp(chan).line,'ydata',mn(chan, :)'*plotData.lfpGain);
 
     % update spike waveforms

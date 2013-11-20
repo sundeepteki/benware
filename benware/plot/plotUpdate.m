@@ -61,7 +61,7 @@ if state.plot.typeShouldChange
         plotData.activeHandles{chan} = plotData.psth(chan).handles;
         plotData.dataHandles{chan} = plotData.psth(chan).dataHandles;
         active_psth = state.onlineData.psth.pooledData;
-        mx = max(active_psth(1:end-1, chan))*1.05;
+        mx = max(active_psth(1:end-1, chan));
         scaled = active_psth(1:end-1, chan)/mx*2-1;
         psthY = reshape(repmat(scaled',2,1),1,2*length(scaled));
         set(plotData.psth(chan).line,'ydata',psthY);

@@ -98,13 +98,17 @@ end
 
 xticklabels = cell(size(xticknums));
 for ii = 1:length(xticknums)
+  if (xticknums(ii)-floor(xticknums(ii)))<2*eps(xticknums(ii))
     xticklabels{ii} = sprintf('%0.0f', xticknums(ii));
+  else
+    xticklabels{ii} = sprintf('%0.2f', xticknums(ii));
+  end
 end
 
 
 for chan = 1:plotData.nChannels
     plotData.subplot(chan) = axes('position', pos{chan}, 'xtick', [], 'ytick', [], ...
-        'xlim', [1 nSamplesExpected]/fs_in, 'ylim', [-1 1], ...
+        'xlim', [1 nSamplesExpected]/fs_in, 'ylim', [-1.02 1.02], ...
         'drawmode', 'fast', 'ticklength', [0 0], ...
         'xcolor', get(f,'color'), 'ycolor', get(f,'color'),  'ButtonDownFcn', {'clickOnSubplot',chan});
 
@@ -180,7 +184,9 @@ for chan = 1:plotData.nChannels
     plotData.psth(chan).sahaniHandle = text(nSamplesExpected/fs_in, 1, '1', invisibleTextProps{:});
     
     plotData.psth(chan).handles = [plotData.psth(chan).axis.x plotData.psth(chan).axis.y ...
-                                    plotData.psth(chan).line plotData.psth(chan).labelHandles plotData.psth(chan).sahaniHandle];
+                                    plotData.psth(chan).line plotData.psth(chan).labelHandles ...
+                                    plotData.xgrid(chan).line ...
+                                    plotData.psth(chan).sahaniHandle];
     plotData.psth(chan).dataHandles = [plotData.psth(chan).line];
 
     % lfp running average plot
@@ -188,7 +194,9 @@ for chan = 1:plotData.nChannels
     plotData.lfp(chan).axis.y = y0;
     plotData.lfp(chan).line = line(0, 0, defaultDataProps{:});
     set(plotData.lfp(chan).line, 'XData', state.onlineData.lfp.keptSampleTimes);
-    plotData.lfp(chan).handles = [plotData.lfp(chan).axis.x plotData.lfp(chan).axis.y plotData.lfp(chan).line];
+    plotData.lfp(chan).handles = [plotData.lfp(chan).axis.x plotData.lfp(chan).axis.y ...
+                                    plotData.xgrid(chan).line ...
+                                    plotData.lfp(chan).line];
     plotData.lfp(chan).dataHandles = [plotData.lfp(chan).line];
     plotData.lfpGain = 1;
 
@@ -213,7 +221,7 @@ for chan = 1:plotData.nChannels
     % end
     
     % time axis for all plot types
-    if chan==plotData.nChannels
+    if mod(chan,plotData.nChannels/4)==0 % bottom of each column
         for ticknum = 1:length(xticks)
             plotData.xlabels(chan).xlabels(ticknum) = text(xticks(ticknum), -1, xticklabels(ticknum), ...
                 'parent', plotData.subplot(chan), 'hittest', 'off', 'visible', 'on', ...

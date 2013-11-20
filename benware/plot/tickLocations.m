@@ -1,13 +1,15 @@
-function tickLocations = tickLocations(ymax)
+function tickLocs = tickLocations(ymax)
 
-scale = 10^floor(log10(ymax));
+scale = 10^floor(log10(ymax))
 
-if (ymax/scale)<=2
-	jump = scale/2;
+if (ymax/scale)<1.5
+	jump = scale/4;
+elseif (ymax/scale)<2
+  	jump = scale/2;
 elseif (ymax/scale)<5
     jump = scale;
 else
-    jump = scale * 2;
+    jump = scale * 2.5;
 end
 
-tickLocations = 0:jump:ymax;
+tickLocs = 0:jump:ymax;

@@ -17,6 +17,9 @@ end
 if ~isfield(state, 'dataGainFiltered')
   state.dataGainFiltered = 1000;
 end
+if ~isfield(state, 'dataGainLFP')
+  state.dataGainLFP = 1;
+end
 if ~isfield(state, 'audioMonitor') || ~isfield(state.audioMonitor, 'channel')
   state.audioMonitor.channel = 1;
 end
