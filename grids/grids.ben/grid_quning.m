@@ -31,7 +31,7 @@ function grid = grid_quning()
   grid.stimLevelOffsetDB = [0 0]-16-35+24;
   
   % compensation filters
-  grid.initFunction = 'loadCompensationFilters';
-  grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\calib.ben.18.11.2013\compensationFilters.100k.mat'; % 100kHz
-  grid.compensationFilterVarNames = {'compensationFilters.L', 'compensationFilters.R'};
+  % grid.initFunction = 'loadCompensationFilters';
+  % grid.compensationFilterFile = ...
+  %   'e:\auditory-objects\calibration\calib.ben.18.11.2013\compensationFilters.100k.mat'; % 100kHz
+  % grid.compensationFilterVarNames = {'compensationFilters.L', 'compensationFilters.R'};

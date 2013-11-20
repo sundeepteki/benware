@@ -1,3 +1,20 @@
+== TODO Nov 2013
+
+
+* more sensible absolute calibration (RMS of x Volts means level of y dB) 
+-- TODO
+
+* raster slowness with 64 channels (may not be fixable) 
+-- investigate on VB
+
+* better handling of compensation filter selection (so you don’t have to 
+specify in in every grid) 
+
+* too many small files when sweeps are short
+
+* make sure compensation filters are a reasonable length -- speed of convolution
+
+
 == TODO MARCH 16 2013
 
 * test stereoplay version 6
@@ -55,6 +72,15 @@
 
 
 == DONE
+
+>> * scalable LFP (so that it’s still visible when there is a dud channel) 
+-- done
+>> * time tick-marks are missing in PSTHs
+-- done
+>> * PSTHs clipped at the top 
+-- hopefully done
+>> * sometimes the time axis is meaningless (1 1 1 1) 
+-- done
 
 * need to be able to address NUMBERED devices on zBUs
 
