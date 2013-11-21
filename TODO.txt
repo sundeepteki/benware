@@ -3,8 +3,51 @@
 * james's calibration needs to produce a file called compensationFilters.200k.mat,
   containing a variable called compensationFilter
 
+* my calibration needs to produce files names 50k and 100k
+
+* should we use my rewritten calibration code?
+
+* compensation filters -- we need a single overall level adjustment for the compensated
+  stimuli, which makes RMS=0.1 into 80dB. This should be specified in expt
+  
+* don't use the B&K display -- we want to be able to use the GRAS amplifier too
+
+* I think we need to remove some of the current level manipulation code, probably from
+  multiple different stimulus generation functions.
+
+* it would be nice to integrate calibration better into benware, including:
+  ** recording the sound produced
+  ** testing the code that produces each grid somehow
+  ** getting actual spectrum of produced sounds
+  
 * more sensible absolute calibration (RMS of x Volts means level of y dB) 
 -- TODO
+
+** we don't need to integrate calibration with bw, just allow it to be tested within bw
+SO: relative calibration is mostly fine, though it might be a good idea to use newer code, and it's
+definitely necessary to alter save format
+
+absolute calibration program:
+* allow recording of bonger (94dB?), measure RMS_B
+* play 1kHz tone @ RMS=1Pa (94dB), measure RMS_T
+* get compensation factor RMS_B/RMS_T
+* play 1kHz tone again, confirm that compensation factor means it's now same level
+
+you could have a special mode of benware, set by CALIBRATE=true; benware
+extra/alternative grids available for calibration tests
+in this mode, expt.dataDevice is overridden with a device that records an analogue input on RZ2
+(i.e. the mic input)
+at the end of each sweep, you get an extra window with waveform, spectrogram, PSD.
+
+for absolute_calibration, the grid first allows user to record bonger
+
+the stimulus values could be measured in Pa. then:
+* the absolute threshold of hearing (0dB SPL; 2e-5Pa) would be RMS=2e-5
+* 80dB would be RMS=0.2Pa
+* 94dB would be RMS=1Pa
+* clip at +/-10 (114dB)?
+
+-- we then need a way to adjust levels on a grid-by-grid basis
 
 * raster slowness with 64 channels (may not be fixable) 
 -- investigate on VB
