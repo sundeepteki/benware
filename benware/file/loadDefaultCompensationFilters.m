@@ -1,6 +1,11 @@
 function grid = loadDefaultCompensationFilters(grid, expt)
 % load default compensation filters
 
+if ~isfield(expt, 'compensationFilterFilename')
+    fprintf('== WARNING: No compensation filters specified in expt.\n');
+    fprintf('== Filters from grid will be used\n');
+    fprintf('== This will soon be an error\n');
+end
 sampleRate = ceil(grid.sampleRate/10000)*10;
 compensationFilterFilename = sprintf(expt.compensationFilterFilename, sampleRate);
 
@@ -14,7 +19,7 @@ end
 
 l = load(compensationFilterFile);
 
-if isfield(l, 'compensationFilters') & isfield(l.compensationFilters, 'L')
+if isfield(l, 'compensationFilters') && isfield(l.compensationFilters, 'L')
   varnames = {'compensationFilters.L', 'compensationFilters.R'};
 elseif isfield(l, 'compensationFilter')
   varnames = {'compensationFilter'};

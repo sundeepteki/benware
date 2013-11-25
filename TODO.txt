@@ -2,8 +2,10 @@
 
 * james's calibration needs to produce a file called compensationFilters.200k.mat,
   containing a variable called compensationFilter
+-- done
 
 * my calibration needs to produce files names 50k and 100k
+-- done
 
 * should we use my rewritten calibration code?
 
