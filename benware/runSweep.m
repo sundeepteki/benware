@@ -41,6 +41,9 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
 
   % keep track of how much of stimulus has been uploaded
   samplesUploaded = 0;
+  
+  % waveform statistics for spike detection
+  waveformStats = [];
 
   % trigger stimulus presentation and data collection
   timeStamp = clock;
@@ -79,10 +82,10 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
     end
     
     % bandpass filter data and detect spikes
-    if (nSamplesReceived-filterIndex) > (hardware.dataDevice.sampleRate/10)
+    if (nSamplesReceived-filterIndex) > (hardware.dataDevice.sampleRate/10) % at least 100msec of data
       [filtData, offset] = filterData(data(:, filterIndex+1:nSamplesReceived), spikeFilter);
       filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
-      spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, hardware.dataDevice.sampleRate, spikeThreshold);
+      [spikeTimes, waveformStats] = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, hardware.dataDevice.sampleRate, waveformStats);
       filterIndex = filterIndex + size(filtData,2);
     end
  
