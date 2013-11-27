@@ -24,8 +24,12 @@ if ~isfield(grid, 'saveWaveforms')
   grid.saveWaveforms = true;
 end
 
+if ~isfield(grid, 'compensationFilters')
+  grid.compensationFilters = [];
+end
+
 % load default compensation filters specified in expt
-grid = loadDefaultCompensationFilters(grid, expt);
+%grid = loadDefaultCompensationFilters(grid, expt);
 
 if isfield(grid, 'sweepLen') && isfield(grid, 'postStimSilence')
   error('grid:error', 'Grid specifies both sweepLen and postStimSilence');

@@ -9,9 +9,10 @@ function grid = loadCompensationFilters(grid, expt)
 fprintf('== WARNING: Using GRID.compensationFilterFile.\n');
 fprintf('== Ignoring EXPT.compensationFilterFile.\n');
 fprintf('== This will soon be an error\n');
-% l = load(grid.compensationFilterFile);
-% 
-% for ii = 1:length(grid.compensationFilterVarNames)
-%   grid.compensationFilters{ii} = eval(['l.' grid.compensationFilterVarNames{ii}]);
-%   fprintf(['Loaded compensation filter for channel ' num2str(ii) ' from ' escapepath(grid.compensationFilterFile) '\n']);
-% end
+
+l = load(grid.compensationFilterFile);
+
+for ii = 1:length(grid.compensationFilterVarNames)
+  grid.compensationFilters{ii} = eval(['l.' grid.compensationFilterVarNames{ii}]);
+  fprintf(['Loaded compensation filter for channel ' num2str(ii) ' from ' escapepath(grid.compensationFilterFile) '\n']);
+end

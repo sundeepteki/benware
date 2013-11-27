@@ -1,6 +1,6 @@
 %datadir = '~/scratch/P00-noise_with_light.9';
 %datadir = '/Volumes/vonbraun.dpag.ox.ac.uk/James/data/expt33/P02-noise_with_light.2';
-datadir = 'E:/James/data/expt35/P08-noise_with_light';
+datadir = 'E:/James/data/expt37/P03-noise_with_light';
 dt = 25; % ms bins for PSTH
 latency = 0; % ms latency
 max_t = 750;

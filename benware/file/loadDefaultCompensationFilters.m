@@ -5,6 +5,8 @@ if ~isfield(expt, 'compensationFilterFilename')
     fprintf('== WARNING: No compensation filters specified in expt.\n');
     fprintf('== Filters from grid will be used\n');
     fprintf('== This will soon be an error\n');
+    grid.compensationFilters = [];
+    return;
 end
 sampleRate = ceil(grid.sampleRate/10000)*10;
 compensationFilterFilename = sprintf(expt.compensationFilterFilename, sampleRate);
