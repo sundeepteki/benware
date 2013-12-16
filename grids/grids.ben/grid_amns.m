@@ -7,20 +7,20 @@ function grid = grid_amns()
   grid.stimFilename = 'AMN.%1_%2.wav';
   
   % stimulus grid structure
-  grid.stimGridTitles = {'id1', 'id2', 'Level'};  
-  grid.stimGrid = [createPermutationGrid(1:2, 1:6, 80)];
+  grid.stimGridTitles = {'id1', 'id2'};  
+  grid.stimGrid = [createPermutationGrid(1:2, 1:6)]; % 80dB
 
   global CALIBRATE;
   if CALIBRATE
    fprintf('Calibration only!!\n');
    pause;
-   grid.stimGrid = [999 999 80]; % switching contrast, loud
+   grid.stimGrid = [999 999];
   end
   
   % sweep parameters
   grid.postStimSilence = 0;
   grid.repeatsPerCondition = 5;
   
-  % set this using absolute calibration
+  % set this to match nominal level of 80dB
   grid.legacyLevelOffsetDB = 0;
   

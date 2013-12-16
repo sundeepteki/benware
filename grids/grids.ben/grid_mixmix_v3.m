@@ -7,20 +7,20 @@ function grid = grid_mixmix_v3()
   grid.stimFilename = 'mixmix.mix.%1.%2.wav';
   
   % stimulus grid structure
-  grid.stimGridTitles = {'Mixture', 'Sound ID', 'Level'};  
-  grid.stimGrid = createPermutationGrid([0 1], 1:16, 80);
+  grid.stimGridTitles = {'Mixture', 'Sound ID'};  
+  grid.stimGrid = createPermutationGrid([0 1], 1:16);
   
   global CALIBRATE;
   if CALIBRATE
     fprintf('== Calibration mode. Press a key to continue == ')
     pause;
-    grid.stimGrid = createPermutationGrid(1, 1, 80); 
+    grid.stimGrid = createPermutationGrid(1, 1); 
   end
   
   % sweep parameters
   grid.postStimSilence = 0;
   grid.repeatsPerCondition = 15;
   
-  % set this using absolute calibration
+  % set this to match nominal level of 80dB
   grid.legacyLevelOffsetDB = 0;
   
