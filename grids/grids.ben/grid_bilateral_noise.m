@@ -6,13 +6,13 @@ function grid = grid_bilateral_noise
 
   % stimulus grid structure
   grid.stimGridTitles = {'Duration', 'LeftDelay', 'RightDelay', 'BothDelay', 'Level'};
-  grid.stimGrid = [45 0 100 200 80];
+  grid.stimGrid = [45 0 100 200 90]; % after compensation this will be about 10dB below nominal level
   
   global CALIBRATION
   if CALIBRATION
     fprintf('== Calibration only!\n');
     pause;
-    grid.stimGrid = [500 0 1000 2000 80];  
+    grid.stimGrid = [500 0 1000 2000 90];
   end
   
   % sweep parameters
@@ -22,5 +22,3 @@ function grid = grid_bilateral_noise
   grid.repeatsPerCondition = Inf;
   grid.saveWaveforms = false;
   
-  % set this using absolute calibration
-  grid.stimLevelOffsetDB = [-116 -116]+75;

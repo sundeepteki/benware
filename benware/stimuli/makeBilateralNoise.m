@@ -21,7 +21,7 @@ rampT = round(10/1000*sampleRate);
 % 2*pi*f*t
 ramp = sin(2*pi*(1/rampT)*(1:rampT/4));
 
-stim = rand(2,stimLen)*2-1;
+stim = randn(2,stimLen);
 
 envL = [zeros(1,leftDelay),ramp,ones(1,duration-2*length(ramp)),fliplr(ramp)];
 envL = [envL zeros(1,bothDelay-length(envL))];
@@ -38,5 +38,5 @@ envR = [envR envBoth];
 stim = stim.*[envL; envR];
 
 % apply level offset
-level_offset = level-80;
+level_offset = level-94;
 stim = stim * 10^(level_offset/20);

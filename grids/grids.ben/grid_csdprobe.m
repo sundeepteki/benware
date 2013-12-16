@@ -6,7 +6,7 @@ function grid = grid_csdprobe()
   
   % stimulus grid structure
   grid.stimGridTitles = {'Stimulus Length (ms)', 'Delay (ms)'; 'Noise Length (ms)', 'Level'};
-  grid.stimGrid = [490 50 50 90];
+  grid.stimGrid = [490 50 50 80];  % after compensation this will be below nominal level
 
   global CALIBRATE;
   if CALIBRATE
