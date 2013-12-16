@@ -1,9 +1,8 @@
-function newcompfilters(dirname)
-% newcompfilters(dirname)
+function newcompensationfilters(filename)
+% newcompensationfilters(filename)
 %
-% Update the compensation filters in the expt struct and save it
-% 
-% Also delete the cached stimuli??
+% Update the compensation filter filename in the expt struct and save it
+% [Should this also delete the cached stimuli?]
 %
 % Run this when you recalibrate
 
@@ -11,17 +10,15 @@ setpath;
 loadexpt;
 
 if nargin==0
-  dirname = input('Input name of directory containing calibration filters: ', 's');
+  filename = input('Input name of file containing calibration filters: ', 's');
 end
 
-if ~exist(dirname, 'dir')
- error(sprintf('Directory %s does not exist. Doing nothing.', dirname));
+if ~exist(filename, 'file')
+ error(sprintf('File %s does not exist. Doing nothing.', filename));
 end
 
-expt.compensationFilterDir = dirname;
-expt.compensationFilterFilename = 'compensationFilters.%dk.mat';
+expt.compensationFilterFile = filename;
 
 printExpt(expt);
 
 saveexpt;
-

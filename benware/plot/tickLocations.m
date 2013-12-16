@@ -1,6 +1,6 @@
 function tickLocs = tickLocations(ymax)
 
-scale = 10^floor(log10(ymax))
+scale = 10^floor(log10(ymax));
 
 if (ymax/scale)<1.5
 	jump = scale/4;

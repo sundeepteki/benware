@@ -1,38 +1,40 @@
 function grid = loadDefaultCompensationFilters(grid, expt)
 % load default compensation filters
 
-if ~isfield(expt, 'compensationFilterFilename')
-    fprintf('== WARNING: No compensation filters specified in expt.\n');
+global OLDCOMPENSATION
+
+if OLDCOMPENSATION
+    fprintf('== WARNING: OLDCOMPENSATION=true.\n');
     fprintf('== Filters from grid will be used\n');
     fprintf('== This will soon be an error\n');
-    grid.compensationFilters = [];
     return;
 end
-sampleRate = ceil(grid.sampleRate/10000)*10;
-compensationFilterFilename = sprintf(expt.compensationFilterFilename, sampleRate);
+
+compensationFilterFile = expt.compensationFilterFile;
 
 global fakeHardware;
 if fakeHardware
   fprintf('== Using FAKE compensation filters from ./benware/fakeCompensationFilters\n');
-  compensationFilterFile = fix_slashes(['./benware/fakeCompensationFilters/' compensationFilterFilename]);
-else
-  compensationFilterFile = fix_slashes([expt.compensationFilterDir '/' compensationFilterFilename]);
+  compensationFilterFile = fix_slashes('./benware/fakeCompensationFilters/compensation_filters.mat');
 end
 
+% load filters for all sample rates
 l = load(compensationFilterFile);
 
-if isfield(l, 'compensationFilters') && isfield(l.compensationFilters, 'L')
-  varnames = {'compensationFilters.L', 'compensationFilters.R'};
-elseif isfield(l, 'compensationFilter')
-  varnames = {'compensationFilter'};
-else
-  error(['I do not understand the compensation filter file ' compensationFilterFiles]);
+% put filters for grid.sampleRate into grid.compensationFilters
+calib_idx = find([l.calibs.sampleRate]==grid.sampleRate);
+if length(calib_idx)<0
+    error('Did not find a calibration corresponding to the sample rate of this grid.');
+elseif length(calib_idx)>1
+    error('Found more than one calibration corresponding to the sample rate of this grid.');
+end
+calib = l.calibs(calib_idx);
+
+grid.compensationFilters = {};
+for ii = 1:length(calib.relCalibs)
+  grid.compensationFilters{ii} = calib.relCalibs(ii).filter;
 end
 
-for ii = 1:length(varnames)
-  rawCompensationFilter = eval(['l.' varnames{ii}]);
+grid.rmsVoltsPerPascal = calib.recorded_rms_volts_per_pascal;
 
-  % set vector length to one so that filters have no overall effect on amplitude
-  grid.compensationFilters{ii} = rawCompensationFilter/norm(rawCompensationFilter);
-  fprintf(['== Loaded compensation filter for channel ' num2str(ii) ' from ' escapepath(compensationFilterFile) '\n']);
-end
+fprintf(['== Loaded compensation filters for ' num2str(ii) ' channels from ' escapepath(compensationFilterFile) '\n']);

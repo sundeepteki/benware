@@ -1,14 +1,20 @@
 function grid = loadCompensationFilters(grid, expt)
 % load compensation filters
 
+global OLDCOMPENSATION
+
 % fprintf('== loadCompensationFilters should no longer be used!\n');
 % fprintf('== Remove the line mentioning loadCompensationFilters from your grid\n');
 % fprintf('== Compensation filters are now specified using newcompfilters()\n');
 % error('You must fix this to continue');
 
-fprintf('== WARNING: Using GRID.compensationFilterFile.\n');
-fprintf('== Ignoring EXPT.compensationFilterFile.\n');
-fprintf('== This will soon be an error\n');
+if OLDCOMPENSATION
+ fprintf('== WARNING: Using GRID.compensationFilterFile.\n');
+ fprintf('== Ignoring EXPT.compensationFilterFile.\n');
+ fprintf('== This will soon be an error\n');
+else
+ error('== To use loadCompensationFilters, you must set global OLDCOMPENATION=true');
+end
 
 l = load(grid.compensationFilterFile);
 
