@@ -6,7 +6,7 @@ function grid = grid_csdprobe()
   
   % stimulus grid structure
   grid.stimGridTitles = {'Stimulus Length (ms)', 'Delay (ms)'; 'Noise Length (ms)', 'Level'};
-  grid.stimGrid = [490 50 50 80];
+  grid.stimGrid = [490 50 50 90];
 
   global CALIBRATE;
   if CALIBRATE
@@ -18,7 +18,4 @@ function grid = grid_csdprobe()
   % sweep parameters
   grid.postStimSilence = 0;
   grid.repeatsPerCondition = Inf;
-  
-  % set this using absolute calibration
-  grid.stimLevelOffsetDB = -46;
   

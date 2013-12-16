@@ -14,5 +14,5 @@ uncalib(1, delay:delay+len-1) = randn(1, len);
 stim = repmat(uncalib, nChannels, 1);
 
 % apply level
-level_offset = level-80;
+level_offset = level-94;
 stim = stim*10^(level_offset/20);
