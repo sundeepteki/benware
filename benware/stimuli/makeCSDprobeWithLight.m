@@ -28,5 +28,5 @@ lightstim(1, lightdelay:min(stimLen_samples, lightdelay+lightduration-1)) = ligh
 stim(2,:) = lightstim;
 
 % apply level to sound channel only
-level_offset = level-80;
+level_offset = level-94;
 stim(1,:) = stim(1,:)*10^(level_offset/20);
