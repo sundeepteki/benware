@@ -2,7 +2,7 @@ function grid = grid_comparison()
 
   % controlling the sound presentation
   grid.sampleRate = 24414.0625*4;  % ~100kHz
-  grid.stimGenerationFunctionName = 'loadStimAndCompensate';
+  grid.stimGenerationFunctionName = 'loadStereoFile';
   grid.stimDir = 'e:\auditory-objects\sounds-uncalib\comparison\';
   grid.stimFilename = 'comparison.stimtype.%1.token.%2.wav';
   
@@ -22,20 +22,11 @@ function grid = grid_comparison()
    pause;
    grid.stimGrid = [0 1 80];
   end
-%   
-  % compensation filter
-  grid.initFunction = 'loadCompensationFilters';
-  grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\calib.ben.18.11.2013\compensationFilters.100k.mat'; % 100kHz
-  %grid.compensationFilterFile = ...
-  %  '/Users/ben/scratch/expt.42/calib.expt42/compensationFilters100k.mat';
-
-  grid.compensationFilterVarNames = {'compensationFilters.L', 'compensationFilters.R'};
 
   % sweep parameters
   grid.postStimSilence = 0;
   grid.repeatsPerCondition = 10;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [13 13]-18-25+24;
+  grid.legacyLevelOffsetDB = 0;
   
