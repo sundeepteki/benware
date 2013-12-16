@@ -12,8 +12,7 @@ end
 
 compensationFilterFile = expt.compensationFilterFile;
 
-global fakeHardware;
-if fakeHardware
+if ~ispc
   fprintf('== Using FAKE compensation filters from ./benware/fakeCompensationFilters\n');
   compensationFilterFile = fix_slashes('./benware/fakeCompensationFilters/compensation_filters.mat');
 end
