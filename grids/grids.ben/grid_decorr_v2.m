@@ -1,7 +1,7 @@
 function grid = grid_decorr_v2()
 
   % controlling the sound presentation
-  grid.sampleRate = 24414.0625*4;  % ~100kHz
+  grid.sampleRate = tdt100k;
   grid.stimGenerationFunctionName = 'loadStereoFile';
   grid.stimDir = 'e:\auditory-objects\sounds-uncalib\decorr.v2\';
   grid.stimFilename = 'drc.cond.%1.token.%2.f32';

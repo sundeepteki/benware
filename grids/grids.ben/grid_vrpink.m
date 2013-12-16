@@ -1,7 +1,7 @@
 function grid = grid_vrpink()
 
   % controlling the sound presentation
-  grid.sampleRate = 24414.0625*2;  % ~100kHz
+  grid.sampleRate = tdt50k;
   grid.stimGenerationFunctionName = 'loadStereoFile';
   grid.stimDir = 'e:\auditory-objects\sounds-uncalib\vrpink\';
   grid.stimFilename = 'vr_pink_p%1_%2ms.mat.wav';
