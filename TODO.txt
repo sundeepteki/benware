@@ -4,7 +4,7 @@
 
 * set legacyStimLevelOffset in grids
 
-* update James' grids for new compensation
+* check James's light stuff works with new compensation code
 
 * update Astrid's stuff for new compensation
 
