@@ -49,6 +49,11 @@ plotData = plotInit(expt.dataDeviceSampleRate, expt.nChannels, nSamplesExpected,
 %% run sweeps
 % =============
 
+if isfield(expt, 'jamesSpikeThreshold') && expt.jamesSpikeThreshold
+  fprintf('runGrid: warning -- using waveform stats from first sweep only\n');
+  state.waveformStats = [];
+end
+
 sweepNum = firstSweep;
 while sweepNum<=grid.nSweepsDesired
   tic;

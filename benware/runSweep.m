@@ -42,9 +42,12 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   % keep track of how much of stimulus has been uploaded
   samplesUploaded = 0;
   
-  % waveform statistics for spike detection
-  waveformStats = [];
-
+  if isfield(expt, 'jamesSpikeThreshold') && expt.jamesSpikeThreshold
+    % waveform statistics for spike detection
+    fprintf('runSweep: warning: using global state.waveformStats\n');
+    waveformStats = state.waveformStats;
+  end
+  
   % trigger stimulus presentation and data collection
   timeStamp = clock;
   hardware.triggerDevice.trigger();
@@ -85,8 +88,14 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
     if (nSamplesReceived-filterIndex) > (hardware.dataDevice.sampleRate*100/1000) % at least 150msec of data
       [filtData, offset] = filterData(data(:, filterIndex+1:nSamplesReceived), spikeFilter);
       filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
-      [spikeTimes, waveformStats] = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, hardware.dataDevice.sampleRate, waveformStats);
+
+      if isfield(expt, 'jamesSpikeThreshold') && expt.jamesSpikeThreshold
+        [spikeTimes, waveformStats] = appendSpikeTimesJames(spikeTimes, filtData, filterIndex+offset+1, hardware.dataDevice.sampleRate, waveformStats);
+      else
+        [spikeTimes, waveformStats] = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, hardware.dataDevice.sampleRate);
+      end
       filterIndex = filterIndex + size(filtData,2);
+
     end
  
     % check audio monitor is on the right channel
@@ -164,6 +173,10 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   plotData.nSweeps = plotData.nSweeps + 1;
   plotData = plotUpdate(plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
   plotData.lastSweepSpikes = spikeTimes;
+  
+  %
+  fprintf('runSweep: warning: saving waveformStats\n');
+  state.waveformStats = waveformStats;
 
   % optional: check data thoroughly (too slow to be used normally)
   global checkdata
