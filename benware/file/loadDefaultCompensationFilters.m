@@ -30,10 +30,10 @@ end
 calib = l.calibs(calib_idx);
 
 grid.compensationFilters = {};
-for ii = 1:length(calib.relCalibs)
-  grid.compensationFilters{ii} = calib.relCalibs(ii).filter;
+for ii = 1:length(calib.channels)
+  grid.compensationFilters{ii} = calib.channels(ii).filter;
 end
 
-grid.rmsVoltsPerPascal = calib.recorded_rms_volts_per_pascal;
+grid.rmsVoltsPerPascal = calib.reftone_rms_volts_per_pascal;
 
 fprintf(['== Loaded compensation filters for ' num2str(ii) ' channels from ' escapepath(compensationFilterFile) '\n']);

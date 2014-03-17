@@ -1,5 +1,5 @@
-function newcompensationfilters(filename)
-% newcompensationfilters(filename)
+function newcompensationfilters(dirname)
+% newcompensationfilters(dirname)
 %
 % Update the compensation filter filename in the expt struct and save it
 % [Should this also delete the cached stimuli?]
@@ -10,8 +10,10 @@ setpath;
 loadexpt;
 
 if nargin==0
-  filename = input('Input name of file containing calibration filters: ', 's');
+  dirname = input('Input name of directory containing calibration filters: ', 's');
 end
+
+filename = [dirname filesep 'compensation_filters.mat'];
 
 if ~exist(filename, 'file')
  error(sprintf('File %s does not exist. Doing nothing.', filename));

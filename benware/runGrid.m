@@ -49,9 +49,11 @@ plotData = plotInit(expt.dataDeviceSampleRate, expt.nChannels, nSamplesExpected,
 %% run sweeps
 % =============
 
+useJamesSpikeThreshold = false;
 if isfield(expt, 'jamesSpikeThreshold') && expt.jamesSpikeThreshold
   fprintf('runGrid: warning -- using waveform stats from first sweep only\n');
   state.waveformStats = [];
+  useJamesSpikeThreshold = true;
 end
 
 sweepNum = firstSweep;
@@ -108,7 +110,7 @@ while sweepNum<=grid.nSweepsDesired
   % run the sweep
   [nSamples, spikeTimes, lfp, timeStamp, plotData, sampleWaveforms] = ...
       runSweep(hardware, sweepLen, expt.nChannels, stim, nextStim, ...
-              spikeFilter, expt.spikeThreshold, grid.saveWaveforms, sweeps(sweepNum).dataFiles, plotData);
+              spikeFilter, expt.spikeThreshold, grid.saveWaveforms, sweeps(sweepNum).dataFiles, plotData, useJamesSpikeThreshold);
 
   % check whether sweep was successful; if not, offer to repeat it
   if state.noData.warnUser

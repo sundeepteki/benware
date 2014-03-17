@@ -80,8 +80,7 @@ else
             if chan<=length(grid.compensationFilters)
                 % then this is assumed to be a compensatable audio channel
                 % (not a pure voltage for driving the LED for example)
-                stim{chan} = uncomp(chan,:)*grid.rmsVoltsPerPascal;
-                stim{chan} = conv(grid.compensationFilters{chan}, stim{chan});
+                stim{chan} = conv(grid.compensationFilters{chan}, uncomp(chan,:));
                 if isfield(grid, 'legacyLevelOffsetDB')
                     if length(grid.legacyLevelOffsetDB)==1
                         level_offset = grid.legacyLevelOffsetDB(1);
@@ -89,6 +88,8 @@ else
                         level_offset = grid.legacyLevelOffsetDB(chan);
                     end
                     stim{chan} = stim{chan} * 10^(level_offset / 20);
+                    fprintf('= LegacyLevelOffset: boosting level by %d db\n', level_offset);
+
                 end
             else
                % pure voltage channels may need some padding at the end

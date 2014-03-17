@@ -1,6 +1,6 @@
 function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveforms] = runSweep(hardware, ...
   sweepLen, nChannels, stim, nextStim, spikeFilter, spikeThreshold, ...
-  saveWaveforms, dataFiles, plotData)
+  saveWaveforms, dataFiles, plotData, useJamesSpikeThreshold)
   %% Run a sweep, ASSUMING THAT THE STIMULUS HAS ALREADY BEEN UPLOADED
   %% Will fail if next stimulus is not on the stimulus device
   %% Upload the next stimulus at the same time, then reset the stimDevice
@@ -42,7 +42,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   % keep track of how much of stimulus has been uploaded
   samplesUploaded = 0;
   
-  if isfield(expt, 'jamesSpikeThreshold') && expt.jamesSpikeThreshold
+  if useJamesSpikeThreshold
     % waveform statistics for spike detection
     fprintf('runSweep: warning: using global state.waveformStats\n');
     waveformStats = state.waveformStats;
@@ -89,10 +89,10 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
       [filtData, offset] = filterData(data(:, filterIndex+1:nSamplesReceived), spikeFilter);
       filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
 
-      if isfield(expt, 'jamesSpikeThreshold') && expt.jamesSpikeThreshold
+      if useJamesSpikeThreshold
         [spikeTimes, waveformStats] = appendSpikeTimesJames(spikeTimes, filtData, filterIndex+offset+1, hardware.dataDevice.sampleRate, waveformStats);
       else
-        [spikeTimes, waveformStats] = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, hardware.dataDevice.sampleRate);
+        spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, hardware.dataDevice.sampleRate);
       end
       filterIndex = filterIndex + size(filtData,2);
 
@@ -117,7 +117,11 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   % finish detecting spikes  
   [filtData, offset] = filterData(data(:, filterIndex+1:nSamplesReceived), spikeFilter);
   filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
-  spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, hardware.dataDevice.sampleRate, waveformStats);
+  if useJamesSpikeThreshold
+    [spikeTimes, waveformStats] = appendSpikeTimesJames(spikeTimes, filtData, filterIndex+offset+1, hardware.dataDevice.sampleRate, waveformStats);
+  else
+    spikeTimes = appendSpikeTimes(spikeTimes, filtData, filterIndex+offset+1, hardware.dataDevice.sampleRate);
+  end
   filterIndex = filterIndex + size(filtData,2);
   
   fprintf(['  * ' num2str(sum(cellfun(@(i) length(i),spikeTimes))) ' spikes detected after ' num2str(toc) ' sec.\n']);
@@ -175,9 +179,11 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   plotData.lastSweepSpikes = spikeTimes;
   
   %
-  fprintf('runSweep: warning: saving waveformStats\n');
-  state.waveformStats = waveformStats;
-
+  if useJamesSpikeThreshold
+      fprintf('runSweep: warning: saving waveformStats\n');
+      state.waveformStats = waveformStats;
+  end
+  
   % optional: check data thoroughly (too slow to be used normally)
   global checkdata
 
