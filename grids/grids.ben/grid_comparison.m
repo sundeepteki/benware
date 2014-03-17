@@ -28,5 +28,5 @@ function grid = grid_comparison()
   grid.repeatsPerCondition = 10;
   
   % set this to match nominal level of 80dB
-  grid.legacyLevelOffsetDB = 0;
+  grid.legacyLevelOffsetDB = 9;
   

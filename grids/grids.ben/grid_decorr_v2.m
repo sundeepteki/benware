@@ -22,5 +22,5 @@ function grid = grid_decorr_v2()
   grid.repeatsPerCondition = 4;
   
   % set this to match nominal level of 80dB
-  grid.legacyLevelOffsetDB = 0;
+  grid.legacyLevelOffsetDB = -10;
   

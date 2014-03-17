@@ -25,7 +25,7 @@ function path = constructStimPath(path, exptNum, penNum, gridName, side, stimPar
 %path = [grid.stimDir grid.stimFilename];
 
 % replace main parts of path
-for ii = 1:length(stimParameters)-1
+for ii = 1:length(stimParameters)
   path = regexprep(path, ['%' num2str(ii)], num2str(stimParameters(ii)));
 end
 path = regexprep(path, '%E', num2str(exptNum));

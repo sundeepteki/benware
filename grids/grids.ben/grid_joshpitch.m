@@ -7,7 +7,7 @@ function grid = grid_joshpitch()
   grid.stimFilename = 'KerryPitchSounds2013_%1.wav';
   
   % stimulus grid structure
-  grid.stimGridTitles = {'ID','dB'};  
+  grid.stimGridTitles = {'ID'};  
   grid.stimGrid = createPermutationGrid(1:15);
 
   global CALIBRATE
@@ -22,5 +22,5 @@ function grid = grid_joshpitch()
   grid.repeatsPerCondition = 1;
   
   % set this to match nominal level of 80dB
-  grid.legacyLevelOffsetDB = 0;
+  grid.legacyLevelOffsetDB = 12.5;
   

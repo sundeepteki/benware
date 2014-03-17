@@ -22,5 +22,5 @@ function grid = grid_mixmix_v3()
   grid.repeatsPerCondition = 15;
   
   % set this to match nominal level of 80dB
-  grid.legacyLevelOffsetDB = 0;
+  grid.legacyLevelOffsetDB = 7;
   
