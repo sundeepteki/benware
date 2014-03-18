@@ -6,7 +6,7 @@ function waveform = gen_complex(f0,basefreq,numcomponents,amps,shifts,phases,sti
 %      f0              fundamental frequency
 %      basefreq        base frequency
 %      numcomponents   number of components in complex sound
-%      amps            vector with amplitudes of each component 
+%      amps            vector with amplitudes (Pascal) of each component 
 %      shifts          vector with frequency shift of each component to allow mistuning 
 %      phases          vector with phaseshift for each component
 %      stimlen         duration of complex waveform
@@ -16,7 +16,7 @@ function waveform = gen_complex(f0,basefreq,numcomponents,amps,shifts,phases,sti
 %      waveform        vector containing complex waveform
 %
 % Author: stef@nstrahl.de
-% Version: $Id: gen_complex.m 126 2013-11-03 13:38:55Z stefan $
+% Version: $Id: gen_complex.m 144 2013-12-28 23:08:10Z stefan $
 
 if ~exist('windowlen','var'), windowlen=25e-3; end         % if undefined the window len is 25 ms
 
@@ -28,7 +28,7 @@ window = [window(1:ceil(fs*windowlen)) ; ones(nsamples-ceil(fs*windowlen)-floor(
 % harmonic complex stimulus
 s = zeros(numcomponents,length(t));                        % init memory for harmonics
 for h=1:numcomponents                                      % for all harmonics
-    s(h,:) = amps(h) .* sin( (basefreq+(h-1)*f0+shifts(h))*t*2*pi + phases(h)); % compute time signal
+    s(h,:) = amps(h)*sqrt(2) .* sin( (basefreq+(h-1)*f0+shifts(h))*t*2*pi + phases(h)); % compute time signal with amp being RMS of sinusoidal
 end
 % s = repmat(amps',[1 nsamples]) .* sin( (basefreq+f0*repmat((0:numcomponents-1)',[1 nsamples])+repmat(shifts',[1 nsamples])).*repmat(t,[numcomponents 1])*2*pi + repmat(phases',[1 nsamples])); % compute time signal
 

@@ -9,16 +9,16 @@ classdef tdtDataDevice < tdtDevice
     function obj = tdtDataDevice(deviceInfo, requestedSampleRateHz, channelMap, ~)
       % initialise the class itself
       
-      USE_MEDUSA_WITH_RZ2=false; % normally false
-      if USE_MEDUSA_WITH_RZ2
-          % to use old-style Medusae you need the 'legacy' ports on the front
-          % of the RZ2 and the following line:
-          obj.rcxSetup.rcxFilename = ['benware/tdt/' deviceInfo.name '-nogain-legacy.rcx'];
-      else
-          % default RCX file. use this under normal circumstances:
-          obj.rcxSetup.rcxFilename = ['benware/tdt/' deviceInfo.name '-nogain.rcx'];
-      end
+      % default value
+      rco_leafname = [deviceInfo.name '-nogain.rcx'];
 
+      % override if necessary
+      global OVERRIDE_RCO_FILE;
+      if ~isempty(OVERRIDE_RCO_FILE)
+        rco_leafname = OVERRIDE_RCO_FILE;
+      end
+      
+      obj.rcxSetup.rcxFilename = ['benware/tdt/' rco_leafname];
       obj.rcxSetup.versionTagName = [deviceInfo.name 'NoGainVer'];
       obj.rcxSetup.versionTagValue = 3;
 

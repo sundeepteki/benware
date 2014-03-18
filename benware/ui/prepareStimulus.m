@@ -61,8 +61,8 @@ else
     total_n = floor(l/std_n)*std_n;
     sd = nan(1, size(uncomp, 1));
     for ii = 1:size(uncomp, 1)
-      r = reshape(uncomp(1,1:total_n), [std_n total_n/std_n]);
-      sd(ii) = max(std(r));                            
+      r = reshape(uncomp(ii,1:total_n), [std_n total_n/std_n]);
+      sd(ii) = max(std(r));
     end
     max_level = 20*log10(sd)+94;
     
@@ -80,6 +80,7 @@ else
             if chan<=length(grid.compensationFilters)
                 % then this is assumed to be a compensatable audio channel
                 % (not a pure voltage for driving the LED for example)
+                fprintf('= Compensating for frequency response\n');
                 stim{chan} = conv(grid.compensationFilters{chan}, uncomp(chan,:));
                 if isfield(grid, 'legacyLevelOffsetDB')
                     if length(grid.legacyLevelOffsetDB)==1
@@ -101,5 +102,12 @@ else
     else
         stim = uncomp;
     end
-
+    %
+    if false
+       keyboard
+       l = load(expt.compensationFilterFile);
+       play_and_analyse_sound(grid.sampleRate, 1, 'RX6', uncomp(2,:), grid.compensationFilters{2}, 50, l.calibs(1).reftone_rms_volts_per_pascal);
+       play_and_analyse_sound(grid.sampleRate, 1, 'RX6', stim(2,:), [], 50, l.calibs(1).reftone_rms_volts_per_pascal);
+       keyboard
+    end
 end    

@@ -19,6 +19,8 @@ function waveform = gen_drc(fs, freqs, levels, chord_duration, ramp_duration)
 % Author: ben.willmore & astrid.klinge@googlemail.com & stef@nstrahl.de
 % Version: $Id:$
 
+do_debug = false;
+
 n_chords = size(levels, 2);
 n_freqs = size(levels, 1);
 
@@ -55,9 +57,10 @@ for freq_idx = 1:n_freqs
         freq = freqs(freq_idx,cell2mat(idx));
         freq = horzcat(freq(1)*ones(1,floor(length(cosramp)/2)),freq,freq(end)*ones(1,ceil(length(cosramp)/2)));
               
-        pos           = [0 ramp_duration/2*ones(1,n_chords)] + (0:(n_chords))*chord_duration;   % get positions in seconds where frequency changes
-        phase_diff    = -2*pi* [0 diff(freqs(freq_idx,:))] .* pos(1:end-1);                         % get phase offsets/jumps to remove
-        phase_correct = [0 cumsum(phase_diff(1:end-1))];                                                % we need to propagate our phase corrections
+        pos           = [0 ramp_duration/2*ones(1,n_chords)] + (0:(n_chords))*chord_duration; % get positions in seconds where frequency changes
+        phase_diff    = -2*pi* [0 diff(freqs(freq_idx,:))] .* pos(1:end-1);                   % get phase offsets/jumps to remove
+        phase_diff    = phase_diff + phase_diff(2);                                           % introduce random phase by starting chord 1 with phase offset between chord 1 and 2
+        phase_correct = [0 cumsum(phase_diff(1:end-1))];                                      % we need to propagate our phase corrections
         
         temp = phase_diff+phase_correct;
         phi  = temp(cell2mat(idx));        % reuse idx from above
@@ -75,7 +78,7 @@ for freq_idx = 1:n_freqs
 	% to the current one, then hold at the current amplitude
 
 	for chord_idx = 1:n_chords
-		level = amplitudes(freq_idx, chord_idx);
+		level = sqrt(2) * amplitudes(freq_idx, chord_idx); % sqrt(2) to calibrate to RMS of this sinus function
 		len = chord_start_samples(chord_idx+1) - chord_start_samples(chord_idx);
 
 		env{chord_idx} = last_level+chord_env(1:len)*(level-last_level);
@@ -86,7 +89,11 @@ for freq_idx = 1:n_freqs
 	level = 0;
 	env{end+1} = last_level+cosramp*(level-last_level);
 
-	env = cell2mat(env);
+    if do_debug
+        n_chord_pos = [1 cumsum(cellfun(@length,env))+ round(ramp_samples/2)+1];   % remember where the next chords do begin
+        n_chord_pos(end) = 	n_chord_pos(end) - round(ramp_samples/2);
+    end
+    env = cell2mat(env);
 
 	% superpose the frequency channels on one another to
 	% get a single sound vector
@@ -94,6 +101,26 @@ for freq_idx = 1:n_freqs
 		waveform = carrier .* env;
 	else
 		waveform = waveform + carrier .* env;
-	end
+    end
+end
 
+if do_debug
+    %% compute RMS level for all n_chords
+    rms_chords = zeros(n_chords,1);
+    for i=1:n_chords
+        wav_chord = waveform(n_chord_pos(i):n_chord_pos(i+1));
+        rms_chords(i) = sqrt(sum(wav_chord.^2)/ length(wav_chord));
+    end
+    subplot(3,1,1)
+    plot(waveform)
+    subplot(3,1,2)
+    plot(rms_chords);
+    grid minor
+    ylabel('RMS level (Pascal)');
+    subplot(3,1,3)
+    plot(20*log10(rms_chords/20e-6));
+    title(['mean rms: ' num2str(mean(20*log10(rms_chords/20e-6)))])
+    grid minor
+    ylabel('RMS level (dB SPL)');
+    xlabel('Chord number');
 end

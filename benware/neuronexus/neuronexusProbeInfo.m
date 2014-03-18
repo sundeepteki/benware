@@ -44,6 +44,11 @@ eightByEight = [5 4 6 3 7 2 8 1; 13 12 14 11 15 10 16 9; ...
 order = transpose(eightByEight);
 probes(end).order = order(:)';
 
+probes(end+1).name = 'Warp-16';
+warp = reshape(1:16, [4 4]);
+order = warp;
+probes(end).order = order(:)';
+
 % NeuroNexus connector pin maps from:
 % http://www.neuronexustech.com/support/probe-site-maps
 connectors = struct;
@@ -81,7 +86,7 @@ connectors(end).pins = [41 0 0 24; 38 0 0 27; 43 0 0 22; 37 0 0 28; 36 39 26 29;
 						% reference is on the right
 
 % TDT connector pin maps from System 3 Manual
-connectors(end+1).name = 'ZCA-NN32';
+connectors(end+1).name = 'ZCA-NN32)';
 connectors(end).pins = [10 0 0 8; 12 0 0 6; 14 0 0 4; 16 0 0 2; 11 9 7 5; 15 13 3 1; ...
 						28 26 24 22; 32 30 20 18; 27 25 23 21; 31 29 19 17];
 						% probe pointing down, reference on the right
@@ -100,13 +105,16 @@ connectors(end).pins = [18 0 0 16; 20 0 0 14; 22 0 0 12; 24 0 0 10; 28 26 8 6; .
 						64 62 36 34; 51 49 47 45; 55 53 43 41; 59 57 39 37; 63 61 35 33];
 						% probe pointing down, reference on the right
 
+connectors(end+1).name = 'No mapping (16 chans)';
+connectors(end).pins = [1:16];
+
 % headstages
 headstages = struct;
 headstages(1).name = 'RA16AC';
 headstages(1).inputconnector = 'A16';
 headstages(1).outputconnector = 'A16';
 
-headstages(end+1).name = 'ZCA-NN32';
+headstages(end+1).name = 'ZCA-NN32 (A-series to ZIF-clip adaptor)';
 headstages(end).inputconnector = 'A32 (rev 3)';
 headstages(end).outputconnector = 'ZCA-NN32';
 
@@ -114,7 +122,7 @@ headstages(end+1).name = 'ZC32 (ZIF-clip)';
 headstages(end).inputconnector = 'Z32';
 headstages(end).outputconnector = 'ZC32';
 
-headstages(end+1).name = 'ZCA-NN64';
+headstages(end+1).name = 'ZCA-NN64 (A-series to ZIF-clip adaptor)';
 headstages(end).inputconnector = 'A64';
 headstages(end).outputconnector = 'ZCA-NN64';
 
@@ -125,6 +133,11 @@ headstages(end).outputconnector = 'A32 (rev 2)';
 headstages(end+1).name = 'NN32AC (#2000 onward)';
 headstages(end).inputconnector = 'A32 (rev 3)';
 headstages(end).outputconnector = 'A32 (rev 3)';
+
+headstages(end+1).name = 'Warp-16 (no mapping)';
+headstages(end).inputconnector = 'No mapping (16 chans)';
+headstages(end).outputconnector = 'No mapping (16 chans)';
+
 
 info.probes = probes;
 info.connectors = connectors;

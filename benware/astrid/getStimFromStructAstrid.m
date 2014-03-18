@@ -2,9 +2,8 @@ function [stim, stimInfo] = getStimFromStructAstrid(expt, grid, sampleRate, nCha
 
   stimInfo.stimGridTitles = grid.stimGridTitles;
   stimInfo.stimParameters = cell2mat(varargin);
-  assert(length(stimInfo.stimParameters)==2); % one for stimulus ID, one for level
+  assert(length(stimInfo.stimParameters)==1); % one for stimulus ID
   stimID = stimInfo.stimParameters(1);
-  level = stimInfo.stimParameters(2);
 
   if size(grid.stimuli(stimID).L,1)>1
     stim = grid.stimuli(stimID).L';

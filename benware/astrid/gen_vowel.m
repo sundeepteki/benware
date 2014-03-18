@@ -1,10 +1,10 @@
-function waveform = gen_vowel(stimlen,amplitude,fs,f0,formants,bandwidths,carriertype,hannramp)
+function waveform = gen_vowel(vowel_dur,amplitude,fs,f0,formants,bandwidths,carriertype,hannramp)
 % gen_vowel() -- generates vowels
 %   Usage:
-%      waveform = gen_vowel(stimlen,fs,f0,formants,bandwidths,windowlen)
+%      waveform = gen_vowel(vowel_dur,fs,f0,formants,bandwidths,windowlen)
 %   Parameters:
-%      stimlen         duration of vowel (sec)
-%      amplitude       maximal amplitude of vowel (Pascal)
+%      vowel_dur         duration of vowel (sec)
+%      amplitude       amplitude of vowel (Pascal)
 %      fs              sampling frequency (Hz)
 %      f0              fundamental frequency (Hz)
 %      formants        vector with formant frequencies (Hz)
@@ -24,7 +24,7 @@ function waveform = gen_vowel(stimlen,amplitude,fs,f0,formants,bandwidths,carrie
 if ~exist('hannramp','var'), hannramp=5e-3; end            % if undefined the Hann ramp is 5 ms
 if ~exist('carriertype','var'), carriertype='clicktrain'; end   % if undefined the default is +1/-1 click train
 
-t = 0:1/(fs-1):stimlen;                                    % time vector in sampling frequency resolution
+t = 0:1/(fs-1):vowel_dur;                                    % time vector in sampling frequency resolution
 nsamples = length(t);
 
 % creating formant filters with bandwiths (Smith, J.O. Introduction to Digital Filters with Audio Applications,
@@ -70,7 +70,7 @@ else
 end
 
 waveform = filter(1,A,sig);
-waveform = amplitude*waveform./max(abs(waveform));
+waveform = amplitude/sqrt(mean(waveform.^2)) .* waveform; % set the amplitude using the rms of the waveform
 
 window = hann(ceil(fs*2*hannramp),'periodic');   % generate hanning window
 window = [window(1:ceil(fs*hannramp)) ; ones(nsamples-ceil(fs*hannramp)-floor(fs*hannramp)-1,1) ; window(floor(fs*hannramp)+1:end)]; % build hanning window for stimulus
