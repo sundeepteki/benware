@@ -1,7 +1,7 @@
 function grid = grid_mistuning()
 % grid_mistunings() -- defines Astrid's mistuning stimuli
 %   Usage: 
-%      grid  = grid_mistunings()
+%      grid  = grid_mistuning()
 %   Outputs:
 %      grid    return a benware(TM) grid with Astrid's mistuning stimuli permuted over the desired iterations
 %
@@ -10,6 +10,7 @@ function grid = grid_mistuning()
 
 [status,hostname] = system('hostname');          % get name of host benware is currently running on
 
+% Internal calibration not needed anymore (since 16/03/2014) as it will be done by Benware
 % switch strtrim(hostname)
 %     case {'ATWSN647','schleppi'}
 %         compensationFilterFile = '../calibration/compensationFilters.100k.mat';
@@ -29,13 +30,13 @@ global CALIBRATE;
 if CALIBRATE
   fprintf('For calibration only!');
   pause;
-  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsCalibMistuned2013_11_18.m';
+  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsCalibMistuned2014_03_18.m';
 else
-  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsMistuned2013_11_18.m';    
+  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsMistuned2014_03_18.m';    
 end
 
 fprintf('Generating stimuli...\n');
-grid.stimuli = CreateAstridStimuli(settingsFile); %, compensationFilterFile);
+grid.stimuli = CreateAstridStimuli(settingsFile);       % ATTENTION: no compensationFilterFile needed internally, is done externally by benware
 grid.stimGridTitles = {'Stim set'};
 
 if CALIBRATE
@@ -44,9 +45,8 @@ else
     grid.stimGrid = createPermutationGrid(1:length(grid.stimuli)); % correct level will be handled within CreateAstridStimuli()
 end
 
-% set this using absolute calibration
-%grid.stimLevelOffsetDB = [0 0]-25; % can the two identical values be replaced by
-%grid.stimLevelOffsetDB = -16-7+5;      % just one scalar value?
+% set this using absolute calibration (old way of calibrating, new since 16/03/14)
+% grid.stimLevelOffsetDB = -16-7+5;      % by how much should stimulus level be adjusted
 
 % sweep parameters
 grid.postStimSilence = 0;         % no need of silence between stimulus sets, WAV files have trailing inter stimulus interval

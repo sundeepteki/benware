@@ -45,8 +45,9 @@ order = transpose(eightByEight);
 probes(end).order = order(:)';
 
 probes(end+1).name = 'Warp-16';
-warp = reshape(1:16, [4 4]);
-order = warp;
+%warp = reshape(1:16, [4 4]);
+warp = [14 15 16 2; 13 4 3 1; 12 5 6 8; 11 10 9 7];
+order = transpose(warp);
 probes(end).order = order(:)';
 
 % NeuroNexus connector pin maps from:

@@ -1,5 +1,6 @@
 function [spikeTimes, waveformStats] = appendSpikeTimes(spikeTimes, data, offset, fs, waveformStats)
 % NB threshold is no longer used
+global state;
 
 data = data';
 

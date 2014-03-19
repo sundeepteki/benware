@@ -6,10 +6,11 @@ function grid = grid_DRCvowel()
 %      grid    return a benware(TM) grid with Astrid's vowel + DRC 
 %
 % Author: stef@nstrahl.de
-% Version: $Id:$
+% Version: $Id$
 
 [status,hostname] = system('hostname');          % get name of host benware is currently running on
 
+% Internal calibration not needed anymore (since 16/03/2014) as it will be done by Benware
 % switch strtrim(hostname)
 %     case {'ATWSN647','schleppi'}
 %         compensationFilterFile = '../calibration/compensationFilters.100k.mat';
@@ -17,7 +18,7 @@ function grid = grid_DRCvowel()
 %         compensationFilterFile = '/Users/ben/scratch/expt.42/calib.expt42/compensationFilters100k.mat';
 %     otherwise
 %         compensationFilterFile = ...
-%               'e:\auditory-objects\calibration\calib.ben.18.11.2013\compensationFilters.100k.mat'; % 100kHz
+%               'e:\auditory-objects\calibration_new\2014.03.17.ben\compensation_filters.mat'; % is it 100kHz?
 % end
 
 % controlling the sound presentation
@@ -29,13 +30,13 @@ global CALIBRATE;
 if CALIBRATE
   fprintf('For calibration only!');
   pause;
-  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsCalibDRCvowel2013_11_18.m';
+  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsCalibDRCvowel2014_03_18.m';
 else
-  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsDRCvowel2013_11_18.m';    
+  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsDRCvowel2014_03_18.m';    
 end
 
 fprintf('Generating stimuli...\n');
-grid.stimuli = CreateAstridStimuli(settingsFile); %, compensationFilterFile);
+grid.stimuli = CreateAstridStimuli(settingsFile);         % ATTENTION: no compensationFilterFile needed internally, is done externally by benware
 grid.stimGridTitles = {'Stim set'};
 
 if CALIBRATE
@@ -44,10 +45,9 @@ else
     grid.stimGrid = createPermutationGrid(1:length(grid.stimuli)); % correct level will be handled within CreateAstridStimuli()
 end
 
-% set this using absolute calibration
-%grid.stimLevelOffsetDB = [0 0]-25; % can the two identical values be replaced by
-%grid.stimLevelOffsetDB = -16-7+5;      % just one scalar value?
+% set this using absolute calibration (old way of calibrating, new since 16/03/14)
+% grid.stimLevelOffsetDB = -16-7+5;      % by how much should stimulus level be adjusted
 
 % sweep parameters
 grid.postStimSilence = 0;         % no need of silence between stimulus sets, WAV files have trailing inter stimulus interval
-grid.repeatsPerCondition = 6;     % we need permutation between stimuli so it is done within the WAV files
+grid.repeatsPerCondition = 11;     % we need permutation between stimuli so it is done within the WAV files

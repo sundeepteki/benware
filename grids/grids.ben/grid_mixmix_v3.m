@@ -19,7 +19,7 @@ function grid = grid_mixmix_v3()
   
   % sweep parameters
   grid.postStimSilence = 0;
-  grid.repeatsPerCondition = 15;
+  grid.repeatsPerCondition = 20;
   
   % set this to match nominal level of 80dB
   grid.legacyLevelOffsetDB = 7;
