@@ -96,6 +96,10 @@ if isfield(expt, 'bugle')
   state.bugle = expt.bugle;
 end
 
+if ~isfield(expt, 'stimulusDirectory')
+  expt.stimulusDirectory = [];
+end
+
 
 %% load and set defaults for grid structure
 %% which contains specifications for the current grid
@@ -125,7 +129,7 @@ end
 
 if ~gotGrid
   % load grid from grids/ directory
-  grid = chooseGrid();
+  grid = chooseGrid(expt.stimulusDirectory);
   
   % verify grid, randomise it, save grid metadata to disk
   grid = prepareGrid(grid, expt);

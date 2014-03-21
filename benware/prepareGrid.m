@@ -24,6 +24,10 @@ if ~isfield(grid, 'saveWaveforms')
   grid.saveWaveforms = true;
 end
 
+if ~isfield(grid, 'postStimSilence')
+  grid.postStimSilence = 0;
+end
+
 global OLDCOMPENSATION
 if OLDCOMPENSATION
   if ~isfield(grid, 'compensationFilters')

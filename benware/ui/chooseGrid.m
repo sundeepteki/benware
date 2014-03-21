@@ -1,5 +1,5 @@
-function grid = chooseGrid
-% grid = chooseGrid
+function grid = chooseGrid(stimDir)
+% grid = chooseGrid(stimDir)
 % 
 % Allows user to choose a grid from the subdirectory grids/
 
@@ -7,16 +7,8 @@ function grid = chooseGrid
 l = load('user.mat');
 user = l.user;
 
+% get functions from grids/grids.user/ and put relevant information in allstim
 gridFunctions = dir(fix_slashes(['grids/grids.' user.name '/grid_*.m']));
-
-% scan for new-style stimulus directories in grids/grids.name/stimulus_dirs.txt
-fid = fopen(fix_slashes(['grids/grids.' user.name '/stimulus_dirs.txt']));
-scan = textscan(fid, '%s', Inf);
-fclose(fid);
-
-dirs = scan{1};
-
-% get grids and dirs in same format
 allstim = {};
 for ii = 1:length(gridFunctions)
   thisstim = struct;
@@ -26,22 +18,27 @@ for ii = 1:length(gridFunctions)
   allstim{end+1} = thisstim;
 end
 
-for ii = 1:length(dirs)
-  thisstim = struct;
-  d = dirs{ii};
-  d(d=='\') = '/';
-  if d(end)=='/'
-    d = d(1:end-1);
+% scan for stimulus directories in stimDir and put information in allstim
+if ~isempty(stimDir)
+  if ~exist(stimDir', 'dir')
+    errorBeep(sprintf('Stimulus search directory in expt.stimulusDirectory does not exist: %s', stimDir));
   end
-  split = strsplit(d, '/');
-  thisstim.name = split{end};
-  thisstim.value = d;
-  thisstim.type = 2;
-  allstim{end+1} = thisstim;
+
+  dirs = dir(stimDir);
+  for ii = 1:length(dirs)
+    if dirs(ii).isdir && dirs(ii).name(1)~='.'
+        d = dirs(ii).name;
+        thisstim.name = d;
+        thisstim.value = [stimDir filesep d];
+        thisstim.type = 2;
+        allstim{end+1} = thisstim;
+    end
+  end
 end
 
+[srt, idx] = sort(cellfun(@(x) x.name, allstim, 'uni', false));
+allstim = allstim(idx);
 allstim = [allstim{:}];
-
 
 % print options for the user
 fprintf_subtitle('Choose a grid:');
@@ -54,7 +51,7 @@ fprintf('\n');
 % demand input
 idx = demandnumberinput('      >>> ', 1:L(allstim));
 %idx = demandnumberinput(['Enter 1-' num2str(length(d)) ': '],1:length(d));
-keyboard
+
 % return the grid
 chosenStim = allstim(idx);
 if chosenStim.type == 1
@@ -67,4 +64,5 @@ if chosenStim.type == 1
 else
   % new-style stimulus directory
   grid = getGridForStimDir(chosenStim.value);
+  grid.name = chosenStim.name;
 end
