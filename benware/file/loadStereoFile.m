@@ -20,6 +20,9 @@ fprintf(['  * Getting stimulus from ' escapepath(filename) '...']);
 % load the stimulus
 if strcmp(filename(end-3:end), '.f32')
     uncalib = readf32(filename)';
+    if isnan(uncalib);
+        errorBeep('Failed to read file %s', filename);
+    end
 elseif strcmp(filename(end-3:end), '.wav')
     uncalib = wavread(filename)';
 end

@@ -87,7 +87,7 @@ connectors(end).pins = [41 0 0 24; 38 0 0 27; 43 0 0 22; 37 0 0 28; 36 39 26 29;
 						% reference is on the right
 
 % TDT connector pin maps from System 3 Manual
-connectors(end+1).name = 'ZCA-NN32)';
+connectors(end+1).name = 'ZCA-NN32';
 connectors(end).pins = [10 0 0 8; 12 0 0 6; 14 0 0 4; 16 0 0 2; 11 9 7 5; 15 13 3 1; ...
 						28 26 24 22; 32 30 20 18; 27 25 23 21; 31 29 19 17];
 						% probe pointing down, reference on the right
