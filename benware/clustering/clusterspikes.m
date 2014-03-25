@@ -30,10 +30,9 @@ for dirIdx = 1:length(dirs)
   dir = dirs{dirIdx};
   [paramsFile, nShanks] = benware2spikedetekt(dirs{dirIdx});
   cmd = ['cd ' dir filesep 'spikedetekt' '; ' ...
-         'LD_LIBRARY_PATH='''' DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' python ' pwd '/klustakwik/detektspikes.py ' paramsFile];
+         'LD_LIBRARY_PATH='''' DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' python ' pwd '/klustakwik/detektspikes.py ' paramsFile ' | grep -v --line-buffered Unalignable'];
   fprintf('= Detecting spikes by running command:\n %s\n', cmd);
   system(cmd);
-keyboard
   spikedetektDirs = getdirsmatching([dir filesep 'spikedetekt_*/']);
   spikedetektDir = spikedetektDirs{end};
   
