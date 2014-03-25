@@ -21,12 +21,15 @@ mkdir_nowarning(newDir);
 fprintf('Converting sweeps to spikedetekt format ');
 filenames = {};
 mult = 3276700*2;
+sweepLens = [];
 while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
   filename = sprintf([newDir filesep gridName '.%d.dat'], sweepIdx);
   shortFilename = sprintf([gridName '.%d.dat'], sweepIdx);
   if exist(filename, 'file')
     fprintf('s');
     filenames{end+1} = shortFilename;
+    tmp = f32read(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, 1));
+    sweepLens(end+1) = length(tmp);
     sweepIdx = sweepIdx+1;
     continue;
   else
@@ -39,6 +42,8 @@ while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
     sweepData(:,chanIdx) = f32read(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, chanIdx));
   end
 
+  sweepLens(end+1) = size(sweepData, 1);
+  
   % interleave data
   sweepData = sweepData';
   sweepData = sweepData(:);
@@ -47,6 +52,7 @@ while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
   %int16write(sweepData, filename, mult);
   int16write(sweepData, filename, mult);
   filenames{end+1} = shortFilename;
+  
   sweepIdx = sweepIdx+1;
 
 end
@@ -95,4 +101,6 @@ for ii = 1:length(probes)
 end
 
 finalNShanks = makeadjacencygraph(layout, shanksAreCloseTogether, [newDir filesep gridName '.probe']);
+
+save([newDir filesep 'sweep_info.mat'], 'filenames', 'sweepLens');
 fprintf('done\n');
