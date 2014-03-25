@@ -28,7 +28,7 @@ dirs = cellfun(@(x) x(1:end-length('/gridInfo.mat')), dirs, 'uni', false);
 
 for dirIdx = 1:length(dirs)
   dir = dirs{dirIdx};
-  [paramsFile, nShanks] = benware2spikedetekt(dirs{dirIdx});
+  [paramsFile, nSitesPerShank] = benware2spikedetekt(dirs{dirIdx});
 
   done_detekting = false;
   try
@@ -55,7 +55,7 @@ for dirIdx = 1:length(dirs)
   end
 
   for shankIdx = 1:nShanks
-    parameters = '-UseDistributional 1 -MaxPossibleClusters 500 -MaskStarts 300 -PenaltyK 1 -PenaltyKLogN 0 -DropLastNFeatures 1';
+    parameters = ['-UseDistributional 1 -MaxPossibleClusters ' num2str(nSpikesPerShank(shankIdx)) ' -MaskStarts ' num2str(ceil(nSpikesPerShank(shankIdx)/2)) ' -PenaltyK 1 -PenaltyKLogN 0 -DropLastNFeatures 1'];
     cmd = sprintf(['cd ' spikedetektDir '; ' ...
                    'LD_LIBRARY_PATH='''' DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' ' pwd '/klustakwik/KlustaKwik.' computer ' ' paramsFile(1:end-7) ' %d ' parameters], shankIdx);
     fprintf('Clustering shank %d by running command:\n %s\n', shankIdx, cmd);

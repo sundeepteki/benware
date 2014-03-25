@@ -1,4 +1,4 @@
-function [paramsFile, finalNShanks] = benware2spikedetekt(dataDir)
+function [paramsFile, nSitesPerShank] = benware2spikedetekt(dataDir)
 
 if ~exist(dataDir, 'dir')
   error('Directory %s does not exist\n', dataDir);
@@ -81,18 +81,23 @@ fprintf('done\n');
 fprintf('Making probe adjacency map...');
 probes = l.expt.probes;
 layout = {};
-shanksAreCloseTogether = [];
+
 for ii = 1:length(probes)
-  if strcmp(probes.layout, 'Warp-16')
-    layout{ii} = [4 4];
-    shanksAreCloseTogether(ii) = true;
+  if strcmp(probes(ii).layout, 'Warp-16')
+    layout{ii} = [1 16];
+
   elseif strcmp(probes.layout, 'A4x4')
     layout{ii} = [4 4];
-    shanksAreCloseTogether(ii) = false;
+
   else
     error('unknown probe layout -- talk to ben');
   end
 end
 
-finalNShanks = makeadjacencygraph(layout, shanksAreCloseTogether, [newDir filesep gridName '.probe']);
+makeadjacencygraph(layout, [newDir filesep gridName '.probe']);
+
+nSitesPerShank = [];
+for ii = 1:length(layout)
+  nSitesPerShank = [nSitesPerShank repmat(layout{ii}(2), [1 layout{ii}(1)])];
+end
 fprintf('done\n');
