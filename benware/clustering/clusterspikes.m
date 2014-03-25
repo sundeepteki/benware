@@ -31,15 +31,15 @@ for dirIdx = 1:length(dirs)
   [paramsFile, nShanks] = benware2spikedetekt(dirs{dirIdx});
   cmd = ['cd ' dir filesep 'spikedetekt' '; ' ...
          'DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' python ' pwd '/klustakwik/detektspikes.py ' paramsFile];
-  fprintf('= Detecting spikes by running command: %s', cmd);
+  fprintf('= Detecting spikes by running command:\n %s', cmd);
   system(cmd);
   spikedetektDirs = getdirsmatching([dir filesep 'spikedetekt_*/']);
   spikedetektDir = spikedetektDirs{end};
   
   for shankIdx = 1:nShanks
     cmd = sprintf(['cd ' spikedetektDir '; ' ...
-                   'DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' ' pwd '/klustakwik/MaskedKlustaKwik.' computer ' ' paramsFile(1:end-7) ' %d'], shankIdx);
-    fprintf('Clustering shank %d by running command: %s', shankIdx, cmd);
+                   'DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' ' pwd '/klustakwik/KlustaKwik.' computer ' ' paramsFile(1:end-7) ' %d'], shankIdx);
+    fprintf('Clustering shank %d by running command:\n %s', shankIdx, cmd);
     system(cmd);
   end
 end
