@@ -29,6 +29,7 @@ dirs = cellfun(@(x) x(1:end-length('/gridInfo.mat')), dirs, 'uni', false);
 for dirIdx = 1:length(dirs)
   dir = dirs{dirIdx};
   [paramsFile, nSitesPerShank] = benware2spikedetekt(dirs{dirIdx});
+  nShanks = length(nSitesPerShank);
 
   done_detekting = false;
   try
@@ -42,7 +43,7 @@ for dirIdx = 1:length(dirs)
   end
 
   if done_detekting
-  fprintf('Found complete spikedetekt data in %s; skipping spike detection\n', spikedetektDir);
+    fprintf('Found complete spikedetekt data in %s; skipping spike detection\n', spikedetektDir);
   else
     cmd = ['cd ' dir filesep 'spikedetekt' '; ' ...
            'LD_LIBRARY_PATH='''' DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' python ' pwd '/klustakwik/detektspikes.py ' paramsFile ' | grep -v --line-buffered Unalignable'];
@@ -55,7 +56,7 @@ for dirIdx = 1:length(dirs)
   end
 
   for shankIdx = 1:nShanks
-    parameters = ['-UseDistributional 1 -MaxPossibleClusters ' num2str(nSpikesPerShank(shankIdx)) ' -MaskStarts ' num2str(ceil(nSpikesPerShank(shankIdx)/2)) ' -PenaltyK 1 -PenaltyKLogN 0 -DropLastNFeatures 1'];
+    parameters = ['-UseDistributional 1 -MaxPossibleClusters ' num2str(nSitesPerShank(shankIdx)) ' -MaskStarts ' num2str(ceil(nSitesPerShank(shankIdx)/2)) ' -PenaltyK 1 -PenaltyKLogN 0 -DropLastNFeatures 1'];
     cmd = sprintf(['cd ' spikedetektDir '; ' ...
                    'LD_LIBRARY_PATH='''' DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' ' pwd '/klustakwik/KlustaKwik.' computer ' ' paramsFile(1:end-7) ' %d ' parameters], shankIdx);
     fprintf('Clustering shank %d by running command:\n %s\n', shankIdx, cmd);
