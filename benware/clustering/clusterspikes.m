@@ -37,8 +37,9 @@ for dirIdx = 1:length(dirs)
   spikedetektDir = spikedetektDirs{end};
   
   for shankIdx = 1:nShanks
+    parameters = '-UseDistributional 1 -MaxPossibleClusters 500 -MaskStarts 300 -PenaltyK 1 -PenaltyKLogN 0 -DropLastNFeatures 1';
     cmd = sprintf(['cd ' spikedetektDir '; ' ...
-                   'DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' ' pwd '/klustakwik/KlustaKwik.' computer ' ' paramsFile(1:end-7) ' %d'], shankIdx);
+                   'DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' ' pwd '/klustakwik/KlustaKwik.' computer ' ' paramsFile(1:end-7) ' %d' parameters], shankIdx);
     fprintf('Clustering shank %d by running command:\n %s', shankIdx, cmd);
     system(cmd);
   end
