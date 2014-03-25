@@ -29,13 +29,31 @@ dirs = cellfun(@(x) x(1:end-length('/gridInfo.mat')), dirs, 'uni', false);
 for dirIdx = 1:length(dirs)
   dir = dirs{dirIdx};
   [paramsFile, nShanks] = benware2spikedetekt(dirs{dirIdx});
-  cmd = ['cd ' dir filesep 'spikedetekt' '; ' ...
-         'LD_LIBRARY_PATH='''' DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' python ' pwd '/klustakwik/detektspikes.py ' paramsFile ' | grep -v --line-buffered Unalignable'];
-  fprintf('= Detecting spikes by running command:\n %s\n', cmd);
-  system(cmd);
-  spikedetektDirs = getdirsmatching([dir filesep 'spikedetekt_*/']);
-  spikedetektDir = spikedetektDirs{end};
-  
+
+  done_detekting = false;
+  try
+    spikedetektDirs = getdirsmatching([dir filesep 'spikedetekt_*/']);
+    spikedetektDir = spikedetektDirs{end};
+    if exist([spikedetektDir filesep 'done.txt'], 'file')
+      done_detekting = true;
+    end
+  catch
+    done_detekting = false;
+  end
+
+  if done_detekting
+  fprintf('Found complete spikedetekt data in %s; skipping spike detection\n', spikedetektDir);
+  else
+    cmd = ['cd ' dir filesep 'spikedetekt' '; ' ...
+           'LD_LIBRARY_PATH='''' DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' python ' pwd '/klustakwik/detektspikes.py ' paramsFile ' | grep -v --line-buffered Unalignable'];
+    fprintf('= Detecting spikes by running command:\n %s\n', cmd);
+    system(cmd);
+    spikedetektDirs = getdirsmatching([dir filesep 'spikedetekt_*/']);
+    spikedetektDir = spikedetektDirs{end};
+    cmd = ['echo done > ' spikedetektDir filesep 'done.txt'];
+    system(cmd);
+  end
+
   for shankIdx = 1:nShanks
     parameters = '-UseDistributional 1 -MaxPossibleClusters 500 -MaskStarts 300 -PenaltyK 1 -PenaltyKLogN 0 -DropLastNFeatures 1';
     cmd = sprintf(['cd ' spikedetektDir '; ' ...
