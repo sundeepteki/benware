@@ -34,8 +34,15 @@ for dirIdx = 1:length(dirs)
   done_detekting = false;
   try
     spikedetektDirs = getdirsmatching([dir filesep 'spikedetekt_*/']);
+
+    % sort to get the last one
+    res = cellfun(@(x) regexp(x, 'spikedetekt_([0-9]+)', 'tokens'), spikedetektDirs, 'uni', false);
+    n = cellfun(@(x) eval(x{1}{1}), res)';
+    [srt, idx] = sort(n);
+    spikedetektDirs = spikedetektDirs(idx);
     spikedetektDir = spikedetektDirs{end};
-    if exist([spikedetektDir filesep 'done.txt'], 'file')
+
+    if exist([spikedetektDir filesep 'detektion_done.txt'], 'file')
       done_detekting = true;
     end
   catch
@@ -48,18 +55,30 @@ for dirIdx = 1:length(dirs)
     cmd = ['cd ' dir filesep 'spikedetekt' '; ' ...
            'LD_LIBRARY_PATH='''' DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' python ' pwd '/klustakwik/detektspikes.py ' paramsFile ' | grep -v --line-buffered Unalignable'];
     fprintf('= Detecting spikes by running command:\n %s\n', cmd);
-    system(cmd);
+    res = system(cmd);
+    if res>0
+      error('Command failed');
+    end
     spikedetektDirs = getdirsmatching([dir filesep 'spikedetekt_*/']);
     spikedetektDir = spikedetektDirs{end};
-    cmd = ['echo done > ' spikedetektDir filesep 'done.txt'];
+    cmd = ['echo done > ' spikedetektDir filesep 'detektion_done.txt'];
     system(cmd);
   end
 
   for shankIdx = 1:nShanks
-    parameters = ['-UseDistributional 1 -MaxPossibleClusters ' num2str(nSitesPerShank(shankIdx)) ' -MaskStarts ' num2str(ceil(nSitesPerShank(shankIdx)/2)) ' -PenaltyK 1 -PenaltyKLogN 0 -DropLastNFeatures 1'];
-    cmd = sprintf(['cd ' spikedetektDir '; ' ...
+    if exist(sprintf([spikedetektDir filesep 'klustering_done.%d.txt'], shankIdx), 'file')
+      fprintf('= Shank %d already clustered, skipping\n', shankIdx);
+    else
+      parameters = ['-UseDistributional 1 -MaxPossibleClusters ' num2str(nSitesPerShank(shankIdx)) ' -MaskStarts ' num2str(ceil(nSitesPerShank(shankIdx)/2)) ' -PenaltyK 1 -PenaltyKLogN 0 -DropLastNFeatures 1'];
+      cmd = sprintf(['cd ' spikedetektDir '; ' ...
                    'LD_LIBRARY_PATH='''' DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' ' pwd '/klustakwik/KlustaKwik.' computer ' ' paramsFile(1:end-7) ' %d ' parameters], shankIdx);
-    fprintf('Clustering shank %d by running command:\n %s\n', shankIdx, cmd);
-    system(cmd);
+      fprintf('= Clustering shank %d by running command:\n %s\n', shankIdx, cmd);
+      res = system(cmd);
+      if res>0
+        error('Command failed');
+      end
+      cmd = sprintf(['echo done > ' spikedetektDir filesep 'klustering_done.%d.txt'], shankIdx);
+      system(cmd);
+    end
   end
 end
