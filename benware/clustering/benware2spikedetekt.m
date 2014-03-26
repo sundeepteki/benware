@@ -92,8 +92,11 @@ for ii = 1:length(probes)
   if strcmp(probes(ii).layout, 'Warp-16')
     layout{ii} = [1 16];
 
-  elseif strcmp(probes.layout, 'A4x4')
-    layout{ii} = [4 4];
+  elseif probes(ii).layout(1)=='A'
+    res = regexp(probes(ii).layout, 'A([0-9]+)x([0-9]+)', 'tokens');
+    nShanks = eval(res{1}{1});
+    nSites = eval(res{1}{2});
+    layout{ii} = [nShanks nSites];
 
   else
     error('unknown probe layout -- talk to ben');
