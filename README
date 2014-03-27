@@ -108,14 +108,13 @@ If your data from expt 64 was saved in /data/expt64, in Matlab:
 
 -- Clustering
 
-Now, in terminal, run klustaviewa on all the shanks for all subdirectories, e.g.:
+Now, in terminal, run klustaviewa on all subdirectories, e.g.:
  cd /data/expt64/P10-decorr.v2/spikedetekt_1
  klustaviewa decorr.1
- klustaviewa decorr.2
  cd /data/expt64/P11-decorr.v2/spikedetekt_1
+ klustaviewa decorr.1
  ...
 
 Now, get the spike times into Matlab:
  cd /data/expt64/P10-decorr.v2/spikedetekt_1
  spiketimes = getclusteredspikes('/data/expt64')
-
