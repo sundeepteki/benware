@@ -102,11 +102,15 @@ In Terminal:
  cd spikedetekt
  python setup.py install
 
+
+-- Clustering
+
 If your data from expt 64 was saved in /data/expt64, in Matlab:
  cd benware
  clusterspikes('/data/expt64');
 
--- Clustering
+
+-- Manual editing of clusters
 
 Now, in terminal, run klustaviewa on all subdirectories, e.g.:
  cd /data/expt64/P10-decorr.v2/spikedetekt_1
