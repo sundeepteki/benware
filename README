@@ -82,12 +82,17 @@ Choose from the list of stimuli. Press k in the Benware window to see a list of 
 
 = Spike sorting
 
+-- Installation
+
 Needs to be done on Linux or Mac, so copy your data to a Unix machine first.
 
 Download Benware from http://github.com/beniamino38/benware
 
 On a Linux machine: Install anaconda
 On a Mac: Install Enthought Canopy
+
+Make sure pandas version 0.12.0 is installed:
+ pip install -Iv pandas==0.12.0
 
 In the terminal:
  pip install klustaviewa
@@ -101,6 +106,8 @@ If your data from expt 64 was saved in /data/expt64, in Matlab:
  cd benware
  clusterspikes('/data/expt64');
 
+-- Clustering
+
 Now, in terminal, run klustaviewa on all the shanks for all subdirectories, e.g.:
  cd /data/expt64/P10-decorr.v2/spikedetekt_1
  klustaviewa decorr.1
@@ -110,5 +117,5 @@ Now, in terminal, run klustaviewa on all the shanks for all subdirectories, e.g.
 
 Now, get the spike times into Matlab:
  cd /data/expt64/P10-decorr.v2/spikedetekt_1
- shank1 = getClusteredSpikes('/data/expt64/P10-decorr.v2/', 1)
- shank2 = getClusteredSpikes('/data/expt64/P10-decorr.v2/', 2)
+ spiketimes = getclusteredspikes('/data/expt64')
+
