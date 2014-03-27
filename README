@@ -94,14 +94,18 @@ On a Mac: Install Enthought Canopy
 Make sure pandas version 0.12.0 is installed:
  pip install -Iv pandas==0.12.0
 
-In the terminal:
- pip install klustaviewa
-
-Download spikedetekt from https://github.com/klusta-team/spikedetekt
+Download spikedetekt from https://github.com/beniamino38/spikedetekt
 In Terminal:
  cd spikedetekt
  python setup.py install
 
+Download kwiklib from https://github.com/beniamino38/kwiklib
+In Terminal:
+ cd kwiklib
+ python setup.py install
+
+In the terminal:
+ pip install klustaviewa
 
 -- Clustering
 
@@ -112,13 +116,14 @@ If your data from expt 64 was saved in /data/expt64, in Matlab:
 
 -- Manual editing of clusters
 
-Now, in terminal, run klustaviewa on all subdirectories, e.g.:
- cd /data/expt64/P10-decorr.v2/spikedetekt_1
- klustaviewa decorr.1
- cd /data/expt64/P11-decorr.v2/spikedetekt_1
- klustaviewa decorr.1
+Now, in terminal, run klustaviewa on all shanks, e.g.:
+ cd /data/expt64/P10-decorr.v2/shank.1
+ klustaviewa decorr.clu.1
+ cd /data/expt64/P11-decorr.v2/shank.2
+ klustaviewa decorr.clu.2
  ...
 
+
 Now, get the spike times into Matlab:
- cd /data/expt64/P10-decorr.v2/spikedetekt_1
+ cd benware
  spiketimes = getclusteredspikes('/data/expt64')

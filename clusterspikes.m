@@ -96,4 +96,15 @@ for dirIdx = 1:length(dirs)
       system(cmd);
     end
   end
+  
+  % move to shank-specific directories
+  for shankIdx = 1:nShanks
+    shankDir = sprintf([parentDir filesep 'shank.%d'], shankIdx);
+    if ~exist(shankDir, 'dir')
+      mkdir(shankDir);
+    end
+    copyfile(sprintf([spikedetektDir filesep '*.%d'], shankIdx), shankDir); 
+    copyfile([parentDir filesep 'spikedetekt' filesep '*.probe'], shankDir); 
+    copyfile([spikedetektDir filesep '*.xml'], shankDir); 
+  end
 end

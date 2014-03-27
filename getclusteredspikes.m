@@ -1,16 +1,17 @@
 function shankData = getClusteredSpikes(dir)
 
-spikedetektDirs = getdirsmatching([dir filesep 'spikedetekt_*']);
-
-% sort to get the last one
-res = cellfun(@(x) regexp(x, 'spikedetekt_([0-9]+)', 'tokens'), spikedetektDirs, 'uni', false);
-n = cellfun(@(x) eval(x{1}{1}), res)';
-[srt, idx] = sort(n);
-spikedetektDirs = spikedetektDirs(idx);
-spikedetektDir = spikedetektDirs{end};
+% spikedetektDirs = getdirsmatching([dir filesep 'spikedetekt_*']);
+% 
+% % sort to get the last one
+% res = cellfun(@(x) regexp(x, 'spikedetekt_([0-9]+)', 'tokens'), spikedetektDirs, 'uni', false);
+% n = cellfun(@(x) eval(x{1}{1}), res)';
+% [srt, idx] = sort(n);
+% spikedetektDirs = spikedetektDirs(idx);
+% spikedetektDir = spikedetektDirs{end};
 
 try
-  files = getfilesmatching([spikedetektDir filesep '*.fet.*']);
+  %files = getfilesmatching([spikedetektDir filesep '*.fet.*']);
+  files = getfilesmatching([dir filesep 'shank*' filesep '*.fet.*']);
 catch
   error('No FET files found');
 end
