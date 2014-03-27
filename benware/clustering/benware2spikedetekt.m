@@ -90,7 +90,7 @@ layout = {};
 
 for ii = 1:length(probes)
   if strcmp(probes(ii).layout, 'Warp-16')
-    layout{ii} = [1 16];
+    layout{ii} = [16 1];
 
   elseif probes(ii).layout(1)=='A'
     res = regexp(probes(ii).layout, 'A([0-9]+)x([0-9]+)', 'tokens');

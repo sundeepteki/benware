@@ -27,14 +27,20 @@ for shank = 1:length(files)
   
   % fet file contains features and spike times
   fetfile = files{shank};
-  fprintf('Loading data from fet file %s\n', fetfile);
   shankData{shank}.fetfile = fetfile;
-  fet = fetload(fetfile);
-  spikeTimes = fet(:,end); % in samples
-
   % clu file contains cluster IDs
   clufile = regexprep(fetfile, '.fet.', '.clu.');
   shankData{shank}.clufile = clufile;
+
+  fprintf('Loading data from fet file %s\n', fetfile);
+  fet = fetload(fetfile);
+  if isempty(fet)
+    shankData{shank}.clusters = {};
+    continue;
+  end
+  spikeTimes = fet(:,end); % in samples
+
+  % load clu file
   clusterID = cluread(clufile);
   nClusters = max(clusterID);
 
