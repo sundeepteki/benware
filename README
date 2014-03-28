@@ -95,17 +95,25 @@ Make sure pandas version 0.12.0 is installed:
  pip install -Iv pandas==0.12.0
 
 Download spikedetekt from https://github.com/beniamino38/spikedetekt
+(note this is my modified version, not the standard one)
 In Terminal:
  cd spikedetekt
  python setup.py install
 
 Download kwiklib from https://github.com/beniamino38/kwiklib
+(note this is my modified version, not the standard one)
 In Terminal:
  cd kwiklib
  python setup.py install
 
-In the terminal:
- pip install klustaviewa
+Download klustaviewa from https://github.com/beniamino38/klustaviewa
+(note this is my modified version, not the standard one)
+In Terminal:
+ cd klustaviewa
+ python setup.py install
+
+(for all of the above, you may need "sudo python setup.py install" instead)
+
 
 -- Clustering
 
