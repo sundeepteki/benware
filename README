@@ -112,6 +112,11 @@ In Terminal:
  cd klustaviewa
  python setup.py install
 
+[If you get an error about "-mno-fused-madd" try:
+ export CFLAGS=-Qunused-arguments
+ export CPPFLAGS=-Qunused-arguments
+ python setup.py install ]
+ 
 (for all of the above, you may need "sudo python setup.py install" instead)
 
 
