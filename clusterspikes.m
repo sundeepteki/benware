@@ -70,8 +70,6 @@ for dirIdx = 1:length(dirs)
     end
     fprintf('= Detecting spikes by running command:\n %s\n', cmd);
     res = system(cmd); % TODO: python / spikedetekt will crash if there is not enough diskspace - handle this
-    delete cmd;
-    res = 0
     if res>0
       error('Command failed');
     end
