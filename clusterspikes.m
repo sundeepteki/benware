@@ -116,7 +116,6 @@ for dirIdx = 1:length(dirs)
         fid = fopen(cmd,'w');
         fprintf(fid,'cd %s\n',spikedetektDir);
         fprintf(fid,'set PATH=%s\n',windows_path(pos(1)+1:end));
-%         fprintf(fid,'python %s\\klustakwik\\KlustaKwik.%s %s %d %s\n',pwd,computer,paramsFile(1:end-7),shankIdx,parameters); % TODO: get KlustaKwik.PCWIN
         fprintf(fid,'%s\\klustakwik\\klustakwik.PCWIN.exe %s %d %s\n',pwd,paramsFile(1:end-7),shankIdx,parameters); % use 64 Bit version from https://github.com/klusta-team/klustakwik
         fclose(fid);
       else
