@@ -108,6 +108,11 @@ In Terminal:
  cd spikedetekt
  python setup.py install
 
+For Windows, install "KlustaViewa Full Installer for Windows 64 bits" (http://klustaviewa.rossant.net/klustaviewa-setup.exe)
+Manually apply Ben's patch https://github.com/beniamino38/klustaviewa/commit/2a794c4e3506dea9bca5776d2a562a28a9852dbf
+
+For Linux and Mac, do these following steps:
+
 Download kwiklib from https://github.com/beniamino38/kwiklib
 (note this is my modified version, not the standard one)
 In Terminal:
