@@ -29,7 +29,7 @@ catch
 end
 
 dirs = cat(1, d0, d1, d2);
-dirs = cellfun(@(x) x(1:end-length('/gridInfo.mat')), dirs, 'uni', false)
+dirs = cellfun(@(x) x(1:end-length('/gridInfo.mat')), dirs, 'uni', false);
 
 for dirIdx = 1:length(dirs)
   dir = dirs{dirIdx};

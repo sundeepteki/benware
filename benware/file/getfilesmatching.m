@@ -7,7 +7,7 @@ if ispc
     data = cellfun(@(x) strrep(x,'\\','/'), data, 'uni', false); % convert ugly "\\" back to much less troublesome "/" filesep
     data = cellfun(@(x) strrep(x,'\','/'), data, 'uni', false); % convert ugly "\" back to much less troublesome "/" filesep
 else
-    list = ls('-C', searchstring)
+    list = ls('-C', searchstring);
     files = strsplit(list,'\n');
     if length(files{end})==0
       files = files(1:end-1);
