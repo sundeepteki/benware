@@ -14,14 +14,34 @@ nChannels = length(l.expt.channelMapping);
 
 gridName = l.grid.name;
 dataPath = [dataDir filesep l.expt.dataFilename];
+
+% get multiplier for int16 format
+fprintf('Getting range of data ');
 sweepIdx = 1;
+maxabs = -Inf;
+while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
+  for chanIdx = 1:nChannels
+    tmp = f32read(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, chanIdx));
+    maxabs = max(maxabs, max(abs(tmp(:))));
+  end
+
+  fprintf('.');
+  if round(sweepIdx/70)==(sweepIdx/70)
+    fprintf('\n');
+  end
+
+  sweepIdx = sweepIdx+1;
+end
+mult = 32767/maxabs;
+fprintf('done\n');
 
 newDir = [dataDir filesep 'spikedetekt'];
 mkdir_nowarning(newDir);
 fprintf('Converting sweeps to spikedetekt format ');
 filenames = {};
-mult = 3276700*2;
 sweepLens = [];
+
+sweepIdx = 1;
 while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
   filename = sprintf([newDir filesep gridName '.%d.dat'], sweepIdx);
   shortFilename = sprintf([gridName '.%d.dat'], sweepIdx);
@@ -34,6 +54,9 @@ while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
     continue;
   else
     fprintf('.');
+    if round(sweepIdx/70)==(sweepIdx/70)
+      fprintf('\n');
+    end
   end
   
   % load all data for this sweep
@@ -49,7 +72,6 @@ while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
   sweepData = sweepData(:);
   
   % open output data file for this sweep
-  %int16write(sweepData, filename, mult);
   int16write(sweepData, filename, mult);
   filenames{end+1} = shortFilename;
   
