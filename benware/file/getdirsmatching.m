@@ -3,7 +3,7 @@ function data = getdirsmatching(searchstring)
 if ispc
     data = getfilesmatching(searchstring);
 else
-  list = ls('-C -d', searchstring);
+  list = ls('-Cd', searchstring);
   files = strsplit(list,'\n');
   if length(files{end})==0
     files = files(1:end-1);
