@@ -7,15 +7,11 @@ if ispc
     data = cellfun(@(x) strrep(x,'\\','/'), data, 'uni', false); % convert ugly "\\" back to much less troublesome "/" filesep
     data = cellfun(@(x) strrep(x,'\','/'), data, 'uni', false); % convert ugly "\" back to much less troublesome "/" filesep
 else
-    list = ls(searchstring);
-
-    [st, en] = regexp(list,'\S*');
-
-    files = {};
-    for ii = 1:length(st)
-      files{ii} = list(st(ii):en(ii));
+    list = ls('-C', searchstring)
+    files = strsplit(list,'\n');
+    if length(files{end})==0
+      files = files(1:end-1);
     end
-
     data = sort(files)';
 end  
 

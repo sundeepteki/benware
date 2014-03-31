@@ -67,11 +67,12 @@ for dirIdx = 1:length(dirs)
       fprintf(fid,'python %s/klustakwik/detektspikes.py %s\n',pwd,paramsFile);
       fclose(fid);
     else
-      cmd = ['cd ' dir filesep 'spikedetekt' '; ' ...
+      cmd = ['cd ' escapespaces([dir filesep 'spikedetekt']) '; ' ...
            'LD_LIBRARY_PATH='''' DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' python ' pwd '/klustakwik/detektspikes.py ' paramsFile];
     end
     fprintf('= Detecting spikes by running command:\n %s\n', cmd);
     res = system(cmd); % TODO: python / spikedetekt will crash if there is not enough diskspace - handle this
+    
     if res>0
       error('Command failed');
     end
@@ -121,7 +122,7 @@ for dirIdx = 1:length(dirs)
         fprintf(fid,'%s\\klustakwik\\klustakwik.PCWIN.exe %s %d %s\n',pwd,paramsFile(1:end-7),shankIdx,parameters); % use 64 Bit version from https://github.com/klusta-team/klustakwik
         fclose(fid);
       else
-        cmd = sprintf(['cd ' spikedetektDir '; ' ...
+        cmd = sprintf(['cd ' escapespaces(spikedetektDir) '; ' ...
                      'LD_LIBRARY_PATH='''' DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' ' pwd '/klustakwik/KlustaKwik.' computer ' ' paramsFile(1:end-7) ' %d ' parameters], shankIdx);
       end
       fprintf('= Clustering shank %d by running command:\n %s\n', shankIdx, cmd);
