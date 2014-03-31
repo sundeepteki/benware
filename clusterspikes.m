@@ -145,9 +145,7 @@ for dirIdx = 1:length(dirs)
       mkdir(shankDir);
     end
     copyfile(sprintf([spikedetektDir filesep '*.%d'], shankIdx), shankDir); 
-%     copyfile([parentDir filesep 'spikedetekt' filesep '*.probe'], shankDir);
-    copyfile([dir filesep 'spikedetekt' filesep '*.probe'], shankDir); % TODO: ask Ben if this is the correct fix?
-
+    copyfile([dir filesep 'spikedetekt' filesep '*.probe'], shankDir);
     copyfile([spikedetektDir filesep '*.xml'], shankDir); 
   end
 end
