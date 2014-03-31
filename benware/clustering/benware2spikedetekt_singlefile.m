@@ -139,6 +139,6 @@ for ii = 1:length(layout)
   nSitesPerShank = [nSitesPerShank repmat(layout{ii}(2), [1 layout{ii}(1)])];
 end
 
-save([newDir filesep 'sweep_info.mat'], 'filenames', 'sweepLens');
+save([newDir filesep 'sweep_info.mat'], 'filenames', 'sweepLens', 'paramsFile', 'nSitesPerShank');
 
 fprintf('done\n');

@@ -35,10 +35,19 @@ singleFile = true;
 
 for dirIdx = 1:length(dirs)
   dir = dirs{dirIdx};
-  if singleFile
-    [paramsFile, nSitesPerShank] = benware2spikedetekt_singlefile(dirs{dirIdx});
-  else
-    [paramsFile, nSitesPerShank] = benware2spikedetekt(dirs{dirIdx});
+
+  sweepInfoFile = [dir filesep 'spikedetekt/sweep_info.mat']
+  if exist(sweepInfoFile, 'file')
+    fprintf('Found %s; skipping conversion\n', sweepInfoFile);
+    l = load(sweepInfoFile);
+    paramsFile = l.paramsFile;
+    nSitesPerShank = l.nSitesPerShank;
+  else  
+    if singleFile
+      [paramsFile, nSitesPerShank] = benware2spikedetekt_singlefile(dirs{dirIdx});
+    else
+      [paramsFile, nSitesPerShank] = benware2spikedetekt(dirs{dirIdx});
+    end
   end    
   nShanks = length(nSitesPerShank);
 
