@@ -2,11 +2,13 @@
 
 Benware is a simple matlab-based neurophysiology program.
 
+
 = Getting started
 
 Download Benware from http://github.com/beniamino38/benware
 
-Download calibration code from http://github.com/beniamino38/newcalib
+For physiology, download calibration code from http://github.com/beniamino38/newcalib
+For spike sorting, jump to "Spike sorting", below
 
 
 = Benware initial setup
