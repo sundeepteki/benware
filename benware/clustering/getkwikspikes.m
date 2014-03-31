@@ -35,6 +35,8 @@ for jj = 1:size(weirdnames, 1)
   group_names{jj} = s{1};
 end
 
+waveform_data = h5read(kwikfile, [shankid '/waveforms']);
+
 % make a structure with information about each cluster
 clusters = {};
 clusterIDs = unique(clusterID);
@@ -49,6 +51,10 @@ for ii = 1:length(clusterIDs)
   cluster.clusterType = group_names{idx};
   
   cluster.spikeTimes = spikeTimes(clusterID==cluster.clusterID,:);
+
+  cluster.waveforms = waveform_data.waveform_filtered(:,clusterID==cluster.clusterID);
+
   clusters{ii} = cluster;
+  
 end
 clusters = [clusters{:}];

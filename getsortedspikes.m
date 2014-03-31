@@ -41,10 +41,14 @@ for probeIdx = 1:length(layout)
       shank.kwikfile = f{1};
       shank.cluster = getkwikspikes(shank.kwikfile);
       fprintf('o');
-    catch
-      shank.kwikfile = '';
-      shank.cluster = {};
-      fprintf('.');
+    catch exc
+      if strcmp(exc.identifier, 'MATLAB:ls:OSError')
+        shank.kwikfile = '';
+        shank.cluster = {};
+        fprintf('.');
+      else
+        rethrow(exc);
+      end
     end
     shanks{shankIdx} = shank;
     shankNum = shankNum + 1;
