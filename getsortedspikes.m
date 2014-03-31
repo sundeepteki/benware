@@ -1,4 +1,9 @@
 function data = getclusteredspikes(dir)
+% function data = getclusteredspikes(dir)
+% scan a directory for .kwik files and load them
+%
+% dir = benware data directory containing sorted data
+%       e.g. /Users/ben/data/P10-mistuning
 
 data = struct;
 data.gridInfo = [dir filesep 'gridInfo.mat'];
@@ -23,12 +28,14 @@ for ii = 1:length(probes)
     error('unknown probe layout -- talk to ben');
   end
 end
+orig_probes = probes;
 
 fprintf('Loading data from shanks ')
 probes = {};
 shankNum = 1;
 for probeIdx = 1:length(layout)
   probe = struct;
+  probe.name = orig_probes(probeIdx).layout;
   probe.layout = layout{probeIdx};
   shanks = {};
   for shankIdx = 1:probe.layout(1)

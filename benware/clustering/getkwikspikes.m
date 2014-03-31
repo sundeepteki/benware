@@ -1,4 +1,9 @@
 function clusters = getkwikspikes(kwikfile)
+% function clusters = getkwikspikes(kwikfile)
+% 
+% load spikes from kwik file, combine with
+% data from benware to get spike times on each
+% sweep
 
 re = regexp(kwikfile, '(.*)/.*/.*', 'tokens');
 exptdir = re{1}{1};
