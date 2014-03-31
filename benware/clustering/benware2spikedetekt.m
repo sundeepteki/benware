@@ -22,7 +22,7 @@ gridName = l.grid.name;
 dataPath = [dataDir filesep l.expt.dataFilename];
 
 % get multiplier for int16 format
-fprintf('Getting range of data ');
+fprintf('Getting range of data\n');
 sweepIdx = 1;
 maxabs = -Inf;
 while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
@@ -43,7 +43,7 @@ fprintf('done\n');
 
 newDir = [dataDir filesep 'spikedetekt'];
 mkdir_nowarning(newDir);
-fprintf('Converting sweeps to spikedetekt format ');
+fprintf('Converting sweeps to spikedetekt format\n');
 filenames = {};
 sweepLens = [];
 
