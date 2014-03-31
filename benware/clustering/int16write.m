@@ -1,7 +1,13 @@
-function int16write(data, filename, mult, compress)
+function int16write(data, filename, mult, append)
 
-if ~exist('compress', 'var')
-  compress = false;
+if ~exist('append', 'var')
+  append = false;
+end
+
+if append
+  mode = 'a';
+else
+  mode = 'w';
 end
 
 if ~exist('mult', 'var')
@@ -16,15 +22,10 @@ if any(d<-32767) || any(d>32767)
 end
 
 
-f = fopen(filename,'w');
+f = fopen(filename, mode);
 if (f==-1)
   error('Could not open file');
 else
   fwrite(f, d, 'int16');
   fclose(f);
-end
-
-if compress
-  gzip(filename);
-  delete(filename);
 end
