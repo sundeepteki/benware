@@ -101,8 +101,7 @@ Create a file named distutils.cfg (if you already don't have it) in your PythonX
  [build]
  compiler = mingw32
 
-For Linux and Mac, download spikedetekt from https://github.com/beniamino38/spikedetekt
-For Windows, download from https://github.com/strahl/spikedetekt (should also work on Linux and Mac, but not tested yet)
+Download spikedetekt from https://github.com/beniamino38/spikedetekt
 (note this is my modified version, not the standard one)
 In Terminal:
  cd spikedetekt
