@@ -1,12 +1,23 @@
 function data = getfilesmatching(searchstring)
 
 if ispc
-    searchstring = strrep(searchstring,'/','\');                               % convert "/" filesep into ugly "\"
-    temp = rdir(searchstring);                                                 % thanks Thomas Vanaret for http://www.mathworks.com/matlabcentral/fileexchange/32226-recursive-directory-listing-enhanced-rdir
+    searchstring = strrep(searchstring,'/','\');  % convert "/" filesep into ugly "\"
+    temp = rdir(searchstring); % thanks Thomas Vanaret for http://www.mathworks.com/matlabcentral/fileexchange/32226-recursive-directory-listing-enhanced-rdir
     data = {temp.name};
-    data = cellfun(@(x) strrep(x,'\\','/'), data, 'uni', false);               % convert ugly "\\" back to much less troublesome "/" filesep
-    data = cellfun(@(x) strrep(x,'\','/'), data, 'uni', false);                % convert ugly "\" back to much less troublesome "/" filesep
-end
+    data = cellfun(@(x) strrep(x,'\\','/'), data, 'uni', false); % convert ugly "\\" back to much less troublesome "/" filesep
+    data = cellfun(@(x) strrep(x,'\','/'), data, 'uni', false); % convert ugly "\" back to much less troublesome "/" filesep
+else
+    list = ls(searchstring);
+
+    [st, en] = regexp(list,'\S*');
+
+    files = {};
+    for ii = 1:length(st)
+      files{ii} = list(st(ii):en(ii));
+    end
+
+    data = sort(files)';
+end  
 
 function [varargout] = rdir(rootdir,varargin)
 % RDIR - Recursive directory listing

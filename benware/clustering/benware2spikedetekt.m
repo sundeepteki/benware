@@ -1,8 +1,11 @@
 function [paramsFile, nSitesPerShank] = benware2spikedetekt(dataDir)
 
 if ispc
-    filesep = '\\';                                        % yet another Matlab WTF... :/ - needed avoid invalid escape sequences in sprintf
+  filesep = '\\'; % yet another Matlab WTF... :/ - needed avoid invalid escape sequences in sprintf
+else
+  filesep = '/';
 end
+
 if ~exist(dataDir, 'dir')
   error('Directory %s does not exist\n', dataDir);
 end

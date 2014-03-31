@@ -1,6 +1,8 @@
 function clusterspikes(parentDir)
 if ispc
-    filesep = '\\';                                        % yet another Matlab WTF... :/ - needed avoid invalid escape sequences in sprintf
+  filesep = '\\'; % yet another Matlab WTF... :/ - needed avoid invalid escape sequences in sprintf
+else
+  filesep = '/';
 end
 
 setpath;
@@ -27,7 +29,7 @@ catch
 end
 
 dirs = cat(1, d0, d1, d2);
-dirs = cellfun(@(x) x(1:end-length('/gridInfo.mat')), dirs, 'uni', false);
+dirs = cellfun(@(x) x(1:end-length('/gridInfo.mat')), dirs, 'uni', false)
 
 for dirIdx = 1:length(dirs)
   dir = dirs{dirIdx};
