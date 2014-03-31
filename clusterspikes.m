@@ -31,9 +31,15 @@ end
 dirs = cat(1, d0, d1, d2);
 dirs = cellfun(@(x) x(1:end-length('/gridInfo.mat')), dirs, 'uni', false);
 
+singleFile = true;
+
 for dirIdx = 1:length(dirs)
   dir = dirs{dirIdx};
-  [paramsFile, nSitesPerShank] = benware2spikedetekt(dirs{dirIdx});
+  if singleFile
+    [paramsFile, nSitesPerShank] = benware2spikedetekt_singlefile(dirs{dirIdx});
+  else
+    [paramsFile, nSitesPerShank] = benware2spikedetekt(dirs{dirIdx});
+  end    
   nShanks = length(nSitesPerShank);
 
   done_detekting = false;

@@ -94,7 +94,7 @@ fprintf('Making spikedetekt parameter file...');
 paramsFile = [gridName '.params'];
 fid = fopen([newDir filesep paramsFile], 'w');
 fprintf(fid, 'RAW_DATA_FILES = [');
-for sweepIdx = 1:nSweeps
+for sweepIdx = 1:nFiles
   fprintf(fid, ['''' filenames{sweepIdx} '''' ', ']);
 end
 fprintf(fid, ']\n');
