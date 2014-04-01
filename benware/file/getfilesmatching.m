@@ -10,7 +10,7 @@ else
   temp = rdir(searchstring);
 end
 
-data = {temp.name};
+data = {temp.name}';
 
 if ispc
   data = cellfun(@(x) strrep(x,'\\','/'), data, 'uni', false); % convert ugly "\\" back to much less troublesome "/" filesep
