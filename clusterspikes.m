@@ -160,7 +160,7 @@ for dirIdx = 1:length(dirs)
   
   % move to shank-specific directories
   for shankIdx = 1:nShanks
-    shankDir = sprintf([parentDir filesep 'shank.%d'], shankIdx);
+    shankDir = sprintf([dir filesep 'shank.%d'], shankIdx);
     if ~exist(shankDir, 'dir')
       mkdir(shankDir);
     end
