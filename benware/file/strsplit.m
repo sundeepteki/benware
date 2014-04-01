@@ -77,14 +77,17 @@ if nargin < 2
     delimiterType = 'RegularExpression';
     aDelim = '\s';
 end
-if ~isString(str)
+if ~ischar(str)
     error(message('MATLAB:strsplit:InvalidStringType'));
 end
-if isString(aDelim)
+if ischar(aDelim)
     aDelim = {aDelim};
-elseif ~isCellString(aDelim)
+elseif ~iscell(aDelim)
     error(message('MATLAB:strsplit:InvalidDelimiterType'));
+elseif ~ischar(aDelim{1})
+  error(message('MATLAB:strsplit:InvalidDelimiterType'));
 end
+
 if nargin > 2
     funcName = mfilename;
     p = inputParser;
