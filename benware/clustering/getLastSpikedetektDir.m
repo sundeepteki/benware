@@ -1,9 +1,9 @@
-function dir = getLastSpikedetektDir(parentDir)
+function spikedetektDir = getLastSpikedetektDir(parentDir)
 
 try
-  spikedetektDirs = getdirsmatching([dir filesep 'spikedetekt_*/']);
+  spikedetektDirs = getdirsmatching([dir filesep 'spikedetekt_*']);
 catch
-  dir = '';
+  spikedetektDir = '';
 end
 
 % sort to get the last one
