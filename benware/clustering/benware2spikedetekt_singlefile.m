@@ -30,8 +30,7 @@ sweepIdx = 1;
 maxabs = -Inf;
 while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
   for chanIdx = 1:nChannels
-    fprintf('** Warning skiping range calc\n');
-    tmp = 1; %f32read(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, chanIdx));
+    tmp = f32read(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, chanIdx));
     maxabs = max(maxabs, max(abs(tmp(:))));
   end
 
