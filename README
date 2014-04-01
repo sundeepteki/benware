@@ -153,4 +153,7 @@ Now, in terminal, run klustaviewa on all shanks, e.g.:
 
 Now, get the spike times into Matlab:
  cd benware
+ % for auto-clustered spikes (before you run klustaviewa)
  spiketimes = getclusteredspikes('/data/expt64')
+ % for manually sorted spikes (the result of running klustaviewa)
+ spiketimes = getsortedspikes('/data/expt64')
