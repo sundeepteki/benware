@@ -100,7 +100,8 @@ On a Mac: Install Enthought Canopy
 On a PC: Install pythonxy (MinGW package needed)
 
 3. Install generic python packages using anaconda/canopy/pythonxy:
-You need: pytables, pyqt, pyopengl, h5py
+You need: pytables, pyqt or pyside, pyopengl, h5py
+[conda install pytables h5py; pip install pyopengl; pip install pyside]
 
 4. Downgrade python package "pandas" (Mac, Linux):
 In Terminal:

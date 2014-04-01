@@ -7,6 +7,10 @@ end
 
 setpath;
 
+if ~exist(parentDir, 'dir')
+  error(sprintf('%s not found'), parentDir);
+end
+
 try
   d0 = {};
   d0 = getfilesmatching([parentDir '/gridInfo.mat']);
@@ -35,42 +39,30 @@ singleFile = true;
 
 for dirIdx = 1:length(dirs)
   dir = dirs{dirIdx};
+  fprintf('== Processing %s\n', dir);
 
-  sweepInfoFile = [dir filesep 'spikedetekt/sweep_info.mat']
+  % check if data has been converted; if not, convert it
+  sweepInfoFile = [dir filesep 'spikedetekt/sweep_info.mat'];
   if exist(sweepInfoFile, 'file')
     fprintf('Found %s; skipping conversion\n', sweepInfoFile);
     l = load(sweepInfoFile);
     paramsFile = l.paramsFile;
     nSitesPerShank = l.nSitesPerShank;
-  else  
+    
+  else
     if singleFile
       [paramsFile, nSitesPerShank] = benware2spikedetekt_singlefile(dirs{dirIdx});
     else
       [paramsFile, nSitesPerShank] = benware2spikedetekt(dirs{dirIdx});
     end
-  end    
+  end
   nShanks = length(nSitesPerShank);
 
-  done_detekting = false;
-  try
-    spikedetektDirs = getdirsmatching([dir filesep 'spikedetekt_*/']);
-
-    % sort to get the last one
-    res = cellfun(@(x) regexp(x, 'spikedetekt_([0-9]+)', 'tokens'), spikedetektDirs, 'uni', false);
-    n = cellfun(@(x) eval(x{1}{1}), res)';
-    [srt, idx] = sort(n);
-    spikedetektDirs = spikedetektDirs(idx);
-    spikedetektDir = spikedetektDirs{end};
-
-    if exist([spikedetektDir filesep 'detektion_done.txt'], 'file')
-      done_detekting = true;
-    end
-  catch
-    done_detekting = false;
-  end
-
-  if done_detekting
+  % check if spikes have been detected; if not, detect them
+  spikedetektDir = getLastSpikedetektDir(dir);
+  if ~isempty(spikedetektDir) && exist([spikedetektDir filesep 'detektion_done.txt'], 'file')
     fprintf('Found complete spikedetekt data in %s; skipping spike detection\n', spikedetektDir);
+
   else
     if ispc
       [status,windows_path] = system('PATH'); % we need to get rid of Matlab in our PATH as otherwise scipy will load wrong DLLs from Matlab installation
@@ -87,23 +79,16 @@ for dirIdx = 1:length(dirs)
            'PATH=~/Library/Enthought/Canopy_64bit/User/bin/:Library/Enthought/Canopy_32bit/User/bin/:$PATH ' ...
            'python ' pwd '/klustakwik/detektspikes.py ' paramsFile];
     end
+    
     fprintf('= Detecting spikes by running command:\n %s\n', cmd);
-    res = system(cmd); % TODO: python / spikedetekt will crash if there is not enough diskspace - handle this
+    res = 0; % system(cmd); % TODO: python / spikedetekt will crash if there is not enough diskspace - handle this
     
     if res>0
       error('Command failed');
     end
-    if ispc
-      spikedetektDirs = getdirsmatching([dir filesep 'spikedetekt_*']);
-    else
-      spikedetektDirs = getdirsmatching([dir filesep 'spikedetekt_*/']);
-    end
-    % sort to get the last one
-    res = cellfun(@(x) regexp(x, 'spikedetekt_([0-9]+)', 'tokens'), spikedetektDirs, 'uni', false);
-    n = cellfun(@(x) eval(x{1}{1}), res)';
-    [srt, idx] = sort(n);
-    spikedetektDirs = spikedetektDirs(idx);
-    spikedetektDir = spikedetektDirs{end};
+
+    spikedetektDir = getLastSpikedetektDir(dir);
+    
     if ispc
       fid = fopen(sprintf('%s/detektion_done.txt',spikedetektDir),'w');
       fprintf(fid,'done\n');
@@ -112,6 +97,7 @@ for dirIdx = 1:length(dirs)
       cmd = ['echo done > ' spikedetektDir filesep 'detektion_done.txt'];
       system(cmd);
     end
+    
   end
 
   for shankIdx = 1:nShanks

@@ -21,7 +21,6 @@ if any(d<-32767) || any(d>32767)
   error('Number outside 16-bit integer range');
 end
 
-
 f = fopen(filename, mode);
 if (f==-1)
   error('Could not open file');

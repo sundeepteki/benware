@@ -30,7 +30,8 @@ sweepIdx = 1;
 maxabs = -Inf;
 while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
   for chanIdx = 1:nChannels
-    tmp = f32read(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, chanIdx));
+    fprintf('** Warning skiping range calc\n');
+    tmp = 1; %f32read(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, chanIdx));
     maxabs = max(maxabs, max(abs(tmp(:))));
   end
 
@@ -64,7 +65,12 @@ while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
   % load all data for this sweep
   sweepData = [];
   for chanIdx = 1:nChannels
-    sweepData(:,chanIdx) = f32read(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, chanIdx));
+    d = f32read(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, chanIdx));
+    try
+      sweepData(:,chanIdx) = d;
+    catch
+      error('Data for sweep %d, channel %d is not the same size as previous channels', sweepIdx, chanIdx);
+    end
   end
   
   sweepLens(end+1) = size(sweepData, 1);
@@ -80,7 +86,7 @@ while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
     % append
     int16write(sweepData, filename, mult, true);
   end
-  
+
   sweepIdx = sweepIdx+1;
 
 end
