@@ -83,7 +83,9 @@ for dirIdx = 1:length(dirs)
       fclose(fid);
     else
       cmd = ['cd ' escapespaces([dir filesep 'spikedetekt']) '; ' ...
-           'LD_LIBRARY_PATH='''' DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' python ' pwd '/klustakwik/detektspikes.py ' paramsFile];
+           'LD_LIBRARY_PATH='''' DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' ' ...
+           'PATH=~/Library/Enthought/Canopy_64bit/User/bin/:Library/Enthought/Canopy_32bit/User/bin/:$PATH ' ...
+           'python ' pwd '/klustakwik/detektspikes.py ' paramsFile];
     end
     fprintf('= Detecting spikes by running command:\n %s\n', cmd);
     res = system(cmd); % TODO: python / spikedetekt will crash if there is not enough diskspace - handle this
