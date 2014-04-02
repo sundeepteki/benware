@@ -42,20 +42,16 @@ for probeIdx = 1:length(layout)
     shank = struct;
     shank.shankIdx = shankIdx;
     shank.shankNum = shankNum;
-    try
-      sprintf([dir filesep 'shank.%d' filesep '*kwik'], shankNum);
-      f = getfilesmatching(sprintf([dir filesep 'shank.%d' filesep '*kwik'], shankNum));
+    sprintf([dir filesep 'shank.%d' filesep '*kwik'], shankNum);
+    f = getfilesmatching(sprintf([dir filesep 'shank.%d' filesep '*kwik'], shankNum));
+    if isempty(f)
+      shank.kwikfile = '';
+      shank.cluster = {};
+      fprintf('.');
+    else
       shank.kwikfile = f{1};
       shank.cluster = getkwikspikes(shank.kwikfile);
       fprintf('o');
-    catch exc
-      if strcmp(exc.identifier, 'MATLAB:ls:OSError')
-        shank.kwikfile = '';
-        shank.cluster = {};
-        fprintf('.');
-      else
-        rethrow(exc);
-      end
     end
     shanks{shankIdx} = shank;
     shankNum = shankNum + 1;
