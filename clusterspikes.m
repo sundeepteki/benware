@@ -40,8 +40,6 @@ end
 dirs = cat(1, d0, d1, d2);
 dirs = cellfun(@(x) x(1:end-length('/gridInfo.mat')), dirs, 'uni', false);
 
-singleFile = true;
-
 for dirIdx = 1:length(dirs)
   try
     dir = dirs{dirIdx};
@@ -56,16 +54,13 @@ for dirIdx = 1:length(dirs)
       nSitesPerShank = l.nSitesPerShank;
     
     else
-      if singleFile
-        [paramsFile, nSitesPerShank] = benware2spikedetekt_singlefile(dirs{dirIdx});
-      else
-        [paramsFile, nSitesPerShank] = benware2spikedetekt(dirs{dirIdx});
-      end
+      [paramsFile, nSitesPerShank] = benware2spikedetekt(dirs{dirIdx});
     end
     nShanks = length(nSitesPerShank);
 
     % check if spikes have been detected; if not, detect them
     spikedetektDir = getLastSpikedetektDir(dir);
+  
     if ~isempty(spikedetektDir) && exist([spikedetektDir filesep 'detektion_done.txt'], 'file')
       fprintf('Found complete spikedetekt data in %s; skipping spike detection\n', spikedetektDir);
 
@@ -95,14 +90,9 @@ for dirIdx = 1:length(dirs)
 
       spikedetektDir = getLastSpikedetektDir(dir);
     
-      if ispc
-        fid = fopen(sprintf('%s/detektion_done.txt',spikedetektDir),'w');
-        fprintf(fid,'done\n');
-        fclose(fid);
-      else
-        cmd = ['echo done > ' spikedetektDir filesep 'detektion_done.txt'];
-        system(cmd);
-      end
+      fid = fopen(sprintf('%s/detektion_done.txt',spikedetektDir),'w');
+      fprintf(fid,'done\n');
+      fclose(fid);
     
     end
 

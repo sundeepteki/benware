@@ -1,8 +1,5 @@
 function [paramsFile, nSitesPerShank] = benware2spikedetekt(dataDir)
 
-% put all data in a single file
-singleFile = true;
-
 if ispc
   filesep = '\\'; % yet another Matlab WTF... :/ - needed avoid invalid escape sequences in sprintf
 else
@@ -51,27 +48,29 @@ filenames = {};
 sweepLens = [];
 
 sweepIdx = 1;
-
-filename = [newDir filesep gridName '.sweeps.dat'];
-shortFilename = [gridName '.sweeps.dat'];
-
 while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
-  fprintf('.');
-  if round(sweepIdx/70)==(sweepIdx/70)
-    fprintf('\n');
+  filename = sprintf([newDir filesep gridName '.%d.dat'], sweepIdx);
+  shortFilename = sprintf([gridName '.%d.dat'], sweepIdx);
+  if exist(filename, 'file')
+    fprintf('s');
+    filenames{end+1} = shortFilename;
+    tmp = f32read(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, 1));
+    sweepLens(end+1) = length(tmp);
+    sweepIdx = sweepIdx+1;
+    continue;
+  else
+    fprintf('.');
+    if round(sweepIdx/70)==(sweepIdx/70)
+      fprintf('\n');
+    end
   end
   
   % load all data for this sweep
   sweepData = [];
   for chanIdx = 1:nChannels
-    d = f32read(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, chanIdx));
-    try
-      sweepData(:,chanIdx) = d;
-    catch
-      error('Data for sweep %d, channel %d is not the same size as previous channels', sweepIdx, chanIdx);
-    end
+    sweepData(:,chanIdx) = f32read(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, chanIdx));
   end
-  
+
   sweepLens(end+1) = size(sweepData, 1);
   
   % interleave data
@@ -79,19 +78,14 @@ while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
   sweepData = sweepData(:);
   
   % open output data file for this sweep
-  if sweepIdx==1
-    int16write(sweepData, filename, mult);
-  else
-    % append
-    int16write(sweepData, filename, mult, true);
-  end
-
+  int16write(sweepData, filename, mult);
+  filenames{end+1} = shortFilename;
+  
   sweepIdx = sweepIdx+1;
 
 end
 
-filenames = {shortFilename};
-nFiles = 1; % number of data files
+nSweeps = length(filenames); % number of complete sweeps
 
 fprintf(' done\n');
 
@@ -99,7 +93,7 @@ fprintf('Making spikedetekt parameter file...');
 paramsFile = [gridName '.params'];
 fid = fopen([newDir filesep paramsFile], 'w');
 fprintf(fid, 'RAW_DATA_FILES = [');
-for sweepIdx = 1:nFiles
+for sweepIdx = 1:nSweeps
   fprintf(fid, ['''' filenames{sweepIdx} '''' ', ']);
 end
 fprintf(fid, ']\n');
@@ -120,7 +114,6 @@ if spikeDetektDev
   fprintf(fid, 'USE_COMPONENT_ALIGNFLOATMASK = True\n');
   fprintf(fid, 'DEBUG = False\n');
 end
-
 %mult
 %fprintf(fid, 'ADDITIONAL_FLOAT_PENUMBRA = 0\n');
 %fprintf(fid, 'DTYPE = ''f32''');
