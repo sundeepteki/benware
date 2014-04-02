@@ -111,6 +111,8 @@ fprintf(fid, 'VOLTAGE_RANGE = %0.6f\n', 32767/mult);
 
 spikeDetektDev = true; % true if using spikedetekt amalgamated_dev branch
 if spikeDetektDev
+  fprintf(fid, 'WRITE_FIL_FILE = False\n');
+  fprintf(fid, 'WRITE_BINFIL_FILE = False\n');
   fprintf(fid, 'THRESH_SD = 4.5\n');
   fprintf(fid, 'THRESH_SD_LOWER = 2\n');
   fprintf(fid, 'USE_OLD_CC_CODE = True\n');
