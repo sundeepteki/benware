@@ -1,7 +1,7 @@
 function spikedetektDir = getLastSpikedetektDir(parentDir)
 
 try
-  spikedetektDirs = getdirsmatching([dir filesep 'spikedetekt_*']);
+  spikedetektDirs = getdirsmatching([parentDir filesep 'spikedetekt_*']);
 catch
   spikedetektDir = '';
   return;
