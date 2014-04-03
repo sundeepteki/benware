@@ -108,6 +108,7 @@ fprintf(fid, 'SAMPLERATE = %0.6f\n', l.expt.dataDeviceSampleRate);
 fprintf(fid, 'NCHANNELS = %d\n', nChannels);
 fprintf(fid, 'PROBE_FILE = ''%s''\n', [gridName '.probe']);
 fprintf(fid, 'VOLTAGE_RANGE = %0.6f\n', 32767/mult);
+fprintf(fid, 'USE_SINGLE_THRESHOLD = False\n');
 
 spikeDetektDev = true; % true if using spikedetekt amalgamated_dev branch
 if spikeDetektDev
