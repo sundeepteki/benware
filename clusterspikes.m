@@ -45,6 +45,12 @@ for dirIdx = 1:length(dirs)
     dir = dirs{dirIdx};
     fprintf('== Processing %s\n', dir);
 
+    if exist([dir '/raw.f32'])==0
+      fprintf('%s does not exist (probably because no waveforms were saved); skipping spike detection\n', [dir '/raw.f32']);
+      continue
+    end
+
+
     % check if data has been converted; if not, convert it
     sweepInfoFile = [dir filesep 'spikedetekt/sweep_info.mat'];
     if exist(sweepInfoFile, 'file')
