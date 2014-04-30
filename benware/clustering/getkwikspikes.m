@@ -63,3 +63,23 @@ for ii = 1:length(clusterIDs)
   
 end
 clusters = [clusters{:}];
+
+mergeMUA = true;
+muaClusterIdx = find(strcmp({clusters(:).clusterType}, 'MUA'));
+if mergeMUA && ~isempty(muaClusterIdx)
+  % merge all MUA clusters into one
+  suClusterIdx = setdiff(1:length(clusters), muaClusterIdx);
+
+  newClusters = clusters(suClusterIdx);
+
+  muaCluster = struct;
+  muaCluster.clusterID = [clusters(muaClusterIdx).clusterID];
+  muaCluster.clusterGroup = [clusters(muaClusterIdx).clusterGroup];
+  muaCluster.clusterType = 'MUA';
+  muaCluster.spikeTimes = cat(1, clusters(muaClusterIdx).spikeTimes);
+  muaCluster.waveforms = cat(2, clusters(muaClusterIdx).waveforms);
+  
+  newClusters(end+1) = muaCluster;
+  
+  clusters = newClusters;
+end
