@@ -41,7 +41,7 @@ while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
 
   sweepIdx = sweepIdx+1;
 end
-mult = 32767/maxabs/1.1; % seems to be needed to prevent clipping
+mult = 32767/maxabs/2; % seems to be needed to prevent clipping
 fprintf('done\n');
 
 newDir = [dataDir filesep 'spikedetekt'];
