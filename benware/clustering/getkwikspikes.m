@@ -64,6 +64,10 @@ for ii = 1:length(clusterIDs)
 end
 clusters = [clusters{:}];
 
+if length(clusters)==0
+  return;
+end
+
 mergeMUA = true;
 muaClusterIdx = find(strcmp({clusters(:).clusterType}, 'MUA'));
 if mergeMUA && ~isempty(muaClusterIdx)

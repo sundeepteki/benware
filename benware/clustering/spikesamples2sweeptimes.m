@@ -1,9 +1,15 @@
 function sweepTimes = spikesamples2sweeptimes(f_s, spikeTimes, sweepLens)
 
+if isempty(spikeTimes)
+  sweepTimes = [];
+return;
+end
+
 spikeTimes = double(spikeTimes);
 
 % biggest spike time should be less than biggest sample
 assert(max(spikeTimes)<sum(sweepLens));
+
 
 % convert spike times to sweep times
 sweepEdges = [0 cumsum(sweepLens)];
