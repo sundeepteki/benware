@@ -6,7 +6,7 @@ function grid = grid_bilateral_noise
 
   % stimulus grid structure
   grid.stimGridTitles = {'Duration', 'LeftDelay', 'RightDelay', 'BothDelay', 'Level'};
-  grid.stimGrid = [50 0 100 200 140]; % after compensation this will be about 10dB below nominal level
+  grid.stimGrid = [45 0 100 200 90]; % after compensation this will be about 10dB below nominal level
   
   global CALIBRATION
   if CALIBRATION

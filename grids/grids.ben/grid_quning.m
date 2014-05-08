@@ -1,4 +1,3 @@
-
 function grid = grid_quning()
 
   % controlling the sound presentation
@@ -13,14 +12,6 @@ function grid = grid_quning()
   levels = 50:20:90;
   tonedur = 100;
 
-  fprintf('== Warning temporary values\n');
-  pause;
-  freqs = logspace(log10(500), log10(500*2^5.75), 5.75*4+1);  
-  levels = 140;
-  tonedur = 25;
-  grid.repeatsPerCondition = 300;
-
-  
   global CALIBRATE;
   if CALIBRATE
     fprintf('== Calibration mode. Press a key to continue == ')
@@ -34,7 +25,7 @@ function grid = grid_quning()
 
   % sweep parameters
   grid.postStimSilence = 0;
-  %grid.repeatsPerCondition = 30;
+  grid.repeatsPerCondition = 30;
   
   % set this using absolute calibration
   grid.stimLevelOffsetDB = [0 0]-16-35+24;
