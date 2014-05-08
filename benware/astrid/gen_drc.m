@@ -56,7 +56,8 @@ for freq_idx = 1:n_freqs
         idx  = arrayfun(@(x,y) repmat(x,[1 y]),1:n_chords,diff(chord_start_samples),'UniformOutput',false);  % allow different sample lenghts for each chord
         freq = freqs(freq_idx,cell2mat(idx));
         freq = horzcat(freq(1)*ones(1,floor(length(cosramp)/2)),freq,freq(end)*ones(1,ceil(length(cosramp)/2)));
-              
+        % we need to correct for the phase jumps from one chord to another by calculating the difference between the phase at the end of the previous and the phase at the beginning of the
+        % following chord and correcting the phase of the following chord to match it to the phase from the previous chord
         pos           = [0 ramp_duration/2*ones(1,n_chords)] + (0:(n_chords))*chord_duration; % get positions in seconds where frequency changes
         phase_diff    = -2*pi* [0 diff(freqs(freq_idx,:))] .* pos(1:end-1);                   % get phase offsets/jumps to remove
         phase_diff    = phase_diff + phase_diff(2);                                           % introduce random phase by starting chord 1 with phase offset between chord 1 and 2

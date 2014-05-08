@@ -18,7 +18,7 @@ function grid = grid_DRCvowel()
 %         compensationFilterFile = '/Users/ben/scratch/expt.42/calib.expt42/compensationFilters100k.mat';
 %     otherwise
 %         compensationFilterFile = ...
-%               'e:\auditory-objects\calibration_new\2014.03.17.ben\compensation_filters.mat'; % is it 100kHz?
+%               'e:\auditory-objects\calibration_new\2014.03.21.forjan\compensation_filters.mat'; % is it 100kHz?
 % end
 
 % controlling the sound presentation
@@ -30,9 +30,9 @@ global CALIBRATE;
 if CALIBRATE
   fprintf('For calibration only!');
   pause;
-  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsCalibDRCvowel2014_03_18.m';
+  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsCalibDRCvowel2014_04_22.m';
 else
-  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsDRCvowel2014_03_18.m';    
+  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsDRCvowel2014_04_22.m';    
 end
 
 fprintf('Generating stimuli...\n');
@@ -50,4 +50,4 @@ end
 
 % sweep parameters
 grid.postStimSilence = 0;         % no need of silence between stimulus sets, WAV files have trailing inter stimulus interval
-grid.repeatsPerCondition = 11;     % we need permutation between stimuli so it is done within the WAV files
+grid.repeatsPerCondition = 15;     % we need permutation between stimuli so it is done within the WAV files

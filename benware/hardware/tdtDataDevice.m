@@ -17,6 +17,7 @@ classdef tdtDataDevice < tdtDevice
       if ~isempty(OVERRIDE_RCO_FILE)
         rco_leafname = OVERRIDE_RCO_FILE;
       end
+      rco_leafname
       
       obj.rcxSetup.rcxFilename = ['benware/tdt/' rco_leafname];
       obj.rcxSetup.versionTagName = [deviceInfo.name 'NoGainVer'];

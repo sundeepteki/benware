@@ -30,9 +30,9 @@ global CALIBRATE;
 if CALIBRATE
   fprintf('For calibration only!');
   pause;
-  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsCalibMistuned2014_03_18.m';
+  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsCalibMistuned2014_04_22.m';
 else
-  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsMistuned2014_03_18.m';    
+  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsMistuned2014_04_22.m';    
 end
 
 fprintf('Generating stimuli...\n');
