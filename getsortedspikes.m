@@ -8,6 +8,12 @@ function data = getclusteredspikes(dir)
 data = struct;
 data.gridInfoFile = [dir filesep 'gridInfo.mat'];
 
+if ispc
+  % kludge
+  filesep = '/';
+  data.gridInfoFile(data.gridInfoFile=='\') = '/';
+end
+
 l = load(data.gridInfoFile);
 data.grid = l.grid;
 data.expt = l.expt;
