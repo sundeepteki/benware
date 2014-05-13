@@ -61,7 +61,8 @@ for probeIdx = 1:nProbes
     lastSite = firstSite + nSites-1;
 
     if nSites==1
-      fprintf(fid, '(%d, %d), ', firstSite, firstSite);
+      fprintf(fid, '(%d, -1), ', firstSite);
+      %fprintf(fid, '(%d, %d), ', firstSite, firstSite);
     else
       for siteIdx = 1:nSites
         if siteIdx<nSites
