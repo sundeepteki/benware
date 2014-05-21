@@ -1,0 +1,12 @@
+2014-05-08 04:15:45 - CreateAstridStimuli started using E:\auditory-objects\benware\benware\astrid\SettingsDRCvowel2014_04_22.m
+  random_seed = 209145;
+  random_seed = 209145;
+  ### vowel settings ###
+  vowel_dur = 0;  f0 = 220;  startvowel = [460  1105  2735  4052];  endvowel = [730  2058  2979  4294];  nsteps = 4;  formants = 456765430000                         11  47  24  20  .. 1632163006355738                         22  88  19  67  .. 2362736933675379                         44  12  31  23  .. 4634063256392734;  bandwidths = [80   70  160  300];  carriertype = clicktrain;  vowel_level = 85;  vowel_amplitude = 0.355656;
+  vowel_position = [  3370];
+  ### DRC settings ###
+  complex = [200    400    600    800   1000   1200   1400   1600   1800   2000   2200   2400   2600   2800   3000   3200   3400   3600   3800   4000   4200   4400   4600   4800   5000   5200   5400   5600   5800   6000   6200   6400   6600   6800   7000   7200   7400   7600   7800   8000   8200   8400   8600   8800   9000   9200   9400   9600   9800  10000  10200  10400  10600  10800  11000  11200  11400  11600  11800  12000  12200  12400  12600  12800  13000  13200  13400  13600  13800  14000  14200  14400  14600  14800  15000  15200  15400  15600  15800  16000  16200  16400  16600  16800  17000  17200  17400  17600  17800  18000  18200  18400  18600  18800  19000  19200  19400  19600  19800  20000];  n_chord = 60  jitter = [00..000011              0 .00.0014               00..00041                00..0044]  levels_offset = 60;  levels_range = 10;  chord_duration = 0  ramp_duration = 0
+permutation_sequence = [1   8   5  10   4   6   3   9  12   7   2  11];
+permutation_sequence = [3   7   2  10  12   6   5   8   1   9   4  11];
+permutation_sequence = [3   4   2  12   9   1   7  10   8   6   5  11];
+permutation_sequence = [3   9   1  11   2   5   4   7  10   6  12   8];

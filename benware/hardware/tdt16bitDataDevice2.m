@@ -1,4 +1,4 @@
-classdef tdtDataDevice < tdtDevice
+classdef tdt16bitDataDevice2 < tdtDevice
   properties
     nChannels = nan;
     rcxSetup = [];
@@ -10,14 +10,7 @@ classdef tdtDataDevice < tdtDevice
       % initialise the class itself
       
       % default value
-      rco_leafname = [deviceInfo.name '-nogain.rcx'];
-
-      % override if necessary
-      global OVERRIDE_RCO_FILE;
-      if ~isempty(OVERRIDE_RCO_FILE)
-        rco_leafname = OVERRIDE_RCO_FILE;
-      end
-      rco_leafname
+      rco_leafname = [deviceInfo.name '-nogain-pipebus-and-legacy-16bit.rcx'];
       
       obj.rcxSetup.rcxFilename = ['benware/tdt/' rco_leafname];
       obj.rcxSetup.versionTagName = [deviceInfo.name 'NoGainVer'];
@@ -64,7 +57,7 @@ classdef tdtDataDevice < tdtDevice
         data = nan(obj.nChannels, nSamples);
 
         for chan = 1:obj.nChannels
-            data(chan, :) = obj.handle.ReadTagV(['ADwb' num2str(chan)], offset, nSamples);
+            data(chan, :) = obj.handle.ReadTagVEX(['ADwb' num2str(chan)], offset, nSamples, 'I16', 'F64');
         end
     end
         
@@ -73,7 +66,7 @@ classdef tdtDataDevice < tdtDevice
       data = cell(1, obj.nChannels);
       for chan = 1:obj.nChannels
           maxIndex = obj.handle.GetTagVal(['ADidx' num2str(chan)]);
-          data{chan} = obj.handle.ReadTagV(['ADwb' num2str(chan)],0,maxIndex);
+          data{chan} = obj.handle.ReadTagVEX(['ADwb' num2str(chan)],0,maxIndex, 'I16', 'F64');
       end
     end
 
@@ -85,7 +78,7 @@ classdef tdtDataDevice < tdtDevice
         data = [];
         errorBeep('Data requested beyond end of buffer!\n');
       else
-        data = obj.handle.ReadTagV(['ADwb' num2str(chan)],offset,maxIndex-offset);
+        data = obj.handle.ReadTagVEX(['ADwb' num2str(chan)],offset,maxIndex-offset, 'I16', 'F64');
       end
     end
     
@@ -131,10 +124,6 @@ classdef tdtDataDevice < tdtDevice
       % index: the index that the serial buffer has reached
 
       index = obj.handle.GetTagVal(['ADidx' num2str(chan)]);
-    end
-    
-    function deviceIs16bit = is16Bit(obj)
-        deviceIs16bit = false;
     end
     
   end

@@ -22,6 +22,9 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
  
   % make matlab buffer for data
   nSamplesExpected = floor(sweepLen*hardware.dataDevice.sampleRate)+1;
+  if hardware.dataDevice.is16Bit
+      nSamplesExpected = floor(nSamplesExpected/2)*2;
+  end
   data = zeros(nChannels, nSamplesExpected);
   nSamplesReceived = 0;
 
@@ -61,7 +64,10 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   % * upload next stimulus as far as possible
   % * download data as fast as possible while trial is running
   % * plot incoming data
-
+  DEBUG = true;
+  if DEBUG
+      fprintf('Samples expected %d\n', nSamplesExpected);
+  end
   % loop until we've received (and saved) all data
   while nSamplesReceived<nSamplesExpected
       
