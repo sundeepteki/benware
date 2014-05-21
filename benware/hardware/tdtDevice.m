@@ -130,7 +130,7 @@ classdef tdtDevice < handle
       status = obj.deviceStatus;
       if status~=7
         ok = false;
-        message = ['reports wrong status -- code ' obj.deviceStatus];
+        message = ['reports wrong status -- code ' num2str(obj.deviceStatus)];
       end
       
       fprintf('  * Device %s (%s%d) OK: %s v.%d @ %0.0fHz\n', deviceInfo.name, ...

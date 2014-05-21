@@ -10,7 +10,7 @@ classdef tdt16bitDataDevice < tdtDevice
       % initialise the class itself
       
       % default value
-      rco_leafname = [deviceInfo.name '-nogain-pipebus-and-legacy-16bit.rcx'];
+      rco_leafname = [deviceInfo.name '-nogain-pipebus-and-legacy-16bit-exptal.rcx'];
       
       obj.rcxSetup.rcxFilename = ['benware/tdt/' rco_leafname];
       obj.rcxSetup.versionTagName = [deviceInfo.name 'NoGainVer'];
@@ -57,18 +57,37 @@ classdef tdt16bitDataDevice < tdtDevice
         maxIndex_32bit = min(maxIndex_32bit);
         maxIndex_16bit = maxIndex_32bit*2; % we actually have twice as many samples as reported by ADidx
         
-        DEBUG = true;
+        DEBUG = false;
         if DEBUG
             fprintf('Offset %d, available %d\n', offset_16bit, maxIndex_16bit);
         end
 
         nSamples_16bit = maxIndex_16bit-offset_16bit;
-        offset_32bit = offset_16bit/2;
+        %offset_32bit = offset_16bit/2;
         
         data = nan(obj.nChannels, nSamples_16bit);
         
         for chan = 1:obj.nChannels
-            data(chan, :) = obj.handle.ReadTagVEX(['ADwb' num2str(chan)], offset_32bit, nSamples_16bit, 'I16', 'F64', 1);
+            data(chan, :) = obj.handle.ReadTagVEX(['ADwb' num2str(chan)], offset_16bit, nSamples_16bit, 'I16', 'F64', 1);
+        end
+        
+        if DEBUG
+            fprintf('DEBUG: checking downloadAvailableData...');
+            check = obj.downloadAllData;
+            minLen = min(cellfun(@(x) length(x), check));
+            check = cellfun(@(x) x(1:minLen), check, 'uni', false);
+            check = cat(1, check{:});
+            try
+              assert(all(all(data==check(:,offset_16bit+1:offset_16bit+nSamples_16bit))));
+            catch
+                figure(10);
+                subplot(2,1,1);
+                imagesc(check(:,offset_16bit+1:offset_16bit+nSamples_16bit));
+                subplot(2,1,2);
+                imagesc(data);
+              keyboard
+            end
+            fprintf('done\n');
         end
     end
         
@@ -93,10 +112,10 @@ classdef tdt16bitDataDevice < tdtDevice
             data = [];
             errorBeep('Data requested beyond end of buffer!\n');
         else
-            offset_32bit = offset_16bit/2;
+            %offset_32bit = offset_16bit/2;
             maxIndex_16bit = maxIndex_32bit*2; % we actually have twice as many samples as reported by ADidx
             nSamples_16bit = maxIndex_16bit-offset_16bit;
-            data = obj.handle.ReadTagVEX(['ADwb' num2str(chan)], offset_32bit, nSamples_16bit, 'I16', 'F64', 1);
+            data = obj.handle.ReadTagVEX(['ADwb' num2str(chan)], offset_16bit, nSamples_16bit, 'I16', 'F64', 1);
         end
     end
     
@@ -127,7 +146,7 @@ classdef tdt16bitDataDevice < tdtDevice
 
       index = nan(1, nChannels);
       for chan = 1:nChannels
-          index(chan) = obj.handle.GetTagVal(['ADidx' num2str(chan)]);
+          index(chan) = obj.handle.GetTagVal(['ADidx' num2str(chan)])*2;
       end
     end
     
@@ -141,7 +160,7 @@ classdef tdt16bitDataDevice < tdtDevice
       % chan: the number of the channel you want
       % index: the index that the serial buffer has reached
 
-      index = obj.handle.GetTagVal(['ADidx' num2str(chan)]);
+      index = obj.handle.GetTagVal(['ADidx' num2str(chan)])*2;
     end
     
     function deviceIs16bit = is16Bit(obj)
