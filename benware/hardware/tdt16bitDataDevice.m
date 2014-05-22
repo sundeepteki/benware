@@ -10,7 +10,8 @@ classdef tdt16bitDataDevice < tdtDevice
       % initialise the class itself
       
       % default value
-      rco_leafname = [deviceInfo.name '-nogain-pipebus-and-legacy-16bit-exptal.rcx'];
+      rco_leafname = [deviceInfo.name '-nogain-pipebus-and-legacy-16bit-exptal2.rcx'];
+      %rco_leafname = [deviceInfo.name '-nogain-pipebus-and-legacy-16bit.rcx'];
       
       obj.rcxSetup.rcxFilename = ['benware/tdt/' rco_leafname];
       obj.rcxSetup.versionTagName = [deviceInfo.name 'NoGainVer'];
@@ -68,7 +69,7 @@ classdef tdt16bitDataDevice < tdtDevice
         data = nan(obj.nChannels, nSamples_16bit);
         
         for chan = 1:obj.nChannels
-            data(chan, :) = obj.handle.ReadTagVEX(['ADwb' num2str(chan)], offset_16bit, nSamples_16bit, 'I16', 'F64', 1);
+            data(chan, :) = obj.handle.ReadTagVEX(['ADwb' num2str(chan)], offset_16bit, nSamples_16bit, 'I16', 'F64', 1)/3276.7;
         end
         
         if DEBUG
@@ -97,7 +98,7 @@ classdef tdt16bitDataDevice < tdtDevice
       for chan = 1:obj.nChannels
           maxIndex_32bit = obj.handle.GetTagVal(['ADidx' num2str(chan)]);
           maxIndex_16bit = maxIndex_32bit*2;
-          data{chan} = obj.handle.ReadTagVEX(['ADwb' num2str(chan)], 0, maxIndex_16bit, 'I16', 'F64', 1);
+          data{chan} = obj.handle.ReadTagVEX(['ADwb' num2str(chan)], 0, maxIndex_16bit, 'I16', 'F64', 1)/3276.7;
       end
     end
 
@@ -115,7 +116,7 @@ classdef tdt16bitDataDevice < tdtDevice
             %offset_32bit = offset_16bit/2;
             maxIndex_16bit = maxIndex_32bit*2; % we actually have twice as many samples as reported by ADidx
             nSamples_16bit = maxIndex_16bit-offset_16bit;
-            data = obj.handle.ReadTagVEX(['ADwb' num2str(chan)], offset_16bit, nSamples_16bit, 'I16', 'F64', 1);
+            data = obj.handle.ReadTagVEX(['ADwb' num2str(chan)], offset_16bit, nSamples_16bit, 'I16', 'F64', 1)/3276.7;
         end
     end
     
