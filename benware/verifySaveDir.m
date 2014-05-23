@@ -14,7 +14,7 @@ if ~exist(dataDir, 'dir')
   if r=='n'
     errorBeep('parameter:error', 'Error in verifySaveDir');
   end
-  saveName = '';
+  saveName = grid.name;
 
   return
 end

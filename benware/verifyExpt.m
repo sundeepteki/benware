@@ -16,7 +16,9 @@ printExpt(expt);
 % stimulus
 fprintf_subtitle('Stimulus');
 fprintf('  - name: %s\n', grid.name);
-fprintf('  - sample rate: %d\n', round(grid.sampleRate));
+if ~strcmpi(expt.stimDeviceType, 'none')
+  fprintf('  - sample rate: %d\n', round(grid.sampleRate));
+end
 fprintf('  - # sets: %d\n', size(grid.stimGrid, 1));
 fprintf('  - # repeats: %d\n', grid.repeatsPerCondition);
 fprintf('  - # sweeps: %d\n', size(grid.stimGrid, 1) * grid.repeatsPerCondition);

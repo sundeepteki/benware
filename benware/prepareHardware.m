@@ -22,27 +22,31 @@ end
 % we want to be able to have mono or stereo stimulus device because the amount of buffer space on the 
 % TDT devices is limited. We don't want to share the buffer with a non-existant second channel.
 
-if ~isfield(hardware, 'stimDevice')
-	fprintf('  * Initialising stimulus device...\n');
-	hardware.stimDevice = feval(expt.stimDeviceType, ...
-								expt.stimDeviceInfo, grid.sampleRate, expt.nStimChannels);
+if strcmpi(expt.stimDeviceType, 'none')
+  hardware.stimDevice = [];
 else
-    if ~strcmp(class(hardware.stimDevice), expt.stimDeviceType)
-        ok = false;
-        message = sprintf('wrong stimulus device type (%s rather than %s)', ...
-                    class(hardware.stimDevice), expt.stimDeviceType);
-    else
-        [ok, message] = hardware.stimDevice.checkDevice(...
-                    	expt.stimDeviceInfo, grid.sampleRate, expt.nStimChannels);
-    end
+  if ~isfield(hardware, 'stimDevice')
+  	fprintf('  * Initialising stimulus device...\n');
+    hardware.stimDevice = feval(expt.stimDeviceType, ...
+  								expt.stimDeviceInfo, grid.sampleRate, expt.nStimChannels);
+  else
+      if ~strcmp(class(hardware.stimDevice), expt.stimDeviceType)
+          ok = false;
+          message = sprintf('wrong stimulus device type (%s rather than %s)', ...
+                      class(hardware.stimDevice), expt.stimDeviceType);
+      else
+          [ok, message] = hardware.stimDevice.checkDevice(...
+                      	expt.stimDeviceInfo, grid.sampleRate, expt.nStimChannels);
+      end
 
-    if ok
-        fprintf('  * Stimulus device already initialised\n');
-    else
-        fprintf('  * Reinitialising stimulus device (%s)...\n', message);
-        hardware.stimDevice = feval(expt.stimDeviceType, ...
-								expt.stimDeviceInfo, grid.sampleRate, expt.nStimChannels);
-    end
+      if ok
+          fprintf('  * Stimulus device already initialised\n');
+      else
+          fprintf('  * Reinitialising stimulus device (%s)...\n', message);
+          hardware.stimDevice = feval(expt.stimDeviceType, ...
+  								expt.stimDeviceInfo, grid.sampleRate, expt.nStimChannels);
+      end
+  end
 end
 
 % set up data device
@@ -90,8 +94,10 @@ pause(2);
 fprintf('done.\n');
 
 % check sample rates are identical to those requested
-if floor(hardware.stimDevice.sampleRate) ~= floor(grid.sampleRate)
-  errorBeep('stimDevice sample rate is wrong');
+if ~strcmpi(expt.stimDeviceType, 'none')
+  if floor(hardware.stimDevice.sampleRate) ~= floor(grid.sampleRate)
+    errorBeep('stimDevice sample rate is wrong');
+  end
 end
 
 if hardware.dataDevice.sampleRate ~= expt.dataDeviceSampleRate

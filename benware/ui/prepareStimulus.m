@@ -38,6 +38,11 @@ else
     stimInfo.stimGridTitles = grid.stimGridTitles;
     stimInfo.stimParameters = grid.randomisedGrid(sweepNum, :);
     
+    if strcmpi(expt.stimDeviceType, 'none')
+      stim = [];
+      return;
+    end
+    
     parameters = num2cell(stimInfo.stimParameters);
 
     % generate stimulus vector/matrix
