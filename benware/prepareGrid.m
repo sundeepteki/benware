@@ -2,20 +2,23 @@ function grid = prepareGrid(grid, expt)
 
 % add extra fields
 grid.saveName = '';
-grid.nStimConditions = size(grid.stimGrid, 1);
 
 
 if strcmpi(expt.stimDeviceType, 'none')
   % no stimulus device, so no stimulus checks
   grid.stimGenerationFunction = '';
   grid.stimGridTitles = {'SweepNum'};
-  grid.nSweepsDesired = 10000;
-  grid.stimGrid = (1:grid.nSweepsDesired)';
+  grid.nStimConditions = 10000;
   grid.repeatsPerCondition = 1;
+  grid.nSweepsDesired = grid.nStimConditions;
+  grid.stimGrid = (1:grid.nSweepsDesired)';
   grid.randomisedGrid = grid.stimGrid;
   grid.randomisedGridSetIdx = grid.stimGrid;
 
 else
+  % add extra field
+  grid.nStimConditions = size(grid.stimGrid, 1);
+
   % check that the grid is valid
   verifyGridFields(grid);
 
