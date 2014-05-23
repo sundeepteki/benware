@@ -127,7 +127,7 @@ if ~isempty(gridFile)
   
   if lower(i)=='y'
     fprintf('The last recorded sweep was %d.\n', lastSweep);
-    firstSweep = demandnumberinput(sprintf('Which sweep do you want to resume from? [%d] ', lastSweep+1), 1:lastSweep+1, lastSweep+1);
+    firstSweep = demandnumberinput(sprintf('Which sweep do you want to resume from? [%d] ', lastSweep), 1:lastSweep+1, lastSweep);
     gotGrid = true;
     grid = l.grid;
   end
