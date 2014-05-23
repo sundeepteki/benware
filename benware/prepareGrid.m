@@ -14,6 +14,11 @@ if strcmpi(expt.stimDeviceType, 'none')
   grid.stimGrid = (1:grid.nSweepsDesired)';
   grid.randomisedGrid = grid.stimGrid;
   grid.randomisedGridSetIdx = grid.stimGrid;
+  
+  if ~isfield(grid, 'saveWaveforms')
+    grid.saveWaveforms = true;
+  end
+  
 
 else
   % add extra field
