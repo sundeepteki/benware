@@ -77,7 +77,9 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   while ~endofSweep
       
     % allow stimDevice to do something during sweep (i.e. upload stimulus)
-    hardware.stimDevice.workDuringSweep;
+    if ~state.slaveMode
+      hardware.stimDevice.workDuringSweep;
+    end
     
     % download data
     newdata = hardware.dataDevice.downloadAvailableData(nSamplesReceived);
@@ -120,7 +122,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
     
     % check whether we're done
     if state.slaveMode
-      if nSamplesReceived == nSamplesReceivedAlready % no new samples
+      if (nSamplesReceived == nSamplesReceivedAlready) || (nsamplesReceived>=nSamplesExpected) % no new samples
         endOfSweep = true;
       end
     else
@@ -136,8 +138,14 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   fprintf(['  * Waveforms received and saved after ' num2str(toc) ' sec.\n']);
 
   % allow stimDevice to do some work
-  hardware.stimDevice.workAfterSweep;
-
+  if ~state.slaveMode
+    hardware.stimDevice.workAfterSweep;
+  end
+  
+  if state.slaveMode
+    data = data(:,1:nSamplesReceived);
+  end
+  
   % finish detecting spikes  
   [filtData, offset] = filterData(data(:, filterIndex+1:nSamplesReceived), spikeFilter);
   filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;
