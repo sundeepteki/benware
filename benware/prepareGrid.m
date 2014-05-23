@@ -8,19 +8,12 @@ grid.nStimConditions = size(grid.stimGrid, 1);
 if strcmpi(expt.stimDeviceType, 'none')
   % no stimulus device, so no stimulus checks
   grid.stimGenerationFunction = '';
-
-  repeatsPerCondition = 10000;
-
-  idx = [];
-
-  for ii = 1:repeatsPerCondition
-    idx = [idx 1:size(grid.stimGrid, 1)];
-  end
-  grid.randomisedGrid = grid.stimGrid(idx, :);
-  grid.nSweepsDesired = size(grid.randomisedGrid, 1);
-
-  [junk grid.randomisedGridSetIdx] = ...
-    ismember(grid.randomisedGrid, grid.stimGrid, 'rows');
+  grid.stimGridTitles = {'SweepNum'};
+  grid.nSweepsDesired = 10000;
+  grid.stimGrid = (1:grid.nSweepsDesired)';
+  grid.repeatsPerCondition = 1;
+  grid.randomisedGrid = grid.stimGrid;
+  grid.randomisedGridSetIdx = grid.stimGrid;
 
 else
   % check that the grid is valid
