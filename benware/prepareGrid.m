@@ -18,7 +18,6 @@ if strcmpi(expt.stimDeviceType, 'none')
   if ~isfield(grid, 'saveWaveforms')
     grid.saveWaveforms = true;
   end
-  
 
 else
   % add extra field
