@@ -57,9 +57,9 @@ else
     
     if isfield(grid, 'levelOffsetDB')
         fprintf('= levelOffsetDB: Boosting level by %d dB\n', grid.levelOffsetDB);
-        amplitudeMultiplier = 10^(levelOffsetDB/20);
+        amplitudeMultiplier = 10^(grid.levelOffsetDB/20);
         nAudioChannels = length(grid.compensationFilters);
-        stim(1:nAudioChannels,:) = stim(1:nAudioChannels,:) * amplitudeMultiplier;
+        uncomp(1:nAudioChannels,:) = uncomp(1:nAudioChannels,:) * amplitudeMultiplier;
     end
     
     % at this point, stim is equal to the ideal stimulus, i.e.

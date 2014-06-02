@@ -74,7 +74,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   nSamplesReceivedAlready = 0;
   endOfSweep = false;
   
-  while ~endofSweep
+  while ~endOfSweep
       
     % allow stimDevice to do something during sweep (i.e. upload stimulus)
     if ~state.slaveMode
