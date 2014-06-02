@@ -17,4 +17,4 @@ uncalib = uncalib.*env;
 uncalib = uncalib*sqrt(2);
 uncalib = uncalib * 10^((level-94) / 20);
 
-stim = repmat(uncalib, nChannels);
+stim = repmat(uncalib, nChannels, 1);

@@ -8,7 +8,7 @@ function grid = grid_quning()
   grid.stimGridTitles = {'Frequency', 'Duration', 'Level'};
 
   % frequencies and levels
-  freqs = logspace(log10(500), log10(500*2^5.75), 5.75*4+1);  
+  freqs = logspace(log10(500), log10(500*2^6), 6*4+1);  
   levels = 50:20:90;
   tonedur = 25;
 
