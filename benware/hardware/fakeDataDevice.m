@@ -122,6 +122,11 @@ classdef fakeDataDevice < handle
         'ExecutionMode', 'fixedRate', 'BusyMode', 'drop', 'Period', .05);
       start(obj.timer);
     end
+
+    function yesno = is16Bit(obj)
+      yesno = false;
+    end
     
   end
+  
 end

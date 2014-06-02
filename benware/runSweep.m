@@ -22,6 +22,7 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
  
   % make matlab buffer for data
   nSamplesExpected = floor(sweepLen*hardware.dataDevice.sampleRate)+1;
+  
   if hardware.dataDevice.is16Bit
       nSamplesExpected = floor(nSamplesExpected/2)*2;
   end
@@ -68,11 +69,17 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   if DEBUG
       fprintf('Samples expected %d\n', nSamplesExpected);
   end
+  
   % loop until we've received (and saved) all data
-  while nSamplesReceived<nSamplesExpected
+  nSamplesReceivedAlready = 0;
+  endOfSweep = false;
+  
+  while ~endofSweep
       
     % allow stimDevice to do something during sweep (i.e. upload stimulus)
-    hardware.stimDevice.workDuringSweep;
+    if ~state.slaveMode
+      hardware.stimDevice.workDuringSweep;
+    end
     
     % download data
     newdata = hardware.dataDevice.downloadAvailableData(nSamplesReceived);
@@ -112,14 +119,33 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
 
     % plot data
     plotData = plotUpdate(plotData, data, nSamplesReceived, filteredData, filterIndex, spikeTimes);
+    
+    % check whether we're done
+    if state.slaveMode
+      if (nSamplesReceived == nSamplesReceivedAlready) || (nsamplesReceived>=nSamplesExpected) % no new samples
+        endOfSweep = true;
+      end
+    else
+      if nSamplesReceived>=nSamplesExpected % expected number of samples reached
+        endOfSweep = true;
+      end
+    end
+
+    nSamplesReceivedAlready = nSamplesReceived;
 
   end
   
   fprintf(['  * Waveforms received and saved after ' num2str(toc) ' sec.\n']);
 
   % allow stimDevice to do some work
-  hardware.stimDevice.workAfterSweep;
-
+  if ~state.slaveMode
+    hardware.stimDevice.workAfterSweep;
+  end
+  
+  if state.slaveMode
+    data = data(:,1:nSamplesReceived);
+  end
+  
   % finish detecting spikes  
   [filtData, offset] = filterData(data(:, filterIndex+1:nSamplesReceived), spikeFilter);
   filteredData(:, filterIndex+offset+1:filterIndex+offset+size(filtData,2)) = filtData;

@@ -76,12 +76,15 @@ if ispc
 else
   expt.exptDir = ['./' expt.exptSubDir];
   expt.dataDir = ['./' expt.exptSubDir expt.dataSubDir];
+  expt.stimulusDirectory = './stimulusdir';
   fakeHardware = true;
   %state.justWarnOnDataEmpty = true;
 end
 
 if fakeHardware
-  expt.stimDeviceType = 'fakeStimDevice';
+  if ~strcmp(expt.stimDeviceType, 'none')
+    expt.stimDeviceType = 'fakeStimDevice';
+  end
   expt.dataDeviceType = 'fakeDataDevice';
   expt.triggerDevice = 'stimAndDataDevices';
 end
@@ -107,6 +110,12 @@ if ~isfield(expt, 'stimulusDirectory')
   expt.stimulusDirectory = [];
 end
 
+if strcmpi(expt.stimDeviceType, 'none')
+  fprintf('== Running in slave mode\n');
+  state.slaveMode = true;
+else
+  state.slaveMode = false;
+end
 
 %% load and set defaults for grid structure
 %% which contains specifications for the current grid
@@ -127,7 +136,7 @@ if ~isempty(gridFile)
   
   if lower(i)=='y'
     fprintf('The last recorded sweep was %d.\n', lastSweep);
-    firstSweep = demandnumberinput(sprintf('Which sweep do you want to resume from? [%d] ', lastSweep+1), 1:lastSweep+1, lastSweep+1);
+    firstSweep = demandnumberinput(sprintf('Which sweep do you want to resume from? [%d] ', lastSweep), 1:lastSweep+1, lastSweep);
     gotGrid = true;
     grid = l.grid;
   end

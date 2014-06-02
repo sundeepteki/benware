@@ -25,7 +25,7 @@ spikeFilter = makeSpikeFilter(expt.dataDeviceSampleRate);
 
 % get first stimulus
 [stim sweeps(firstSweep).stimInfo] = prepareStimulus(...
-  grid.stimGenerationFunction, firstSweep, grid, expt);
+      grid.stimGenerationFunction, firstSweep, grid, expt);
 
 % fprintf('  * Uploading first stimulus...');
 % hardware.stimDevice.prepareForSweep(stim);
@@ -72,20 +72,23 @@ while sweepNum<=grid.nSweepsDesired
     nextStim = [];
   end
   
-  hardware.stimDevice.prepareForSweep(stim, nextStim);
+  if ~state.slaveMode
+    hardware.stimDevice.prepareForSweep(stim, nextStim);
+  end
   
   sweeps(sweepNum).sweepNum = sweepNum;
   
   % store stimulus duration
   sweeps(sweepNum).stimLen.samples = size(stim, 2);
-  sweeps(sweepNum).stimLen.ms = sweeps(sweepNum).stimLen.samples/grid.sampleRate*1000;
-  
+  if ~state.slaveMode
+    sweeps(sweepNum).stimLen.ms = sweeps(sweepNum).stimLen.samples/grid.sampleRate*1000;
+  end
   % actual sweep length
   if isfield(grid, 'sweepLength')
     % then use a fixed sweep length
     sweepLen = grid.sweepLength;
     % if sweep length < stimulus length, warn user
-    if (size(stim, 2)/grid.sampleRate)>sweepLen && ~state.sweepTooShort.userWarned
+    if ~state.slaveMode && (size(stim, 2)/grid.sampleRate)>sweepLen && ~state.sweepTooShort.userWarned
       bbeep;
       fprintf_title('Stimulus length is longer than sweep length!');
       if lower(demandinput('Do you want to carry on anyway? ','yn','n',true))=='n'

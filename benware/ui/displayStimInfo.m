@@ -16,6 +16,10 @@ repeatIdx = sum(grid.randomisedGridSetIdx(1:sweepNum) == setIdx);
 nRepeats = grid.repeatsPerCondition;
 fprintf('Set %d/%d, repeat %d/%d\n\n', setIdx, nSets, repeatIdx, nRepeats);
 
+if isstr(grid.stimGenerationFunction) && strcmp(grid.stimGenerationFunction, '')
+  return;
+end
+
 % display parameters
 fprintf('Stimulus parameters:\n');
 stimInfo = sweeps(sweepNum).stimInfo;

@@ -38,6 +38,11 @@ else
     stimInfo.stimGridTitles = grid.stimGridTitles;
     stimInfo.stimParameters = grid.randomisedGrid(sweepNum, :);
     
+    if strcmpi(expt.stimDeviceType, 'none')
+      stim = [];
+      return;
+    end
+    
     parameters = num2cell(stimInfo.stimParameters);
 
     % generate stimulus vector/matrix
@@ -48,6 +53,13 @@ else
     if size(uncomp, 1)~=expt.nStimChannels
         errorBeep('Stimulus function %s did not generate the correct number of channels (%d)', ...
                     func2str(stimGenerationFunction), expt.nStimChannels);
+    end
+    
+    if isfield(grid, 'levelOffsetDB')
+        fprintf('= levelOffsetDB: Boosting level by %d dB\n', grid.levelOffsetDB);
+        amplitudeMultiplier = 10^(levelOffsetDB/20);
+        nAudioChannels = length(grid.compensationFilters);
+        stim(1:nAudioChannels,:) = stim(1:nAudioChannels,:) * amplitudeMultiplier;
     end
     
     % at this point, stim is equal to the ideal stimulus, i.e.
