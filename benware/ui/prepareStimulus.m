@@ -55,6 +55,13 @@ else
                     func2str(stimGenerationFunction), expt.nStimChannels);
     end
     
+    if isfield(grid, 'levelOffsetDB')
+        fprintf('= levelOffsetDB: Boosting level by %d dB\n', grid.levelOffsetDB);
+        amplitudeMultiplier = 10^(levelOffsetDB/20);
+        nAudioChannels = length(grid.compensationFilters);
+        stim(1:nAudioChannels,:) = stim(1:nAudioChannels,:) * amplitudeMultiplier;
+    end
+    
     % at this point, stim is equal to the ideal stimulus, i.e.
     % it has not been processed with the headphone compensation or the
     % absolute level compensation.

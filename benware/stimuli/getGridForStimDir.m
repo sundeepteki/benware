@@ -47,6 +47,8 @@ if exist(paramsFile, 'file')
         
         if length(r)>2 && strcmpi(name(1:3), 'rep')
           grid.repeatsPerCondition = value;
+        elseif length(r)>2 && strcmpi(name, 'leveloffsetdb')
+          grid.levelOffsetDB = value;
         else
           grid = setfield(grid, name, value);
         end
