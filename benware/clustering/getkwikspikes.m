@@ -1,9 +1,13 @@
-function clusters = getkwikspikes(kwikfile)
+function clusters = getkwikspikes(kwikfile, allWaveforms)
 % function clusters = getkwikspikes(kwikfile)
 % 
 % load spikes from kwik file, combine with
 % data from benware to get spike times on each
 % sweep
+
+if ~exist('allWaveforms', 'var')
+  allWaveforms = false;
+end
 
 re = regexp(kwikfile, '(.*)/.*/.*', 'tokens');
 exptdir = re{1}{1};
@@ -70,11 +74,16 @@ for ii = 1:length(clusterIDs)
 
   wf = double(waveform_data.waveform_filtered(:,clusterID==cluster.clusterID));
   n_spikes = size(wf, 2);
-  wf = reshape(wf, n_channels,n_samples/n_channels,n_spikes);
+  if (~allWaveforms) && (n_spikes>1000)
+    idx = randperm(n_spikes);
+    wf = wf(:,idx(1:1000));
+  end
+  n_keptSpikes = size(wf, 2);
+  wf = reshape(wf, n_channels,n_samples/n_channels,n_keptSpikes);
   cluster.waveforms = wf;
 
   % find which channel signal is biggest on
-  sd = std(reshape(wf, [n_channels, n_samples/n_channels*n_spikes]), [], 2);
+  sd = std(reshape(wf, [n_channels, n_samples/n_channels*n_keptSpikes]), [], 2);
   cluster.channelSD = sd;
   cluster.peakChannel = find(sd==max(sd),1);
 
@@ -93,7 +102,6 @@ if n_channels==1
 else
   mergeMUA = false;
 end
-mergeMUA = true;
 
 muaClusterIdx = find(strcmp({clusters(:).clusterType}, 'MUA'));
 if mergeMUA && ~isempty(muaClusterIdx)
@@ -107,9 +115,15 @@ if mergeMUA && ~isempty(muaClusterIdx)
   muaCluster.clusterGroup = [clusters(muaClusterIdx).clusterGroup];
   muaCluster.clusterType = 'MUA';
   muaCluster.spikeTimes = cat(1, clusters(muaClusterIdx).spikeTimes);
-  muaCluster.waveforms = cat(3, clusters(muaClusterIdx).waveforms);
-  [n_c, n_s, n_sp] = size(muaCluster.waveforms);
-  sd = std(reshape(muaCluster.waveforms, [n_c, n_s*n_sp]), [], 2);
+  wf = cat(3, clusters(muaClusterIdx).waveforms);
+  [n_c, n_s, n_sp] = size(wf);
+  if (~allWaveforms) && (n_sp>1000)
+    idx = randperm(n_sp);
+    wf = wf(:,:,idx(1:1000));
+  end
+  muaCluster.waveforms = wf;
+  
+  sd = std(reshape(wf, [n_c, n_s*size(wf,3)]), [], 2);
   muaCluster.channelSD = sd;
   muaCluster.peakChannel = find(sd==max(sd),1);
 

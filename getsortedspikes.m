@@ -78,4 +78,4 @@ if ~isempty(data.grid.saveName)
  else 
    name = data.grid.name;
 end
-save(sprintf([dir theFileSep 'P%02d-%s.sortedspikes.mat'], data.expt.penetrationNum, name), 'data');
+save(sprintf([dir theFileSep 'P%02d-%s.sortedspikes.mat'], data.expt.penetrationNum, name), 'data', '-v7.3');
