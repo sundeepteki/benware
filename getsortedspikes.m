@@ -6,11 +6,12 @@ function data = getclusteredspikes(dir)
 %       e.g. /Users/ben/data/P10-mistuning
 
 data = struct;
-data.gridInfoFile = [dir filesep 'gridInfo.mat'];
+theFileSep = filesep;
+data.gridInfoFile = [dir theFileSep 'gridInfo.mat'];
 
 if ispc
   % kludge
-  filesep = '/';
+  theFileSep = '/';
   data.gridInfoFile(data.gridInfoFile=='\') = '/';
 end
 
@@ -50,8 +51,8 @@ for probeIdx = 1:length(layout)
     shank = struct;
     shank.shankIdx = shankIdx;
     shank.shankNum = shankNum;
-    sprintf([dir filesep 'shank.%d' filesep '*kwik'], shankNum);
-    f = getfilesmatching(sprintf([dir filesep 'shank.%d' filesep '*kwik'], shankNum));
+    sprintf([dir theFileSep 'shank.%d' theFileSep '*kwik'], shankNum);
+    f = getfilesmatching(sprintf([dir theFileSep 'shank.%d' theFileSep '*kwik'], shankNum));
     if isempty(f)
       shank.kwikfile = '';
       shank.cluster = {};
@@ -77,4 +78,4 @@ if ~isempty(data.grid.saveName)
  else 
    name = data.grid.name;
 end
-save(sprintf([dir filesep 'P%02d-%s.sortedspikes.mat'], data.expt.penetrationNum, name), 'data');
+save(sprintf([dir theFileSep 'P%02d-%s.sortedspikes.mat'], data.expt.penetrationNum, name), 'data', '-v7.3');
