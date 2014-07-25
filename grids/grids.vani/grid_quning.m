@@ -8,17 +8,17 @@ function grid = grid_quning()
   grid.stimGridTitles = {'Frequency', 'Duration', 'Level'};
 
   % frequencies and levels
-  freqs = logspace(log10(500), log10(500*2^6), 6*4+1);  
+  freqs = logspace(log10(500), log10(500*2^6), 3*4+1);  
   levels = 50:20:90;
-  tonedur = 25;
+  tonedur = 40;
 
   global CALIBRATE;
   if CALIBRATE
     fprintf('== Calibration mode. Press a key to continue == ')
     pause;
-    freqs = [1000];
+    freqs = [50];
     levels = 80;
-    tonedur = 1000;
+    tonedur = 100;
   end
 
   grid.stimGrid = createPermutationGrid(freqs, tonedur, levels);

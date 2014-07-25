@@ -13,12 +13,12 @@ function grid = grid_mistuning()
 % Internal calibration not needed anymore (since 16/03/2014) as it will be done by Benware
 % switch strtrim(hostname)
 %     case {'ATWSN647','schleppi'}
-%         compensationFilterFile = '../calibration/compensationFilters.100k.mat';
+%         compensationFilterFile = '../calibration_new/2014-06-13-2mm-gap/compensationFilters.mat';
 %     case 'ben'
 %         compensationFilterFile = '/Users/ben/scratch/expt.42/calib.expt42/compensationFilters100k.mat';
 %     otherwise
 %         compensationFilterFile = ...
-%               'e:\auditory-objects\calibration\calib.ben.18.11.2013\compensationFilters.100k.mat'; % 100kHz
+%               'e:\auditory-objects\calibration_new\2014-06-13-2mm-gap/compensationFilters.mat'; % 100kHz
 % end
 
 % controlling the sound presentation
@@ -30,9 +30,9 @@ global CALIBRATE;
 if CALIBRATE
   fprintf('For calibration only!');
   pause;
-  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsCalibMistuned2014_04_22.m';
+  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsCalibMistuned2014_07_15.m';
 else
-  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsMistuned2014_04_22.m';    
+  settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsMistuned2014_07_15.m';    
 end
 
 fprintf('Generating stimuli...\n');

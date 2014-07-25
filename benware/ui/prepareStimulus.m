@@ -106,7 +106,7 @@ else
                 end
             else
                % pure voltage channels may need some padding at the end
-               stim{chan} = zeros(1, max(cellfun(@(x) length(x),a)));
+               stim{chan} = zeros(1, max(cellfun(@(x) length(x),stim)));
                stim{chan}(1:length(uncomp(chan,:))) = uncomp(chan,:);
             end
         end
