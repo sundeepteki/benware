@@ -8,7 +8,12 @@ end
 spikeTimes = double(spikeTimes);
 
 % biggest spike time should be less than biggest sample
-assert(max(spikeTimes)<sum(sweepLens));
+try
+  assert(max(spikeTimes)<sum(sweepLens));
+catch
+  fprintf('Assertion failed in spikesamples2sweeptimes\n');
+  keyboard
+end
 
 
 % convert spike times to sweep times

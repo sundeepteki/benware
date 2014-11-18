@@ -1,9 +1,13 @@
-function data = getclusteredspikes(dir)
+function data = getclusteredspikes(dir, allWaveforms)
 % function data = getclusteredspikes(dir)
 % scan a directory for .kwik files and load them
 %
 % dir = benware data directory containing sorted data
 %       e.g. /Users/ben/data/P10-mistuning
+
+if ~exist('allWaveforms', 'var')
+  allWaveforms = false;
+end
 
 data = struct;
 theFileSep = filesep;
@@ -59,7 +63,7 @@ for probeIdx = 1:length(layout)
       fprintf('.');
     else
       shank.kwikfile = f{1};
-      shank.cluster = getkwikspikes(shank.kwikfile);
+      shank.cluster = getkwikspikes(shank.kwikfile, allWaveforms);
       fprintf('o');
     end
     shanks{shankIdx} = shank;
