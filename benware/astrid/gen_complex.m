@@ -1,7 +1,7 @@
 function waveform = gen_complex(f0,basefreq,numcomponents,amps,shifts,phases,stimlen,fs,windowlen)
 % gen_complex() -- generates complex waveform
 %   Usage: 
-%      waveform = gen_complex(fs,stim_length,f0,harmonics,shifts,phases,amps)
+%      waveform = gen_complex(f0,basefreq,numcomponents,amps,shifts,phases,stimlen,fs,windowlen)
 %   Parameters:
 %      f0              fundamental frequency
 %      basefreq        base frequency
@@ -16,14 +16,16 @@ function waveform = gen_complex(f0,basefreq,numcomponents,amps,shifts,phases,sti
 %      waveform        vector containing complex waveform
 %
 % Author: stef@nstrahl.de
-% Version: $Id: gen_complex.m 144 2013-12-28 23:08:10Z stefan $
+% Version: $Id: gen_complex.m 156 2014-04-14 20:35:10Z stefan $
 
 if ~exist('windowlen','var'), windowlen=25e-3; end         % if undefined the window len is 25 ms
 
 t = 0:1/(fs-1):stimlen;                                    % time vector in sampling frequency resolution
 nsamples = length(t);
-window = hann(ceil(fs*2*windowlen),'periodic');            % generate hanning window
-window = [window(1:ceil(fs*windowlen)) ; ones(nsamples-ceil(fs*windowlen)-floor(fs*windowlen)-1,1) ; window(floor(fs*windowlen)+1:end)]; % build hanning window for stimulus
+temp = hann(ceil(fs*2*windowlen),'periodic');              % generate hanning window
+window = ones(nsamples,1);
+window(1:ceil(fs*windowlen)) = temp(1:ceil(fs*windowlen));
+window(end-ceil(fs*windowlen):end) = temp(floor(fs*windowlen):end);
 
 % harmonic complex stimulus
 s = zeros(numcomponents,length(t));                        % init memory for harmonics

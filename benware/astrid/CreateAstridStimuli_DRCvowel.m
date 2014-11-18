@@ -60,9 +60,9 @@ for j = 1:size(jitter,1)     % for all jitter combinations
     %                saveas(gcf,'DRCstimulus.fig','fig');
     %             end
     wave_drc = gen_drc(fs,drc_freqs,drc_levels,chord_duration,ramp_duration);
-    %             if dostimplot
-    %                wavwrite(wave_drc,round(fs),'DRCstimulus.wav');
-    %             end
+                if dostimplot
+                   wavwrite(wave_drc,round(fs),'DRCstimulus.wav');
+                end
     fprintf('done\n');
 
     % generate Vowel
