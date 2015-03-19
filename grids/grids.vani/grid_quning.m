@@ -9,7 +9,7 @@ function grid = grid_quning()
 
   % frequencies and levels
   freqs = logspace(log10(500), log10(500*2^6), 3*4+1);  
-  levels = 50:20:90;
+  levels = 50:20:80;
   tonedur = 40;
 
   global CALIBRATE;

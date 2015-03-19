@@ -13,7 +13,7 @@ function grid = grid_comparison_v3()
                     createPermutationGrid(2, 1:3); ... % TORC
                     createPermutationGrid(3, 1:2); ... % modnoise                  
                     createPermutationGrid(4, 1:2); ... % nat sounds
-                    createPermutationGrid(6, 1:3); ... % pure tones
+                    % createPermutationGrid(6, 1:3); ... % pure tones
                     ];
 
   global CALIBRATE;
