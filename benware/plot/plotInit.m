@@ -23,8 +23,13 @@ plotData.sampleTimes = plotData.samplesToPlot/fs_in;
 plotData.lineHandles = zeros(1,plotData.nChannels)-1;
 
 % positions
-n.cols = 4;
-n.rows = ceil(nChannels/n.cols);
+if nChannels<4
+  n.cols = nChannels;
+  n.rows = 1;
+else
+  n.cols = 4;
+  n.rows = ceil(nChannels/n.cols);
+end
 
 w = struct;
 w.L = 0.025;
