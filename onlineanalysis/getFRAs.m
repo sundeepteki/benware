@@ -1,5 +1,6 @@
 addpath('.');
-baseDir = 'e:\vani.data\';
+
+baseDir = 'F:\vani.data\';
 %baseDir = '~/scratch/onlineanalysis/';
 exptNumber = 1001;
 
@@ -42,8 +43,13 @@ for setIdx = 1:n_sets
   
   for chanIdx = 1:n_chans
     spikeTimesPerRep = data.sets(setIdx).spikeTimes{chanIdx};
-    spikeTimesAllReps = cat(1, spikeTimesPerRep{:});
-    psth = histc(spikeTimesAllReps, t);
+    if isempty(spikeTimesPerRep)
+        spikeTimesAllReps = [];
+        psth = zeros(n_t+1,1);
+    else
+        spikeTimesAllReps = cat(1, spikeTimesPerRep{:});
+        psth = histc(spikeTimesAllReps, t);
+    end
     spikes(:, lev_idx, freq_idx, chanIdx) = psth(1:end-1);
   end
 end
