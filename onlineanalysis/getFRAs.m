@@ -1,15 +1,15 @@
 addpath('.');
-%baseDir = 'e:\auditory-objects.data\expt%E/';
-baseDir = '~/scratch/onlineanalysis/';
-exptNumber = 98;
+baseDir = 'e:\vani.data\';
+%baseDir = '~/scratch/onlineanalysis/';
+exptNumber = 1001;
 
 t_min = 10; % parameters of spike window
 t_max = 40;
 
-exptPattern = [baseDir 'expt%E/'];
+exptPattern = [baseDir 'expt%E\'];
 exptDir = regexprep(exptPattern, '%E', num2str(exptNumber));
 subdirName = chooseOntehflyDirectory(exptDir);
-dataDir = [exptDir subdirName '/'];
+dataDir = [exptDir subdirName '\'];
 
 % get the spikes from the benware files
 data = collectOnlineSpikes2(dataDir);
