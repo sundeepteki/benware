@@ -50,6 +50,9 @@ warp = [14 15 16 2; 13 4 3 1; 12 5 6 8; 11 10 9 7];
 order = transpose(warp);
 probes(end).order = order(:)';
 
+probes(end+1).name = 'Single channel';
+probes(end).order = 1;
+
 % NeuroNexus connector pin maps from:
 % http://www.neuronexustech.com/support/probe-site-maps
 connectors = struct;
@@ -109,6 +112,9 @@ connectors(end).pins = [18 0 0 16; 20 0 0 14; 22 0 0 12; 24 0 0 10; 28 26 8 6; .
 connectors(end+1).name = 'No mapping (16 chans)';
 connectors(end).pins = [1:16];
 
+connectors(end+1).name = 'Single channel';
+connectors(end).pins = 1;
+
 % headstages
 headstages = struct;
 headstages(1).name = 'RA16AC';
@@ -139,6 +145,9 @@ headstages(end+1).name = 'Warp-16 (no mapping)';
 headstages(end).inputconnector = 'No mapping (16 chans)';
 headstages(end).outputconnector = 'No mapping (16 chans)';
 
+headstages(end+1).name = 'Single channel';
+headstages(end).inputconnector = 'Single channel';
+headstages(end).outputconnector = 'Single channel';
 
 info.probes = probes;
 info.connectors = connectors;
