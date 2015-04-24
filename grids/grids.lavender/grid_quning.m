@@ -28,7 +28,7 @@ function grid = grid_quning()
   grid.repeatsPerCondition = 30;
   
   % set this using absolute calibration
-  grid.stimLevelOffsetDB = [0 0]-16-35+24;
+  grid.legacyLevelOffsetDB = -20;
   
   % compensation filters
   % grid.initFunction = 'loadCompensationFilters';

@@ -1,11 +1,11 @@
 addpath('.');
 
-baseDir = 'F:\vani.data\';
+baseDir = 'C:\awakedata\lavender\';
 %baseDir = '~/scratch/onlineanalysis/';
-exptNumber = 1001;
+exptNumber = 1;
 
-t_min = 10; % parameters of spike window
-t_max = 40;
+t_min = 0; % parameters of spike window
+t_max = 12;
 
 exptPattern = [baseDir 'expt%E\'];
 exptDir = regexprep(exptPattern, '%E', num2str(exptNumber));
