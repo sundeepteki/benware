@@ -18,11 +18,10 @@ switch eventInfo.Key
     if ~isempty(eventInfo.Modifier)
       gainDelta = gainDelta * (length(eventInfo.Modifier)+1);
     end
-    gainDelta
     if state.plot.type=='w'
       if state.plot.filtered
         state.dataGainFiltered = state.dataGainFiltered*(gainDelta+1);
-      elseif state.plot.unfiltered
+      else
         state.dataGainRaw = state.dataGainRaw*(gainDelta+1);
       end
     elseif state.plot.type=='l'
@@ -33,11 +32,11 @@ switch eventInfo.Key
     if ~isempty(eventInfo.Modifier)
       gainDelta = gainDelta * (length(eventInfo.Modifier)+1);
     end
-    gainDelta
+    
     if state.plot.type=='w'
       if state.plot.filtered
         state.dataGainFiltered = state.dataGainFiltered/(gainDelta+1);
-      elseif state.plot.unfiltered
+      else
         state.dataGainRaw = state.dataGainRaw/(gainDelta+1);
       end
     elseif state.plot.type=='l'
