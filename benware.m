@@ -12,6 +12,9 @@ printGreetings;
 % variables intended for manipulation by future UI
 global state;
 
+% save data in a single file, as used by klustasuite
+state.klustaFormat = true;
+
 global checkdata;
 checkdata = false; % for testing only. should normally be FALSE
 
@@ -79,6 +82,15 @@ else
   expt.stimulusDirectory = './stimulusdir';
   fakeHardware = true;
   %state.justWarnOnDataEmpty = true;
+end
+
+if state.klustaFormat
+  % don't save klustaformat data in a subdirectory, don't add sweep/channel numbers
+  % and add .dat to the end
+  expt.dataFilename = regexprep(expt.dataFilename,'raw.f32[\\\/]','');
+  expt.dataFilename = regexprep(expt.dataFilename,'.channel.%C','');
+  %expt.dataFilename = regexprep(expt.dataFilename,'.sweep.%S.channel.%C','');
+  expt.dataFilename = [expt.dataFilename '.dat'];
 end
 
 if fakeHardware
@@ -157,6 +169,10 @@ if ~gotGrid
 
 end
 
+%% save params and probe files for klustakwik
+if state.klustaFormat
+  makeklustaparams(expt, grid);
+end
 
 %% prepare hardware
 if ~exist('hardware','var')

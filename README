@@ -95,44 +95,39 @@ Mac: Download XCode from app store and install command line tools
 Linux: sudo apt-get install build-essential
 
 2. Install python
-On a Linux machine: Install anaconda
-On a Mac: Install Enthought Canopy
+On a Linux machine or Mac: Install anaconda
 On a PC: Install pythonxy (MinGW package needed)
 
 3. Install generic python packages using anaconda/canopy/pythonxy:
-You need: pytables, pyqt or pyside, pyopengl, h5py
-[conda install pytables h5py pyside; pip install pyopengl]
+You *must* have pytables version 3.0.0, numpy version 1.8.1 and pandas version 0.12
+For anaconda, you can do this with:
+conda install pytables=3.0.0 pyqt pyopengl=3.0
+conda install nose matplotlib=1.3 pandas=0.12 numpy=1.8.1
 
-4. Downgrade python package "pandas" (Mac, Linux):
-In Terminal:
- sudo pip install -Iv pandas==0.12.0
-
-5. PC only: Make sure that distutils uses MinGW (howto see for example https://github.com/cython/cython/wiki/InstallingOnWindows)
+4. PC only: Make sure that distutils uses MinGW (howto see for example https://github.com/cython/cython/wiki/InstallingOnWindows)
 Create a file named distutils.cfg (if you already don't have it) in your PythonXYLibdistutils and add to it the following lines:
  [build]
  compiler = mingw32
 
-6. Download various parts of klusta suite:
+6. Download and install klustakwik (using 'git clone' or .zip link on the page). Then, in a terminal window:
+https://github.com/klusta-team/klustakwik -- click zip link
+or
+git clone https://github.com/klusta-team/klustakwik.git
 
-You need each of:
- https://github.com/beniamino38/spikedetekt
- https://github.com/beniamino38/kwiklib
- https://github.com/rossant/qtools
- https://github.com/rossant/galry
- https://github.com/beniamino38/kwiklib
- https://github.com/beniamino38/klustaviewa 
+Then:
 
-For each of these, download (using 'git clone' or .zip link on the page). Then, in Terminal: 
- cd spikedetekt
+ cd klustakwik
+ make NOOPENMP=1
+ sudo mv KlustaKwik /usr/local/bin/
+ [Check it works by typing: cd ~; KlustaKwik ]
+
+7. Download *customised* klustaviewa from:
+ http://willmore.eu/klustaviewa-0.3.0-bw.zip
+
+ cd klustaviewa-0.3.0-bw
  sudo python setup.py install
 
-Now repeat for the other parts (kwiklib, ...)
-
-Klustaviewa only: if you get an error mentioning cython, try:
- cd klustaviewa/stats/
- cython correlograms_cython.pyx
- cd ../..
- python setup.py install
+[Check it works by typing: 'cd ~; klusta', cd ~; klustaviewa' ]
 
 
 -- Clustering
@@ -141,16 +136,17 @@ If your data from expt 64 was saved in /data/expt64, in Matlab:
  cd benware
  clusterspikes('/data/expt64');
 
+The above will go through each directory in turn, find spikes and do automatic
+clustering. You can do this for a single directory with (not in matlab):
+  klusta *.params
 
 -- Manual editing of clusters
 
-Now, in terminal, run klustaviewa on all shanks, e.g.:
- cd /data/expt64/P10-decorr.v2/shank.1
- klustaviewa decorr.clu.1
- cd /data/expt64/P11-decorr.v2/shank.2
- klustaviewa decorr.clu.2
- ...
+Now, in terminal, run klustaviewa: on all shanks, e.g.:
+ cd /data/expt64/P10-decorr.v2
+ klustaviewa *kwik
 
+You can go through the different shanks using the File menu -> change shank
 
 Now, get the spike times into Matlab:
  cd benware

@@ -34,10 +34,20 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   
   % open data files
   if saveWaveforms
-    dataFileHandles = nan(1,nChannels);
-    for chan = 1:nChannels
-      dataFileHandles(chan) = fopen(dataFiles{chan},'w');
-    end
+    % only relevant for single-file-per-expt data
+    % if state.klustaFormat
+    %   % save in a single, interleaved file
+    %   dataFileHandles = dataFiles; % file has already been opened by runGrid
+    % else
+  
+    if state.klustaFormat
+      dataFileHandles = fopen(datafiles, 'w'); % one file per sweep
+    else
+      dataFileHandles = nan(1,nChannels);
+      for chan = 1:nChannels
+        dataFileHandles(chan) = fopen(dataFiles{chan},'w');
+      end
+    % end
   end
   
   % cell array for storing spike times
@@ -92,9 +102,14 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
     
     % save waveforms
     if saveWaveforms
-      for chan = 1:nChannels
-        fwrite(dataFileHandles(chan), newdata(chan, :), 'float32');
-      end      
+      if state.klustaFormat
+        % data are interleaved automatically
+        fwrite(dataFileHandles, newdata, 'float32');
+      else
+        for chan = 1:nChannels
+          fwrite(dataFileHandles(chan), newdata(chan, :), 'float32');
+        end
+      end
     end
     
     % bandpass filter data and detect spikes
@@ -174,9 +189,9 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
      end
   end
   
-  % close data files
-  if saveWaveforms
-    for chan = 1:nChannels
+  % close data files if not using klustaFormat single-file-per-expt
+  if saveWaveforms % && ~state.klustaFormat
+    for file = 1:length(dataFileHandles)
       fclose(dataFileHandles(chan));
     end
   end

@@ -56,6 +56,36 @@ if isfield(expt, 'jamesSpikeThreshold') && expt.jamesSpikeThreshold
   useJamesSpikeThreshold = true;
 end
 
+% The following was probably a mistake -- was saving a single file for the entire data set
+% but I now see that spikedetekt will accept a list of files
+
+% if state.klustaFormat
+%   % construct path for saving data
+%   expt.dataFile = constructDataPath([expt.dataDir expt.dataFilename],grid,expt,0,0);
+  
+%   dataDir = split_path(expt.dataFile);
+%   if grid.saveWaveforms
+%     mkdir_nowarning(dataDir);
+%   end
+
+%   % open data file, and rewind file pointer if restarting a grid
+%   if firstSweep==1
+%     dataFile = fopen(dataFile, 'w'); % discard existing contents of file if it already exists
+
+%   else
+%     dataFile = fopen(dataFile, 'a'); % open existing data file
+
+%     % get info about the previous sweep
+%     lastSweepInfo = loadSingleSweepInfo(sweeps(sweepNum), grid, expt, sweepNum);
+
+%     % rewind to wherever the data file pointer was after the end of the previous sweep
+%     fseek(dataFile, lastSweepInfo.dataFilePointer.afterSweep, 'bof');
+
+%   end
+
+% end
+
+
 sweepNum = firstSweep;
 while sweepNum<=grid.nSweepsDesired
   tic;
@@ -102,18 +132,34 @@ while sweepNum<=grid.nSweepsDesired
     sweepLen = size(stim, 2)/grid.sampleRate + grid.postStimSilence;
   end
   fprintf(['  * sweep length: ' num2str(sweepLen) ' s\n']);
-  
+
+  % Only relevant for single-file data  
+  % if saving in klustaFormat, get current position in data file
+  % if state.klustaFormat
+  %   sweeps(sweepNum).dataFilePointer.beforeSweep = ftell(dataFile);
+  % end
+
   % get filenames for saving data
-  sweeps(sweepNum).dataFiles = constructDataPaths([expt.dataDir expt.dataFilename],grid,expt,sweepNum,expt.nChannels);
+  %if ~state.klustaFormat
+  sweeps(sweepNum).dataFiles = constructDataPaths([expt.dataDir expt.dataFilename], ...
+    grid,expt,sweepNum,expt.nChannels);
+  dataFile = sweeps(sweepNum).dataFiles;
   dataDir = split_path(sweeps(sweepNum).dataFiles{1});
   if grid.saveWaveforms
     mkdir_nowarning(dataDir);
   end
-  
+  %end
+
   % run the sweep
   [nSamples, spikeTimes, lfp, timeStamp, plotData, sampleWaveforms] = ...
       runSweep(hardware, sweepLen, expt.nChannels, stim, nextStim, ...
-              spikeFilter, expt.spikeThreshold, grid.saveWaveforms, sweeps(sweepNum).dataFiles, plotData, useJamesSpikeThreshold);
+              spikeFilter, expt.spikeThreshold, grid.saveWaveforms, dataFile, plotData, useJamesSpikeThreshold);
+
+  % Only relevant for single-file data  
+  % if saving in klustaFormat, get current position in data file
+  % if state.klustaFormat
+  %   sweeps(sweepNum).dataFilePointer.afterSweep = ftell(dataFile);
+  % end
 
   % check whether sweep was successful; if not, offer to repeat it
   if state.noData.warnUser
@@ -139,7 +185,12 @@ while sweepNum<=grid.nSweepsDesired
         % saving any more data (though waveforms will usually already have been saved by runGrid)
         % don't update sweepNum, so that sweep is repeated;
         state.noData.warnUser = false;
-        continue;
+
+        % only relevant for single-file data
+        % if state.klustaFormat
+        %   fseek(dataFile, sweeps(sweepNum).dataFilePointer.beforeSweep, 'bof');
+        % end
+        continue; % jump to next iteration
       end
     end
   end
@@ -204,6 +255,12 @@ while sweepNum<=grid.nSweepsDesired
   % successfully on to the next sweep
   sweepNum = sweepNum + 1;
 end
+
+% only relevant for single-file data
+% close data file if using klustaFormat
+% if state.klustaFormat
+%   fclose(dataFile);
+% end
 
 % cleanup seems to happen on quit anyway, not sure why
 %cleanup(hardware);
