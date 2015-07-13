@@ -144,7 +144,13 @@ while sweepNum<=grid.nSweepsDesired
   sweeps(sweepNum).dataFiles = constructDataPaths([expt.dataDir expt.dataFilename], ...
     grid,expt,sweepNum,expt.nChannels);
   dataFile = sweeps(sweepNum).dataFiles;
-  dataDir = split_path(sweeps(sweepNum).dataFiles{1});
+
+  if isstr(dataFile) % single file
+      dataDir = split_path(dataFile);
+  else
+      dataDir = split_path(dataFile{1});      
+  end
+  
   if grid.saveWaveforms
     mkdir_nowarning(dataDir);
   end

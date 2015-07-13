@@ -41,13 +41,13 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
     % else
   
     if state.klustaFormat
-      dataFileHandles = fopen(datafiles, 'w'); % one file per sweep
+      dataFileHandles = fopen(dataFiles, 'w'); % one file per sweep
     else
       dataFileHandles = nan(1,nChannels);
       for chan = 1:nChannels
         dataFileHandles(chan) = fopen(dataFiles{chan},'w');
       end
-    % end
+    end
   end
   
   % cell array for storing spike times
@@ -190,10 +190,14 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   end
   
   % close data files if not using klustaFormat single-file-per-expt
-  if saveWaveforms % && ~state.klustaFormat
-    for file = 1:length(dataFileHandles)
-      fclose(dataFileHandles(chan));
-    end
+  if saveWaveforms
+      if state.klustaFormat
+          fclose(dataFileHandles);
+      else
+        for file = 1:length(dataFileHandles)
+          fclose(dataFileHandles(chan));
+        end
+      end  
   end
 
   % check for blank data channels
