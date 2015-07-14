@@ -28,6 +28,15 @@ fourByEight = [5 4 6 3 7 2 8 1; 13 12 14 11 15 10 16 9; ...
 order = transpose(fourByEight);
 probes(end).order = order(:)';
 
+probes(end+1).name = 'A4x8Buzsaki';
+% going down each side of each shank in turn; not using this
+%fourByEightBuzsaki = [1 2 3 4; 8 7 6 5; 9 10 11 12; 16 15 14 13; ...
+%                      17 18 19 20; 24 23 22 21; 25 26 27 28; 32 31 30 29];
+fourByEightBuzsaki = [1 8 2 7 3 6 4 5; 9 16 10 15 11 14 12 13; ...
+                        17 24 18 23 19 22 20 21; 25 32 26 31 27 30 28 29];
+order = transpose(fourByEightBuzsaki);
+probes(end).order = order(:)';
+
 probes(end+1).name = 'A4x16';
 fourBySixteen = [9 8 10 7 11 6 12 5 13 4 14 3 15 2 16 1; ...
 				25 24 26 23 27 22 28 21 29 20 30 19 31 18 32 17; ...
@@ -52,6 +61,8 @@ probes(end).order = order(:)';
 
 probes(end+1).name = 'Single channel';
 probes(end).order = 1;
+
+
 
 % NeuroNexus connector pin maps from:
 % http://www.neuronexustech.com/support/probe-site-maps
