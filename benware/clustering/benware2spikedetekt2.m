@@ -60,6 +60,7 @@ while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nan))
   
   sweepData = f32read(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nan));
   assert(mod(length(sweepData)/nChannels,1)==0)
+  sweepLens(end+1) = length(sweepData)/nChannels;
 
   if sweepIdx==1
     int16write(sweepData, filename, mult);
@@ -76,4 +77,7 @@ nFiles = 1; % number of data files
 
 fprintf(' done\n');
 
-makeklustaparams(l.expt, l.grid, dataDir, shortFilename);
+[paramsFile, probeFile, nSitesPerShank] = makeklustaparams(l.expt, l.grid, dataDir, shortFilename);
+
+datafile = shortFilename;
+save([dataDir filesep 'sweep_info.mat'], 'datafile', 'sweepLens', 'paramsFile', 'probeFile', 'nSitesPerShank');

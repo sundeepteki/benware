@@ -1,4 +1,4 @@
-function makeklustaparams(expt, grid, exptdir, datafile)
+function [paramsFile, probeFile, nSitesPerShank] = makeklustaparams(expt, grid, exptdir, datafile)
 
 if ~exist('exptdir', 'var')
   exptdir = expt.dataDir;
@@ -88,7 +88,5 @@ nSitesPerShank = [];
 for ii = 1:length(layout)
   nSitesPerShank = [nSitesPerShank repmat(layout{ii}(2), [1 layout{ii}(1)])];
 end
-
-%save([expt.dataDir filesep 'sweep_info.mat'], 'filenames', 'sweepLens', 'paramsFile', 'nSitesPerShank');
 
 fprintf('done\n');

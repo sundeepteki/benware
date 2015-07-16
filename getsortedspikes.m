@@ -1,4 +1,4 @@
-function data = getclusteredspikes(dir, allWaveforms)
+function data = getsortedspikes(dir, allWaveforms)
 % function data = getclusteredspikes(dir)
 % scan a directory for .kwik files and load them
 %
