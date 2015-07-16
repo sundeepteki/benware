@@ -42,7 +42,11 @@ for probeIdx = 1:nProbes
   
   nShanks = thisProbe(1);
   nSites = thisProbe(2);
-  
+
+  if lower(thisProbeType(1))=='b' && nSites~=8
+    fprintf('makeadjacencygraph2 WARNING: not tested with buzsaki probes with <>8 sites per shank\n');
+  end
+
   fprintf(fid, '    # Probe %d\n', probeIdx);
   
   probes{probeIdx} = {};
