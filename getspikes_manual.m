@@ -1,12 +1,21 @@
-function data = getspikes_manual(dir, allWaveforms)
-% function shankData = getspikes_manual(dir)
+function data = getspikes_manual(dir, allWaveforms, unsortedSpikes)
+% function shankData = getspikes_manual(dir, allWaveforms, unsortedSpikes)
 % 
-% get spike data that has been MANUALLY sorted with klustaviewa
+% get spike data that has been manually sorted with klustaviewa
 % from a benware directory
 % e.g. shankData = getspikes_manual('P10-quning.1')
+%
+% dir: benware directory
+% allWaveforms: if false, only return a maximum of 1000 spike waveforms
+% unsortedSpikes: if true, return the result of automatic clustering with
+% klustakwik, rather than the manually sorted clusters
 
 if ~exist('allWaveforms', 'var')
   allWaveforms = false;
+end
+
+if ~exist('unsortedSpikes', 'var')
+  unsortedSpikes = false;
 end
 
 data = struct;
@@ -43,37 +52,68 @@ for ii = 1:length(probes)
 end
 orig_probes = probes;
 
-fprintf('Loading data from shanks ')
-probes = {};
-shankNum = 1;
-for probeIdx = 1:length(layout)
-  probe = struct;
-  probe.name = orig_probes(probeIdx).layout;
-  probe.layout = layout{probeIdx};
-  shanks = {};
-  for shankIdx = 1:probe.layout(1)
-    shank = struct;
-    shank.shankIdx = shankIdx;
-    shank.shankNum = shankNum;
-    sprintf([dir theFileSep 'shank.%d' theFileSep '*kwik'], shankNum);
-    f = getfilesmatching(sprintf([dir theFileSep 'shank.%d' theFileSep '*kwik'], shankNum));
-    if isempty(f)
-      shank.kwikfile = '';
-      shank.cluster = {};
-      fprintf('.');
-    else
-      shank.kwikfile = f{1};
-      shank.cluster = getkwikspikes(shank.kwikfile, allWaveforms);
-      fprintf('o');
+sh = getdirsmatching([dir filesep 'shank*']);
+
+if isempty(sh) % klustaviewa 0.3.0
+  f = getfilesmatching([dir theFileSep '*.kwik']);
+  assert(length(f)==1);
+  kwikfile = f{1};
+  fprintf(['Loading data from ' f{1} '\n']);
+
+  probes = {};
+  shankNum = 1;
+  for probeIdx = 1:length(layout)
+    probe = struct;
+    probe.name = orig_probes(probeIdx).layout;
+    probe.layout = layout{probeIdx};
+    shanks = {};
+    for shankIdx = 1:probe.layout(1)
+      shank = struct;
+      shank.shankIdx = shankIdx;
+      shank.shankNum = shankNum;
+      shank.cluster = getkwikspikes_multishank(kwikfile, shankIdx, allWaveforms, unsortedSpikes);
+      shanks{shankIdx} = shank;
+      shankNum = shankNum + 1;
     end
-    shanks{shankIdx} = shank;
-    shankNum = shankNum + 1;
+    probe.shank = [shanks{:}];
+    probes{probeIdx} = probe;
   end
-  probe.shank = [shanks{:}];
-  probes{probeIdx} = probe;
+  probes = [probes{:}];
+  fprintf('\n');
+
+else % klustaviewa < 0.3.0
+  fprintf('Loading data from shanks ')
+  probes = {};
+  shankNum = 1;
+  for probeIdx = 1:length(layout)
+    probe = struct;
+    probe.name = orig_probes(probeIdx).layout;
+    probe.layout = layout{probeIdx};
+    shanks = {};
+    for shankIdx = 1:probe.layout(1)
+      shank = struct;
+      shank.shankIdx = shankIdx;
+      shank.shankNum = shankNum;
+      sprintf([dir theFileSep 'shank.%d' theFileSep '*kwik'], shankNum);
+      f = getfilesmatching(sprintf([dir theFileSep 'shank.%d' theFileSep '*kwik'], shankNum));
+      if isempty(f)
+        shank.kwikfile = '';
+        shank.cluster = {};
+        fprintf('.');
+      else
+        shank.kwikfile = f{1};
+        shank.cluster = getkwikspikes(shank.kwikfile, allWaveforms);
+        fprintf('o');
+      end
+      shanks{shankIdx} = shank;
+      shankNum = shankNum + 1;
+    end
+    probe.shank = [shanks{:}];
+    probes{probeIdx} = probe;
+  end
+  probes = [probes{:}];
+  fprintf('\n');
 end
-probes = [probes{:}];
-fprintf('\n');
 
 data.probeData = probes;
 
@@ -82,4 +122,10 @@ if ~isempty(data.grid.saveName)
  else 
    name = data.grid.name;
 end
-save(sprintf([dir theFileSep 'P%02d-%s.sortedspikes.mat'], data.expt.penetrationNum, name), 'data', '-v7.3');
+
+if unsortedSpikes
+  save(sprintf([dir theFileSep 'P%02d-%s.unsortedspikes.mat'], data.expt.penetrationNum, name), 'data', '-v7.3');
+else
+  save(sprintf([dir theFileSep 'P%02d-%s.sortedspikes.mat'], data.expt.penetrationNum, name), 'data', '-v7.3');
+
+end

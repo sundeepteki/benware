@@ -16,7 +16,6 @@ function shankData = getspikes_auto(dir)
 sh = getdirsmatching([dir filesep 'shank*']);
 
 if isempty(sh) % klustaviewa 0.3.0
-  'new style'
   try
     files = getfilesmatching([dir filesep '_klustakwik/' filesep '*.fet.*']);
   catch
