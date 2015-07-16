@@ -1,4 +1,8 @@
-function shankData = getClusteredSpikes(dir)
+function shankData = getspikes_auto(dir)
+% function shankData = getspikes_auto(dir)
+% 
+% get the klustakwik-sorted spike data from a benware directory
+% e.g. shankData = getspikes_auto('P10-quning.1')
 
 % spikedetektDirs = getdirsmatching([dir filesep 'spikedetekt_*']);
 % 

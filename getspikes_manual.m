@@ -1,9 +1,9 @@
-function data = getsortedspikes(dir, allWaveforms)
-% function data = getclusteredspikes(dir)
-% scan a directory for .kwik files and load them
-%
-% dir = benware data directory containing sorted data
-%       e.g. /Users/ben/data/P10-mistuning
+function data = getspikes_manual(dir, allWaveforms)
+% function shankData = getspikes_manual(dir)
+% 
+% get spike data that has been MANUALLY sorted with klustaviewa
+% from a benware directory
+% e.g. shankData = getspikes_manual('P10-quning.1')
 
 if ~exist('allWaveforms', 'var')
   allWaveforms = false;
