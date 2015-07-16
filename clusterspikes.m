@@ -74,7 +74,9 @@ for dirIdx = 1:length(dirs)
     try
       fprintf('== Processing %s\n', dir);
 
-      if ~length(getfilesmatching([dir filesep '*.i16.*']))
+      if length(getfilesmatching([dir filesep '*.i16.*'])) && ~overwrite
+        fprintf('i16 file exists, not converting data\n');
+      else
         benware2spikedetekt2(dir);
       end
 

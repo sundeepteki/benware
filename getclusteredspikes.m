@@ -1,4 +1,4 @@
-function shankData = getspikes_auto(dir)
+function shankData = getclusteredspikes(dir)
 % function shankData = getspikes_auto(dir)
 % 
 % get the klustakwik-sorted spike data from a benware directory
@@ -16,6 +16,12 @@ function shankData = getspikes_auto(dir)
 sh = getdirsmatching([dir filesep 'shank*']);
 
 if isempty(sh) % klustaviewa 0.3.0
+  fprintf('getsortedspikes has been superceded by getspikes_manual.\n')
+  fprintf('getsortedspikes(dir, allWaveforms, unsortedSpikes) with unsortedSpikes==true\n')
+  fprintf('will return the raw results of running klustakwik\n');
+  shankData = [];
+  return;
+
   try
     files = getfilesmatching([dir filesep '_klustakwik/' filesep '*.fet.*']);
   catch

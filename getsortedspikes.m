@@ -1,5 +1,5 @@
-function data = getspikes_manual(dir, allWaveforms, unsortedSpikes)
-% function shankData = getspikes_manual(dir, allWaveforms, unsortedSpikes)
+function data = getsortedspikes(dir, allWaveforms, unsortedSpikes)
+% function shankData = getsortedspikes(dir, allWaveforms, unsortedSpikes)
 % 
 % get spike data that has been manually sorted with klustaviewa
 % from a benware directory

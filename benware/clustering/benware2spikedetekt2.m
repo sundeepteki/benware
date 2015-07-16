@@ -19,7 +19,7 @@ if ~exist([dataDir filesep 'gridInfo.mat'], 'file')
   error('%s is not a benware data directory\n', dataDir);
 end
 
-fprintf('Converting %s...\n', dataDir);
+fprintf('Converting %s... to i16 format:\n', dataDir);
 l = load([dataDir filesep 'gridInfo.mat']);
 nChannels = length(l.expt.channelMapping);
 
@@ -27,7 +27,7 @@ gridName = l.grid.name;
 dataPath = [dataDir filesep l.expt.dataFilename];
 
 % get multiplier for int16 format
-fprintf('Getting range of data\n');
+fprintf('Getting range of data');
 sweepIdx = 1;
 maxabs = -Inf;
 while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
@@ -44,7 +44,7 @@ end
 mult = 32767/maxabs/2; % seems to be needed to prevent clipping
 fprintf('done\n');
 
-fprintf('Converting sweeps to spikedetekt format\n');
+fprintf('Converting sweeps');
 
 sweepLens = [];
 sweepIdx = 1;
@@ -75,7 +75,7 @@ end
 
 nFiles = 1; % number of data files
 
-fprintf(' done\n');
+fprintf('done\n');
 
 [paramsFile, probeFile, nSitesPerShank] = makeklustaparams(l.expt, l.grid, dataDir, shortFilename);
 
