@@ -54,6 +54,16 @@ end
 
 dirs = cat(1, d0, d1, d2);
 dirs = cellfun(@(x) x(1:end-length('/gridInfo.mat')), dirs, 'uni', false);
+if isempty(dirs)
+  fprintf('== No gridInfo.mat files found\n');
+  return;
+end
+
+fprintf('== Found:\n');
+for dirIdx = 1:length(dirs)
+  fprintf(' %s\n', dirs{dirIdx});
+end
+fprintf('\n');
 
 for dirIdx = 1:length(dirs)
   dir = dirs{dirIdx};
@@ -82,8 +92,10 @@ for dirIdx = 1:length(dirs)
         fprintf(fid,'set PATH=%s\n',windows_path(pos(1)+1:end));
         fprintf(fid,'%s\\klustakwik\\klusta.PCWIN.exe %s *.params', overwrite_str);
         fclose(fid);
-	else
-          cmd = sprintf([prefix 'cd ' escapespaces(dir) '; klusta ' overwrite_str ' *.params']);
+      elseif ismac
+        cmd = sprintf([prefix 'cd ' escapespaces(dir) '; DYLD_LIBRARY_PATH='''' klusta ' overwrite_str ' *.params']);
+      else % linux
+        cmd = sprintf([prefix 'cd ' escapespaces(dir) '; klusta ' overwrite_str ' *.params']);
       end
       fprintf('= Clustering by running command:\n %s\n', cmd);
       res = system(cmd);

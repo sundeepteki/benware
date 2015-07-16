@@ -61,7 +61,7 @@ for probeIdx = 1:nProbes
     fprintf(fid, '        ''geometry'': { \n', nSites);
 
     for siteIdx = 0:nSites-1
-      fprintf(fid, '            %d: (%d, %d), \n', firstSite+siteIdx, 0, siteIdx);
+      fprintf(fid, '            %d: (%d, %d), \n', firstSite+siteIdx, 0, -siteIdx);
     end
     fprintf(fid, '        },\n    },\n');
 
