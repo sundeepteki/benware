@@ -7,6 +7,9 @@ function finalNShanks = makeadjacencygraph(probeArrangement, filename)
 % this has become a bit of a mess. shanksAreCloseTogether = true is for
 % e.g. the Warp-16, where there is a 2D grid of sites. In this case, we
 % define a single shank with the correct adjacency relationships (a grid)
+fprintf('This was for obsolete versions of spikedetekt\n');
+fprintf('Use makeadjacencygraph2 instead.\n');
+return
 
 if ~iscell(probeArrangement)
   probeArrangment = {probeArrangement};

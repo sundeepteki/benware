@@ -1,4 +1,9 @@
 function clusterspikes(parentDir, skipFailures, overwrite)
+if ismac
+  prefix = 'export PATH=/Users/ben/scratch/klustakwik/miniconda/bin:$PATH; ';
+else
+  prefix = ''
+end
 
 if ~exist('skipFailures', 'var')
   skipFailures = false;
@@ -74,7 +79,7 @@ for dirIdx = 1:length(dirs)
         fprintf(fid,'%s\\klustakwik\\klusta.PCWIN.exe %s *.params', overwrite_str);
         fclose(fid);
       else
-        cmd = sprintf(['cd ' escapespaces(dir) '; ' ...
+        cmd = sprintf([prefix 'cd ' escapespaces(dir) '; ' ...
                      'LD_LIBRARY_PATH='''' DYLD_LIBRARY_PATH='''' DYLD_FRAMEWORK_PATH='''' klusta ' overwrite_str ' *.params']);
       end
       fprintf('= Clustering by running command:\n %s\n', cmd);

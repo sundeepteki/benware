@@ -1,4 +1,8 @@
 function [paramsFile, nSitesPerShank] = benware2spikedetekt(dataDir)
+fprintf('This probably doesnt work with newer versions of spikedetekt.\n');
+fprintf('For old data using non-interleaved files, try benware_old2new\n');
+fprintf('followed by benware2spikedetekt2.\n')
+return
 
 % put all data in a single file
 singleFile = true;

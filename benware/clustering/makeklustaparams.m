@@ -1,4 +1,14 @@
-function makekwikparams(expt, grid)
+function makeklustaparams(expt, grid, exptdir, datafile)
+
+if ~exist('exptdir', 'var')
+  exptdir = expt.dataDir;
+end
+
+if ~exist('datafile', 'var')
+  usebenwarefiles = true; % this probably doesn't work
+else
+  usebenwarefiles = false;
+end
 
 gridName = grid.name;
 
@@ -19,12 +29,16 @@ end
 fclose(fid);
 
 % file list
-file_list = '[ ';
-for sweepIdx = 1:grid.nSweepsDesired
-  filename = constructDataPath(expt.dataFilename, grid, expt, sweepIdx);
-  file_list = [file_list '''' filename '''' ', '];
+if usebenwarefiles
+  file_list = '[ ';
+  for sweepIdx = 1:grid.nSweepsDesired
+    filename = constructDataPath(expt.dataFilename, grid, expt, sweepIdx);
+    file_list = [file_list '''' filename '''' ', '];
+  end
+  file_list = [file_list ' ]'];
+else
+  file_list = ['[ ''' datafile ''' ]'];
 end
-file_list = [file_list ' ]'];
 
 % insert parameters into file
 params = regexprep(params, '%EXPERIMENT_NAME%', gridName);
@@ -33,7 +47,11 @@ params = regexprep(params, '%PROBE_FILE%', [gridName '.probe']);
 params = regexprep(params, '%SAMPLE_RATE%', sprintf('%0.6f', expt.dataDeviceSampleRate));
 params = regexprep(params, '%N_CHANNELS%', sprintf('%d', expt.nChannels));
 
-paramsFile = constructDataPath([expt.dataDir filesep gridName '.params'], grid, expt, 1);
+params = regexprep(params, '%MIN_CLUSTERS%', sprintf('%d', expt.nChannels/2));
+params = regexprep(params, '%MAX_CLUSTERS%', sprintf('%d', expt.nChannels*2));
+params = regexprep(params, '%MAX_POSS_CLUSTERS%', sprintf('%d', min(expt.nChannels*4, 500)));
+
+paramsFile = constructDataPath([exptdir filesep gridName '.params'], grid, expt, 1);
 fid = fopen(paramsFile, 'w');
 fprintf(fid, params);
 fclose(fid);
@@ -58,7 +76,7 @@ for ii = 1:length(probes)
   end
 end
 
-probeFile = constructDataPath([expt.dataDir filesep gridName '.probe'], grid, expt, 1);
+probeFile = constructDataPath([exptdir filesep gridName '.probe'], grid, expt, 1);
 makeadjacencygraph2(layout, probeFile);
 
 nSitesPerShank = [];

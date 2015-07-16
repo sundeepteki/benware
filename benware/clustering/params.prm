@@ -5,7 +5,7 @@
 experiment_name = '%EXPERIMENT_NAME%'
 raw_data_files = %FILES_LIST%
 prb_file = '%PROBE_FILE%'
-nbits = 32
+nbits = 16
 voltage_gain = 10.
 
 sample_rate = %SAMPLE_RATE%
@@ -58,9 +58,9 @@ pca_nwaveforms_max = 10000
 # KlustaKwik parameters #
 #########################
 KK_MaskStarts = 100
-#KK_MinClusters = 100 
-#KK_MaxClusters = 110
-KK_MaxPossibleClusters =  500
+KK_MinClusters = %MIN_CLUSTERS%
+KK_MaxClusters = %MAX_CLUSTERS%
+KK_MaxPossibleClusters = %MAX_POSS_CLUSTERS%
 KK_FullStepEvery =  10
 KK_MaxIter = 10000
 KK_RandomSeed =  654
