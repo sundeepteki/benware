@@ -60,6 +60,7 @@ fprintf('done\n');
 fprintf('Making probe adjacency map...');
 probes = expt.probes;
 layout = {};
+type = {};
 
 for ii = 1:length(probes)
   if strcmp(probes(ii).layout, 'Warp-16')
@@ -70,14 +71,18 @@ for ii = 1:length(probes)
     nShanks = eval(res{1}{1});
     nSites = eval(res{1}{2});
     layout{ii} = [nShanks nSites];
-
+    if strfind(probes(1).layout, 'Buzs') || strfind(probes(1).layout, 'Busz')
+      type{ii} = 'buzsaki';
+    else
+      type{ii} = 'linear';
+    end
   else
     error('unknown probe layout -- talk to ben');
   end
 end
 
 probeFile = constructDataPath([exptdir filesep gridName '.probe'], grid, expt, 1);
-makeadjacencygraph2(layout, probeFile);
+makeadjacencygraph2(layout, type, probeFile);
 
 nSitesPerShank = [];
 for ii = 1:length(layout)
