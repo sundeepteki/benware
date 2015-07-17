@@ -1,4 +1,17 @@
 function clusterspikes(parentDir, skipFailures, overwrite)
+% function clusterspikes(parentDir, skipFailures, recluster)
+%
+% Cluster benware data.
+%
+% parentDir: benware dir, or directory of benware dirs, or
+%   wildcard matching multiple benware dirs
+%
+% skipFailures: Attempt to continue with other directories
+%   if one directory failes
+%
+% recluster: Rerun klusta even if clustering has already beend
+%   done. Useful if you have changed parameters in the *.params
+%   file
 
 setpath;
 
@@ -77,7 +90,7 @@ for dirIdx = 1:length(dirs)
     try
       fprintf('== Processing %s\n', dir);
 
-      if exist([dir filesep 'konversion_done.txt'], 'file') && ~overwrite
+      if exist([dir filesep 'konversion_done.txt'], 'file')
         fprintf('konversion_done.txt exists, not converting data\n');
       else
         benware2spikedetekt2(dir);

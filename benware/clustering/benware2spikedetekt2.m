@@ -30,18 +30,35 @@ dataPath = [dataDir filesep l.expt.dataFilename];
 fprintf('Getting range of data');
 sweepIdx = 1;
 maxabs = -Inf;
+foundempty = false;
+
 while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nChannels))
   tmp = f32read(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nan));
-  maxabs = max(maxabs, max(abs(tmp(:))));
 
-  fprintf('.');
+  if foundempty
+    % then a data file was empty, and it wasn't the last
+    fprintf('Empty f32 file!\n');
+    keyboard
+  end
+
+  if isempty(tmp)
+    % if data file is empty, it must be the last one, or something is wrong
+    foundempty = true;
+    fprintf('o');
+  else
+    maxabs = max(maxabs, max(abs(tmp(:))));
+    fprintf('.');
+  end
+
   if round(sweepIdx/70)==(sweepIdx/70)
     fprintf('\n');
   end
 
   sweepIdx = sweepIdx+1;
 end
+
 mult = 32767/maxabs/2; % seems to be needed to prevent clipping
+
 fprintf('done\n');
 
 fprintf('Converting sweeps');
@@ -57,10 +74,14 @@ while exist(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nan))
   if round(sweepIdx/70)==(sweepIdx/70)
     fprintf('\n');
   end
-  
+
   sweepData = f32read(constructDataPath(dataPath, l.grid, l.expt, sweepIdx, nan));
   assert(mod(length(sweepData)/nChannels,1)==0)
   sweepLens(end+1) = length(sweepData)/nChannels;
+
+  if isempty(sweepData)
+    break;
+  end
 
   if sweepIdx==1
     int16write(sweepData, filename, mult);
