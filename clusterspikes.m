@@ -1,4 +1,7 @@
 function clusterspikes(parentDir, skipFailures, overwrite)
+
+setpath;
+
 if ismac
   prefix = 'export PATH=/Users/ben/scratch/klustakwik/miniconda/bin:$PATH; ';
 else
@@ -74,10 +77,13 @@ for dirIdx = 1:length(dirs)
     try
       fprintf('== Processing %s\n', dir);
 
-      if length(getfilesmatching([dir filesep '*.i16.*'])) && ~overwrite
-        fprintf('i16 file exists, not converting data\n');
+      if exist([dir filesep 'konversion_done.txt'], 'file') && ~overwrite
+        fprintf('konversion_done.txt exists, not converting data\n');
       else
         benware2spikedetekt2(dir);
+        fid = fopen([dir filesep 'konversion_done.txt'], 'w');
+        fprintf(fid,'done\n');
+        fclose(fid);
       end
 
       %if length(getfilesmatching([dir filesep '*.kwik'])) && ~overwrite
@@ -89,7 +95,7 @@ for dirIdx = 1:length(dirs)
         fprintf('klustering_done.txt exists, skipping\n');
         continue;
       else
-	overwrite_str = '--overwrite';
+        overwrite_str = '--overwrite';
       end
 
       if ispc
