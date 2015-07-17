@@ -80,9 +80,16 @@ for dirIdx = 1:length(dirs)
         benware2spikedetekt2(dir);
       end
 
-      if length(getfilesmatching([dir filesep '*.kwik'])) && ~overwrite
-        fprintf('.kwik file exists, skipping\n');
+      %if length(getfilesmatching([dir filesep '*.kwik'])) && ~overwrite
+      %  fprintf('.kwik file exists, skipping\n');
+      %  continue;
+      %end
+
+      if exist([dir filesep 'klustering_done.txt'], 'file') && ~overwrite
+        fprintf('klustering_done.txt exists, skipping\n');
         continue;
+      else
+	overwrite_str = '--overwrite';
       end
 
       if ispc
@@ -104,6 +111,11 @@ for dirIdx = 1:length(dirs)
       if res>0
         error('Command failed');
       end
+
+      fid = fopen([dir filesep 'klustering_done.txt'], 'w');
+      fprintf(fid,'done\n');
+      fclose(fid);
+
     catch exc
       if ~skipFailures
         rethrow(exc);
