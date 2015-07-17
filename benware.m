@@ -170,9 +170,9 @@ if ~gotGrid
 end
 
 %% save params and probe files for klustakwik
-if state.klustaFormat
-  makeklustaparams(expt, grid);
-end
+% if state.klustaFormat
+%   makeklustaparams(expt, grid);
+% end
 
 %% prepare hardware
 if ~exist('hardware','var')
