@@ -21,13 +21,14 @@ type = {};
 for ii = 1:length(probes)
   if strcmp(probes(ii).layout, 'Warp-16')
     layout{ii} = [16 1];
+    type{ii} = 'linear';
 
   elseif probes(ii).layout(1)=='A'
     res = regexp(probes(ii).layout, 'A([0-9]+)x([0-9]+)', 'tokens');
     nShanks = eval(res{1}{1});
     nSites = eval(res{1}{2});
     layout{ii} = [nShanks nSites];
-    if strfind(probes(1).layout, 'Buzs') || strfind(probes(1).layout, 'Busz')
+    if ~isempty(strfind(probes(ii).layout, 'Buzs')) || ~isempty(strfind(probes(ii).layout, 'Busz'))
       type{ii} = 'buzsaki';
     else
       type{ii} = 'linear';
