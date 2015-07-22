@@ -9,7 +9,7 @@ function grid = grid_quning()
 
   % frequencies and levels
   freqs = logspace(log10(500), log10(500*2^5.75), 5.75*4+1);  
-  levels = 50:10:90;
+  levels = 40:20:100;
   tonedur = 100;
 
   global CALIBRATE;
@@ -24,7 +24,7 @@ function grid = grid_quning()
   grid.stimGrid = createPermutationGrid(freqs, tonedur, levels);
 
   % sweep parameters
-  grid.postStimSilence = 0;
+  grid.postStimSilence = .4;
   grid.repeatsPerCondition = 30;
   
   % set this using absolute calibration

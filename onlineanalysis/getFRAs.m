@@ -1,11 +1,11 @@
 addpath('.');
 
-baseDir = 'C:\awakedata\lavender\';
+baseDir = 'f:\auditory-objects.data\';
 %baseDir = '~/scratch/onlineanalysis/';
-exptNumber = 1;
+exptNumber = 72;
 
 t_min = 0; % parameters of spike window
-t_max = 12;
+t_max = 50;
 
 exptPattern = [baseDir 'expt%E\'];
 exptDir = regexprep(exptPattern, '%E', num2str(exptNumber));
@@ -26,7 +26,9 @@ n_levs = length(levs);
 
 durParam = find(strcmp(data.grid.stimGridTitles, 'Duration'));
 dur = max(data.grid.stimGrid(:,durParam));
-t = 0:1:dur; % 1ms time bins
+dur = 500;
+binsize = 15;
+t = 0:binsize:dur; % 1ms time bins
 n_t = length(t)-1; % number of bins, not length of t
 
 n_chans = data.expt.nChannels;
@@ -54,12 +56,16 @@ for setIdx = 1:n_sets
   end
 end
 
+% benware channels are in 4 columns, so we are going to match this
+plot_order = reshape(1:n_chans,4,n_chans/4)';
+plot_order = plot_order(:);
+
 % plot PSTHes
 figure(1);
 collapsed_data = squeeze(sum(sum(spikes,2), 3)); % sum over freq, level
 for chan_idx = 1:n_chans
-  subplot(ceil(n_chans/4), 4, chan_idx);
-  bar(collapsed_data(:,chan_idx), 'histc');
+  subplot(ceil(n_chans/4), 4, plot_order(chan_idx));
+  bar(t(1:end-1),collapsed_data(:,chan_idx), 'histc');
   xlim([min(t) max(t)]);
 end
 
@@ -71,7 +77,7 @@ fra_data = squeeze(sum(fra_data, 1));
 
 figure(2);
 for chan_idx = 1:n_chans
-  subplot(ceil(n_chans/4), 4, chan_idx);
+  subplot(ceil(n_chans/4), 4, plot_order(chan_idx));
   imagesc(fra_data(:,:,chan_idx));
   set(gca, 'xtick', [], 'ytick', []);
   axis xy;
