@@ -30,6 +30,14 @@ while exist(constructDataPath(oldDataPath, l.grid, l.expt, sweepIdx, nChannels))
 end
 fprintf('done\n');
 
-l.expt.dataDir = dataDir;
-l.expt.dataFilename = newDataFilename;
-makeklustaparams(l.expt, l.grid);
+movefile([dataDir filesep 'gridInfo.mat'], [dataDir filesep 'gridInfoOrig.mat']);
+grid = l.grid;
+expt = l.expt;
+expt_orig = l.expt;
+expt.dataFilename = newDataFilename;
+save([dataDir filesep 'gridInfo.mat'], 'expt', 'grid', 'expt_orig');
+
+% no longer needed -- klustaparams is made by benware2spikedetekt2
+%l.expt.dataDir = dataDir;
+%l.expt.dataFilename = newDataFilename;
+%makeklustaparams(l.expt, l.grid);
