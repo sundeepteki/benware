@@ -14,6 +14,9 @@ probes(end+1).name = 'A1x32 (rev 3)';
 probes(end).order = [17 16 18 15 19 14 20 13 21 12 22 11 23 10 24 ...
 				  9 25 8 26 7 27 6 28 5 29 4 30 3 31 2 32 1]; % top to bottom
 
+probes(end+1).name = 'A1x32-Edge';
+probes(end).order = [32:-1:1]; % top to bottom
+              
 probes(end+1).name = 'A2x16';
 twoBySixteen = [9 8 10 7 11 6 12 5 13 4 14 3 15 2 16 1; ...
 					25 24 26 23 27 22 28 21 29 20 30 19 31 18 32 17];
@@ -28,7 +31,7 @@ fourByEight = [5 4 6 3 7 2 8 1; 13 12 14 11 15 10 16 9; ...
 order = transpose(fourByEight);
 probes(end).order = order(:)';
 
-probes(end+1).name = 'A4x8Buzsaki';
+probes(end+1).name = 'A4x8-Buzsaki';
 % going down each side of each shank in turn; not using this
 %fourByEightBuzsaki = [1 2 3 4; 8 7 6 5; 9 10 11 12; 16 15 14 13; ...
 %                      17 18 19 20; 24 23 22 21; 25 26 27 28; 32 31 30 29];

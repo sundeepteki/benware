@@ -12,10 +12,10 @@ state.plot.filtered = true;
 state.plot.type = 'w';
 state.plot.typeShouldChange = false;
 if ~isfield(state, 'dataGainRaw')
-  state.dataGainRaw = 500;
+  state.dataGainRaw = 1000;
 end
 if ~isfield(state, 'dataGainFiltered')
-  state.dataGainFiltered = 1000;
+  state.dataGainFiltered = 10000;
 end
 if ~isfield(state, 'dataGainLFP')
   state.dataGainLFP = 1;
