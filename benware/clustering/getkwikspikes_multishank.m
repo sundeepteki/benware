@@ -40,7 +40,13 @@ waveform_data = h5read(kwxfile, [shankGroup '/waveforms_raw']);
 assert(n_spikes==size(spikeTimes, 1));
 
 % get cluster assignments
-clusterID = h5read(kwikfile, [shankGroup 'spikes/clusters/' which_clustering]);
+try
+  clusterID = h5read(kwikfile, [shankGroup 'spikes/clusters/' which_clustering]);
+catch
+  fprintf('Could not find any manually sorted spikes in a shank of %s!\n', kwikfile);
+  clusters = [];
+  return
+end
 n_clusters = max(clusterID);
 
 % loop through clusters
