@@ -10,6 +10,8 @@ function data = getsortedspikes(dir, allWaveforms, unsortedSpikes)
 % unsortedSpikes: if true, return the result of automatic clustering with
 % klustakwik, rather than the manually sorted clusters
 
+setpath;
+
 if ~exist('allWaveforms', 'var')
   allWaveforms = false;
 end
