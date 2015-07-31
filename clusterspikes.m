@@ -16,7 +16,7 @@ function clusterspikes(parentDir, skipFailures, overwrite)
 setpath;
 
 if ismac
-  prefix = 'export PATH=/Users/ben/scratch/klustakwik/miniconda/bin:$PATH; ';
+  prefix = ''; % no longer needed
 else
   prefix = '';
 end
@@ -85,11 +85,13 @@ for dirIdx = 1:length(dirs)
   dir = dirs{dirIdx};
 
   if true % length(getfilesmatching([dir filesep '*.dat']))
-    % for new interleaved benware file format, and klusta* 0.3.0
+    % for klusta* 0.3.0
+    % old (non-interleaved) benware data will be converted to interleaved format
 
     try
       fprintf('== Processing %s\n', dir);
 
+      % convert old benware to new (interleaved) benware format
       if exist([dir filesep 'raw.f32'], 'dir')
         if exist([dir filesep 'update_done.txt'], 'file')
           fprintf('update_done.txt exists, not updating data\n');
@@ -101,6 +103,7 @@ for dirIdx = 1:length(dirs)
         end
       end
 
+      % convert to a single i16 file which is readable by spikdetekt
       if exist([dir filesep 'konversion_done.txt'], 'file')
         fprintf('konversion_done.txt exists, not converting data\n');
       else
@@ -110,11 +113,7 @@ for dirIdx = 1:length(dirs)
         fclose(fid);
       end
 
-      %if length(getfilesmatching([dir filesep '*.kwik'])) && ~overwrite
-      %  fprintf('.kwik file exists, skipping\n');
-      %  continue;
-      %end
-
+      % run spikedetekt and klustakwik, using 'klusta'
       if exist([dir filesep 'klustering_done.txt'], 'file') && ~overwrite
         fprintf('klustering_done.txt exists, skipping\n');
         continue;
