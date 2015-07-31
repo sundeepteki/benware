@@ -40,13 +40,7 @@ waveform_data = h5read(kwxfile, [shankGroup '/waveforms_raw']);
 assert(n_spikes==size(spikeTimes, 1));
 
 % get cluster assignments
-try
-  clusterID = h5read(kwikfile, [shankGroup 'spikes/clusters/' which_clustering]);
-catch
-  fprintf('Could not find any manually sorted spikes in a shank of %s!\n', kwikfile);
-  clusters = [];
-  return
-end
+clusterID = h5read(kwikfile, [shankGroup 'spikes/clusters/' which_clustering]);
 n_clusters = max(clusterID);
 
 % loop through clusters
@@ -54,17 +48,24 @@ clusters = {};
 for cluster_idx = 1:n_clusters
   cluster = struct;
   cluster.clusterID = cluster_idx;
-  clusterGroup = h5readatt(kwikfile, ...
-    [shankGroup 'clusters/' which_clustering '/' num2str(cluster_idx)], 'cluster_group');
+  try
+    clusterGroup = h5readatt(kwikfile, ...
+      [shankGroup 'clusters/' which_clustering '/' num2str(cluster_idx)], 'cluster_group');
+  catch
+    % cluster has been deleted
+    clusterGroup = 4;
+  end
   if strcmp(which_clustering, 'original')
     assert(clusterGroup==3);
     cluster.clusterType = 'Unsorted';
+  elseif clusterGroup==4
+    cluster.clusterType = 'Deleted';
   else
     cluster.clusterType = h5readatt(kwikfile, ...
       [shankGroup 'cluster_groups/' which_clustering '/' num2str(clusterGroup)], 'name');
   end
   times = spikeTimes(clusterID==cluster.clusterID,:);
-  cluster.nSpikes = length(times);
+  cluster.nSpikes = size(times,1);
   cluster.spikeTimes = times;
 
   waveforms = double(waveform_data(:,:,clusterID==cluster.clusterID));
@@ -72,7 +73,11 @@ for cluster_idx = 1:n_clusters
     cluster.waveforms = waveforms;
   else
     randidx = randperm(cluster.nSpikes);
-    cluster.waveforms = waveforms(:,:,randidx(1:min(1000,cluster.nSpikes)));
+    if cluster.nSpikes == 0
+      cluster.waveforms = [];
+    else
+      cluster.waveforms = waveforms(:,:,randidx(1:min(1000,cluster.nSpikes)));
+    end
   end
 
   % find which channel signal is biggest on

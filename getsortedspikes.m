@@ -48,8 +48,12 @@ for ii = 1:length(probes)
     nSites = eval(res{1}{2});
     layout{ii} = [nShanks nSites];
 
+  elseif strcmp(probes(ii).layout, 'Buz64')
+    % not recommended -- this was a temp fix for James
+    layout{ii} = [8 8];
+
   else
-    error('unknown probe layout -- talk to ben');
+    error('unknown probe layout ''%s'' -- talk to ben', probes(ii).layout);
   end
 end
 orig_probes = probes;
@@ -65,6 +69,7 @@ if isempty(sh) % klustaviewa 0.3.0
   probes = {};
   shankNum = 1;
   for probeIdx = 1:length(layout)
+    fprintf('Probe %d: ', probeIdx);
     probe = struct;
     probe.name = orig_probes(probeIdx).layout;
     probe.layout = layout{probeIdx};
@@ -74,11 +79,18 @@ if isempty(sh) % klustaviewa 0.3.0
       shank.shankIdx = shankIdx;
       shank.shankNum = shankNum;
       shank.cluster = getkwikspikes_multishank(kwikfile, shankIdx, allWaveforms, unsortedSpikes);
+      if isempty(shank.cluster)
+        fprintf('.');
+      else
+        fprintf('o');
+      end
+
       shanks{shankIdx} = shank;
       shankNum = shankNum + 1;
     end
     probe.shank = [shanks{:}];
     probes{probeIdx} = probe;
+    fprintf('\n');
   end
   probes = [probes{:}];
   fprintf('\n');
