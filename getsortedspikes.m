@@ -131,6 +131,50 @@ end
 
 data.probeData = probes;
 
+%% now make a flat data structure containing all this information for each cluster
+clusters = [];
+for probeIdx = 1:length(data.probeData)
+  for shankIdx = 1:length(data.probeData(probeIdx).shank)
+    for clusterIdx = 1:length(data.probeData(probeIdx).shank(shankIdx).cluster)
+      cluster = data.probeData(probeIdx).shank(shankIdx).cluster(clusterIdx);
+      cluster.probeIdx = probeIdx;
+      cluster.shankIdx = shankIdx;
+      clusters = cat(2, clusters, cluster);
+    end
+  end
+end
+
+% get spike times
+expandedClusters = {};
+for clusterIdx = 1:length(clusters)
+  cluster = clusters(clusterIdx);
+  cluster.nSpikes = size(cluster.spikeTimes, 1);
+  sets = {};
+  for setIdx = 1:max(data.grid.randomisedGridSetIdx)
+    set = struct;
+    set.stimGridTitles = data.grid.stimGridTitles;
+    set.stimParams = data.grid.stimGrid(setIdx, :);
+    sweepIdxes = find(data.grid.randomisedGridSetIdx==setIdx);
+    spikeTimes = {};
+    for rep = 1:length(sweepIdxes)
+      spikeIdxes = find(cluster.spikeTimes(:,1)==sweepIdxes(rep));
+      spikeTimes{rep} = cluster.spikeTimes(spikeIdxes,2);
+    end
+    set.spikeTimesByRep = spikeTimes;
+    set.allSpikeTimes = cat(1, set.spikeTimesByRep{:});
+    set.nSpikes = length(set.allSpikeTimes);
+    
+    sets{setIdx} = set;
+  end
+  cluster.responsesByStimulus = [sets{:}];
+  assert(cluster.nSpikes==sum([cluster.responsesByStimulus(:).nSpikes]));
+  expandedClusters{clusterIdx} = cluster;
+end
+clusters = [expandedClusters{:}];
+
+data.clusters = clusters;
+
+%% SAVE
 if ~isempty(data.grid.saveName)
   name = data.grid.saveName;
  else 
