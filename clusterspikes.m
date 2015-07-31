@@ -84,11 +84,22 @@ fprintf('\n');
 for dirIdx = 1:length(dirs)
   dir = dirs{dirIdx};
 
-  if length(getfilesmatching([dir filesep '*.dat']))
+  if true % length(getfilesmatching([dir filesep '*.dat']))
     % for new interleaved benware file format, and klusta* 0.3.0
 
     try
       fprintf('== Processing %s\n', dir);
+
+      if exist([dir filesep 'raw.f32'], 'dir')
+        if exist([dir filesep 'update_done.txt'], 'file')
+          fprintf('update_done.txt exists, not updating data\n');
+        else
+          benware_old2new(dir);
+          fid = fopen([dir filesep 'update_done.txt'], 'w');
+          fprintf(fid,'done\n');
+          fclose(fid);
+        end
+      end
 
       if exist([dir filesep 'konversion_done.txt'], 'file')
         fprintf('konversion_done.txt exists, not converting data\n');
@@ -142,6 +153,7 @@ for dirIdx = 1:length(dirs)
     end
 
   else
+    % This no longer gets executed! old-style benware data is updated to new-style instead
     % old-style
     try
       dir = dirs{dirIdx};
