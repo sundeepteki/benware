@@ -51,12 +51,21 @@ for cluster_idx = 1:n_clusters
   try
     clusterGroup = h5readatt(kwikfile, ...
       [shankGroup 'clusters/' which_clustering '/' num2str(cluster_idx)], 'cluster_group');
+    if length(clusterGroup)>1
+      % I don't know why this would ever happen
+      assert(all(clusterGroup)==clusterGroup(1));
+      clusterGroup = clusterGroup(1);
+    end
   catch
     % cluster has been deleted
     clusterGroup = 4;
   end
   if strcmp(which_clustering, 'original')
-    assert(clusterGroup==3);
+    try
+      assert(clusterGroup==3 || clusterGroup==4);
+    catch
+      keyboard
+    end
     cluster.clusterType = 'Unsorted';
   elseif clusterGroup==4
     cluster.clusterType = 'Deleted';
