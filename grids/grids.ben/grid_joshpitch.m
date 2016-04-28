@@ -2,7 +2,7 @@ function grid = grid_joshpitch()
 
   % controlling the sound presentation
   grid.sampleRate = tdt100k;
-  grid.stimGenerationFunctionName = 'loadStereoFile';
+  grid.stimGenerationFunctionName = 'stimgen_loadSoundFile';
   grid.stimDir = 'e:\auditory-objects\sounds-uncalib\joshpitch\';
   grid.stimFilename = 'KerryPitchSounds2013_%1.wav';
   

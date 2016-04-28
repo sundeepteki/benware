@@ -1,7 +1,7 @@
 function grid = grid_gain_time_course()
 
   % controlling the sound presentation
-  grid.stimGenerationFunctionName = 'loadStereo';
+  grid.stimGenerationFunctionName = 'stimgen_loadSoundFile';
   grid.stimDir = 'E:\auditory-objects\sounds.calib.expt%E\%N\';
   grid.sampleRate = 24414.0625*2;  % ~50kHz
 

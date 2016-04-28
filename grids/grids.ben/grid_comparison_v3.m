@@ -2,7 +2,7 @@ function grid = grid_comparison_v3()
 
   % controlling the sound presentation
   grid.sampleRate = tdt100k;
-  grid.stimGenerationFunctionName = 'loadStereoFile';
+  grid.stimGenerationFunctionName = 'stimgen_loadSoundFile';
   grid.stimDir = 'e:\auditory-objects\sounds-uncalib\comparison.v3\';
   grid.stimFilename = 'comparison.stimtype.%1.token.%2.wav';
   

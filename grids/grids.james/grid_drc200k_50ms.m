@@ -2,7 +2,7 @@ function grid = grid_drc200k_50ms()
 
   % controlling the sound presentation
   grid.sampleRate = tdt200k;
-  grid.stimGenerationFunctionName = 'loadMonoFileWithLight';
+  grid.stimGenerationFunctionName = 'stimgen_loadSoundFileWithLight';
   grid.stimDir = 'e:\auditory-objects\sounds-uncalib\mouse.drc.8\';
   grid.stimFilename = 'drc%1_dur%3_contrast%2.f32';
   

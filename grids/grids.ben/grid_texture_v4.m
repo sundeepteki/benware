@@ -2,7 +2,7 @@ function grid = grid_texture_v4()
 
   % controlling the sound presentation
   grid.sampleRate = tdt50k;
-  grid.stimGenerationFunctionName = 'loadStereoFile';
+  grid.stimGenerationFunctionName = 'stimgen_loadSoundFile';
   grid.stimDir = 'e:\auditory-objects\sounds-uncalib\texture.v2\';
   grid.stimFilename = 'texture.v2.id%1.type%2.wav';
   

@@ -2,7 +2,7 @@ function grid = grid_mixmix_v3()
 
   % controlling the sound presentation
   grid.sampleRate = tdt50k;
-  grid.stimGenerationFunctionName = 'loadStereoFile';
+  grid.stimGenerationFunctionName = 'stimgen_loadSoundFile';
   grid.stimDir = 'e:\auditory-objects\sounds-uncalib\mixmix\';
   grid.stimFilename = 'mixmix.mix.%1.%2.wav';
   

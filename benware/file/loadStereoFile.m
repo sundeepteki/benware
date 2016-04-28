@@ -1,4 +1,6 @@
 function stim = loadStereoFile(expt, grid, sampleRate, nChannels, compensationFilters, varargin)
+% deprecated: use stimgen_loadSoundFile instead
+%
 % function stim = loadStereoFile(sampleRate, nChannels, compensationFilters, filename)
 %
 % Load an f32 or wav file.

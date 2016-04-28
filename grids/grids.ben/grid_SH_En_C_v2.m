@@ -2,7 +2,7 @@ function grid = grid_sh_en_c_v2
 
 % essentials
 grid.sampleRate = tdt50k;  % ~50kHz
-grid.stimGenerationFunctionName = 'loadStereoFile';
+grid.stimGenerationFunctionName = 'stimgen_loadSoundFile';
 grid.stimDir = 'e:\auditory-objects\sounds-uncalib\SH.En.C_v2\';
 grid.stimFilename = 'source.%1.sound.%2.snr.%3.token.%4.fw.%5.frozen.%6.wav';
 

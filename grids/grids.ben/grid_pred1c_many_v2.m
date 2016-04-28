@@ -2,7 +2,7 @@ function grid = grid_pred1c_many_v2()
 
 % controlling the sound presentation
 grid.sampleRate = tdt100k;
-grid.stimGenerationFunctionName = 'loadStereoFile';
+grid.stimGenerationFunctionName = 'stimgen_loadSoundFile';
 grid.stimDir = 'e:\auditory-objects\sounds-uncalib\pred1c_many_v2\';
 grid.stimFilename = 'pred1c_many_v2.type%1.set%2.n%3.wav';
 

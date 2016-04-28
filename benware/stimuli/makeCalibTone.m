@@ -1,5 +1,6 @@
 function stim = makeCalibTone(expt, grid, sampleRate, nChannels, compensationFilters, ...
 								freq, duration, level)
+% deprecated: used stimgen_makeTone instead
 
 % time
 t = 0:1/grid.sampleRate:duration/1000;

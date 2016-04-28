@@ -2,7 +2,7 @@ function grid = grid_pred1c_streaming()
 
 % controlling the sound presentation
 grid.sampleRate = tdt50k;
-grid.stimGenerationFunctionName = 'loadStereoFile';
+grid.stimGenerationFunctionName = 'stimgen_loadSoundFile';
 grid.stimDir = 'e:\auditory-objects\sounds-uncalib\pred1c_streaming\';
 grid.stimFilename = 'pred1c_streaming.type%1.set%2.n%3.wav';
 

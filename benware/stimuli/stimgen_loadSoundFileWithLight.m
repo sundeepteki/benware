@@ -1,5 +1,9 @@
-function stim = stimgen_loadSoundFile(expt, grid, varargin)
-    %% stim = stimgen_loadSoundFile(expt, grid, varargin)
+function stim = stimgen_loadSoundFileWithLight(expt, grid, varargin)
+    %% stim = stimgen_loadSoundFileWithLight(expt, grid, varargin)
+    %%
+    %% This function usess stimgen_loadSoundFile to load a sound and duplicated it
+    %% to expt.nStimChannels-1, then adds a final channel containing a constant
+    %% voltage to drive a light for optogenetics.
     %%
     %% This is a model for new-style (2016 onward) benware stimulus generation functions
     %%
@@ -39,38 +43,21 @@ function stim = stimgen_loadSoundFile(expt, grid, varargin)
     end
 
     parameters = cell2mat(varargin);
+    light_voltage_idx = strcmpi(grid.stimGridTitles, 'Light voltage');
+    light_voltage = parameters(light_voltage_idx);
 
+    %% get sound file with one less channel that expt.nStimChannels (because the last
+    %% channel will be used for the light)
+    new_expt = expt;
+    new_expt.nStimChannels = expt.nStimChannels - 1;
 
-    %% load stimuli
+    % remove light_voltage from grid.stimGridTitles and from the parameter list
+    % so that these are now in the format expected by stimgen_loadSoundfile.m
+    new_grid = grid;
+    valid_idx = setdiff(1:length(parameters), light_voltage_idx);
+    new_grid.stimGridTitles = new_grid.stimGridTitles(valid_idx);
+    new_varargin = varargin(valid_idx);
+    stim = stimgen_loadSoundFile(new_expt, new_grid, new_varargin{:});
 
-    filename = constructStimPath([grid.stimDir grid.stimFilename], ...
-    				expt.exptNum, expt.penetrationNum, grid.name, '', parameters)
-
-    fprintf(['  * Getting stimulus from ' escapepath(filename) '...']);
-
-    % load the stimulus
-    if strcmp(filename(end-3:end), '.f32')
-            uncalib = readf32(filename)';
-        if isnan(uncalib);
-            errorBeep('Failed to read file %s', filename);
-        end
-    elseif strcmp(filename(end-3:end), '.wav')
-        [uncalib, sampleRateInFile] = audioread(filename)';
-        if floor(sampleRateInFile)~=floor(sampleRate)
-            error(sprintf('Sample rate (%d Hz) in file doesn''t match grid (%d Hz)', ...
-                          floor(sampleRateInFile), floor(sampleRate)));
-        end
-    end
-
-    nChannelsInFile = size(uncalib, 1);
-
-    if nChannelsInFile==nChannels
-        stim = uncalib;
-    elseif nChannelsInFile==1
-        stim = repmat(uncalib, [nChannels 1]);
-    else
-        error(sprintf('Can''t map %d channels in stimulus file to %d stimulus channels', ...
-              nChannelsInFile, nChannels));
-    end
-
-    fprintf('done\n');
+    %% add light
+    stim(expt.nStimChannels, :) = [ones(1, length(stim)-100) zeros(1, 100)] * light_voltage;

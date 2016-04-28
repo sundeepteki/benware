@@ -1,5 +1,7 @@
 function stim = makeBilateralNoise(expt, grid, sampleRate, nChannels, compensationFilters, ...
 									duration, leftDelay, rightDelay, bothDelay, level)
+% deprecated: use stimgen_CSDprobe instead
+
 % function stim = makeBilateralNoise(sampleRate, nChannels, duration, leftDelay, rightDelay, bothDelay, level)
 % generate L-R-both bilateral noise stimulus
 % used as a search stimulus by Ben

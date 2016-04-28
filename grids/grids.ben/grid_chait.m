@@ -2,7 +2,7 @@ function grid = grid_chait()
 
   % controlling the sound presentation
   grid.sampleRate = tdt100k;
-  grid.stimGenerationFunctionName = 'loadStereoFile';
+  grid.stimGenerationFunctionName = 'stimgen_loadSoundFile';
   grid.stimDir = 'e:\auditory-objects\sounds-uncalib\chait.drc.1\';
   grid.stimFilename = 'drc.token.%1.rep.%2.f32';
   
