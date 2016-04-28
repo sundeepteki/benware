@@ -50,12 +50,15 @@ function stim = stimgen_loadSoundFile(expt, grid, varargin)
 
     % load the stimulus
     if strcmp(filename(end-3:end), '.f32')
-            uncalib = readf32(filename)';
+        uncalib = readf32(filename)';
         if isnan(uncalib);
             errorBeep('Failed to read file %s', filename);
         end
+
     elseif strcmp(filename(end-3:end), '.wav')
-        [uncalib, sampleRateInFile] = audioread(filename)';
+        [uncalib, sampleRateInFile] = audioread(filename);
+        uncalib = uncalib';
+
         if floor(sampleRateInFile)~=floor(sampleRate)
             error(sprintf('Sample rate (%d Hz) in file doesn''t match grid (%d Hz)', ...
                           floor(sampleRateInFile), floor(sampleRate)));
