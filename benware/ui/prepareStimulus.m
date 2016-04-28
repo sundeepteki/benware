@@ -92,7 +92,7 @@ else
             if chan<=length(grid.compensationFilters)
                 % then this is assumed to be a compensatable audio channel
                 % (not a pure voltage for driving the LED for example)
-                fprintf('= Compensating for frequency response\n');
+                fprintf('= Compensating channel %d for frequency response\n', chan);
                 stim{chan} = conv(grid.compensationFilters{chan}, uncomp(chan,:));
                 if isfield(grid, 'legacyLevelOffsetDB')
                     if length(grid.legacyLevelOffsetDB)==1
