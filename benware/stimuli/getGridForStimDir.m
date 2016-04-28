@@ -14,7 +14,7 @@ end
 if isempty(stimFiles)
   errorBeep(sprintf('No .wav files found in %s', stimDir));
 end
-[y, fs] = wavread(stimFiles{1});
+[y, fs] = audioread(stimFiles{1});
 
 sampleRates =   [0.125 0.25 0.5 1 2 4 8]*tdt50k;
 sampleRateIdx = find((abs(fs-sampleRates)<1));

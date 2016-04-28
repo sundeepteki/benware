@@ -24,7 +24,7 @@ if strcmp(filename(end-3:end), '.f32')
         errorBeep('Failed to read file %s', filename);
     end
 elseif strcmp(filename(end-3:end), '.wav')
-    uncalib = wavread(filename)';
+    uncalib = audioread(filename)';
 end
 
 if size(uncalib,1)==2

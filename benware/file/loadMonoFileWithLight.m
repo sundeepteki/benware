@@ -20,7 +20,7 @@ fprintf(['  * Getting stimulus from ' escapepath(filename) '...']);
 if strcmp(filename(end-3:end), '.f32')
     uncalib = readf32(filename)';
 elseif strcmp(filename(end-3:end), '.wav')
-    uncalib = wavread(filename)';
+    uncalib = audioread(filename)';
 end
 
 if size(uncalib,1)==1

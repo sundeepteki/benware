@@ -35,7 +35,7 @@ else
 	if strcmp(stimFile(end-3:end), '.f32')
 		uncalib = readf32(stimFile);
 	elseif strcmp(stimFile(end-3:end), '.wav')
-		uncalib = wavread(stimFile);
+		uncalib = audioread(stimFile);
 	end
 
 	% apply compensation filter

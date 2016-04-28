@@ -273,6 +273,6 @@ end
 visualBellOff;
 
 if ~state.userQuit && isfield(state, 'bugle') && state.bugle
-  [snd, fs] = wavread(['sounds/bugle-' num2str(randi(3),'%02d') '.wav']);
+  [snd, fs] = audioread(['sounds/bugle-' num2str(randi(3),'%02d') '.wav']);
   soundsc(snd, fs);
 end

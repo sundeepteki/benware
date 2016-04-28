@@ -14,7 +14,7 @@ filename = grid.stimFiles{stimID};
 fprintf(['  * Getting stimulus from ' escapepath(filename) '...']);
 
 % load the stimulus
-uncalib = wavread(filename)';
+uncalib = audioread(filename)';
 
 if size(uncalib,1)==2
     stim = uncalib;
