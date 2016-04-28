@@ -1,5 +1,7 @@
-function stim = stimgen_loadSoundFile(expt, grid, varargin)
-    %% stim = stimgen_loadSoundFile(expt, grid, varargin)
+function stim = stimgen_loadSoundFileIdx(expt, grid, stimIdx)
+    %% stim = stimgen_loadSoundFileIdx(expt, grid, stimIdx)
+    %%
+    %% This function is used by the "directory of wav files" stimulus grids.
     %%
     %% This is a model for new-style (2016 onward) benware stimulus generation functions
     %%
@@ -31,36 +33,16 @@ function stim = stimgen_loadSoundFile(expt, grid, varargin)
     sampleRate = grid.sampleRate;
     nChannels = expt.nStimChannels;
 
-    try
-        assert(length(varargin)==length(grid.stimGridTitles));
-    catch
-        error(['The number of parameters in the stimulus grid (columsn in grid.stimGrid) does ' ...
-               'not match the number of parameter titles (length of grid.stimGridTitles)']);
-    end
+	filename = grid.stimFiles{stimIdx};
 
-    parameters = cell2mat(varargin);
-    level = varargin{end};
+	%% get stimulus
+	fprintf(['  * Getting stimulus from ' escapepath(filename) '...']);
 
+    [uncalib, sampleRateInFile] = audioread(filename)';
 
-    %% load stimuli
-
-    filename = constructStimPath([grid.stimDir grid.stimFilename], ...
-    				expt.exptNum, expt.penetrationNum, grid.name, '', parameters)
-
-    fprintf(['  * Getting stimulus from ' escapepath(filename) '...']);
-
-    % load the stimulus
-    if strcmp(filename(end-3:end), '.f32')
-            uncalib = readf32(filename)';
-        if isnan(uncalib);
-            errorBeep('Failed to read file %s', filename);
-        end
-    elseif strcmp(filename(end-3:end), '.wav')
-        [uncalib, sampleRateInFile] = audioread(filename)';
-        if floor(sampleRateInFile)~=floor(sampleRate)
-            error(sprintf('Sample rate (%d Hz) in file doesn''t match grid (%d Hz)', ...
-                          floor(sampleRateInFile), floor(sampleRate)));
-        end
+    if floor(sampleRateInFile)~=floor(sampleRate)
+        error(sprintf('Sample rate (%d Hz) in file doesn''t match grid (%d Hz)', ...
+                      floor(sampleRateInFile), floor(sampleRate)));
     end
 
     nChannelsInFile = size(uncalib, 1);

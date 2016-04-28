@@ -24,7 +24,7 @@ if isempty(sampleRateIdx)
 end
 
 grid.sampleRate = sampleRates(sampleRateIdx);
-grid.stimGenerationFunctionName = 'loadNamedStereoFile';
+grid.stimGenerationFunctionName = 'stimgen_loadSoundFileIdx';
 grid.stimFiles = stimFiles;
 grid.stimGridTitles = {'Stimulus file (index into grid.stimFiles)'};
 grid.stimGrid = (1:length(stimFiles))';
