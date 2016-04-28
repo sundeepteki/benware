@@ -46,8 +46,24 @@ else
     parameters = num2cell(stimInfo.stimParameters);
 
     % generate stimulus vector/matrix
-    uncomp = feval(stimGenerationFunction, expt, grid, grid.sampleRate, expt.nStimChannels, ...
-                    grid.compensationFilters, parameters{:});
+
+    % Check whether this is new-style (2016 onward) stimulus generation function
+    % If so, its name will begin 'stimgen_', and we will call it with new-style
+    % reduced parameters.
+    func_str = func2str(stimGenerationFunction);
+    prefix = 'stimgen_';
+    len = length(prefix);
+    if length(func_str)>len && all(func_str(1:len)==prefix)
+        % function is new-style
+        uncomp = feval(stimGenerationFunction, expt, grid, parameters{:});
+
+    else
+        % function is old-style
+        fprintf('== WARNING: Using an old-style stimulus generation function.');
+        fprintf('== This will soon be an error\n')
+        uncomp = feval(stimGenerationFunction, expt, grid, grid.sampleRate, expt.nStimChannels, ...
+                       grid.compensationFilters, parameters{:});
+    end
 
     % check number of channels is correct
     if size(uncomp, 1)~=expt.nStimChannels
