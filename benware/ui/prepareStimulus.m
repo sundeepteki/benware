@@ -7,6 +7,8 @@ function [stim, stimInfo] = prepareStimulus(stimGenerationFunction, sweepNum, gr
 global OLDCOMPENSATION
 
 if OLDCOMPENSATION
+    error('Using OLDCOMPENSATION=true is no longer possible')
+
     stimInfo.stimGridTitles = grid.stimGridTitles;
     stimInfo.stimParameters = grid.randomisedGrid(sweepNum, :);
 

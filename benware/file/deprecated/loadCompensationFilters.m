@@ -9,11 +9,12 @@ global OLDCOMPENSATION
 % error('You must fix this to continue');
 
 if OLDCOMPENSATION
+ error('== Using OLDCOMPENSATION=true is no longer possible');
  fprintf('== WARNING: Using GRID.compensationFilterFile.\n');
  fprintf('== Ignoring EXPT.compensationFilterFile.\n');
  fprintf('== This will soon be an error\n');
 else
- error('== To use loadCompensationFilters, you must set global OLDCOMPENATION=true');
+ error('== To use loadCompensationFilters, you must set global OLDCOMPENSATION=true');
 end
 
 l = load(grid.compensationFilterFile);

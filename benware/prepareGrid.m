@@ -49,6 +49,7 @@ else
 
   global OLDCOMPENSATION
   if OLDCOMPENSATION
+    error('== Using OLDCOMPENSATION=true is no longer possible');
     if ~isfield(grid, 'compensationFilters')
       grid.compensationFilters = [];
     end

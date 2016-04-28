@@ -4,6 +4,7 @@ function grid = loadDefaultCompensationFilters(grid, expt)
 global OLDCOMPENSATION
 
 if OLDCOMPENSATION
+    error('== Using OLDCOMPENSATION=true is no longer possible');
     fprintf('== WARNING: OLDCOMPENSATION=true.\n');
     fprintf('== Filters from grid will be used\n');
     fprintf('== This will soon be an error\n');
