@@ -2,7 +2,7 @@ function grid = grid_monosearchnoise200k()
 
   % controlling the sound presentation
   grid.sampleRate = tdt200k;
-  grid.stimGenerationFunctionName = 'stimgen_CSDprobeWithLight';
+  grid.stimGenerationFunctionName = 'stimgen_CSDProbeWithLight';
   
   % stimulus grid structure
   %grid.stimGridTitles = {'Stimulus Length (ms)', 'Delay (ms)'; 'Noise Length (ms)', 'Level'};

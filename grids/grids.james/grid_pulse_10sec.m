@@ -2,7 +2,7 @@ function grid = grid_pulse_10sec()
 
   % controlling the sound presentation
   grid.sampleRate = 24414.0625*4;  % ~100kHz
-  grid.stimGenerationFunctionName = 'stimgen_CSDprobeWithLight';
+  grid.stimGenerationFunctionName = 'stimgen_CSDProbeWithLight';
   
   % stimulus grid structure
   grid.stimGridTitles = {'Stimulus Length (ms)', 'Noise Delay (ms)', ...
