@@ -2,7 +2,7 @@ function grid = grid_noise_with_light()
 
   % controlling the sound presentation
   grid.sampleRate = 24414.0625*8;  % ~200kHz
-  grid.stimGenerationFunctionName = 'makeCSDprobeWithLight_long';
+  grid.stimGenerationFunctionName = 'stimgen_CSDProbeWithLight_long';
   
   % stimulus grid structure
   grid.stimGridTitles = {'Stimulus Length (ms)', 'Noise Delay (ms)', ...

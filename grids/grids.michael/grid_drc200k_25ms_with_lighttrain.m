@@ -1,9 +1,8 @@
-
 function grid = grid_drc200k_25ms_with_lighttrain()
 
   % controlling the sound presentation
   grid.sampleRate = 24414.0625*8;  % ~200kHz
-  grid.stimGenerationFunctionName = 'loadStimAndCompensateWith20HzLightTrain';
+  grid.stimGenerationFunctionName = 'stimgen_loadSoundFileWith20HzLightTrain';
   grid.stimDir = 'E:\auditory-objects\michael.stimuli\drc1.dur25.3contrasts\';
   %grid.stimDir = '/Users/ben/scratch/texture/texture.v2/renamed/';
   grid.stimFilename = 'drc%1_dur%3_contrast%2.wav';

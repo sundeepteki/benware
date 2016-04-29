@@ -1,9 +1,8 @@
 function grid = grid_quning()
 
-compfilt=0
   % controlling the sound presentation
   grid.sampleRate = 24414.0625*8;  % ~100kHz
-  grid.stimGenerationFunctionName = 'makeCalibTone';
+  grid.stimGenerationFunctionName = 'stimgen_makeTone';
   
   % stimulus grid structure
   grid.stimGridTitles = {'Frequency', 'Duration', 'Level'};
@@ -13,15 +12,6 @@ compfilt=0
   levels = 70:20:90;
   tonedur = 100;
 
-  global CALIBRATE;
-  if CALIBRATE
-    fprintf('== Calibration mode. Press a key to continue == ')
-    pause;
-    freqs = [1000];
-    levels = 80;
-    tonedur = 1000;
-  end
-
   grid.stimGrid = createPermutationGrid(freqs, tonedur, levels);
 
   % sweep parameters
@@ -30,11 +20,3 @@ compfilt=0
   
   % set this using absolute calibration
   grid.stimLevelOffsetDB = [0 0]-16-35+25+10;
-  
-  if compfilt == 1
-  % compensation filters
-  grid.initFunction = 'loadCompensationFilters';
-  grid.compensationFilterFile = ...
-    'e:\auditory-objects\calibration\calib.2014.01.06\compensationFilters.100k.mat'; % 100kHz
-  grid.compensationFilterVarNames = {'compensationFilters.L', 'compensationFilters.R'};
-  end
