@@ -19,7 +19,7 @@ if ~ispc
 end
 
 % load filters for all sample rates
-l = load(compensationFilterFile);
+l = load(compensationFilterFile)
 
 % put filters for grid.sampleRate into grid.compensationFilters
 calib_idx = find([l.calibs.sampleRate]==grid.sampleRate);
