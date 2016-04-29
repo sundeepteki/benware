@@ -2,7 +2,7 @@ addpath('.');
 
 baseDir = 'f:\auditory-objects.data\';
 %baseDir = '~/scratch/onlineanalysis/';
-exptNumber = 72;
+exptNumber = 80;
 
 exptPattern = [baseDir 'expt%E\'];
 exptDir = regexprep(exptPattern, '%E', num2str(exptNumber));
@@ -74,7 +74,7 @@ laplace = [0 -1 0; -1 4 1; 0 -1 0];
 fra_data = [];
 
 % try spike windows starting between 0 and 50ms
-max_t_min = find(t>=50, 1);
+max_t_min = find(t>=20, 1);
 % spike windows end at stimulus duration at the latest
 max_t_max = find(t>=toneDur, 1);
 
@@ -85,8 +85,8 @@ for chan_idx = 1:size(spikes,4)
     min_badness = 1e6;
     best_t_min = nan;
     best_t_max = nan;
-    for t_min_idx = 1:max_t_min
-        for t_max_idx = t_min_idx+1:max_t_max
+    for t_min_idx = 2:max_t_min
+        for t_max_idx = t_min_idx+2:max_t_max
             
             % on window
             on = spikes(t_min_idx:t_max_idx, :, :, chan_idx);
@@ -109,7 +109,7 @@ for chan_idx = 1:size(spikes,4)
             
             % now, try with off window
             % off window is the same as on window but toneDur later
-            off = spikes(toneDur_bins+off_min_idx:toneDur_bins+off_max_idx, :, :, chan_idx);
+            off = spikes(toneDur_bins+t_min_idx:toneDur_bins+t_max_idx, :, :, chan_idx);
             off = squeeze(sum(off, 1));
             
             this_fra = on - off;

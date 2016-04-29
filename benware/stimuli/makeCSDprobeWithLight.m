@@ -27,6 +27,8 @@ lightstim(1, lightdelay:min(stimLen_samples, lightdelay+lightduration-1)) = ligh
 
 stim(2,:) = lightstim;
 
-% apply level to sound channel only
-level_offset = level-94;
-stim(1,:) = stim(1,:)*10^(level_offset/20);
+% set level correctly
+uncalib = uncalib*sqrt(2);
+uncalib = uncalib * 10^((level-94) / 20);
+
+stim(1,:) = repmat(uncalib, 1, 1);
