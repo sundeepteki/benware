@@ -1,5 +1,5 @@
-function stim = makeCSDprobeWithLight(expt, grid, ...
- 	duration, delay, len, light_voltage, light_delay, light_duration, level)
+function stim = stimgen_CSDProbeWithLight(expt, grid, ...
+ 	duration, delay, len, lightvoltage, lightdelay, lightduration, level)
 	%% stim = makeCSDprobeWithLight(expt, grid, ...
  	%%    duration, delay, len, lightvoltage, lightdelay, lightduration, level)
 	%%
@@ -24,35 +24,38 @@ function stim = makeCSDprobeWithLight(expt, grid, ...
 	%%      C. The values are measured in Pascals, so that a sound with an RMS of 1
 	%%         corresponds to 1 Pascal RMS, or 94 dB SPL.
 
-	error('Not implemented yet')
+	%% get parameters
+	sampleRate = grid.sampleRate;
+	nChannels = expt.nStimChannels;
 
-    %% get parameters
-    sampleRate = grid.sampleRate;
-    nChannels = expt.nStimChannels;
+	% convert times to samples
+	duration = ceil(duration/1000*grid.sampleRate);
+	delay = round(delay/1000*grid.sampleRate);
+	len = round(len/1000*grid.sampleRate);
+	lightdelay = ceil(lightdelay/1000*grid.sampleRate);
+	lightduration = ceil(lightduration/1000*grid.sampleRate);
 
-    %% get sound file with one less channel that expt.nStimChannels (because the last
-    %% channel will be used for the light)
-    new_expt = expt;
-    new_expt.nStimChannels = expt.nStimChannels - 1;
+	stimLen_samples = duration*trials;
 
-    % remove light_voltage from grid.stimGridTitles and from the parameter list
-    % so that these are now in the format expected by stimgen_loadSoundfile.m
-    new_grid = grid;
-    valid_idx = [1 2 3 7]; % parameters we want to pass on to stimgen_CSDprobe.m
-    new_grid.stimGridTitles = new_grid.stimGridTitles(valid_idx);
-    params = num2cell([duration, delay, len, level]);
-    stim = stimgen_CSDProbe(new_expt, new_grid, params{:});
-    size(stim)
+	rand_trial=randperm(trials); %shuffle trials
 
+	% sound in channel 1
+	uncalib = zeros(1, stimLen_samples);
 
-	%% light in last channel
-    
-    % convert times to samples
-	light_delay = ceil(light_delay/1000*grid.sampleRate);
-	light_duration = ceil(light_duration/1000*grid.sampleRate);
-    
-    stimLen_samples = size(stim, 2);
+	for n=1:trials
+		uncalib(1, (n*duration-duration)+delay(rand_trial(n)):(n*duration-duration)+delay(rand_trial(n))+len-1) = randn(1, len); 
+	end
+
+	stim = repmat(uncalib, [nChannels-1 1]);
+
+	% light in channel 2
 	lightstim = zeros(1, stimLen_samples);
-	lightstim(1, light_delay:min(stimLen_samples, light_delay+light_duration-1)) = light_voltage;
+	lightstim(1, lightdelay:min(stimLen_samples, lightdelay+lightduration-1)) = lightvoltage;
 
-	stim(nChannels,:) = lightstim;
+	stim(2,:) = lightstim;
+
+	% set level correctly
+	uncalib = uncalib*sqrt(2);
+	uncalib = uncalib * 10^((level-94) / 20);
+
+	stim(1,:) = repmat(uncalib, 1, 1);
