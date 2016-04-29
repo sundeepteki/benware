@@ -56,8 +56,8 @@ grid
 sweeps = struct;
 for sweepNum = 1:grid.nSweepsDesired
   fprintf('= Sweep %d\n', sweepNum)
-  [stim, sweeps(sweepNum).stimInfo] = prepareStimulus(grid.stimGenerationFunction, ...
-                                                      sweepNum, grid, expt);
+  [sweeps(sweepNum).stim, sweeps(sweepNum).stimInfo] = prepareStimulus(grid.stimGenerationFunction, ...
+                                                       sweepNum, grid, expt);
   if playsounds
     sound(stim*level_adjust, grid.sampleRate)
     pause(size(stim, 2)/grid.sampleRate)
