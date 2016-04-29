@@ -1,9 +1,9 @@
-## Benware
+# Benware
 
 Benware is a simple matlab-based neurophysiology program.
 
 
-# Getting started
+## Getting started
 
 Download Benware from http://github.com/beniamino38/benware
 
@@ -12,7 +12,7 @@ http://github.com/beniamino38/newcalib For spike sorting, jump to "Spike
 sorting", below
 
 
-# Benware initial setup
+## Benware initial setup
 
 In Matlab:
 ```
@@ -38,7 +38,7 @@ Once you've adjusted these parameters, save using:
 >> saveexpt
 ```
 
-# Stimuli
+## Stimuli
 
 Stimuli can be provided in many different ways. The simplest is to add a
 directory inside the directory pointed to by expt.stimulusDirectory containing
@@ -47,25 +47,25 @@ wav files:
 1. Make wav or 32-bit floating point files (extension .f32) containing your
 stimuli. Take note of the following important constraints:
 
-A: Your wav files must have a TDT supported sample rate (eg. 48828 or 97656
-Hz).
+    1. Your wav files must have a TDT supported sample rate (eg. 48828 or 97656
+    Hz).
 
-B: All wav files in a given directory must have the same sample rate.
+	2. All wav files in a given directory must have the same sample rate.
 
-C: The values in your wav files will be interpreted as pressures in Pascals.
-This means that, if you make a 1kHz tone in Matlab, with an RMS of 1, it will
-be played at 1 Pascal RMS, I.E. 94dB.
+	3. The values in your wav files will be interpreted as pressures in Pascals.
+	This means that, if you make a 1kHz tone in Matlab, with an RMS of 1, it will
+	be played at 1 Pascal RMS, I.E. 94dB.
 
-D: You should be careful about the calibrated range of the equipment.
-Currently, this means that at 48828Hz, your stimuli should contain only
-frequencies between 200 and 22kHz, and at 97656Hz, your stimuli should contain
-only frequencies between 200 and 32kHz. If your stimulus contains frequencies
-outside this range, they will be attenuated by the equipment, and so the
-overall level of your sounds will be lower than you expect.
+	4. You should be careful about the calibrated range of the equipment.
+	Currently, this means that at 48828Hz, your stimuli should contain only
+	frequencies between 200 and 22kHz, and at 97656Hz, your stimuli should contain
+	only frequencies between 200 and 32kHz. If your stimulus contains frequencies
+	outside this range, they will be attenuated by the equipment, and so the
+	overall level of your sounds will be lower than you expect.
 
-E: The maximum length of your wav files should be 40 seconds.  F: If
-you want the same stimulus in both ears, use mono wav files. If you want
-different stimuli in the two ears, use stereo wav files.
+	5. The maximum length of your wav files should be 40 seconds.  F: If
+	you want the same stimulus in both ears, use mono wav files. If you want
+	different stimuli in the two ears, use stereo wav files.
 
 2. Put your sound files in a directory. The name of this directory is what
 benware will call your stimulus
@@ -78,9 +78,9 @@ sampleRate = 48828     # (only necessary for .f32 files)
 ```
 
 
-## Calibration
+# Calibration
 
--- see newcalib/README
+See newcalib/README
 
 Once you have some compensation filters, let's say they're in a directory
 called 'E:\newcalib\2014.01.01.headphones'. Then, in Matlab:
@@ -102,7 +102,7 @@ By default, 1 will be added to the experiment number. This number will be used
 to make a directory to save data into. You can alternatively provide an
 experiment number, e.g. 
 ```
->> newexpt(10).
+>> newexpt(10)
 ```
 
 Every time you start a new penetration:  cd newprobe
@@ -112,7 +112,7 @@ correctly set the electrode channel mapping so that the Benware display
 matches the physical arrangement of the probes.
 
 
-= To run an experiment:
+To run an experiment:
 ```
 >> cd benware
 >> benware
@@ -123,11 +123,11 @@ of keys that you can press to produce different kinds of display (waveforms,
 rasters, PSTH, LFP).
 
 
-## Spike sorting
+# Spike sorting
 
-# Installation
+## Installation
 
-Linux:
+### Linux:
 
 1. Install prerequisites using apt-get: 
 ```
@@ -146,7 +146,7 @@ scp -r ben@lin-wjhs002.dpag.ox.ac.uk:/usr/local/bin/klustaviewa /usr/local/bin/
 
 3. Download Benware from http://github.com/beniamino38/benware
 
-Mac:
+### Mac:
 
 1. Install prerequisites using brew:
 ```
@@ -163,7 +163,7 @@ scp -r ben@mc-dpag0036.dpag.ox.ac.uk:/usr/local/bin/klustaviewa /usr/local/bin/
 3. Download Benware from http://github.com/beniamino38/benware
 
 
-Windows (NOT RECOMMENDED)
+### Windows (NOT RECOMMENDED)
 
 1. Download Benware from http://github.com/beniamino38/benware
 
@@ -203,7 +203,7 @@ http://willmore.eu/klustaviewa-0.3.0-bw.zip
 [Check it works by typing: 'cd ~; klusta', cd ~; klustaviewa' ]
 
 
-# Clustering
+## Clustering
 
 If your data from expt 64 was saved in /data/expt64, in Matlab:
 ```
