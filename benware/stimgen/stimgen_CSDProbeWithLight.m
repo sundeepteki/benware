@@ -40,7 +40,6 @@ function stim = makeCSDprobeWithLight(expt, grid, ...
     new_grid.stimGridTitles = new_grid.stimGridTitles(valid_idx);
     params = num2cell([duration, delay, len, level]);
     stim = stimgen_CSDProbe(new_expt, new_grid, params{:});
-    size(stim)
 
 
 	%% light in last channel

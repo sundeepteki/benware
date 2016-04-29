@@ -43,7 +43,7 @@ function stim = stimgen_makeCalibToneWithLight(expt, grid, ...
 	tone = tone.*env;
 
 	uncalib = [delay tone remainder];
-	uncalib = repmat(uncalib, [uncalib(nChannels-1), 1]);
+	uncalib = repmat(uncalib, [nChannels-1, 1]);
 
 	% set level correctly
 	uncalib = uncalib*sqrt(2);

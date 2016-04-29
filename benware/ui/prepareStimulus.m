@@ -1,4 +1,4 @@
-function [stim, stimInfo] = prepareStimulus(stimGenerationFunction, sweepNum, grid, expt)
+function [stim, stimInfo, uncomp] = prepareStimulus(stimGenerationFunction, sweepNum, grid, expt)
 % generate stimInfo (stimulus parameters) for a given sweep, and
 % pass parameters to specified stimGenerationFunction which generates
 % stimulus vectors.
@@ -103,7 +103,7 @@ else
     end
     max_level = 20*log10(sd)+94;
     
-    fprintf(['  * maximum levels: [ ' num2str(max_level, '%0.2f '), ' ]\n']);
+    fprintf(['  * maximum levels: [ ' num2str(max_level, '%0.2f '), ' ] dB\n']);
 
     if max_level>110
         errorBeep('== Warning: maximum sound level is >110dB');

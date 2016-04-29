@@ -1,3 +1,14 @@
+%% This script generates sounds in exactly the same way as benware. 
+% Optionally, it plays the sounds. It also records them in a sweeps structure.
+% sweeps contains:
+% stim -- the sound after compensation filter have been applied
+% stimInfo -- stimulus parameters
+% uncalib -- the uncompensated sound
+% 
+% You can also inspect the 'expt' and 'grid' structures after this script
+% has run.
+
+
 % if true, play the sounds using sound()
 playsounds = false;
 
@@ -29,7 +40,7 @@ grid = prepareGrid(grid, expt);
 if exist('replace_path', 'var')
   from = replace_path{1};
   to = fix_slashes(replace_path{2});
-  fprintf('Replacing %s with %s in grid...\n', from, to)
+  fprintf('Replacing %s with %s in grid...\n', from, to);
   from = lower(fix_slashes(from));
   len = length(from);
 
@@ -39,7 +50,7 @@ if exist('replace_path', 'var')
     fieldvalue = grid.(fields{ii});
     if isstr(fieldvalue) && length(fieldvalue)>=len && all(fix_slashes(fieldvalue(1:len))==from)
       fieldvalue = fix_slashes([to fieldvalue(len+1:end)]);
-      fprintf('--> grid.%s is now %s\n', fieldname, fieldvalue)
+      fprintf('--> grid.%s is now %s\n', fieldname, fieldvalue);
       grid.(fields{ii}) = fieldvalue;
     end
   end
@@ -59,10 +70,11 @@ grid
 sweeps = struct;
 for sweepNum = 1:grid.nSweepsDesired
   fprintf('= Sweep %d\n', sweepNum)
-  [sweeps(sweepNum).stim, sweeps(sweepNum).stimInfo] = prepareStimulus(grid.stimGenerationFunction, ...
-                                                       sweepNum, grid, expt);
+  [sweeps(sweepNum).stim, sweeps(sweepNum).stimInfo, sweeps(sweepNum).uncalib] = ...
+      prepareStimulus(grid.stimGenerationFunction, sweepNum, grid, expt);
+
   if playsounds
-    sound(sweeps(sweepNum).stim*level_adjust, grid.sampleRate)
-    pause(size(sweeps(sweepNum).stim, 2)/grid.sampleRate)
+    sound(sweeps(sweepNum).stim*level_adjust, grid.sampleRate);
+    pause(size(sweeps(sweepNum).stim, 2)/grid.sampleRate);
   end
 end
