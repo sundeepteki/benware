@@ -61,8 +61,15 @@ else
 
     else
         % function is old-style
-        fprintf('== WARNING: Using an old-style stimulus generation function.');
-        fprintf('== This will soon be an error\n')
+        fprintf('== ERROR: Using an old-style stimulus generation function.');
+        fprintf('== Switch to stimgen_* functions by updating your grid file!');
+        fprintf('== E.G.: loadStereoFile          -> stimgen_loadSoundFile');
+        fprintf('==       makeCalibtone           -> stimgen_makeTone');
+        fprintf('==       makeCSDprobe            -> stimgen_CSDProbe');
+        fprintf('==       makeBilateralNose       -> stimgen_bilateralNoise');
+        fprintf('==       loadMonoFileWithLight   -> stimgen_loadSoundFileWithLight');
+        fprintf('==       makeCSDprobeWithLight   -> stimgen_CSDProbeWithLight');
+        error('Fix these before continuing!')
         uncomp = feval(stimGenerationFunction, expt, grid, grid.sampleRate, expt.nStimChannels, ...
                        grid.compensationFilters, parameters{:});
     end
@@ -119,7 +126,7 @@ else
                         level_offset = grid.legacyLevelOffsetDB(chan);
                     end
                     stim{chan} = stim{chan} * 10^(level_offset / 20);
-                    fprintf('= LegacyLevelOffset: boosting level by %d db\n', level_offset);
+                    fprintf('= LegacyLevelOffset: boosting level by %d dB\n', level_offset);
 
                 end
             else
@@ -132,12 +139,5 @@ else
     else
         stim = uncomp;
     end
-    %
-    if false
-       keyboard
-       l = load(expt.compensationFilterFile);
-       play_and_analyse_sound(grid.sampleRate, 1, 'RX6', uncomp(2,:), grid.compensationFilters{2}, 50, l.calibs(1).reftone_rms_volts_per_pascal);
-       play_and_analyse_sound(grid.sampleRate, 1, 'RX6', stim(2,:), [], 50, l.calibs(1).reftone_rms_volts_per_pascal);
-       keyboard
-    end
+
 end    
