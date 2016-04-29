@@ -2,10 +2,10 @@ addpath('.');
 
 baseDir = 'f:\auditory-objects.data\';
 %baseDir = '~/scratch/onlineanalysis/';
-exptNumber = 72;
+exptNumber = 81;
 
 t_min = 0; % parameters of spike window
-t_max = 50;
+t_max = 25;
 
 exptPattern = [baseDir 'expt%E\'];
 exptDir = regexprep(exptPattern, '%E', num2str(exptNumber));

@@ -65,7 +65,11 @@ probes(end).order = order(:)';
 probes(end+1).name = 'Single channel';
 probes(end).order = 1;
 
-
+probes(end+1).name = 'A1x32-Poly2';
+twoBySixteen = [10 9 8 7 5 6 4 3 2 1 11 12 13 14 15 16; ...
+    23 24 25 26 27 28 29 30 31 32 22 21 20 19 18 17];
+order = transpose(twoBySixteen);
+probes(end).order = order(:)';
 
 % NeuroNexus connector pin maps from:
 % http://www.neuronexustech.com/support/probe-site-maps
