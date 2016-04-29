@@ -1,8 +1,5 @@
-% this path will be replaced in all fields of the grid where it is found
-replace_path = {'E:\auditory-objects\sounds-uncalib', '~/scratch/benware.stimuli'};
-
 % if true, play the sounds using sound()
-playsounds = true;
+playsounds = false;
 
 % multiplier to adjust sounds by to make them audible
 level_adjust = 10;
@@ -11,13 +8,19 @@ level_adjust = 10;
 % if false, just play each stimulus once as specified by grid.stimGrid
 play_complete_grid = false;
 
+% this path will be replaced in all fields of the grid where it is found
+%replace_path = {'E:\auditory-objects\sounds-uncalib', '~/scratch/benware.stimuli'};
+
 % stimulus directory for "directory of wav file" stimuli
-stimulus_dir = './stimulusdir';
+%stimulus_dir = './stimulusdir';
 
 % no more parameters after this
 
 loadexpt;
-expt.stimulusDirectory = stimulus_dir;
+% use different stimulus_dir than the one in expt
+if exist('stimulus_dir', 'var')
+  expt.stimulusDirectory = stimulus_dir;
+end
 
 grid = chooseGrid(expt.stimulusDirectory);
 grid = prepareGrid(grid, expt);
@@ -29,16 +32,16 @@ if exist('replace_path', 'var')
   fprintf('Replacing %s with %s in grid...\n', from, to)
   from = lower(fix_slashes(from));
   len = length(from);
-end
 
-fields = fieldnames(grid);
-for ii = 1:numel(fields)
-  fieldname = fields{ii};
-  fieldvalue = grid.(fields{ii});
-  if isstr(fieldvalue) && length(fieldvalue)>=len && all(fix_slashes(fieldvalue(1:len))==from)
-    fieldvalue = fix_slashes([to fieldvalue(len+1:end)]);
-    fprintf('--> grid.%s is now %s\n', fieldname, fieldvalue)
-    grid.(fields{ii}) = fieldvalue;
+  fields = fieldnames(grid);
+  for ii = 1:numel(fields)
+    fieldname = fields{ii};
+    fieldvalue = grid.(fields{ii});
+    if isstr(fieldvalue) && length(fieldvalue)>=len && all(fix_slashes(fieldvalue(1:len))==from)
+      fieldvalue = fix_slashes([to fieldvalue(len+1:end)]);
+      fprintf('--> grid.%s is now %s\n', fieldname, fieldvalue)
+      grid.(fields{ii}) = fieldvalue;
+    end
   end
 end
 
@@ -59,7 +62,7 @@ for sweepNum = 1:grid.nSweepsDesired
   [sweeps(sweepNum).stim, sweeps(sweepNum).stimInfo] = prepareStimulus(grid.stimGenerationFunction, ...
                                                        sweepNum, grid, expt);
   if playsounds
-    sound(stim*level_adjust, grid.sampleRate)
-    pause(size(stim, 2)/grid.sampleRate)
+    sound(sweeps(sweepNum).stim*level_adjust, grid.sampleRate)
+    pause(size(sweeps(sweepNum).stim, 2)/grid.sampleRate)
   end
 end
