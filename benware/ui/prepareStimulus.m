@@ -61,14 +61,14 @@ else
 
     else
         % function is old-style
-        fprintf('== ERROR: Using an old-style stimulus generation function.');
-        fprintf('== Switch to stimgen_* functions by updating your grid file!');
-        fprintf('== E.G.: loadStereoFile          -> stimgen_loadSoundFile');
-        fprintf('==       makeCalibtone           -> stimgen_makeTone');
-        fprintf('==       makeCSDprobe            -> stimgen_CSDProbe');
-        fprintf('==       makeBilateralNose       -> stimgen_bilateralNoise');
-        fprintf('==       loadMonoFileWithLight   -> stimgen_loadSoundFileWithLight');
-        fprintf('==       makeCSDprobeWithLight   -> stimgen_CSDProbeWithLight');
+        fprintf('== ERROR: Using an old-style stimulus generation function.\n');
+        fprintf('== Switch to stimgen_* functions by updating your grid file!\n');
+        fprintf('== E.G.: loadStereoFile          -> stimgen_loadSoundFile\n');
+        fprintf('==       makeCalibtone           -> stimgen_makeTone\n');
+        fprintf('==       makeCSDprobe            -> stimgen_CSDProbe\n');
+        fprintf('==       makeBilateralNose       -> stimgen_bilateralNoise\n');
+        fprintf('==       loadMonoFileWithLight   -> stimgen_loadSoundFileWithLight\n');
+        fprintf('==       makeCSDprobeWithLight   -> stimgen_CSDProbeWithLight\n');
         error('Fix these before continuing!')
         uncomp = feval(stimGenerationFunction, expt, grid, grid.sampleRate, expt.nStimChannels, ...
                        grid.compensationFilters, parameters{:});
