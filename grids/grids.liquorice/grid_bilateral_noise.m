@@ -2,7 +2,7 @@ function grid = grid_bilateral_noise
 
   % controlling the sound presentation
   grid.sampleRate = tdt100k;
-  grid.stimGenerationFunctionName = 'makeBilateralNoise';
+  grid.stimGenerationFunctionName = 'stimgen_bilateralNoise';
 
   % stimulus grid structure
   grid.stimGridTitles = {'Duration', 'LeftDelay', 'RightDelay', 'BothDelay', 'Level'};
@@ -20,6 +20,6 @@ function grid = grid_bilateral_noise
   
   % search mode
   grid.repeatsPerCondition = Inf;
-  grid.saveWaveforms = false;
+  grid.saveWaveforms = true;
 
   grid.legacyLevelOffsetDB = -26;
