@@ -85,7 +85,8 @@ each stimulus as:
 ```
 uncomp = stimgen_function(expt, grid, parameters{:})
 ```
-
+Any extra fields you put in the grid will be saved by Benware when your
+stimuli are presented, so you can refer to them later.
 
 #### stimgen_function
 
@@ -105,12 +106,11 @@ Stimulus generation functions must obey the following rules:
 
 1. Must have a name that begins stimgen_*
 2. Accept parameters:
-```
-expt: standard benware expt structure (as loaded by loadexpt.m)
-grid: standard benware grid structure (produced by grid_*.m)
-varargin: a list of parameters, whose length matches
-       the length of grid.stimGridTitles
-```
+
+    1. expt: standard benware expt structure (as loaded by loadexpt.m)
+    2. grid: standard benware grid structure (produced by grid_*.m)
+    3. varargin: a list of parameters, whose length matches the length of grid.stimGridTitles
+
 3. Produces a matrix containing uncalibrated sound, meeting these criteria:
      1. The sample rate must match grid.sampleRate
      2. The first dimension of this matrix must match expt.nStimChannels.
