@@ -1,4 +1,4 @@
-# Stimuli
+## Stimuli
 version: 03-May-2016 17:27:47
 
 There are two ways to define stimuli in Benware:
@@ -7,7 +7,7 @@ There are two ways to define stimuli in Benware:
 * providing grid_ and stimgen_ functions which generate stimuli on the fly.
 
 
-## Directory of wav/f32 files:
+### Directory of wav/f32 files:
 
 1. Make wav or 32-bit floating point files (extension .f32) containing your
 stimuli. Take note of the following important constraints:
@@ -42,14 +42,14 @@ reps = 10     # (the number of times your stimulus is repeated; defaults to 20)
 sampleRate = 48828     # (only necessary for .f32 files)
 ```
 
-## grid_ and stimgen_ functions
+### grid_ and stimgen_ functions
 
 The grid_ function lives in benware/grids/grids.username. This directory will
 be scanned by Benware, and all files matching grid_*.m will be treated as
 grid functions. Each grid function defines one set of stimuli. See grid_quning.m,
 grid_csdprobe.m, grid_bilateral_noise.m and grid_texture_v4.m for examples.
 
-### grid_function
+#### grid_function
 
 Defined as:
 ```
@@ -60,7 +60,7 @@ Called by prepareGrid.m as:
 ```
 grid = grid_function()
 ```
-    
+
 Grid functions must obey the following rules:
 1. The name must be 'grid_', and the name at the top of this file must
      match the filename.
@@ -85,10 +85,8 @@ each stimulus as:
 uncomp = stimgen_function(expt, grid, parameters{:})
 ```
     
-    
-   
-    
-### stimgen_function
+
+#### stimgen_function
 
     % defined as function stim = stimgen_function(expt,grid,varargin)
 
