@@ -112,9 +112,9 @@ Stimulus generation functions must obey the following rules:
     3. varargin: a list of parameters, whose length matches the length of grid.stimGridTitles
 
 3. Produces a matrix containing uncalibrated sound, meeting these criteria:
-     1. The sample rate must match grid.sampleRate
-     2. The first dimension of this matrix must match expt.nStimChannels.
-     3. The values are measured in Pascals, so that a sound with an RMS of 1
+    1. The sample rate must match grid.sampleRate
+    2. The first dimension of this matrix must match expt.nStimChannels.
+    3. The values are measured in Pascals, so that a sound with an RMS of 1
         corresponds to 1 Pascal RMS, or 94 dB SPL.
             
 Calibration is now performed by Benware; internal calibration is not required.
