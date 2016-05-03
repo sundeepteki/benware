@@ -43,7 +43,7 @@ function stim = stimgen_loadSoundFileWithLight(expt, grid, varargin)
     end
 
     parameters = cell2mat(varargin);
-    light_voltage_idx = strcmpi(grid.stimGridTitles, 'Light voltage');
+    light_voltage_idx = find(strcmpi(grid.stimGridTitles, 'Light voltage'));
     light_voltage = parameters(light_voltage_idx);
 
     %% get sound file with one less channel that expt.nStimChannels (because the last

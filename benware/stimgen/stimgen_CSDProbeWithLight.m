@@ -28,14 +28,6 @@ function stim = makeCSDprobeWithLight(expt, grid, ...
     sampleRate = grid.sampleRate;
     nChannels = expt.nStimChannels;
 
-    % convert times to samples
-	duration = ceil(duration/1000*grid.sampleRate);
-	delay = round(delay/1000*grid.sampleRate);
-	len = round(len/1000*grid.sampleRate);
-	light_delay = ceil(light_delay/1000*grid.sampleRate);
-	light_duration = ceil(light_duration/1000*grid.sampleRate);
-
-
     %% get sound file with one less channel that expt.nStimChannels (because the last
     %% channel will be used for the light)
     new_expt = expt;
@@ -46,12 +38,18 @@ function stim = makeCSDprobeWithLight(expt, grid, ...
     new_grid = grid;
     valid_idx = [1 2 3 7]; % parameters we want to pass on to stimgen_CSDprobe.m
     new_grid.stimGridTitles = new_grid.stimGridTitles(valid_idx);
-    new_varargin = varargin(valid_idx);
-    stim = stimgen_CSDprobe(new_expt, new_grid, new_varargin{:});
+    params = num2cell([duration, delay, len, level]);
+    stim = stimgen_CSDProbe(new_expt, new_grid, params{:});
 
 
 	%% light in last channel
+    
+    % convert times to samples
+	light_delay = ceil(light_delay/1000*grid.sampleRate);
+	light_duration = ceil(light_duration/1000*grid.sampleRate);
+    
+    stimLen_samples = size(stim, 2);
 	lightstim = zeros(1, stimLen_samples);
-	lightstim(1, lightdelay:min(stimLen_samples, lightdelay+lightduration-1)) = lightvoltage;
+	lightstim(1, light_delay:min(stimLen_samples, light_delay+light_duration-1)) = light_voltage;
 
 	stim(nChannels,:) = lightstim;

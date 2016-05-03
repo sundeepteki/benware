@@ -1,4 +1,4 @@
-function [stim, stimInfo] = prepareStimulus(stimGenerationFunction, sweepNum, grid, expt)
+function [stim, stimInfo, uncomp] = prepareStimulus(stimGenerationFunction, sweepNum, grid, expt)
 % generate stimInfo (stimulus parameters) for a given sweep, and
 % pass parameters to specified stimGenerationFunction which generates
 % stimulus vectors.
@@ -61,14 +61,14 @@ else
 
     else
         % function is old-style
-        fprintf('== ERROR: Using an old-style stimulus generation function.');
-        fprintf('== Switch to stimgen_* functions by updating your grid file!');
-        fprintf('== E.G.: loadStereoFile          -> stimgen_loadSoundFile');
-        fprintf('==       makeCalibtone           -> stimgen_makeTone');
-        fprintf('==       makeCSDprobe            -> stimgen_CSDProbe');
-        fprintf('==       makeBilateralNose       -> stimgen_bilateralNoise');
-        fprintf('==       loadMonoFileWithLight   -> stimgen_loadSoundFileWithLight');
-        fprintf('==       makeCSDprobeWithLight   -> stimgen_CSDProbeWithLight');
+        fprintf('== ERROR: Using an old-style stimulus generation function.\n');
+        fprintf('== Switch to stimgen_* functions by updating your grid file!\n');
+        fprintf('== E.G.: loadStereoFile          -> stimgen_loadSoundFile\n');
+        fprintf('==       makeCalibtone           -> stimgen_makeTone\n');
+        fprintf('==       makeCSDprobe            -> stimgen_CSDProbe\n');
+        fprintf('==       makeBilateralNose       -> stimgen_bilateralNoise\n');
+        fprintf('==       loadMonoFileWithLight   -> stimgen_loadSoundFileWithLight\n');
+        fprintf('==       makeCSDprobeWithLight   -> stimgen_CSDProbeWithLight\n');
         error('Fix these before continuing!')
         uncomp = feval(stimGenerationFunction, expt, grid, grid.sampleRate, expt.nStimChannels, ...
                        grid.compensationFilters, parameters{:});
@@ -103,7 +103,7 @@ else
     end
     max_level = 20*log10(sd)+94;
     
-    fprintf(['  * maximum levels: [ ' num2str(max_level, '%0.2f '), ' ]\n']);
+    fprintf(['  * maximum levels: [ ' num2str(max_level, '%0.2f '), ' ] dB\n']);
 
     if max_level>110
         errorBeep('== Warning: maximum sound level is >110dB');

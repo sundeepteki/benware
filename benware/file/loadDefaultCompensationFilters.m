@@ -23,10 +23,12 @@ l = load(compensationFilterFile);
 
 % put filters for grid.sampleRate into grid.compensationFilters
 calib_idx = find([l.calibs.sampleRate]==grid.sampleRate);
-if length(calib_idx)<0
-    error('Did not find a calibration corresponding to the sample rate of this grid.');
+if length(calib_idx)==0
+    error(sprintf('Did not find a calibration corresponding to grid sample rate (%dHz).', ...
+          floor(grid.sampleRate)));
 elseif length(calib_idx)>1
-    error('Found more than one calibration corresponding to the sample rate of this grid.');
+    error(sprintf('Found more than one calibration corresponding to grid sample rate (%dHz).', ...
+          floor(grid.sampleRate)));
 end
 calib = l.calibs(calib_idx);
 
