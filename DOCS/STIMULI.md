@@ -123,6 +123,7 @@ Calibration is now performed by Benware; internal calibration is not required.
 ### Testing
 
 To test your stimuli, try:
-```testgrid.m
+```
+testgrid.m
 ```
 It allows you to choose a grid and then runs through a fake benware experiment, using exactly the same code as the real benware. It spits out both the uncalibrated sounds produced by your stimulus grid, and the actual calibrated stimulus values that would be sent to the TDT hardware. It optionally plays the uncalibrated versions through the computers’ speakers.
