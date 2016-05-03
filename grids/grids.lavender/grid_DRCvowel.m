@@ -32,7 +32,7 @@ if CALIBRATE
   pause;
   settingsFile = 'C:\benware\benware\astrid\SettingsCalibDRCvowel2014_10_28.m';
 else
-  settingsFile = 'C:\benware-new\benware\astrid\SettingsDRCvowel2016_04_04.m';    
+  settingsFile = 'C:\benware\benware\astrid\SettingsDRCvowel2016_04_04.m';    
 end
 
 fprintf('Generating stimuli...\n');

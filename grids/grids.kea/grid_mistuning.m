@@ -32,7 +32,7 @@ if CALIBRATE
   pause;
   settingsFile = 'E:\auditory-objects\benware\benware\astrid\SettingsCalibMistuned2014_10_28.m';
 else
-  settingsFile = 'C:\benware-new\benware\astrid\SettingsMistuned2016_03_23.m';    
+  settingsFile = 'C:\benware\benware\astrid\SettingsMistuned2016_03_23.m';    
 end
 
 fprintf('Generating stimuli...\n');

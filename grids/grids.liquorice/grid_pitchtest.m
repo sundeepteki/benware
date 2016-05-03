@@ -3,7 +3,7 @@ function grid = grid_pitchtest()
   % controlling the sound presentation
   grid.sampleRate = 24414.0625*4;
   grid.stimGenerationFunctionName = 'stimgen_loadSoundFile'; 
-  grid.stimDir = 'C:\benware-new\benware\sounds\';
+  grid.stimDir = 'C:\benware\benware\sounds\';
   grid.stimFilename = 'QuentinPitchSounds2016_%1.wav';
   
   % stimulus grid structure

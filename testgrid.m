@@ -20,10 +20,10 @@ level_adjust = 10;
 play_complete_grid = false;
 
 % this path will be replaced in all fields of the grid where it is found
-replace_path = {'E:\auditory-objects\sounds-uncalib', '~/scratch/benware.stimuli'};
+%replace_path = {'E:\auditory-objects\sounds-uncalib', '~/scratch/benware.stimuli'};
 
 % stimulus directory for "directory of wav file" stimuli
-stimulus_dir = './stimulusdir';
+%stimulus_dir = './stimulusdir';
 
 % no more parameters after this
 
