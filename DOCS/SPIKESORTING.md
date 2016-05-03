@@ -100,7 +100,7 @@ Now, you can load the results of clustering back into matlab with:
 Setting the 3rd argument to true gets the auto-clustered spikes, not hand-
 sorted ones.
 
-# Manual editing of clusters
+### Manual editing of clusters
 
 Now, in terminal, run klustaviewa: on all shanks, e.g.:
 ```

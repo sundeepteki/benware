@@ -84,31 +84,43 @@ each stimulus as:
 ```
 uncomp = stimgen_function(expt, grid, parameters{:})
 ```
-    
+
 
 #### stimgen_function
 
-    % defined as function stim = stimgen_function(expt,grid,varargin)
+Defined as:
+```
+function stim = stimgen_function(expt,grid,varargin)
+```
 
-	The stimulus generation function will be called by prepareStimulus.m as:
-	  uncomp = stimgen_function(expt, grid, parameters{:})
-	where 'parameters' is a row from grid.stimGrid, so the parameters are values
-	of the stimulus parameters specified in grid.stimGridTitles.
+The stimulus generation function will be called by prepareStimulus.m as:
+```
+uncomp = stimgen_function(expt, grid, parameters{:})
+```
+where 'parameters' is a row from grid.stimGrid, so the parameters are values
+of the stimulus parameters specified in grid.stimGridTitles.
 	
-	Stimulus generation functions must obey the following rules:
-	1. Must have a name that begins stimgen_*
-	2. Accept parameters:
-	     expt: standard benware expt structure (as loaded by loadexpt.m)
-	     grid: standard benware grid structure (produced by grid_*.m)
-	     varargin: a list of parameters, whose length matches
-	               the length of grid.stimGridTitles
-	3. Produces a matrix containing uncalibrated sound, meeting these criteria:
-	     A. The sample rate must match grid.sampleRate
-	     B. The first dimension of this matrix must match expt.nStimChannels.
-	     C. The values are measured in Pascals, so that a sound with an RMS of 1
-	        corresponds to 1 Pascal RMS, or 94 dB SPL.
+Stimulus generation functions must obey the following rules:
+1. Must have a name that begins stimgen_*
+2. Accept parameters:
+```
+expt: standard benware expt structure (as loaded by loadexpt.m)
+grid: standard benware grid structure (produced by grid_*.m)
+varargin: a list of parameters, whose length matches
+       the length of grid.stimGridTitles
+```
+3. Produces a matrix containing uncalibrated sound, meeting these criteria:
+     1. The sample rate must match grid.sampleRate
+     2. The first dimension of this matrix must match expt.nStimChannels.
+     3. The values are measured in Pascals, so that a sound with an RMS of 1
+        corresponds to 1 Pascal RMS, or 94 dB SPL.
             
-    % Calibration is now performed by Benware; internal calibration is not required.
-    
-    % To test your stimuli, try 'testgrid.m'. It allows you to choose a grid and then runs through a fake benware experiment, using exactly the same code as the real benware. It spits out the stimulus values that would be sent to the TDT hardware, and optionally plays them through the computers’ speakers. Remember that these are compensated for the frequency response of your rig speaker (not the computer speaker), so they may sound a bit odd.
-    
+Calibration is now performed by Benware; internal calibration is not required.
+
+
+### Testing
+
+To test your stimuli, try:
+```testgrid.m
+```
+It allows you to choose a grid and then runs through a fake benware experiment, using exactly the same code as the real benware. It spits out both the uncalibrated sounds produced by your stimulus grid, and the actual calibrated stimulus values that would be sent to the TDT hardware. It optionally plays the uncalibrated versions through the computers’ speakers.
