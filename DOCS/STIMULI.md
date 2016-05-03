@@ -62,6 +62,7 @@ grid = grid_function()
 ```
 
 Grid functions must obey the following rules:
+
 1. The name must be 'grid_', and the name at the top of this file must
      match the filename.
      
@@ -99,8 +100,9 @@ uncomp = stimgen_function(expt, grid, parameters{:})
 ```
 where 'parameters' is a row from grid.stimGrid, so the parameters are values
 of the stimulus parameters specified in grid.stimGridTitles.
-	
+
 Stimulus generation functions must obey the following rules:
+
 1. Must have a name that begins stimgen_*
 2. Accept parameters:
 ```
