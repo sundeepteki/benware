@@ -16,6 +16,13 @@ function [nSamplesReceived, spikeTimes, lfp, timeStamp, plotData, sampleWaveform
   end
   
   % check for stale data in data device buffer
+  % FIXME: This hack should not be here. If we read these values
+  % immedately after a reset, we frequently get stale data errors
+  % on the BSB rig machine. Pausing and/or doing countAllData an
+  % extra time seem to fix it.
+  %pause(0.5)
+  dummy = countAllData(hardware.dataDevice, nChannels);
+
   if any(countAllData(hardware.dataDevice, nChannels) ~= 0)
     errorBeep('Stale data in data buffer');
   end
