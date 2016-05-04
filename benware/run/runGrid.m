@@ -7,6 +7,9 @@ tic;
 
 global state;
 
+% make data directory if it doesn't exist
+mkdir_nowarning(constructDataPath(expt.dataDir,grid,expt,0,0))
+
 % start recording a log
 diary(constructDataPath([expt.dataDir expt.logFilename], grid, expt));
 
@@ -45,6 +48,7 @@ if ~isfield(state, 'onlineData')
 end
 
 plotData = plotInit(expt.dataDeviceSampleRate, expt.nChannels, nSamplesExpected, grid);
+
 
 %% run sweeps
 % =============

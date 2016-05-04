@@ -10,3 +10,4 @@ if ~isempty(which('audioread'))
 else
   [snd, fs] = wavread(filename);
 end
+path(p);

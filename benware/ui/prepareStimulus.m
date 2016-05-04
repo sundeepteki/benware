@@ -61,7 +61,7 @@ else
 
     else
         % function is old-style
-        fprintf('== ERROR: Using an old-style stimulus generation function.\n');
+        fprintf(sprintf('== ERROR: %s is an old-style stimulus generation function.\n', func_str));
         fprintf('== Switch to stimgen_* functions by updating your grid file!\n');
         fprintf('== E.G.: loadStereoFile          -> stimgen_loadSoundFile\n');
         fprintf('==       makeCalibtone           -> stimgen_makeTone\n');
