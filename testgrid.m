@@ -74,7 +74,7 @@ for sweepNum = 1:grid.nSweepsDesired
       prepareStimulus(grid.stimGenerationFunction, sweepNum, grid, expt);
 
   if playsounds
-    sound(sweeps(sweepNum).stim*level_adjust, grid.sampleRate);
+    sound(sweeps(sweepNum).uncalib*level_adjust, grid.sampleRate);
     pause(size(sweeps(sweepNum).stim, 2)/grid.sampleRate);
   end
 end
