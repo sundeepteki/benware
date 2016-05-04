@@ -1,6 +1,6 @@
-function num = demandnumberinput(query,allowable_answers)
+function num = demandnumberinput(query,allowable_answers, defaultval)
   % str = demandnumberinput(query,allowable_answers)
-  
+
   if nargin==1, 
     allowable_answers = []; 
   end
@@ -13,8 +13,13 @@ function num = demandnumberinput(query,allowable_answers)
   end
   
   if isempty(num)
-    num = demandnumberinput(query,allowable_answers);
-    return;
+    if exist('defaultval', 'var')
+      num = defaultval;
+      return;
+    else
+      num = demandnumberinput(query,allowable_answers);
+      return;
+    end
   end
   
   if ~isnumeric(num)
