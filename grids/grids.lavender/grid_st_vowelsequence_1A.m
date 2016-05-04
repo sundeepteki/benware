@@ -33,7 +33,7 @@ v1: 29.04.16
 
 %% required parameters
 
-grid.seed                       = rng;
+% grid.seed                       = rng;
 grid.sampleRate                 = tdt100k; % check this value = 97656Hz?
 grid.stimGenerationFunctionName = 'stimgen_st_vowelsequence_1A';
 
