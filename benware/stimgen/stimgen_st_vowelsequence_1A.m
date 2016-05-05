@@ -15,6 +15,8 @@ v1: 29.04.16
 sampleRate = grid.sampleRate; 
 nChannels  = expt.nStimChannels;
 vowel      = grid.vowel;
+vowel_freqs = cell2mat(varargin);
+assert(length(vowel_freqs)==4)
 
 %% make vowel vector
 
@@ -45,9 +47,9 @@ end
 % Now synthesize the vowel
 seq_vowel   = []; 
 
-for i = 1:length(vowel.freqs)
+for i = 1:length(vowel_freqs)
     
-    vowel_f0 = vowel.freqs(i);      % added by ST
+    vowel_f0 = vowel_freqs(i);      % added by ST
     waveform = [];
     
     w0T = 2*pi*vowel_f0/sampleRate;                 % radians per sample
