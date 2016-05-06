@@ -14,13 +14,7 @@ function grid = grid_st_vowelsequence_1A()
               grid will be repeated
     
      The stimulus generation function will be called by BenWare to generate each stimulus as:
-     uncomp = stimgen_function(expt, grid, parameters{:})
-     
- % check
-1. seed type 
-2. tdt100k = 97656Hz?
-3. check fields in verifyGridFields.m
-4. pass a stimulus structure to stimgen?
+     uncomp = stimgen_function(expt, grid, parameters{:})     
 
 % to do
 1. add experiment-specific greeting - expt/control conditions, ferret
