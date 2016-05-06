@@ -7,6 +7,7 @@ based on Gavornik and Bear, 2014 - experiment 1
 
 Sundeep Teki
 v1: 29.04.16
+v2: 05.05.16 - Ben added varargin to get current vowels for each trial
 %}
 
 
