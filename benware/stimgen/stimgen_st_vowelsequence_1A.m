@@ -8,6 +8,7 @@ based on Gavornik and Bear, 2014 - experiment 1
 Sundeep Teki
 v1: 29.04.16
 v2: 05.05.16 - Ben added varargin to get current vowels for each trial
+v3: 07.05.16 - Sundeep added 0.5s pre-ISI and 1s post-ISI
 %}
 
 
@@ -87,8 +88,9 @@ end
 
 %% make vowel sequence
 
-silence = zeros(1,round(vowel.isi*sampleRate));
-stim    = [seq_vowel silence];
+pre_silence  = zeros(1,round(vowel.preisi*sampleRate));
+post_silence = zeros(1,round(vowel.postisi*sampleRate));
+stim         = [pre_silence seq_vowel post_silence];
 
 stim = repmat(stim, nChannels, 1);
 

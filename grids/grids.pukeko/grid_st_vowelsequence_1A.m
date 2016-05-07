@@ -61,7 +61,8 @@ vowel.level      = 65;                              % dB
 vowel.amp        = 20e-6*10.^(vowel.level/20);      % convert to Pascals
 vowel.carrier    = 'clicktrain';
 vowel.hannramp   = 0.005;                           % ramp size - 5ms
-vowel.isi        = 1.5;                             % post-stim interval; seconds
+vowel.preisi     = 0.5;                             % pre-stim interval; seconds
+vowel.postisi    = 1;                               % post-stim interval; seconds
 
 %% Greetings
 
