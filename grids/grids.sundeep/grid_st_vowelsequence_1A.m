@@ -67,19 +67,21 @@ vowel.postisi    = 1;                               % post-stim interval; second
 %% Greetings
 
 fid = 1;
-fprintf(fid, '%%%%%   Vowel settings %%%%%\n');
-fprintf(fid, '%%%%%   F0 = %1.0f\n', vowel.F0);
-fprintf(fid, '%%%%%   Frequencies = %d\n', vowel.freqs);
-fprintf(fid, '%%%%%   Timbre = [%s]\n', vowel.timbre);
-fprintf(fid, '%%%%%   Formant frequencies = %d\n', vowel.formants);
-fprintf(fid, '%%%%%   Duration = %d\n', vowel.dur);
-fprintf(fid, '%%%%%   Level = %d\n', vowel.level);
-
-fprintf(fid, '%%%%%   Experiment settings   %%%%%\n');
+fprintf(fid, 'VOWEL PARAMETERS \n');
+fprintf(fid, 'F0 = %1.0f\n', vowel.F0);
+fprintf(fid, 'Frequencies = %d\n', vowel.freqs);
+fprintf(fid, 'Timbre = [%s]\n', vowel.timbre);
+fprintf(fid, 'Formant frequencies = %d\n', vowel.formants);
+fprintf(fid, 'Duration = %d\n', vowel.dur);
+fprintf(fid, 'Level = %d\n', vowel.level);
+fprintf(fid, '\n');
+fprintf(fid, 'EXPERIMENT PARAMETERS  \n');
 fprintf(fid, 'Experimental animals: Kea & Munchkin\n');
 fprintf(fid, 'Control animals:      Lavender & Paprika\n');
 fprintf(fid, 'Training phase:       Days 1 - 4   [May 9-12] \n');
 fprintf(fid, 'Testing phase:        Days 5, 8, 10, 12   [May 13, 16, 18, 20] \n');
+fprintf(fid, '\n');
+fprintf(fid, 'ENTER EXPERIMENT DETAILS \n');
 
 
 %% Specify experimental condition, animal group and testing day
