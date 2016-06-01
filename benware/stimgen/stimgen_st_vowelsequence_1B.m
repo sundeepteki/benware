@@ -1,19 +1,15 @@
-function stim = stimgen_st_vowelsequence_1A(expt, grid, varargin)
+function stim = stimgen_st_vowelsequence_1B(expt, grid, varargin)
 
 %{
 
-Function to make vowel sequences for sequence learning experiment 1A:
-based on Gavornik and Bear, 2014 - experiment 1 
+Function to make vowel sequences for sequence learning experiment 1B:
+based on Gavornik and Bear, 2014 - experiment 2
+to examine temporal specificity of learning
 
 Sundeep Teki
-v1: 29.04.16
-v2: 05.05.16 - Ben added varargin to get current vowels for each trial
-v3: 07.05.16 - Sundeep added 0.5s pre-ISI and 1s post-ISI
-
-31-May-2016 12:07:50 - also valid for experiment 1A_v2 (same as 1A but in a single day)
+v1: 20.05.16
 
 %}
-
 
 %% get parameters
 
@@ -24,9 +20,6 @@ vowel_freqs = cell2mat(varargin);
 assert(length(vowel_freqs)==4);
 
 %% make vowel vector
-
-t           = 0:1/(sampleRate-1):vowel.dur;
-nsamples    = length(t);
 
 % creating formant filters with bandwiths
 nsecs       = length(vowel.formants);
@@ -54,14 +47,18 @@ seq_vowel   = [];
 
 for i = 1:length(vowel.freqs)
     
-    vowel_f0 = vowel_freqs(i);      % added by ST
+    % added by ST on 20.05.16 - different from stimgen_1A
+    t           = 0:1/(sampleRate-1):vowel.dur(i); 
+    nsamples    = length(t);
+
+    vowel_f0 = vowel_freqs(i);      
     waveform = [];
     
     w0T = 2*pi*vowel_f0/sampleRate;                 % radians per sample
     
     nharm = floor((sampleRate/2)/vowel_f0);         % number of harmonics
-    sig = zeros(1,nsamples);
-    n = 0:(nsamples-1);
+    sig   = zeros(1,nsamples);
+    n     = 0:(nsamples-1);
     
     if strcmp(vowel.carrier,'clicktrain')
         % use click train as carrier
