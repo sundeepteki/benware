@@ -5,8 +5,7 @@
 % stimInfo -- stimulus parameters
 % uncalib -- the uncompensated sound
 % 
-% You can also inspect the 'expt' and 'grid' structures after this script
-% has run.
+% You can also inspect the 'expt' and 'grid' structures after this script has run.
 
 
 % if true, play the sounds using sound()
@@ -20,10 +19,11 @@ level_adjust = 10;
 play_complete_grid = false;
 
 % this path will be replaced in all fields of the grid where it is found
-%replace_path = {'E:\auditory-objects\sounds-uncalib', '~/scratch/benware.stimuli'};
+% replace_path = {'E:\auditory-objects\sounds-uncalib', '~/scratch/benware.stimuli'};
 
 % stimulus directory for "directory of wav file" stimuli
-%stimulus_dir = './stimulusdir';
+% stimulus_dir = './stimulusdir';
+stimulus_dir = '/Users/sundeepteki/benware/benware/stimgen'; % on Teki Mac
 
 % no more parameters after this
 
@@ -39,7 +39,7 @@ grid = prepareGrid(grid, expt);
 % replace path
 if exist('replace_path', 'var')
   from = replace_path{1};
-  to = fix_slashes(replace_path{2});
+  to   = fix_slashes(replace_path{2});
   fprintf('Replacing %s with %s in grid...\n', from, to);
   from = lower(fix_slashes(from));
   len = length(from);
