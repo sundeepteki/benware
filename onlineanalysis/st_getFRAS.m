@@ -93,9 +93,11 @@ figure(3);
 for chan_idx   = 1:n_chans
   subplot(ceil(n_chans/4), 4, plot_order(chan_idx));
   hold on;
+  
+  % Plot spike response for each frequency and channel - check with Ben
   errorbar(freq_idx, nanmean(spikes(:,:,freq_idx,chan_idx)), nanstd(spikes(:,:,freq_idx,chan_idx))/sqrt(length(spikes(:,:,freq_idx,chan_idx))) );
   
-  % Find max response
+  % Find max response 
   [xx,yy] = max((nanmean(spikes(:,:,freq_idx,chan_idx))));  
   
   % Find BF
