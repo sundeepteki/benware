@@ -1,4 +1,4 @@
-function stim = stimgen_makeCalibTone(expt, grid, varargin)
+function stim = stimgen_makeTone(expt, grid, varargin)
 	%% stim = stimgen_makeCalibTone(expt, grid, varargin)
 	%%
 	% This is a model for new-style (2016 onward) benware stimulus generation functions

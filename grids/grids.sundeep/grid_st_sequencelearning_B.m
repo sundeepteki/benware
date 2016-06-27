@@ -1,30 +1,40 @@
-function grid = grid_st_vowelsequence_1B()
+function grid = grid_st_sequencelearning_B()
 
 %{
-   
-The grid function will be called (by prepareGrid) as: grid = grid_st_vowelsequence_1B()
-       
+
+Function: Runs basic Gavornik and Bear experiment 1B in a single session 
+Usage:    grid = grid_st_sequencelearning_B()
+Home:     grids.sundeep (benware)
+
+Procedure: 
+- 4 training blocks followed by 2 test blocks
+- Each blocks consists of 48 trials each
+
+- Training stimuli: ABCD where each element duration alternates between 150 and 200ms
+- Test stimuli:     ABCD - familiar + novel timing & DCBA - familiar + novel timing
+
+------------    
 Sundeep Teki
-v1: 20.05.16
+v1: 25-Jun-2016 00:00:37
+
 
 %}
-
 
 %% required parameters
 
 grid.seed                       = rng;
 grid.sampleRate                 = tdt100k;
-grid.stimGenerationFunctionName = 'stimgen_st_vowelsequence_1B';
+grid.stimGenerationFunctionName = 'stimgen_st_sequencelearning_vowel'; 
 grid.date                       = datestr(now);
 
 %% Stimulus parameters
 
-grid.stimGridTitles = {'Frequency of vowel 1','Frequency of vowel 2','Frequency of vowel 3','Frequency of vowel 4'};
+grid.stimGridTitles = {'Frequency [1]','Frequency [2]','Frequency [3]','Frequency [4]'};
 
 % stimulus parameters
-vowel.F0         = 125; % Hz
-vowel.order      = [2 0 3 1];
-vowel.timbre     = 'a';
+vowel.F0         = 144; % Hz
+vowel.order      = [3 0 2 1];
+vowel.timbre     = 'e';
 
 if(strcmpi(vowel.timbre,'a'))
     vowel.formants   = [936 1551 2815 4290];            % for vowel a
@@ -39,14 +49,14 @@ elseif(strcmpi(vowel.timbre,'test'))
 end
 
 vowel.octavesep  = 0.75;
-vowel.freqs      = floor(vowel.F0*2.^(vowel.octavesep.*vowel.order)); % [353 125 594 210]; for experiment 1A only
+vowel.freqs      = floor(vowel.F0*2.^(vowel.octavesep.*vowel.order)); % [713 252 150 424]
 vowel.bandwidth  = [80 70 160 300];                 % Hz, constant for each vowel
 vowel.level      = 65;                              % dB
 vowel.amp        = 20e-6*10.^(vowel.level/20);      % convert to Pascals
 vowel.carrier    = 'clicktrain';
 vowel.hannramp   = 0.005;                           % ramp size - 5ms
-vowel.preisi     = 0.5;                             % pre-stim interval; seconds
-vowel.postisi    = 1;                               % post-stim interval; seconds
+vowel.preisi     = 0.3;                             % pre-stim interval; seconds
+vowel.postisi    = 0.3;                               % post-stim interval; seconds
 
 %% Greetings
 
@@ -59,23 +69,23 @@ fprintf(fid, 'Formant frequencies = %d\n', vowel.formants);
 fprintf(fid, 'Level = %d\n', vowel.level);
 fprintf(fid, '\n');
 fprintf(fid, 'EXPERIMENT PARAMETERS  \n');
-fprintf(fid, 'Training phase:       Days 1-4: May 30 - June 2 \n');
-fprintf(fid, 'Testing phase:        Days 5,8,10,12,15: June 3, 6, 8, 10, 13 \n');
+fprintf(fid, 'Training phase:       Blocks 1-4 \n');
+fprintf(fid, 'Testing phase:        Blocks 5-6 \n');
 fprintf(fid, '\n');
 fprintf(fid, 'ENTER EXPERIMENT DETAILS \n');
 
 
 %% Specify experimental condition, animal group and testing day
 
-grid.day_expt    = input('Enter the day of experiment - 1/2/3/4/5 etc.: ');
-grid.ferret      = input('Enter the name of the ferret: ','s');
+grid.session_expt    = input('Enter the block number - 1:6 : ');
+grid.ferret          = input('Enter the name of the ferret: ','s');
 
-if(grid.day_expt < 5)
-    warning('Training days = 1/2/3/4 only');
+if(grid.session_expt < 5)
+    warning('Training blocks = 1:4 only');
     grid.condition   = 'Training';  
     fprintf(1, '%%%%%   grid.condition = [%s]\n', grid.condition);
 else
-    warning('Test days = 5/8/10/12/15 only');
+    warning('Test block = 5:6 only');
     grid.condition = 'Test';
     fprintf(1, '%%%%%   grid.condition = [%s]\n', grid.condition);
 end

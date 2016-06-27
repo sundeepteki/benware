@@ -18,7 +18,7 @@ end
 
 exptFile = fix_slashes(['users/expt.' user.name '.mat']);
 if ~exist(exptFile, 'file')
-  copyfile(fix_slashes('users/expt.ben.mat'), exptFile);
+  getcopyfile(fix_slashes('users/expt.ben.mat'), exptFile);
 end
 
 save user user;
