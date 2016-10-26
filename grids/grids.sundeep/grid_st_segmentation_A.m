@@ -10,17 +10,15 @@ Procedure:
 - 4 training blocks followed by 2 test blocks
 - Each blocks consists of 48 trials each
 
-- Training:     AXC = A(BC)D. 6 AXC words. Element duration: 150ms
+- Training:     AXC = A(BC)D. 9 AXC words with same X, 3As and 3Cs. Element duration: 150ms
                 192 repeats (same amount of exposure as experiments 1 & 2). 48 repeats x 4 blocks               
                 Use two different exposure streams across animals
 
-- Test stimuli: Words (ABCD) / Non-words / rule-words (A'BCD') x 48 repeats per category (8 repeats per individual w/pw/nw)
+- Test stimuli: Words (ABCD) vs. Non-words vs. rule-words (A'BCD') x 48 repeats per category (8 repeats per individual w/pw/nw)
 
 ------------
 Sundeep Teki
-v1: 27-Jun-2016 00:12:18
-
-To do: see stimulus design in paper and code this and stimgen.
+v1: 27-Jun-2016 21:57:09
 
 %}
 
@@ -34,11 +32,7 @@ grid.date                       = datestr(now);
 %% Stimulus parameters
 
 % stimulus parameters
-vowel.F0         = 150; % 200Hz and 150Hz
-vowel.length     = 24;
-vowel.num_words  = 6;
-vowel.len_words  = 4;
-vowel.timbre     = 'a';
+vowel.timbre    = 'a';
 
 if(strcmpi(vowel.timbre,'a'))
     vowel.formants   = [936 1551 2815 4290];            % for vowel a
@@ -53,74 +47,27 @@ elseif(strcmpi(vowel.timbre,'test'))
 end
 
 vowel.octavesep  = 0.15;
-vowel.freqs      = floor(vowel.F0*2.^(vowel.octavesep.*(0:vowel.length-1)));
-% vowel.freqs      = vowel.freqs(randperm(length(vowel.freqs)));
+vowel.A         = [180 278 345]; % 200Hz and 150Hz
+vowel.X1        = 315;
+vowel.X2        = 426;
+vowel.C         = [515 128 216]; 
 
-vowel.freqs1      = [273
-    1969
-    221
-    1055
-    857
-    303
-    565
-    951
-    459
-    1600
-    1775
-    246
-    336
-    200
-    509
-    1171
-    414
-    772
-    1299
-    2185
-    1442
-    373
-    627
-    696];
+vowel.words     = [[vowel.A(1) vowel.X1 vowel.X2 vowel.C(1)];...
+                   [vowel.A(1) vowel.X1 vowel.X2 vowel.C(2)];...
+                   [vowel.A(1) vowel.X1 vowel.X2 vowel.C(3)];...
+                   [vowel.A(2) vowel.X1 vowel.X2 vowel.C(1)];...
+                   [vowel.A(2) vowel.X1 vowel.X2 vowel.C(2)];...
+                   [vowel.A(3) vowel.X1 vowel.X2 vowel.C(3)];...
+                   [vowel.A(3) vowel.X1 vowel.X2 vowel.C(1)];...
+                   [vowel.A(3) vowel.X1 vowel.X2 vowel.C(2)];...
+                   [vowel.A(3) vowel.X1 vowel.X2 vowel.C(3)]];
 
-vowel.freqs2 = [1331
-         974
-         310
-         279
-         579
-         184
-         344
-         150
-        1081
-         791
-        1200
-        1639
-         643
-         252
-         227
-         470
-         522
-        1477
-         166
-         713
-         382
-         424
-         204
-         878];
+                   [ones(1,100) 2*ones(1,100) 3*ones(1,100) 4*ones(1,100) 5*ones(1,100) 6*ones(1,100) 7*ones(1,100) 8*ones(1,100) 9*ones(1,100)];
+                   
+                   
+vowel.partwords  = [];
 
-% choose vowel sequence
-vowel.freqs_id      = input('Choose sequence 1 or 2: ');
-if(vowel.freqs_id == 1)
-    vowel.freqs = vowel.freqs1;
-else
-    vowel.freqs = vowel.freq2;
-end
-
-vowel.words      = reshape(vowel.freqs,vowel.num_words,vowel.len_words);
-
-vowel.partwords  = [[vowel.words(1,3:4) vowel.words(2,1:2)]; [vowel.words(2,3:4) vowel.words(3,1:2)];[vowel.words(3,3:4) vowel.words(4,1:2)]; ...
-                   [vowel.words(4,3:4) vowel.words(5,1:2)]; [vowel.words(5,3:4) vowel.words(6,1:2)]; [vowel.words(6,3:4) vowel.words(1,1:2)]];
-
-vowel.rand_freqs = vowel.freqs(randperm(length(vowel.freqs))); % randomise again
-vowel.nonwords   = reshape(vowel.rand_freqs,vowel.num_words,vowel.len_words);
+vowel.rulewords  = [];
 
 % vowel parameters
 vowel.bandwidth  = [80 70 160 300];                 % Hz, constant for each vowel
@@ -137,36 +84,29 @@ vowel.postisi    = 0;                               % post-stim interval; second
 fid = 1;
 fprintf(fid, 'VOWEL PARAMETERS \n');
 fprintf(fid, 'F0 = %1.0f\n', vowel.F0);
-fprintf(fid, 'Frequencies = %d\n', vowel.freqs);
-fprintf(fid, 'Word 01 = %d\n', vowel.words(1,:));
-fprintf(fid, 'Word 02 = %d\n', vowel.words(2,:));
-fprintf(fid, 'Word 03 = %d\n', vowel.words(3,:));
-fprintf(fid, 'Word 04 = %d\n', vowel.words(4,:));
-fprintf(fid, 'Word 05 = %d\n', vowel.words(5,:));
-fprintf(fid, 'Word 06 = %d\n', vowel.words(6,:));
 fprintf(fid, 'Timbre = [%s]\n', vowel.timbre);
 fprintf(fid, 'Formant frequencies = %d\n', vowel.formants);
 fprintf(fid, 'Duration = %d\n', vowel.dur);
 fprintf(fid, 'Level = %d\n', vowel.level);
 fprintf(fid, '\n');
 fprintf(fid, 'EXPERIMENT PARAMETERS  \n');
-fprintf(fid, 'Training phase:       Blocks 1-4 \n');
-fprintf(fid, 'Testing phase:        Blocks 5-6 \n');
+fprintf(fid, 'Training phase:       Block 1 \n');
+fprintf(fid, 'Testing phase:        Block 2:3 \n');
 fprintf(fid, '\n');
 fprintf(fid, 'ENTER EXPERIMENT DETAILS \n');
 
 
 %% Specify experimental condition, animal group and testing day
 
-grid.session_expt    = input('Enter the block number - 1:6 : ');
+grid.session_expt    = input('Enter the block number - 1:3 : ');
 grid.ferret          = input('Enter the name of the ferret: ','s');
 
-if(grid.session_expt < 5)
-    warning('Training blocks = 1:4 only');
+if(grid.session_expt < 2)
+    warning('Training blocks = 1 only');
     grid.condition   = 'Training';
     fprintf(1, '%%%%%   grid.condition = [%s]\n', grid.condition);
 else
-    warning('Test block = 5:6 only');
+    warning('Test block = 2:3 only');
     grid.condition = 'Test';
     fprintf(1, '%%%%%   grid.condition = [%s]\n', grid.condition);
 end
@@ -176,10 +116,10 @@ end
 if(strcmpi(grid.condition,'Training'))
     
     grid.stimGrid                   = vowel.freqs;
-    grid.stimGridTitles = {'F1','F2','F3','F4','F5','F6','F7','F8','F9','10','F11','F12','F13','F14','F15','F16','F17','F18','F19','F20','F21','F22','F23','F24'};
+    grid.stimGridTitles             =  {'F1','F2','F3','F4','F5','F6','F7','F8','F9','10','F11','F12','F13','F14','F15','F16','F17','F18','F19','F20','F21','F22','F23','F24'};
     grid.repeatsPerCondition        = 48; % 48 repeats of 1 fixed stimulus
-    vowel.preisi     = 0;                               % pre-stim interval; seconds
-    vowel.postisi    = 0;                               % post-stim interval; seconds
+    vowel.preisi                    = 0;                               % pre-stim interval; seconds
+    vowel.postisi                   = 0;                               % post-stim interval; seconds
 end
 
 % Test phase

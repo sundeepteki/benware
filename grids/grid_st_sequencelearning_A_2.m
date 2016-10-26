@@ -34,7 +34,7 @@ grid.stimGridTitles = {'Frequency [1]','Frequency [2]','Frequency [3]','Frequenc
 % stimulus parameters
 vowel.F0         = 192; % Hz
 vowel.order      = [1 3 0 2];
-vowel.timbre     = 'a'; %'a'
+vowel.timbre     = 'a';
 
 if(strcmpi(vowel.timbre,'a'))
     vowel.formants   = [936 1551 2815 4290];            % for vowel a
@@ -111,25 +111,24 @@ if(strcmpi(grid.animalgroup,'Experimental') && strcmpi(grid.condition,'Test'))
     vowel.repeats                   = 48;
     vowel.sequence_id               = repmat(vowel.sequence,1,vowel.repeats);
     %     vowel.rand_sequence_id          = trialtypes=tshuffle([1*ones(1,vowel.repeats) 2*ones(1,vowel.repeats) 3*ones(1,vowel.repeats) 4*ones(1,vowel.repeats)],[1 2 3 4]);
-%     vowel.rand_sequence_id          = rand_sequence_order; % load from saved mat file
+    vowel.rand_sequence_id          = rand_sequence_order; % load from saved mat file
     
-%     for i = 1:length(vowel.sequence_id)
-%       vowel.rand_sequence_id = 1;
+    for i = 1:length(vowel.sequence_id)
         
-        if(vowel.rand_sequence_id==1)
+        if(vowel.rand_sequence_id(i)==1)
             grid.stimGrid               = vowel.freqs;
             grid.repeatsPerCondition    = 1; 
             
-        elseif(vowel.rand_sequence_id==2)
+        elseif(vowel.rand_sequence_id(i)==2)
             grid.stimGrid               = vowel.freqs(end:-1:1);
             grid.repeatsPerCondition    = 1; 
             
-        elseif(vowel.rand_sequence_id==3)
-%             vowel.dur                   = 0.3;
+        elseif(vowel.rand_sequence_id(i)==3)
+            vowel.dur                   = 0.3;
             grid.stimGrid               = vowel.freqs;
             grid.repeatsPerCondition    = 1; 
             
-        elseif(vowel.rand_sequence_id==4)
+        elseif(vowel.rand_sequence_id(i)==4)
             vowel.timbre     = 'e';
             vowel.formants   = [730 2058 2979 4294];            % for vowel e
             grid.stimGrid    = vowel.freqs;
@@ -138,7 +137,7 @@ if(strcmpi(grid.animalgroup,'Experimental') && strcmpi(grid.condition,'Test'))
             fprintf(fid, 'Enter one of the 4 valid sequences only  \n');
         end
         
-%     end
+    end
     
     %     grid.repeatsPerCondition        = 48; % 48 repeats of each of 1 fixed test stimuli per block
     

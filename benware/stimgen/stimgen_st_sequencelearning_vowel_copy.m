@@ -15,15 +15,12 @@ v1: 24-Jun-2016 22:26:53
 sampleRate  = grid.sampleRate; 
 nChannels   = expt.nStimChannels;
 vowel       = grid.vowel;
+% vowel.dur   = 0.3;
+% % vowel.formants = [730 2058 2979 4294];            % for vowel e
+% vowel.formants = [936 1551 2815 4290];            % for vowel a
 vowel_freqs = cell2mat(varargin); 
+% vowel_freqs = [322 913 192 543];
 assert(length(vowel_freqs)==4);
-
-% B - 
-% vowel_freqs = [128   215   362   608]; %original
-nsamplesall = [14649 19532 14649 19532]; % original
-vowel_freqs = [608 362 215 128]; % reversed
-% nsamplesall = [19532 14649 19532 14649]; % reversed
-
 
 %% make vowel vector
 
@@ -55,15 +52,13 @@ end
 seq_vowel   = []; 
 
 for i = 1:length(vowel.freqs)
-        
+    
     vowel_f0 = vowel_freqs(i);      % added by ST
     waveform = [];
     
     w0T = 2*pi*vowel_f0/sampleRate;                 % radians per sample
     
-    nharm = floor((sampleRate/2)/vowel_f0);         % number of harmonics    
-    nsamples = nsamplesall(i);
-    
+    nharm = floor((sampleRate/2)/vowel_f0);         % number of harmonics
     sig = zeros(1,nsamples);
     n = 0:(nsamples-1);
     
@@ -114,5 +109,5 @@ else % else present monoaurally
 end
         
 % write sound file if required
-audiowrite(['/Users/sundeepteki/Documents/Oxford/Work/Code/tekilib/#teki/stimuli/sundeep/st_sequencelearning_B_Test_x_2/st_sequencelearning_B_DCBAfamiliar.wav'],stim',97656);
+audiowrite(['/Users/sundeepteki/Documents/Oxford/Work/Code/tekilib/#teki/stimuli/sundeep/st_sequencelearning_A_Test_x_2/st_sequencelearning_A_ABCD300.wav'],stim',97656);
 
